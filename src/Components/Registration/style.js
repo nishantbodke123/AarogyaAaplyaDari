@@ -38,6 +38,18 @@ export const FormItem = styled(Form.Item)`
     width: 300px;
   }
 `;
+export const ModalFormItem = styled(Form.Item)`
+  width: 60%;
+  margin: 10px 50px;
+  @media (max-width: 820px) {
+    margin: 10px 20px;
+    width: 65%;
+  }
+  @media (max-width: 450px) {
+    margin: 10px 20px;
+    width: 80%;
+  }
+`;
 
 export const FormHeader = styled.p`
   font-weight: 650;
@@ -181,5 +193,39 @@ export const SubmitButton = styled(Button)`
   &:hover {
     background-color: #f29727;
     color: none;
+  }
+`;
+
+export const BloodLogoImage = styled.img`
+  width: 30%;
+  margin: 0% 25%;
+`;
+export const BloodSampleText = styled.div`
+  font-size: 20px;
+  font-weight: 600;
+  margin: 5% 0%;
+  font-family= serif;
+
+    @media (max-width: 820px) {
+     font-size: 18px;
+  font-weight: 600;
+  margin: 5% 0%;
+  }
+  @media (max-width: 450px) {
+     font-size: 15px;
+  font-weight: 600;
+  margin: 5% 0%;
+  }
+`;
+export const BloodSampleButtonsRow = styled(Row)``;
+export const BloodSampleButtonCol = styled(Col)`
+  width: 30%;
+
+  @media (max-width: 820px) {
+    width: 100%;
+    margin: 2% 10%;
+  }
+  @media (max-width: 450px) {
+    width: 100%;
   }
 `;

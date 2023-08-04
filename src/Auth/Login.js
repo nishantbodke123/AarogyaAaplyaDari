@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Form, Card, Input, Button } from "antd";
+import { Row, Col, Form, Card, Input, Button, Modal } from "antd";
 import Title from "antd/es/skeleton/Title";
 import {
   ClickHereLink,
@@ -34,25 +34,21 @@ function Login() {
                     placeholder="Enter Email / Mobile Number "
                   ></InputBox>
                 </FormItem>
-                <FormItem label="Password">
-                  <InputBox
-                    type="text"
-                    placeholder="Enter Password "
-                  ></InputBox>
+                <FormItem label="OTP">
+                  <InputBox type="text" placeholder="Enter OTP "></InputBox>
                 </FormItem>
                 <SubmitButton
                   htmlType="submit"
                   onClick={() => {
-                    window.location.replace("/register");
+                    window.location.replace("/Register");
                   }}
                 >
-                  {" "}
                   Sign In
                 </SubmitButton>
-                <ForgetPasswordPara>
+                {/* <ForgetPasswordPara>
                   Forget Password?
                   <ClickHereLink>Click here</ClickHereLink>
-                </ForgetPasswordPara>
+                </ForgetPasswordPara> */}
               </Form>
             </LoginForm>
           </div>
