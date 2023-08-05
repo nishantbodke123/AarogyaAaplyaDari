@@ -75,6 +75,8 @@ function MemberRegister(props) {
     setBloodSampleDenied(!bloodSampleDenied);
   };
 
+ 
+
   //Family Member field
   const [name, setName] = useState();
   const [gender, setGender] = useState();
@@ -83,13 +85,109 @@ function MemberRegister(props) {
   const [aadharCard, setAadharCard] = useState();
   const [abhaId, setAbhaId] = useState();
 
+  // Part A question's state
+  const [question1A, setQuestion1A] = useState("");
+  const [question2A, setQuestion2A] = useState("");
+  const [question3A, setQuestion3A] = useState("");
+  const [question4A, setQuestion4A] = useState("");
+  const [question5A, setQuestion5A] = useState("");
+  const [question6A, setQuestion6A] = useState("");
+
+  // Part B question's state
+  const [question1B1, setQuestion1B1] = useState("");
+  const [question2B1, setQuestion2B1] = useState("");
+  const [question3B1, setQuestion3B1] = useState("");
+  const [question4B1, setQuestion4B1] = useState("");
+  const [question5B1, setQuestion5B1] = useState("");
+  const [question6B1, setQuestion6B1] = useState("");
+  const [question7B1, setQuestion7B1] = useState("");
+  const [question8B1, setQuestion8B1] = useState("");
+  const [question9B1, setQuestion9B1] = useState("");
+  const [question10B1, setQuestion10B1] = useState("");
+  const [question11B1, setQuestion11B1] = useState("");
+  const [question12B1, setQuestion12B1] = useState("");
+  const [question13B1, setQuestion13B1] = useState("");
+  const [question14B1, setQuestion14B1] = useState("");
+  const [question15B1, setQuestion15B1] = useState("");
+  const [question16B1, setQuestion16B1] = useState("");
+  const [question17B1, setQuestion17B1] = useState("");
+  const [question18B1, setQuestion18B1] = useState("");
+  const [question19B1, setQuestion19B1] = useState("");
+  const [question20B1, setQuestion20B1] = useState("");
+  const [question21B1, setQuestion21B1] = useState("");
+  const [question22B1, setQuestion22B1] = useState("");
+  const [question23B1, setQuestion23B1] = useState("");
+  const [question24B1, setQuestion24B1] = useState("");
+  const [question25B1, setQuestion25B1] = useState("");
+  const [question26B1, setQuestion26B1] = useState("");
+  const [question28B1, setQuestion28B1] = useState("");
+  const [question29B1, setQuestion29B1] = useState("");
+  const [question30B1, setQuestion30B1] = useState("");
+  const [question31B1, setQuestion31B1] = useState("");
+  const [question32B1, setQuestion32B1] = useState("");
+
+  //B2
+  const [question1B2, setQuestion1B2] = useState("");
+  const [question2B2, setQuestion2B2] = useState("");
+  const [question3B2, setQuestion3B2] = useState("");
+  const [question4B2, setQuestion4B2] = useState("");
+  const [question5B2, setQuestion5B2] = useState("");
+  const [question6B2, setQuestion6B2] = useState("");
+  const [question7B2, setQuestion7B2] = useState("");
+
+  //B3
+  const [question1B3, setQuestion1B3] = useState("");
+  const [question2B3, setQuestion2B3] = useState("");
+  const [question3B3, setQuestion3B3] = useState("");
+  const [question4B3, setQuestion4B3] = useState("");
+
+  //Part C questions's state
+  const [question1C, setQuestion1C] = useState("");
+  const [question2C, setQuestion2C] = useState("");
+  const [question3C, setQuestion3C] = useState("");
+
+  //Part D question's state
+  const [question1D, setQuestion1D] = useState("");
+  const [question2D, setQuestion2D] = useState("");
+
   //Part E question's state
+  //E1
   const [doYouhaveFever, setDoYouHaveFever] = useState("no");
+  const [doYouhaveFever1, setDoYouHaveFever1] = useState("no");
+  const [doYouhaveFever2, setDoYouHaveFever2] = useState("no");
+  const [doYouhaveFever3, setDoYouHaveFever3] = useState("no");
+  const [doYouhaveFever4, setDoYouHaveFever4] = useState("no");
+  const [doYouhaveFever5, setDoYouHaveFever5] = useState("no");
+  //E2
   const [conjuctivitis, setConjuctivitis] = useState("no");
+  const [conjuctivitis1, setConjuctivitis1] = useState("no");
+  const [conjuctivitis2, setConjuctivitis2] = useState("no");
+  const [conjuctivitis3, setConjuctivitis3] = useState("no");
+  //E3
   const [leptospirosis, setLeptospirosis] = useState("no");
+  const [leptospirosis1, setLeptospirosis1] = useState("no");
+  const [leptospirosis2, setLeptospirosis2] = useState("no");
+
+  //E4
   const [looseMotion, setLooseMotion] = useState("no");
+  const [looseMotion1, setLooseMotion1] = useState("no");
+  const [looseMotion2, setLooseMotion2] = useState("no");
+  const [looseMotion3, setLooseMotion3] = useState("no");
+
+  //E5
   const [hepatitis, setHepatitis] = useState("no");
-  const [leprosy, setLeprosy] = useState("no");
+  const [hepatitis1, setHepatitis1] = useState("no");
+  const [hepatitis2, setHepatitis2] = useState("no");
+  const [hepatitis3, setHepatitis3] = useState("no");
+
+  //E6
+  const [animalBitten, setAnimalBitten] = useState("");
+
+  //E7
+  const [snakeBitten, setSnakeBitten] = useState("");
+
+  //E8
+  const [leprosy, setLeprosy] = useState("");
   return (
     <div>
       <Container>

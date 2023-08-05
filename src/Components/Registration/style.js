@@ -53,7 +53,7 @@ export const ModalFormItem = styled(Form.Item)`
 
 export const FormHeader = styled.p`
   font-weight: 650;
-  margin: 30px 25px;
+  margin: 30px 20px;
 
   // @media (max-width: 820px) {
   //   width: 450px;
@@ -94,7 +94,7 @@ export const QuestionCol = styled(Col)`
   // }
 `;
 export const QuestionSubCol = styled(Col)`
-  width: 30%;
+  width: 35%;
 
   @media (max-width: 820px) {
     width: 60%;
@@ -115,8 +115,6 @@ export const AnswerCol = styled(Col)`
   // }
 `;
 export const AnswerSubCol = styled(Col)`
-  width: 20%;
-
   @media (max-width: 820px) {
     width: 40%;
   }
