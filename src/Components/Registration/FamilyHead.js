@@ -15,6 +15,7 @@ import {
   Row,
   Select,
   Col,
+  message,
 } from "antd";
 
 import {
@@ -220,8 +221,7 @@ function FamilyHead(props) {
   //E5
   const [hepatitis, setHepatitis] = useState("no");
   const [hepatitis1, setHepatitis1] = useState();
-  const [hepatitis2, setHepatitis2] = useState();
-  const [hepatitis3, setHepatitis3] = useState();
+
 
   //E6
   const [animalBitten, setAnimalBitten] = useState("");
@@ -237,12 +237,277 @@ function FamilyHead(props) {
   const [leprosy4, setLeprosy4] = useState();
   const [leprosy5, setLeprosy5] = useState();
 
+  const [familyMembersArray ,setFamilyMembersArray]=useState([]);
+
+
+  // const [firstName, setFirstName] = useState();
+  // const [middelName, setMiddleName] = useState();
+  // const [lastName, setLastName] = useState();
+  // const [mobileNo, setMobileNo] = useState();
+  // const [plotNumber, setPlotNumber] = useState();
+  // const [addressLine1, setAddressLine1] = useState();
+  // const [pincode, setPinCode] = useState();
+  // const [totalFamilyMembers, setTotalFamilyMembers] = useState(1);
+  // const [ward_name, setWard_name] = useState();
+  // const [healthPost, setHealthPost] = useState();
+
+
+  const handleClearFamilyHead=()=>{
+    setFirstName("");
+    setMiddleName("");
+    setLastName("");
+    setMobileNo("");
+    setPlotNumber("");
+    setAddressLine1("");
+    setPinCode("");
+    setTotalFamilyMembers("");
+  }
+
+  
+const handleClearGeneralPart=()=>{
+setName("");
+setGender("");
+setAge("");
+setPhone("");
+setAadharCard("");
+setAbhaId("")
+}
+
+  const handleClearPartA=()=>{
+    setQuestion1A("");
+    setQuestion2A("");
+    setQuestion3A("");
+    setQuestion4A("");
+    setQuestion5A("");
+    setQuestion6A("");
+  }
+
+  const handleClearPartB=()=>{
+    setQuestion1B1("");
+    setQuestion2B1("");
+    setQuestion3B1("");
+    setQuestion4B1("");
+    setQuestion5B1("");
+    setQuestion6B1("");
+    setQuestion7B1("");
+    setQuestion8B1("");
+    setQuestion9B1("");
+    setQuestion10B1("");
+    setQuestion11B1("");
+    setQuestion12B1("");
+    setQuestion13B1("");
+    setQuestion14B1("");
+    setQuestion15B1("");
+    setQuestion16B1("");
+    setQuestion17B1("");
+    setQuestion18B1("");
+    setQuestion19B1("");
+    setQuestion20B1("");
+    setQuestion21B1("");
+    setQuestion22B1("");
+    setQuestion23B1("");
+    setQuestion24B1("");
+    setQuestion25B1("");
+    setQuestion26B1("");
+    setQuestion27B1("");
+    setQuestion28B1("");
+    setQuestion29B1("");
+    setQuestion30B1("");
+    setQuestion31B1("");
+    setQuestion32B1("");
+    setQuestion1B2("");
+    setQuestion2B2("");
+    setQuestion3B2("");
+    setQuestion4B2("");
+    setQuestion5B2("");
+    setQuestion6B2("");
+    setQuestion7B2("");
+    setQuestion1B3("");
+    setQuestion2B3("");
+    setQuestion3B3("");
+    setQuestion4B3("");
+  }
+
+  const handleClearPartC=()=>{
+    setQuestion1C("");
+    setQuestion2C("");
+    setQuestion3C("");
+  }
+
+  const handleClearPartD=()=>{
+    setQuestion1D("");
+    setQuestion2D("");
+  }
+  const handleClearPartE=()=>{
+    setDoYouHaveFever("");
+    setDoYouHaveFever1("");
+    setDoYouHaveFever2("");
+    setDoYouHaveFever3("");
+    setDoYouHaveFever4("");
+    setDoYouHaveFever5("");
+    setConjuctivitis("");
+    setConjuctivitis1("");
+    setConjuctivitis2("");
+    setConjuctivitis3("");
+    setLeptospirosis("");
+    setLeptospirosis1("");
+    setLeptospirosis2("");
+    setLooseMotion("");
+    setLooseMotion1("");
+    setLooseMotion2("");
+    setLooseMotion3("");
+    setHepatitis("");
+    setAnimalBitten("");
+    setSnakeBitten("");
+    setLeprosy("")
+    setLeprosy1("");
+    setLeprosy2("");
+    setLeprosy3("");
+    setLeprosy4("");
+    setLeprosy5("");
+
+  }
+ 
+
+  const memberData={
+    
+    name: name,
+    gender: gender,
+    age: age,
+    phone: phone,
+    aadharCard: aadharCard,
+    abhaId: abhaId,
+    partA: {
+      "what is your age (in full year)": question1A,
+      "Do you smoke or smokeless products like gutkha and Use like Khaini?":
+        question2A,
+      "Do you drink alcohol every day?": question3A,
+      "Waist circumference (in cm)": question4A,
+      "Do you do any type of physical activity for at least 150 minutes a week? (Minimum 30 minutes per day , 5 days per week)":
+        question5A,
+      "Do you have a family history? Have high blood pressure, diabetes and heart disease (from your parents or siblings)?":
+        question6A,
+    },
+    partB: {
+      "Shortness of breath (difficulty breathing)": question1B1,
+      "Cough for more than 2 weeks": question2B1,
+      "Blood in sputum": question3B1,
+      "Fever for more than 2 weeks": question4B1,
+      "Weight loss": question5B1,
+      "Excessive night sweats": question6B1,
+      "Are you currently taking medicines to treat TB?": question7B1,
+      "Is any family member currently suffering from TB disease?":
+        question8B1,
+      " History of TB disease": question9B1,
+      "Frequent bruising of hands and soles of feet": question10B1,
+      "Frequent tingling in palms of hands and feet": question11B1,
+      "Blurred and blurred vision": question12B1,
+      "Difficulty in reading": question13B1,
+      "Non-relief of eye pain for more than a week": question14B1,
+      "Eye redness for more than a week": question15B1,
+      "You have trouble hearing": question16B1,
+      "History of Featka": question17B1,
+      "Difficulty opening the mouth": question18B1,
+      "Non-healing of mouth sores for more than two weeks": question19B1,
+      "Non-healing growth in mouth for more than two weeks": question20B1,
+      "Non-healing white or red sores in the mouth for more than two weeks":
+        question21B1,
+      "Pain while chewing": question22B1,
+      "Changes in voice": question23B1,
+      "Light colored patches or spots in the mouth with no sensation":
+        question24B1,
+      "Thickening of the skin in any part of the body": question25B1,
+      "Tumors in any part of the body": question26B1,
+      "Frequent numbness of palms on hands and feet": question27B1,
+      "Crooked fingers and toes": question28B1,
+      "Tingling in hands and feet and deafness": question29B1,
+      "Incomplete closure of eyelids": question30B1,
+      "Difficulty grasping objects properly in the claws of the hands":
+        question31B1,
+      "Difficulty walking due to weakness in legs": question32B1,
+      "Having a lump in the breast": question1B2,
+      "Bloody discharge from the nipple": question2B2,
+      "Changes in breast size": question3B2,
+      "Bleeding between two periods": question4B2,
+      "Bleeding after cessation of menstruation": question5B2,
+      "Bleeding after intercourse": question6B2,
+      "Foul smelling vaginal discharge": question7B2,
+      "Do you feel unsteady while standing or walking?": question1B3,
+      "Impairment of movement if suffering from physical disability":
+        question2B3,
+      "Do you need help from others to perform daily activities such as eating, dressing, dressing, bathing, walking or using the toilet?":
+        question3B3,
+      " Forgetting your home address or household names?": question4B3,
+    },
+    partC: {
+      "All applicable circles": question1C,
+      "Type of fuel used for cooking – Firewood / Crop residue / Dung cake / Coal / Kerosene / LPG":
+        question2C,
+      "With occupational exposure – burning of crop residues / burning of waste – leaves / working in industries with exposure to fumes, gases and dust like peat kilns and glass factories etc.":
+        question3C,
+    },
+    partD: {
+      "Having little interest or pleasure in doing things?":question1D,
+      "Being depressed ?":question2D,
+    },
+    partE: {
+      "Do you have fever?":doYouhaveFever,
+      "More than 7 days":doYouhaveFever1,
+      "Less than 7 days":doYouhaveFever2,
+      "With Chills":doYouhaveFever3,
+      "With Rash":doYouhaveFever4,
+      "with Bleeding":doYouhaveFever5,
+      "Conjuctivitis?":conjuctivitis,
+      "Watery":conjuctivitis1,
+      "redness":conjuctivitis2,
+      "itching eyes":conjuctivitis3,
+      "Do you have leptospirosis?":leptospirosis,
+      "Do you Waddling in water often?":leptospirosis1,
+      "Exposure to domestic animal like cattle / Dog / Cat / Pig / Rodent?":leptospirosis2,
+      "Do you have loose motion ?":looseMotion,
+      "With Blood":looseMotion1,
+      "Without Blood":looseMotion2,
+      "Vomitting":looseMotion3,
+      "Do you have Hepatitis / Jaundice ?":hepatitis,
+      "Do you eating outside / uncovered food / drinking contaminated water ?":hepatitis1,
+      "did animals have Bitten you ?":animalBitten,
+      "did Snake have Bitten you ?":snakeBitten,
+      "do you have Leprosy ?": leprosy,
+      "Numbness / Tingling in hands/feet ?":leprosy1,
+      "Loss of sensation in any parts of body ?":leprosy2,
+      "Swelling / Nodule on Face/Hands/Feet ?":leprosy3,
+      "Loss of eyelash or eyebrow ?":leprosy4,
+      " Thickened earlobes ?":leprosy5
+    },
+    "bloodCollectionLocation":bloodSampleHome?"At_Home":bloodSampleCenter?"At_Center":bloodSampleDenied?"Denied":""
+  }
+
+  
+
+  const handleSubmit = () => {
+    
+    const Data = {
+      ward_name: ward_name,
+      firstName: firstName,
+      middelName: middelName,
+      lastName: lastName,
+      mobileNo: mobileNo,
+      plotNo: plotNumber,
+      addressLine1: addressLine1,
+      pincode: pincode,
+      totalFamilyMembers: totalFamilyMembers,
+      familyMembers_details: familyMembersArray
+    };
+    console.log(Data);
+   
+  };
+
   return familyHeadRegister == "no" ? (
     <>
       <FormHeader>
         Family Head/ कुटुंब प्रमुख{" "}
         <Button
-          style={{ marginLeft: "70%" }}
+          style={{ marginLeft: "75%" }}
           onClick={() => setShowModal(true)}
         >
           Select Ward
@@ -251,25 +516,33 @@ function FamilyHead(props) {
       <FormContainer layout="vertical">
         <Row>
           <Column>
-            <FormItem label="First Name / पहिले नाव">
+            <FormItem label="First Name / पहिले नाव" name="firstName" rules={[{ required: true, message: 'First Name is required / प्रथम नाव आवश्यक आहे' },
+                 { pattern: /^[a-z ,A-Z]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' },]}>
               <Input
                 type="text"
+                name="firstName"
+                value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
               ></Input>
             </FormItem>
           </Column>
           <Column>
-            <FormItem label="Middle Name /मधले नाव">
+            <FormItem name="middleName" label="Middle Name /मधले नाव" rules={[{ required: true, message: 'Middle Name is required / मधले नाव आवश्यक आहे' },
+                 { pattern: /^[a-z ,A-Z]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' },]}>
               <Input
                 type="text"
+                name="middleName"
+                value={middelName}
                 onChange={(e) => setMiddleName(e.target.value)}
               ></Input>
             </FormItem>
           </Column>
           <Column>
-            <FormItem label="Last Name/आडनाव">
+            <FormItem label="Last Name/आडनाव" name="last name" rules={[{required:true ,message:"Last Name required / आडनाव आवश्यक आहे "},{ pattern: /^[a-z ,A-Z]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' }]}>
               <Input
                 type="text"
+                name="last name"
+                value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               ></Input>
             </FormItem>
@@ -277,9 +550,11 @@ function FamilyHead(props) {
         </Row>
         <Row>
           <Column>
-            <FormItem label="Mobile Number/ मोबाईल नंबर">
+            <FormItem label="Mobile Number/ मोबाईल नंबर" name="mobile number" rules={[{required:true},{pattern:/^[0-9,+]*$/,message:"Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे"},{max:13,message:"Mobile Number can not be longer than 10 digits"}]}>
               <Input
                 type="text"
+                value={mobileNo}
+                name="mobile number"
                 defaultValue="+91"
                 onChange={(e) => setMobileNo(e.target.value)}
               ></Input>
@@ -289,6 +564,7 @@ function FamilyHead(props) {
             <FormItem label="Plot Number / Flat Number / प्लॉट क्रमांक / फ्लॅट क्रमांक ">
               <Input
                 type="text"
+                value={plotNumber}
                 onChange={(e) => setPlotNumber(e.target.value)}
               ></Input>
             </FormItem>
@@ -296,6 +572,7 @@ function FamilyHead(props) {
           <Column>
             <FormItem label="Address / पत्ता">
               <TextArea
+              value={addressLine1}
                 onChange={(e) => setAddressLine1(e.target.value)}
               ></TextArea>
             </FormItem>
@@ -303,28 +580,35 @@ function FamilyHead(props) {
         </Row>
         <Row>
           <Column>
-            <FormItem label="Pin Code / पिन कोड">
+            <FormItem label="Pin Code / पिन कोड" name="pinCode" rules={[{max:6 ,message:"Pin code can not be longer than 6 digit"}]}>
               <Input
                 type="number"
+                name="pinCode"
+                value={pincode}
                 onChange={(e) => setPinCode(e.target.value)}
               ></Input>
             </FormItem>
           </Column>
           <Column>
-            <FormItem label="Number of family members above age of 50 years / 50 पेक्षा जास्त वयाच्या कुटुंबातील सदस्यांची संख्या">
+            <FormItem name="familyMembers" label="Number of family members above age of 50 years / 50 पेक्षा जास्त वयाच्या कुटुंबातील सदस्यांची संख्या" rules={[{required:true , message:"Number of family members required"}]}>
               <Input
                 type="number"
+                value={totalFamilyMembers}
+                name="familyMembers"
                 onChange={(e) => handleFamilyMembers(e)}
               ></Input>
             </FormItem>
           </Column>
         </Row>
-      </FormContainer>
-      <SubmitButtonDiv>
-        <SubmitButton onClick={() => setFamilyHeadRegister("yes")}>
+        <SubmitButtonDiv>
+        <SubmitButton type="submit" onClick={() => setFamilyHeadRegister("yes")}>
           Next
         </SubmitButton>
       </SubmitButtonDiv>
+      </FormContainer>
+     
+        
+       
       <Modal
         open={showModal}
         onCancel={handleShowModalClose}
@@ -339,15 +623,15 @@ function FamilyHead(props) {
         <div>
           <Form layout="vertical">
             <ModalFormItem label="Select Ward / प्रभाग निवडा">
-              <Select onChange={(e) => setWard_name(e.target.value)}>
+              <Select onChange={(value) => setWard_name(value)} value={ward_name}>
                 <Option value="Ward 1">Ward 1</Option>
                 <Option value="Ward 2">Ward 2</Option>
               </Select>
             </ModalFormItem>
             <ModalFormItem label="Select Health Post / आरोग्य पोस्ट निवडा">
-              <Select onChange={(e) => setHealthPost(e.target.value)}>
-                <Option>Post 1</Option>
-                <Option>Post 2</Option>
+              <Select onChange={(value) => setHealthPost(value)} value={healthPost}>
+                <Option value="post 1">Post 1</Option>
+                <Option value="post 2">Post 2</Option>
               </Select>
             </ModalFormItem>
           </Form>
@@ -366,25 +650,29 @@ function FamilyHead(props) {
         <FormContainer layout="vertical">
           <Row>
             <Column>
-              <FormItem label="Name /  नाव">
+              <FormItem label="Name /  नाव" name="name" rules={[{required:true ,message:"name required / नाव आवश्यक आहे"},{pattern:/^[a-zA-Z]*$/ ,message:"Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे"}]}>
                 <Input
                   type="text"
+                  name="name"
+                  value={name}
                   onChange={(e) => setName(e.target.value)}
                 ></Input>
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Aadhar Card Number/ आधार क्रमांक">
+              <FormItem label="Aadhar Card Number/ आधार क्रमांक" name="aadharCardNumber" rules={[{required:true ,message:"aadhar number required / आधार क्रमांक आवश्यक आहे"},{pattern:/^[0-9]*$/ ,message:"Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे"}]}>
                 <Input
-                  type="number"
+                  type="text"
+                  name="aadharCardNumber"
+                  value={aadharCard}
                   onChange={(e) => setAadharCard(e.target.value)}
                 ></Input>
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Gender / लिंग">
-                <Select onChange={(e) => setGender(e.target.value)}>
-                  <Option value="male">Male/ पुरुष</Option>
+              <FormItem label="Gender / लिंग" name="gender" rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]}>
+                <Select name="gender" onChange={(value) => setGender(value)} value={gender}>
+                  <Option value="male">Male / पुरुष</Option>
                   <Option value="female">Female / स्त्री</Option>
                 </Select>
               </FormItem>
@@ -393,26 +681,32 @@ function FamilyHead(props) {
 
           <Row>
             <Column>
-              <FormItem label="Age / वय">
+              <FormItem label="Age / वय" name="age" rules={[{required:true ,message:"Age mention required / वय नमूद करणे आवश्यक आहे"}]}>
                 <Input
                   type="number"
+                  name="age"
+                  value={age}
                   onChange={(e) => setAge(e.target.value)}
                 ></Input>
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Mobile Number / मोबाईल नंबर">
+              <FormItem label="Mobile Number / मोबाईल नंबर" name="mobile number" rules={[{pattern:/^[0-9+]*$/ , message:"Mobile number must be numeric / मोबाईल क्रमांक अंकीय असणे आवश्यक आहे"}]}>
                 <Input
                   defaultValue="+91"
+                  name="mobile number"
                   type="text"
+                  value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 ></Input>
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Abha Card ID / आभा कार्ड आयडी">
+              <FormItem label="Abha Card ID / आभा कार्ड आयडी" name="abha card id">
                 <Input
                   type="text"
+                  name="abha card id"
+                  value={abhaId}
                   onChange={(e) => setAbhaId(e.target.value)}
                 ></Input>
               </FormItem>
@@ -440,6 +734,7 @@ function FamilyHead(props) {
                 style={{ width: "300px" }}
                 type="text"
                 placeholder="0"
+                value={question1A}
                 onChange={(e) => setQuestion1A(e.target.value)}
               ></Input>
             </AnswerCol>
@@ -451,7 +746,7 @@ function FamilyHead(props) {
               Use like Khaini?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion2A(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion2A(e.target.value)} value={question2A}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -462,7 +757,7 @@ function FamilyHead(props) {
               ३. तुम्ही दररोज मद्यपान करता ? / Do you drink alcohol every day?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion3A(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion3A(e.target.value)} value={question3A}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -477,6 +772,7 @@ function FamilyHead(props) {
                 style={{ width: "300px" }}
                 type="text"
                 placeholder="0"
+                value={question4A}
                 onChange={(e) => setQuestion4A(e.target.value)}
               ></Input>
             </AnswerCol>
@@ -489,7 +785,7 @@ function FamilyHead(props) {
               minutes a week? (Minimum 30 minutes per day – 5 days per week)
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion5A(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion5A(e.target.value)} value={question5A}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -503,13 +799,14 @@ function FamilyHead(props) {
               disease (from your parents or siblings)?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onClick={(e) => setQuestion6A(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion6A(e.target.value)} value={question6A} >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
           <SubmitButtonDiv>
+          <Button onClick={()=>setFamilyHeadRegister("no")}>Back</Button>
             <SubmitButton onClick={() => onKeyChange("2")}>Next</SubmitButton>
           </SubmitButtonDiv>
         </Tabs.TabPane>
@@ -526,7 +823,7 @@ function FamilyHead(props) {
               (difficulty breathing)
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion1B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion1B1(e.target.value)} value={question1B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -537,7 +834,7 @@ function FamilyHead(props) {
               २. २ आठवडयांपेक्षा जास्त खोकला / Cough for more than 2 weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion2B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion2B1(e.target.value)} value={question2B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -546,7 +843,7 @@ function FamilyHead(props) {
           <QuestionRow>
             <QuestionCol>३. थुंकीत रक्त येणे/ Blood in sputum</QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion3B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion3B1(e.target.value)} value={question3B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -557,7 +854,7 @@ function FamilyHead(props) {
               ४. २ आठवडयांपेक्षा जास्त ताप/ Fever for more than 2 weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion4B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion4B1(e.target.value)} value={question4B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -566,7 +863,7 @@ function FamilyHead(props) {
           <QuestionRow>
             <QuestionCol>५. वजन कमी होणे/ Weight loss</QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion5B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion5B1(e.target.value)} value={question5B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -577,7 +874,7 @@ function FamilyHead(props) {
               ६. रात्री खूप घाम येणे/ Excessive night sweats
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion6B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion6B1(e.target.value)} value={question6B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no"> No / नाही</Radio>
               </Radio.Group>
@@ -589,7 +886,7 @@ function FamilyHead(props) {
               currently taking medicines to treat TB?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion7B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion7B1(e.target.value)} value={question7B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -601,7 +898,7 @@ function FamilyHead(props) {
               any family member currently suffering from TB disease?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion8B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion8B1(e.target.value)} value={question8B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -612,7 +909,7 @@ function FamilyHead(props) {
               ९. टीबीचा आजार असण्याचा इतिहास / History of TB disease
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion9B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion9B1(e.target.value)} value={question9B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -624,7 +921,7 @@ function FamilyHead(props) {
               bruising of hands and soles of feet
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion10B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion10B1(e.target.value)} value={question10B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -636,7 +933,7 @@ function FamilyHead(props) {
               tingling in palms of hands and feet
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onClick={(e) => setQuestion11B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion11B1(e.target.value)} value={question11B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -647,7 +944,7 @@ function FamilyHead(props) {
               १२. धुसर आणि अंधूक दृष्टी / Blurred and blurred vision
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onClick={(e) => setQuestion12B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion12B1(e.target.value)} value={question12B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -658,13 +955,8 @@ function FamilyHead(props) {
               १३. वाचण्यास त्रास होणे / Difficulty in reading
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group>
-                <Radio
-                  value="yes"
-                  onClick={(e) => setQuestion13B1(e.target.value)}
-                >
-                  Yes / होय
-                </Radio>
+              <Radio.Group  onChange={(e) => setQuestion13B1(e.target.value)} value={question13B1}>
+                <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
@@ -675,7 +967,7 @@ function FamilyHead(props) {
               of eye pain for more than a week
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onClick={(e) => setQuestion14B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion14B1(e.target.value)} value={question14B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -687,7 +979,7 @@ function FamilyHead(props) {
               more than a week
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onClick={(e) => setQuestion15B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion15B1(e.target.value)} value={question15B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -698,7 +990,7 @@ function FamilyHead(props) {
               १६. आपल्याला ऐकण्यास त्रास होणे / You have trouble hearing
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onClick={(e) => setQuestion16B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion16B1(e.target.value)} value={question16B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -707,7 +999,7 @@ function FamilyHead(props) {
           <QuestionRow>
             <QuestionCol>१७. फीटक्याचा इतिहास / History of Featka</QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion17B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion17B1(e.target.value)} value={question17B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -718,7 +1010,7 @@ function FamilyHead(props) {
               १८. तोंड उघडण्यास त्रास होणे / Difficulty opening the mouth
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion18B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion18B1(e.target.value)} value={question18B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -730,7 +1022,7 @@ function FamilyHead(props) {
               of mouth sores for more than two weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion19B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion19B1(e.target.value)} value={question19B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -742,7 +1034,7 @@ function FamilyHead(props) {
               Non-healing growth in mouth for more than two weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion20B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion20B1(e.target.value)} value={question20B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -755,7 +1047,7 @@ function FamilyHead(props) {
               two weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion21B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion21B1(e.target.value)} value={question21B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -766,7 +1058,7 @@ function FamilyHead(props) {
               २२. चघळताना वेदना होणे / Pain while chewing
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion22B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion22B1(e.target.value)} value={question22B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -775,7 +1067,7 @@ function FamilyHead(props) {
           <QuestionRow>
             <QuestionCol>२३. आवाजात बदल होणे/ Changes in voice</QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion23B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion23B1(e.target.value)} value={question23B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -788,7 +1080,7 @@ function FamilyHead(props) {
               sensation
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion24B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion24B1(e.target.value)} value={question24B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -800,7 +1092,7 @@ function FamilyHead(props) {
               skin in any part of the body
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion25B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion25B1(e.target.value)} value={question25B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -812,7 +1104,7 @@ function FamilyHead(props) {
               part of the body
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion26B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion26B1(e.target.value)} value={question26B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -824,7 +1116,7 @@ function FamilyHead(props) {
               of palms on hands and feet
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion27B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion27B1(e.target.value)} value={question27B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -835,7 +1127,7 @@ function FamilyHead(props) {
               २८. हाताची आणि पायाची बोटे वाकडी होणे/ Crooked fingers and toes
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion28B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion28B1(e.target.value)} value={question28B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -847,7 +1139,7 @@ function FamilyHead(props) {
               hands and feet and deafness
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion29B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion29B1(e.target.value)} value={question29B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -859,7 +1151,7 @@ function FamilyHead(props) {
               eyelids
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion30B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion30B1(e.target.value)} value={question30B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -871,7 +1163,7 @@ function FamilyHead(props) {
               Difficulty grasping objects properly in the claws of the hands
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion31B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion31B1(e.target.value)} value={question31B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -883,7 +1175,7 @@ function FamilyHead(props) {
               due to weakness in legs
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion32B1(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion32B1(e.target.value)} value={question32B1}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -895,7 +1187,7 @@ function FamilyHead(props) {
               १. स्तनामध्ये गाठ असणे/ Having a lump in the breast
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion1B2(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion1B2(e.target.value)} value={question1B2}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -907,7 +1199,7 @@ function FamilyHead(props) {
               the nipple
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion2B2(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion2B2(e.target.value)} value={question2B2}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -918,7 +1210,7 @@ function FamilyHead(props) {
               ३. स्तनाच्या आकारात बदल होणे/ Changes in breast size
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion3B2(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion3B2(e.target.value)} value={question3B2}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -930,7 +1222,7 @@ function FamilyHead(props) {
               two periods
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion4B2(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion4B2(e.target.value)} value={question4B2}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -942,7 +1234,7 @@ function FamilyHead(props) {
               cessation of menstruation
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion5B2(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion5B2(e.target.value)} value={question5B2}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -950,11 +1242,10 @@ function FamilyHead(props) {
           </QuestionRow>
           <QuestionRow>
             <QuestionCol>
-              ६. संभोगानंतर रक्तस्त्राव/ Bleeding after cessation of
-              menstruation
+              ६. संभोगानंतर रक्तस्त्राव/ Bleeding after intercourse
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion6B2(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion6B2(e.target.value)} value={question6B2}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -965,7 +1256,7 @@ function FamilyHead(props) {
               ७. योनीमधून दुर्गंधीयुक्त स्त्राव/ Foul smelling vaginal discharge
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion7B2(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion7B2(e.target.value)} value={question7B2}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -981,7 +1272,7 @@ function FamilyHead(props) {
               feel unsteady while standing or walking?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion1B3(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion1B3(e.target.value)} value={question1B3}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -993,7 +1284,7 @@ function FamilyHead(props) {
               Impairment of movement if suffering from physical disability
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion2B3(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion2B3(e.target.value)} value={question2B3}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1008,7 +1299,7 @@ function FamilyHead(props) {
               walking or using the toilet?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion3B3(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion3B3(e.target.value)} value={question3B3}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1020,13 +1311,14 @@ function FamilyHead(props) {
               Forgetting your home address or household names?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion4B3(e.target.value)}>
+              <Radio.Group onChange={(e) => setQuestion4B3(e.target.value)} value={question4B3}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
           <SubmitButtonDiv>
+            <Button onClick={() => onKeyChange("1")}>Back</Button>
             <SubmitButton onClick={() => onKeyChange("3")}>Next</SubmitButton>
           </SubmitButtonDiv>
         </Tabs.TabPane>
@@ -1042,6 +1334,7 @@ function FamilyHead(props) {
               <InputForm
                 type="text"
                 onChange={(e) => setQuestion1C(e.target.value)}
+                value={question1C}
               ></InputForm>
             </AnswerCol>
           </QuestionRow>
@@ -1056,6 +1349,7 @@ function FamilyHead(props) {
               <TextAreaForm
                 type="text"
                 onChange={(e) => setQuestion2C(e.target.value)}
+                value={question2C}
               ></TextAreaForm>
             </AnswerCol>
           </QuestionRow>
@@ -1072,10 +1366,12 @@ function FamilyHead(props) {
               <TextAreaForm
                 type="text"
                 onChange={(e) => setQuestion3C(e.target.value)}
+                value={question3C}
               ></TextAreaForm>
             </AnswerCol>
           </QuestionRow>
           <SubmitButtonDiv>
+            <Button onClick={() => onKeyChange("2")}>Back</Button>
             <SubmitButton onClick={() => onKeyChange("4")}>Next</SubmitButton>
           </SubmitButtonDiv>
         </Tabs.TabPane>
@@ -1095,6 +1391,7 @@ function FamilyHead(props) {
             <Radio.Group
               style={{ margin: "1% 7%" }}
               onChange={(e) => setQuestion1D(e.target.value)}
+              value={question1D}
             >
               <Radio value="Not at all">Not at all</Radio>
               <Radio value="Several days">Several days</Radio>
@@ -1110,6 +1407,7 @@ function FamilyHead(props) {
             <Radio.Group
               style={{ margin: "1% 7%" }}
               onChange={(e) => setQuestion2D(e.target.value)}
+              value={question2D}
             >
               <Radio value="Not at all">Not at all</Radio>
               <Radio value="Several days">Several days</Radio>
@@ -1118,6 +1416,7 @@ function FamilyHead(props) {
             </Radio.Group>
           </QuestionRow>
           <SubmitButtonDiv>
+            <Button onClick={() => onKeyChange("3")}>Back</Button>
             <SubmitButton onClick={() => onKeyChange("5")}>Next</SubmitButton>
           </SubmitButtonDiv>
         </Tabs.TabPane>
@@ -1127,7 +1426,7 @@ function FamilyHead(props) {
               1. तुम्हाला ताप आहे का? / Do you have fever?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setDoYouHaveFever(e.target.value)}>
+              <Radio.Group onChange={(e) => setDoYouHaveFever(e.target.value)} value={doYouhaveFever}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1142,6 +1441,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setDoYouHaveFever1(e.target.checked)}
+                    value={doYouhaveFever1}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1153,6 +1453,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setDoYouHaveFever2(e.target.checked)}
+                    value={doYouhaveFever2}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1164,6 +1465,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setDoYouHaveFever3(e.target.checked)}
+                    value={doYouhaveFever3}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1172,6 +1474,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setDoYouHaveFever4(e.target.checked)}
+                    value={doYouhaveFever4}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1183,6 +1486,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setDoYouHaveFever5(e.target.checked)}
+                    value={doYouhaveFever5}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1197,7 +1501,7 @@ function FamilyHead(props) {
               Conjuctivitis ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setConjuctivitis(e.target.value)}>
+              <Radio.Group onChange={(e) => setConjuctivitis(e.target.value)} value={conjuctivitis}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1206,10 +1510,11 @@ function FamilyHead(props) {
           {conjuctivitis == "yes" ? (
             <>
               <QuestionSubRow>
-                <QuestionSubCol> A. पाणचट / Wattery</QuestionSubCol>
+                <QuestionSubCol> A. पाणचट / Watery</QuestionSubCol>
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setConjuctivitis1(e.target.checked)}
+                    value={conjuctivitis1}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1218,6 +1523,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setConjuctivitis2(e.target.checked)}
+                    value={conjuctivitis2}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1229,6 +1535,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setConjuctivitis3(e.target.checked)}
+                    value={conjuctivitis3}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1242,7 +1549,7 @@ function FamilyHead(props) {
               3. तुम्हाला लेप्टोस्पायरोसिस आहे का? Do you have leptospirosis? ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setLeptospirosis(e.target.value)}>
+              <Radio.Group onChange={(e) => setLeptospirosis(e.target.value)} value={leptospirosis}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1258,6 +1565,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLeptospirosis1(e.target.checked)}
+                    value={leptospirosis1}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1270,6 +1578,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLeptospirosis2(e.target.checked)}
+                    value={leptospirosis2}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1283,7 +1592,7 @@ function FamilyHead(props) {
               4. तुम्हाला जुलाब, हगवण, संडास आहे का ? Do you have loose motion ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setLooseMotion(e.target.value)}>
+              <Radio.Group onChange={(e) => setLooseMotion(e.target.value)} value={looseMotion}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1297,6 +1606,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLooseMotion1(e.target.checked)}
+                    value={looseMotion1}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1305,6 +1615,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLooseMotion2(e.target.checked)}
+                    value={looseMotion2}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1313,6 +1624,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLooseMotion3(e.target.checked)}
+                    value={looseMotion3}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1327,7 +1639,7 @@ function FamilyHead(props) {
               Jaundice ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setHepatitis(e.target.value)}>
+              <Radio.Group onChange={(e) => setHepatitis(e.target.value)} value={hepatitis}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1345,22 +1657,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setHepatitis1(e.target.checked)}
-                  ></Checkbox>
-                </AnswerSubCol>
-              </QuestionSubRow>
-              <QuestionSubRow>
-                <QuestionSubCol> B. रक्ताशिवाय / Without Blood</QuestionSubCol>
-                <AnswerSubCol>
-                  <Checkbox
-                    onChange={(e) => setHepatitis2(e.target.checked)}
-                  ></Checkbox>
-                </AnswerSubCol>
-              </QuestionSubRow>
-              <QuestionSubRow>
-                <QuestionSubCol> C. उलट्या होणे / Vomitting</QuestionSubCol>
-                <AnswerSubCol>
-                  <Checkbox
-                    onChange={(e) => setHepatitis3(e.target.checked)}
+                    value={hepatitis1}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1375,7 +1672,7 @@ function FamilyHead(props) {
               ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setAnimalBitten(e.target.value)}>
+              <Radio.Group onChange={(e) => setAnimalBitten(e.target.value)} value={animalBitten}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1386,7 +1683,7 @@ function FamilyHead(props) {
               7. तुम्हाला साप चावला आहे का ? did Snake have Bitten you ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setSnakeBitten(e.target.value)}>
+              <Radio.Group onChange={(e) => setSnakeBitten(e.target.value)} value={snakeBitten}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1397,7 +1694,7 @@ function FamilyHead(props) {
               8. तुम्हाला कुष्ठरोग आहे का ? do you have Leprosy ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setLeprosy(e.target.value)}>
+              <Radio.Group onChange={(e) => setLeprosy(e.target.value)} value={leprosy}>
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1414,6 +1711,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLeprosy1(e.target.checked)}
+                    value={leprosy1}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1426,6 +1724,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLeprosy2(e.target.checked)}
+                    value={leprosy2}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1438,6 +1737,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLeprosy3(e.target.checked)}
+                    value={leprosy3}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1449,6 +1749,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLeprosy4(e.target.checked)}
+                    value={leprosy4}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1460,6 +1761,7 @@ function FamilyHead(props) {
                 <AnswerSubCol>
                   <Checkbox
                     onChange={(e) => setLeprosy5(e.target.checked)}
+                    value={leprosy5}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
@@ -1469,10 +1771,12 @@ function FamilyHead(props) {
           )}
 
           <SubmitButtonDiv>
-            <SubmitButton onClick={handleConsentModalShow}>Submit</SubmitButton>
+            <Button onClick={() => onKeyChange("4")}>Back</Button>
+            <SubmitButton onClick={handleConsentModalShow}>Next</SubmitButton>
           </SubmitButtonDiv>
         </Tabs.TabPane>
       </DocsTab>
+
       {/* Blood Consent Modal */}
       <Modal
         open={consentModalShow}
@@ -1482,11 +1786,20 @@ function FamilyHead(props) {
           <SubmitButton
             onClick={() => {
               if (totalFamilyMembers - noOfMembersCompleted > 0) {
+                  familyMembersArray.push(memberData)
+                handleClearGeneralPart();
+                handleClearPartA();
+                handleClearPartB();
+                handleClearPartC();
+                handleClearPartD();
+                handleClearPartE();
                 onKeyChange("1");
-                setNoOfMembersComplted(noOfMembersCompleted + 1);
+                setNoOfMembersComplted(noOfMembersCompleted + 1);  
               } else {
-                window.location.reload();
-              }
+                familyMembersArray.push(memberData)
+                handleSubmit();
+               handleClearFamilyHead();
+              } 
               handleConsentModalClose();
             }}
           >
@@ -1495,6 +1808,13 @@ function FamilyHead(props) {
         }
       >
         <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
+        {/* <h5>Consent letter :</h5> */}
+        {/* <p>
+          Would you like to test your blood ?
+          <span style={{ marginLeft: "15px" }}>
+            <Checkbox></Checkbox>
+          </span>
+        </p> */}
         <BloodSampleText>
           Citizen will give his blood sample at / येथे नागरिक आपल्या रक्ताचा
           नमुना देईल :
