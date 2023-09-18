@@ -40,39 +40,101 @@ import {
   QuestionSubCol,
   QuestionSubRow,
   TextAreaForm,
+  AnswerCol1,
 } from "./style";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import axios, { Axios } from "axios";
+import { BASE_URL } from "../../Utils/BaseURL";
 
 function FamilyHead(props) {
-  const [familyHeadRegister, setFamilyHeadRegister] = useState("no");
+  useEffect(() => {
+    setShowModal(true);
+    axios
+      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+        headers: sessionStorage.getItem("Token"),
+      })
+      .then((response) => {
+        setWardList(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
+  const handleWardSelection = (value) => {
+    setWard_name(value);
+    axios
+      .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, ward_name, {
+        headers: sessionStorage.getItem("Token"),
+      })
+      .then((response) => {
+        setHealthPostList(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleHealthPostSelect = (value) => {
+    setHealthPost(value);
+    axios
+      .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, healthPost, {
+        headers: sessionStorage.getItem("Token"),
+      })
+      .then((response) => {
+        setSectionList(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleSectionSelect = (value) => {
+    setSection(value);
+  };
+
+  const [familyHeadRegister, setFamilyHeadRegister] = useState("no");
   const [showModal, setShowModal] = useState(false);
   const [noOfMember, setNoOfMember] = useState(1);
+  const [wardList, setWardList] = useState([]);
+  const [healthPostList, setHealthPostList] = useState([]);
+  const [section, setSection] = useState();
+  const [sectionList, setSectionList] = useState([]);
 
   const handleShowModalClose = () => {
     setShowModal(false);
   };
 
+  const handleWardSelectionModal = () => {
+    if (ward_name == "") {
+      message.warning("Please Select Ward");
+    } else if (healthPost == "") {
+      message.warning("Please Select Health Post");
+    } else if (section == "") {
+      message.warning("Please Select Section");
+    } else {
+      handleShowModalClose();
+    }
+  };
+
   //Family Head Form States
 
-  const [firstName, setFirstName] = useState();
-  const [middelName, setMiddleName] = useState();
-  const [lastName, setLastName] = useState();
-  const [mobileNo, setMobileNo] = useState();
-  const [plotNumber, setPlotNumber] = useState();
-  const [addressLine1, setAddressLine1] = useState();
-  const [pincode, setPinCode] = useState();
-  const [totalFamilyMembers, setTotalFamilyMembers] = useState(1);
-  const [ward_name, setWard_name] = useState();
-  const [healthPost, setHealthPost] = useState();
+  const [familyHeadName, setFamilyHeadName] = useState("");
+  // const [middelName, setMiddleName] = useState("");
+  // const [lastName, setLastName] = useState("");
+  const [mobileNo, setMobileNo] = useState("");
+  const [plotNumber, setPlotNumber] = useState("");
+  const [addressLine1, setAddressLine1] = useState("");
+  const [pincode, setPinCode] = useState("");
+  const [totalFamilyMembers, setTotalFamilyMembers] = useState("");
+  const [ward_name, setWard_name] = useState("");
+  const [healthPost, setHealthPost] = useState("");
 
   const Data = {
     ward_name: ward_name,
-    firstName: firstName,
-    middelName: middelName,
-    lastName: lastName,
+    name: familyHeadName,
     mobileNo: mobileNo,
     plotNo: plotNumber,
     addressLine1: addressLine1,
@@ -83,6 +145,22 @@ function FamilyHead(props) {
 
   const handleFamilyMembers = (e) => {
     setTotalFamilyMembers(e.target.value);
+  };
+
+  const handleFamilyHeadSubmit = () => {
+    if (familyHeadName == "") {
+      message.warning("Please Enter First Name");
+    } else if (mobileNo == "") {
+      message.warning("Plese Enter Mobile Number");
+    } else if (addressLine1 == "") {
+      message.warning("Please Enter Address");
+    } else if (pincode == "") {
+      message.warning("Please Enter PinCode");
+    } else if (totalFamilyMembers == "") {
+      message.warning("Please Enter number Family members above 50 years");
+    } else {
+      setFamilyHeadRegister("yes");
+    }
   };
 
   // Member's Form
@@ -97,6 +175,7 @@ function FamilyHead(props) {
   const [bloodSampleHome, setBloodSampleHome] = useState(false);
   const [bloodSampleCenter, setBloodSampleCenter] = useState(false);
   const [bloodSampleDenied, setBloodSampleDenied] = useState(false);
+
   const handleConsentModalShow = () => {
     setConsentModalShow(true);
   };
@@ -121,12 +200,26 @@ function FamilyHead(props) {
   };
 
   //Family Member field
-  const [name, setName] = useState();
-  const [gender, setGender] = useState();
-  const [age, setAge] = useState();
-  const [phone, setPhone] = useState();
-  const [aadharCard, setAadharCard] = useState();
-  const [abhaId, setAbhaId] = useState();
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+  const [phone, setPhone] = useState("");
+  const [aadharCard, setAadharCard] = useState("");
+  const [abhaId, setAbhaId] = useState("");
+
+  const handleFormSubmit = () => {
+    if (name == "") {
+      message.warning("Please Enter Name");
+    } else if (aadharCard == "") {
+      message.warning("Please Enter Aadhar Card Number");
+    } else if (gender == "") {
+      message.warning("Please Mention Gender");
+    } else if (age == "") {
+      message.warning("Please Enter Age");
+    } else {
+      handleConsentModalShow();
+    }
+  };
 
   // Part A question's state
   const [question1A, setQuestion1A] = useState("");
@@ -186,9 +279,15 @@ function FamilyHead(props) {
   const [question4B3, setQuestion4B3] = useState("");
 
   //Part C questions's state
-  const [question1C, setQuestion1C] = useState("");
-  const [question2C, setQuestion2C] = useState("");
-  const [question3C, setQuestion3C] = useState("");
+  const [question1C1, setquestion1C1] = useState("");
+  const [question2C1, setquestion2C1] = useState("");
+  const [question3C1, setquestion3C1] = useState("");
+  const [question4C1, setquestion4C1] = useState("");
+  const [question5C1, setquestion5C1] = useState("");
+  const [question6C1, setquestion6C1] = useState("");
+  const [question1C2, setQuestion1C2] = useState("");
+  const [question2C2, setQuestion2C2] = useState("");
+  const [question3C2, setQuestion3C2] = useState("");
 
   //Part D question's state
   const [question1D, setQuestion1D] = useState("");
@@ -202,6 +301,7 @@ function FamilyHead(props) {
   const [doYouhaveFever3, setDoYouHaveFever3] = useState();
   const [doYouhaveFever4, setDoYouHaveFever4] = useState();
   const [doYouhaveFever5, setDoYouHaveFever5] = useState();
+  const [doYouhaveFever6, setDoYouHaveFever6] = useState();
   //E2
   const [conjuctivitis, setConjuctivitis] = useState("no");
   const [conjuctivitis1, setConjuctivitis1] = useState();
@@ -222,7 +322,6 @@ function FamilyHead(props) {
   const [hepatitis, setHepatitis] = useState("no");
   const [hepatitis1, setHepatitis1] = useState();
 
-
   //E6
   const [animalBitten, setAnimalBitten] = useState("");
 
@@ -237,8 +336,7 @@ function FamilyHead(props) {
   const [leprosy4, setLeprosy4] = useState();
   const [leprosy5, setLeprosy5] = useState();
 
-  const [familyMembersArray ,setFamilyMembersArray]=useState([]);
-
+  const [familyMembersArray, setFamilyMembersArray] = useState([]);
 
   // const [firstName, setFirstName] = useState();
   // const [middelName, setMiddleName] = useState();
@@ -251,38 +349,34 @@ function FamilyHead(props) {
   // const [ward_name, setWard_name] = useState();
   // const [healthPost, setHealthPost] = useState();
 
-
-  const handleClearFamilyHead=()=>{
-    setFirstName("");
-    setMiddleName("");
-    setLastName("");
+  const handleClearFamilyHead = () => {
+    setFamilyHeadName("");
     setMobileNo("");
     setPlotNumber("");
     setAddressLine1("");
     setPinCode("");
     setTotalFamilyMembers("");
-  }
+  };
 
-  
-const handleClearGeneralPart=()=>{
-setName("");
-setGender("");
-setAge("");
-setPhone("");
-setAadharCard("");
-setAbhaId("")
-}
+  const handleClearGeneralPart = () => {
+    setName("");
+    setGender("");
+    setAge("");
+    setPhone("");
+    setAadharCard("");
+    setAbhaId("");
+  };
 
-  const handleClearPartA=()=>{
+  const handleClearPartA = () => {
     setQuestion1A("");
     setQuestion2A("");
     setQuestion3A("");
     setQuestion4A("");
     setQuestion5A("");
     setQuestion6A("");
-  }
+  };
 
-  const handleClearPartB=()=>{
+  const handleClearPartB = () => {
     setQuestion1B1("");
     setQuestion2B1("");
     setQuestion3B1("");
@@ -326,19 +420,25 @@ setAbhaId("")
     setQuestion2B3("");
     setQuestion3B3("");
     setQuestion4B3("");
-  }
+  };
 
-  const handleClearPartC=()=>{
-    setQuestion1C("");
-    setQuestion2C("");
-    setQuestion3C("");
-  }
+  const handleClearPartC = () => {
+    setquestion1C1("");
+    setquestion2C1("");
+    setquestion3C1("");
+    setquestion4C1("");
+    setquestion5C1("");
+    setquestion6C1("");
+    setQuestion1C2("");
+    setQuestion2C2("");
+    setQuestion3C2("");
+  };
 
-  const handleClearPartD=()=>{
+  const handleClearPartD = () => {
     setQuestion1D("");
     setQuestion2D("");
-  }
-  const handleClearPartE=()=>{
+  };
+  const handleClearPartE = () => {
     setDoYouHaveFever("");
     setDoYouHaveFever1("");
     setDoYouHaveFever2("");
@@ -359,18 +459,15 @@ setAbhaId("")
     setHepatitis("");
     setAnimalBitten("");
     setSnakeBitten("");
-    setLeprosy("")
+    setLeprosy("");
     setLeprosy1("");
     setLeprosy2("");
     setLeprosy3("");
     setLeprosy4("");
     setLeprosy5("");
+  };
 
-  }
- 
-
-  const memberData={
-    
+  const memberData = {
     name: name,
     gender: gender,
     age: age,
@@ -378,128 +475,173 @@ setAbhaId("")
     aadharCard: aadharCard,
     abhaId: abhaId,
     partA: {
-      "what is your age (in full year)": question1A,
-      "Do you smoke or smokeless products like gutkha and Use like Khaini?":
+      What_is_your_age_completeyears: question1A,
+      "Do_you_smoke_or_consume_smokeless_products_such_as_gutka_or_khaini?":
         question2A,
-      "Do you drink alcohol every day?": question3A,
-      "Waist circumference (in cm)": question4A,
-      "Do you do any type of physical activity for at least 150 minutes a week? (Minimum 30 minutes per day , 5 days per week)":
+      "Do_you_consume_alcohol_daily?": question3A,
+      Measurement_of_waist_in_cm: question4A,
+      Do_you_undertake_any_physical_activities_for_minimum_of__minutes_in_a_week:
         question5A,
-      "Do you have a family history? Have high blood pressure, diabetes and heart disease (from your parents or siblings)?":
+      Do_you_have_a_family_history_any_one_of_your_parents_or_siblings_of_high_blood_pressure_diabetes_and_heart_disease:
         question6A,
     },
     partB: {
-      "Shortness of breath (difficulty breathing)": question1B1,
-      "Cough for more than 2 weeks": question2B1,
-      "Blood in sputum": question3B1,
-      "Fever for more than 2 weeks": question4B1,
-      "Weight loss": question5B1,
-      "Excessive night sweats": question6B1,
-      "Are you currently taking medicines to treat TB?": question7B1,
-      "Is any family member currently suffering from TB disease?":
-        question8B1,
-      " History of TB disease": question9B1,
-      "Frequent bruising of hands and soles of feet": question10B1,
-      "Frequent tingling in palms of hands and feet": question11B1,
-      "Blurred and blurred vision": question12B1,
-      "Difficulty in reading": question13B1,
-      "Non-relief of eye pain for more than a week": question14B1,
-      "Eye redness for more than a week": question15B1,
-      "You have trouble hearing": question16B1,
-      "History of Featka": question17B1,
-      "Difficulty opening the mouth": question18B1,
-      "Non-healing of mouth sores for more than two weeks": question19B1,
-      "Non-healing growth in mouth for more than two weeks": question20B1,
-      "Non-healing white or red sores in the mouth for more than two weeks":
-        question21B1,
-      "Pain while chewing": question22B1,
-      "Changes in voice": question23B1,
-      "Light colored patches or spots in the mouth with no sensation":
+      B_Women_and_Men: {
+        Shortness_of_breath_difficulty_breathing: question1B1,
+        Coughing_more_than__weeks: question2B1,
+        Blood_in_sputum: question3B1,
+        Fever_for_more_than__weeks: question4B1,
+        Weight_loss: question5B1,
+        Night_sweats: question6B1,
+        Are_you_currently_taking_medicines_to_treat_TB: question7B1,
+        Is_any_family_member_currently_suffering_from_TB_disease: question8B1,
+        A_history_of_TB_disease: question9B1,
+        Frequent_bruising_of_hands_and_soles_of_feet: question10B1,
+        Frequent_tingling_in_palms_of_hands_and_feet: question11B1,
+        Difficulty_walking_due_to_weakness_in_legs: question32B1,
+        Difficulty_grasping_objects_properly_in_the_hands: question31B1,
+        Incomplete_closure_of_the_eyelids: question30B1,
+        Tingling_and_numbness_in_hands_and_feet: question29B1,
+        Crooked_fingers_and_toes: question28B1,
+        Frequent_numbness_of_the_palms_of_the_hands_and_feet: question27B1,
+        Lumps_on_any_part_of_the_body: question26B1,
+        Thickening_of_the_skin_in_any_part_of_the_body: question25B1,
+        Lightcolored_patches_or_spots_in_the_mouth_with_no_sensation:
         question24B1,
-      "Thickening of the skin in any part of the body": question25B1,
-      "Tumors in any part of the body": question26B1,
-      "Frequent numbness of palms on hands and feet": question27B1,
-      "Crooked fingers and toes": question28B1,
-      "Tingling in hands and feet and deafness": question29B1,
-      "Incomplete closure of eyelids": question30B1,
-      "Difficulty grasping objects properly in the claws of the hands":
-        question31B1,
-      "Difficulty walking due to weakness in legs": question32B1,
-      "Having a lump in the breast": question1B2,
-      "Bloody discharge from the nipple": question2B2,
-      "Changes in breast size": question3B2,
-      "Bleeding between two periods": question4B2,
-      "Bleeding after cessation of menstruation": question5B2,
-      "Bleeding after intercourse": question6B2,
-      "Foul smelling vaginal discharge": question7B2,
-      "Do you feel unsteady while standing or walking?": question1B3,
-      "Impairment of movement if suffering from physical disability":
-        question2B3,
-      "Do you need help from others to perform daily activities such as eating, dressing, dressing, bathing, walking or using the toilet?":
+        Change_in_voice: question23B1,
+        Pain_while_chewing: question22B1,
+        Nonhealing_white_or_red_sores_in_the_mouth_for_more_than_two_weeks:question21B1,
+        Nonhealing_growth_in_mouth_for_more_than_two_weeks: question20B1,
+        Nonhealing_of_mouth_sores_for_more_than_two_weeks: question19B1,
+        Difficulty_opening_the_mouth: question18B1,
+        History_of_Feetka: question17B1,
+        You_have_trouble_hearing: question16B1,
+        Eye_redness_for_more_than_a_week: question15B1,
+        Relapse_of_eye_pain_for_more_than_a_week: question14B1,
+        Difficulty_in_reading: question13B1,
+        Blurred_and_blurred_vision: question12B1,
+      },
+      B_Women_only:{
+        Foul_smelling_vaginal_discharge: question7B2,
+        Bleeding_after_intercourse: question6B2,
+        Bleeding_after_menopause: question5B2,
+        Bleeding_between_periods: question4B2,
+        Lump_in_the_breast: question1B2,
+        Blood_stained_discharge_from_the_nipple: question2B2,
+        Change_in_shape_and_size_of_breast: question3B2,
+      },
+      BFor_Senior_Citizens__years_and_above:{
+        Do_you_feel_unsteady_while_standing_or_walking: question1B3,
+        Impairment_of_movement_if_suffering_from_physical_disability: question2B3,
+        Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet:
         question3B3,
-      " Forgetting your home address or household names?": question4B3,
+        Forgetting_your_home_address_or_household_names: question4B3,
+      } 
     },
     partC: {
-      "All applicable circles": question1C,
-      "Type of fuel used for cooking – Firewood / Crop residue / Dung cake / Coal / Kerosene / LPG":
-        question2C,
-      "With occupational exposure – burning of crop residues / burning of waste – leaves / working in industries with exposure to fumes, gases and dust like peat kilns and glass factories etc.":
-        question3C,
+      Type_of_Fuel_used_for_cooking:{
+        Firewood: question1C1,
+        Crop_Residue: question2C1,
+        Cow_dung_cake: question3C1,
+        Coal: question4C1,
+        Kerosene: question5C1,
+        LPG: question6C1,
+      },
+
+      Occupational_exposure:{
+        Crop_residue_burning: question1C2,
+        burning_of_garbage_leaves: question2C2,
+        working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc:
+          question3C2,
+      }  
     },
     partD: {
-      "Having little interest or pleasure in doing things?":question1D,
-      "Being depressed ?":question2D,
+      Little_interest_of_pleasure_in_doing_things: question1D,
+      Feeling_down_depressed_or_hopeless: question2D,
     },
     partE: {
-      "Do you have fever?":doYouhaveFever,
-      "More than 7 days":doYouhaveFever1,
-      "Less than 7 days":doYouhaveFever2,
-      "With Chills":doYouhaveFever3,
-      "With Rash":doYouhaveFever4,
-      "with Bleeding":doYouhaveFever5,
-      "Conjuctivitis?":conjuctivitis,
-      "Watery":conjuctivitis1,
-      "redness":conjuctivitis2,
-      "itching eyes":conjuctivitis3,
-      "Do you have leptospirosis?":leptospirosis,
-      "Do you Waddling in water often?":leptospirosis1,
-      "Exposure to domestic animal like cattle / Dog / Cat / Pig / Rodent?":leptospirosis2,
-      "Do you have loose motion ?":looseMotion,
-      "With Blood":looseMotion1,
-      "Without Blood":looseMotion2,
-      "Vomitting":looseMotion3,
-      "Do you have Hepatitis / Jaundice ?":hepatitis,
-      "Do you eating outside / uncovered food / drinking contaminated water ?":hepatitis1,
-      "did animals have Bitten you ?":animalBitten,
-      "did Snake have Bitten you ?":snakeBitten,
-      "do you have Leprosy ?": leprosy,
-      "Numbness / Tingling in hands/feet ?":leprosy1,
-      "Loss of sensation in any parts of body ?":leprosy2,
-      "Swelling / Nodule on Face/Hands/Feet ?":leprosy3,
-      "Loss of eyelash or eyebrow ?":leprosy4,
-      " Thickened earlobes ?":leprosy5
+      Fever:{
+        More_than__days: doYouhaveFever1,
+        Less_than__days: doYouhaveFever2,
+        With_Chills: doYouhaveFever3,
+        With_Rash: doYouhaveFever4,
+        with_Bleeding: doYouhaveFever5,
+        with_Altered_Sensorium: doYouhaveFever6,
+      },
+      Conjuctivitis:{
+        watery: conjuctivitis1,
+        redness: conjuctivitis2,
+        itching_eyes: conjuctivitis3,
+      },
+      Lepto:{
+        Waddling_in_water: leptospirosis1,
+        Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent:
+          leptospirosis2,
+      },
+    
+      Hepatitis__Jaundice:{
+        Eating_outside__uncovered_food__drinking_contaminated_water: hepatitis1,
+      },
+      Loose_Motion:{
+        With_Blood: looseMotion1,
+        Without_Blood: looseMotion2,
+        Vomitting: looseMotion3,
+      },
+      Leprosy:{
+        Numbness__Tingling_in_handsfeet: leprosy1,
+        Loss_of_sensation_in_any_parts_of_bod: leprosy2,
+        Swelling__Nodule_on_FaceHandsFeet: leprosy3,
+        Loss_of_eyelash_or_eyebrow: leprosy4,
+        Thickened_earlobes: leprosy5,
+      },
+      Animal_Bite:{
+        Animal_Bite: animalBitten,
+        
+      },
+      Snake_Bite:{
+        Snake_Bite: snakeBitten,
+      }
     },
-    "bloodCollectionLocation":bloodSampleHome?"At_Home":bloodSampleCenter?"At_Center":bloodSampleDenied?"Denied":""
-  }
-
-  
+    bloodConsent:true,
+    bloodCollectionLocation: bloodSampleHome
+      ? "Home"
+      : bloodSampleCenter
+      ? "Center"
+      : bloodSampleDenied
+      ? "Denied"
+      : "",
+  };
 
   const handleSubmit = () => {
-    
     const Data = {
       ward_name: ward_name,
-      firstName: firstName,
-      middelName: middelName,
-      lastName: lastName,
+      healthPost: healthPost,
+      name: familyHeadName,
       mobileNo: mobileNo,
       plotNo: plotNumber,
       addressLine1: addressLine1,
       pincode: pincode,
       totalFamilyMembers: totalFamilyMembers,
-      familyMembers_details: familyMembersArray
+      familyMembers_details: familyMembersArray,
+    };
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     };
     console.log(Data);
-   
+    axios
+      .post(
+        `http://10.202.100.236:9007/healthworker/api/PostSurveyForm`,
+        Data,
+        axiosConfig
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return familyHeadRegister == "no" ? (
@@ -516,41 +658,50 @@ setAbhaId("")
       <FormContainer layout="vertical">
         <Row>
           <Column>
-            <FormItem label="First Name / पहिले नाव" name="firstName" rules={[{ required: true, message: 'First Name is required / प्रथम नाव आवश्यक आहे' },
-                 { pattern: /^[a-z ,A-Z]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' },]}>
+            <FormItem
+              label="Name / नाव"
+              name="firstName"
+              rules={[
+                {
+                  required: true,
+                  message: "First Name is required / प्रथम नाव आवश्यक आहे",
+                },
+                {
+                  pattern: /^[a-z,A-Z ]*$/,
+                  message:
+                    "Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे",
+                },
+              ]}
+            >
               <Input
                 type="text"
                 name="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                value={familyHeadName}
+                onChange={(e) => setFamilyHeadName(e.target.value)}
               ></Input>
             </FormItem>
           </Column>
           <Column>
-            <FormItem name="middleName" label="Middle Name /मधले नाव" rules={[{ required: true, message: 'Middle Name is required / मधले नाव आवश्यक आहे' },
-                 { pattern: /^[a-z ,A-Z]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' },]}>
-              <Input
-                type="text"
-                name="middleName"
-                value={middelName}
-                onChange={(e) => setMiddleName(e.target.value)}
-              ></Input>
-            </FormItem>
-          </Column>
-          <Column>
-            <FormItem label="Last Name/आडनाव" name="last name" rules={[{required:true ,message:"Last Name required / आडनाव आवश्यक आहे "},{ pattern: /^[a-z ,A-Z]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' }]}>
-              <Input
-                type="text"
-                name="last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              ></Input>
-            </FormItem>
-          </Column>
-        </Row>
-        <Row>
-          <Column>
-            <FormItem label="Mobile Number/ मोबाईल नंबर" name="mobile number" rules={[{required:true},{pattern:/^[0-9,+]*$/,message:"Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे"},{max:13,message:"Mobile Number can not be longer than 10 digits"}]}>
+            <FormItem
+              label="Mobile Number/ मोबाईल नंबर"
+              name="mobile number"
+              rules={[
+                { required: true },
+                {
+                  pattern: /^[0-9,+]*$/,
+                  message:
+                    "Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे",
+                },
+                {
+                  max: 13,
+                  message: "Mobile Number can not be longer than 10 digits",
+                },
+                {
+                  min: 13,
+                  message: "Mobile Number can not be shorter than 10 digits",
+                },
+              ]}
+            >
               <Input
                 type="text"
                 value={mobileNo}
@@ -569,18 +720,52 @@ setAbhaId("")
               ></Input>
             </FormItem>
           </Column>
+          {/* <Column>
+            <FormItem name="middleName" label="Middle Name /मधले नाव" rules={[{ required: true, message: 'Middle Name is required / मधले नाव आवश्यक आहे' },
+                 { pattern: /^[a-z,A-Z ]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' },]}>
+              <Input
+                type="text"
+                name="middleName"
+                value={middelName}
+                onChange={(e) => setMiddleName(e.target.value)}
+              ></Input>
+            </FormItem>
+          </Column>
           <Column>
-            <FormItem label="Address / पत्ता">
+            <FormItem label="Last Name/आडनाव" name="last name" rules={[{required:true ,message:"Last Name required / आडनाव आवश्यक आहे "},{ pattern: /^[a-z ,A-Z ]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' }]}>
+              <Input
+                type="text"
+                name="last name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              ></Input>
+            </FormItem>
+          </Column> */}
+        </Row>
+
+        <Row>
+          <Column>
+            <FormItem
+              label="Address / पत्ता"
+              name="address"
+              rules={[{ required: "true", message: "Please Enter Address" }]}
+            >
               <TextArea
-              value={addressLine1}
+                value={addressLine1}
+                name="address"
                 onChange={(e) => setAddressLine1(e.target.value)}
               ></TextArea>
             </FormItem>
           </Column>
-        </Row>
-        <Row>
           <Column>
-            <FormItem label="Pin Code / पिन कोड" name="pinCode" rules={[{max:6 ,message:"Pin code can not be longer than 6 digit"}]}>
+            <FormItem
+              label="Pin Code / पिन कोड"
+              name="pinCode"
+              rules={[
+                { max: 6, message: "Pin code can not be longer than 6 digit" },
+                { required: "true", message: "Please Enter Pin Code" },
+              ]}
+            >
               <Input
                 type="number"
                 name="pinCode"
@@ -590,7 +775,16 @@ setAbhaId("")
             </FormItem>
           </Column>
           <Column>
-            <FormItem name="familyMembers" label="Number of family members above age of 50 years / 50 पेक्षा जास्त वयाच्या कुटुंबातील सदस्यांची संख्या" rules={[{required:true , message:"Number of family members required"}]}>
+            <FormItem
+              name="familyMembers"
+              label="Number of family members above age of 50 years / 50 पेक्षा जास्त वयाच्या कुटुंबातील सदस्यांची संख्या"
+              rules={[
+                {
+                  required: true,
+                  message: "Number of family members required",
+                },
+              ]}
+            >
               <Input
                 type="number"
                 value={totalFamilyMembers}
@@ -601,14 +795,15 @@ setAbhaId("")
           </Column>
         </Row>
         <SubmitButtonDiv>
-        <SubmitButton type="submit" onClick={() => setFamilyHeadRegister("yes")}>
-          Next
-        </SubmitButton>
-      </SubmitButtonDiv>
+          <SubmitButton
+            htmlType="submit"
+            onClick={() => handleFamilyHeadSubmit()}
+          >
+            Next
+          </SubmitButton>
+        </SubmitButtonDiv>
       </FormContainer>
-     
-        
-       
+
       <Modal
         open={showModal}
         onCancel={handleShowModalClose}
@@ -616,22 +811,56 @@ setAbhaId("")
         footer={
           <>
             <Button onClick={() => handleShowModalClose()}>Cancel</Button>
-            <SubmitButton>Submit</SubmitButton>
+            <SubmitButton
+              htmlType="submit"
+              onClick={() => handleWardSelectionModal()}
+            >
+              Submit
+            </SubmitButton>
           </>
         }
       >
         <div>
           <Form layout="vertical">
-            <ModalFormItem label="Select Ward / प्रभाग निवडा">
-              <Select onChange={(value) => setWard_name(value)} value={ward_name}>
-                <Option value="Ward 1">Ward 1</Option>
-                <Option value="Ward 2">Ward 2</Option>
+            <ModalFormItem label="Select Ward / प्रभाग निवडा" required>
+              <Select
+                onChange={(value) => handleWardSelection(value)}
+                value={ward_name}
+              >
+                {wardList.map((data, key) => (
+                  <>
+                    <Option key={key} value={data.id}>
+                      {data.wardName}
+                    </Option>
+                  </>
+                ))}
               </Select>
             </ModalFormItem>
-            <ModalFormItem label="Select Health Post / आरोग्य पोस्ट निवडा">
-              <Select onChange={(value) => setHealthPost(value)} value={healthPost}>
-                <Option value="post 1">Post 1</Option>
-                <Option value="post 2">Post 2</Option>
+            <ModalFormItem
+              label="Select Health Post / आरोग्य पोस्ट निवडा"
+              required
+            >
+              <Select
+                onChange={(value) => handleHealthPostSelect(value)}
+                value={healthPost}
+              >
+                {healthPostList.map((data, key) => (
+                  <Option key={key} value={data.id}>
+                    {data.healthPostName}
+                  </Option>
+                ))}
+              </Select>
+            </ModalFormItem>
+            <ModalFormItem label="Select Section/ विभाग निवडा" required>
+              <Select
+                value={section}
+                onChange={(value) => handleSectionSelect(value)}
+              >
+                {sectionList.map((data, key) => (
+                  <Option key={key} value={data.sectionName}>
+                    {data.sectionName}
+                  </Option>
+                ))}
               </Select>
             </ModalFormItem>
           </Form>
@@ -650,28 +879,29 @@ setAbhaId("")
         <FormContainer layout="vertical">
           <Row>
             <Column>
-              <FormItem label="Name /  नाव" name="name" rules={[{required:true ,message:"name required / नाव आवश्यक आहे"},{pattern:/^[a-zA-Z]*$/ ,message:"Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे"}]}>
+              {/* rules={[{required:true ,message:"name required / नाव आवश्यक आहे"},{pattern:/^[a-z A-Z]*$/ ,message:"Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे"}]} */}
+              <FormItem label="Name /  नाव" required>
                 <Input
                   type="text"
-                  name="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 ></Input>
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Aadhar Card Number/ आधार क्रमांक" name="aadharCardNumber" rules={[{required:true ,message:"aadhar number required / आधार क्रमांक आवश्यक आहे"},{pattern:/^[0-9]*$/ ,message:"Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे"}]}>
+              {/* rules={[{required:true ,message:"aadhar number required / आधार क्रमांक आवश्यक आहे"},{pattern:/^[0-9]*$/ ,message:"Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे"}]} */}
+              <FormItem label="Aadhar Card Number/ आधार क्रमांक" required>
                 <Input
                   type="text"
-                  name="aadharCardNumber"
                   value={aadharCard}
                   onChange={(e) => setAadharCard(e.target.value)}
                 ></Input>
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Gender / लिंग" name="gender" rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]}>
-                <Select name="gender" onChange={(value) => setGender(value)} value={gender}>
+              {/* rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]} */}
+              <FormItem label="Gender / लिंग" required>
+                <Select onChange={(value) => setGender(value)} value={gender}>
                   <Option value="male">Male / पुरुष</Option>
                   <Option value="female">Female / स्त्री</Option>
                 </Select>
@@ -681,20 +911,28 @@ setAbhaId("")
 
           <Row>
             <Column>
-              <FormItem label="Age / वय" name="age" rules={[{required:true ,message:"Age mention required / वय नमूद करणे आवश्यक आहे"}]}>
+              {/*  rules={[{required:true ,message:"Age mention required / वय नमूद करणे आवश्यक आहे"}]} */}
+              <FormItem label="Age / वय" required>
                 <Input
                   type="number"
-                  name="age"
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                 ></Input>
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Mobile Number / मोबाईल नंबर" name="mobile number" rules={[{pattern:/^[0-9+]*$/ , message:"Mobile number must be numeric / मोबाईल क्रमांक अंकीय असणे आवश्यक आहे"}]}>
+              <FormItem
+                label="Mobile Number / मोबाईल नंबर"
+                rules={[
+                  {
+                    pattern: /^[0-9+]*$/,
+                    message:
+                      "Mobile number must be numeric / मोबाईल क्रमांक अंकीय असणे आवश्यक आहे",
+                  },
+                ]}
+              >
                 <Input
                   defaultValue="+91"
-                  name="mobile number"
                   type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -702,7 +940,10 @@ setAbhaId("")
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Abha Card ID / आभा कार्ड आयडी" name="abha card id">
+              <FormItem
+                label="Abha Card ID / आभा कार्ड आयडी"
+                name="abha card id"
+              >
                 <Input
                   type="text"
                   name="abha card id"
@@ -730,13 +971,18 @@ setAbhaId("")
               year)
             </QuestionCol>
             <AnswerCol>
-              <Input
-                style={{ width: "300px" }}
-                type="text"
-                placeholder="0"
-                value={question1A}
+              <Radio.Group
                 onChange={(e) => setQuestion1A(e.target.value)}
-              ></Input>
+                value={question1A}
+              >
+                <Radio value="60 to 79 Years">
+                  60 to 79 Years / 60 ते 79 वर्षे
+                </Radio>
+                <br />
+                <Radio value="80 and 80 above">
+                  80 and 80 above / 80 आणि 80 वर
+                </Radio>
+              </Radio.Group>
             </AnswerCol>
           </QuestionRow>
           <QuestionRow>
@@ -746,9 +992,18 @@ setAbhaId("")
               Use like Khaini?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion2A(e.target.value)} value={question2A}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion2A(e.target.value)}
+                value={question2A}
+              >
+                <Radio value="never">Never / कधीच नाही</Radio>
+                <br />
+                <Radio value="Used to consume in the past/ Sometimes now">
+                  Used to consume in the past/ Sometimes now /<br /> पूर्वी
+                  करायचो/ कधी कधी आता
+                </Radio>
+                <br />
+                <Radio value="Daily">Daily / दररोज</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -757,7 +1012,10 @@ setAbhaId("")
               ३. तुम्ही दररोज मद्यपान करता ? / Do you drink alcohol every day?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion3A(e.target.value)} value={question3A}>
+              <Radio.Group
+                onChange={(e) => setQuestion3A(e.target.value)}
+                value={question3A}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -768,26 +1026,39 @@ setAbhaId("")
               ४. कंबरेचा घेर (सेमी मध्ये) / Waist circumference (in cm)
             </QuestionCol>
             <AnswerCol>
-              <Input
-                style={{ width: "300px" }}
-                type="text"
-                placeholder="0"
-                value={question4A}
-                onChange={(e) => setQuestion4A(e.target.value)}
-              ></Input>
+              <Radio.Group onChange={(e) => setQuestion4A(e.target.value)}>
+                <Radio value="80 cm or less">
+                  80 cm or less/80 सेमी किंवा कमी
+                </Radio>
+                <br />
+                <Radio value="80-100 cm">80-100 cm/80-100 सेमी</Radio>
+                <br />
+                <Radio value="More than 100 cm">
+                  More than 100 cm / 100 सेमी पेक्षा जास्त
+                </Radio>
+              </Radio.Group>
             </AnswerCol>
           </QuestionRow>
           <QuestionRow>
             <QuestionCol>
-              ५. तुम्ही एका आठवडयामध्ये कमीत कमी १५० मिनिटे कोणत्याही प्रकारचे
-              शारीरिक हालचाल करता का ? (दररोज कमीत कमी ३०मिनिटे – आठवडयातून ५
-              दिवस) / Do you do any type of physical activity for at least 150
-              minutes a week? (Minimum 30 minutes per day – 5 days per week)
+              ५. तुम्ही आठवड्यातून किमान 150 मिनिटे कोणतीही शारीरिक क्रिया करता
+              का? / Do you undertake any physical activities for minimum of 150
+              minutes in a week?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion5A(e.target.value)} value={question5A}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion5A(e.target.value)}
+                value={question5A}
+              >
+                <Radio value="At least 150 minutes in a week">
+                  At least 150 minutes in a weak / <br />
+                  एका आठवड्यात किमान 150 मिनिटे
+                </Radio>
+                <br />
+                <Radio value="Less than 150 minutes in a week ">
+                  Less than 150 minutes in a week /<br /> एका आठवड्यात 150
+                  मिनिटांपेक्षा कमी
+                </Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -799,14 +1070,17 @@ setAbhaId("")
               disease (from your parents or siblings)?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion6A(e.target.value)} value={question6A} >
+              <Radio.Group
+                onChange={(e) => setQuestion6A(e.target.value)}
+                value={question6A}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
           <SubmitButtonDiv>
-          <Button onClick={()=>setFamilyHeadRegister("no")}>Back</Button>
+            <Button onClick={() => setFamilyHeadRegister("no")}>Back</Button>
             <SubmitButton onClick={() => onKeyChange("2")}>Next</SubmitButton>
           </SubmitButtonDiv>
         </Tabs.TabPane>
@@ -823,9 +1097,12 @@ setAbhaId("")
               (difficulty breathing)
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion1B1(e.target.value)} value={question1B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion1B1(e.target.value)}
+                value={question1B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -834,18 +1111,24 @@ setAbhaId("")
               २. २ आठवडयांपेक्षा जास्त खोकला / Cough for more than 2 weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion2B1(e.target.value)} value={question2B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion2B1(e.target.value)}
+                value={question2B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
           <QuestionRow>
             <QuestionCol>३. थुंकीत रक्त येणे/ Blood in sputum</QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion3B1(e.target.value)} value={question3B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion3B1(e.target.value)}
+                value={question3B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -854,18 +1137,24 @@ setAbhaId("")
               ४. २ आठवडयांपेक्षा जास्त ताप/ Fever for more than 2 weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion4B1(e.target.value)} value={question4B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion4B1(e.target.value)}
+                value={question4B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
           <QuestionRow>
             <QuestionCol>५. वजन कमी होणे/ Weight loss</QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion5B1(e.target.value)} value={question5B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion5B1(e.target.value)}
+                value={question5B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -874,9 +1163,12 @@ setAbhaId("")
               ६. रात्री खूप घाम येणे/ Excessive night sweats
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion6B1(e.target.value)} value={question6B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no"> No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion6B1(e.target.value)}
+                value={question6B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false"> No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -886,9 +1178,12 @@ setAbhaId("")
               currently taking medicines to treat TB?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion7B1(e.target.value)} value={question7B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion7B1(e.target.value)}
+                value={question7B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -898,9 +1193,12 @@ setAbhaId("")
               any family member currently suffering from TB disease?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion8B1(e.target.value)} value={question8B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion8B1(e.target.value)}
+                value={question8B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -909,9 +1207,12 @@ setAbhaId("")
               ९. टीबीचा आजार असण्याचा इतिहास / History of TB disease
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion9B1(e.target.value)} value={question9B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion9B1(e.target.value)}
+                value={question9B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -921,9 +1222,12 @@ setAbhaId("")
               bruising of hands and soles of feet
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion10B1(e.target.value)} value={question10B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion10B1(e.target.value)}
+                value={question10B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -933,9 +1237,12 @@ setAbhaId("")
               tingling in palms of hands and feet
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion11B1(e.target.value)} value={question11B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion11B1(e.target.value)}
+                value={question11B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -944,9 +1251,12 @@ setAbhaId("")
               १२. धुसर आणि अंधूक दृष्टी / Blurred and blurred vision
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion12B1(e.target.value)} value={question12B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion12B1(e.target.value)}
+                value={question12B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -955,9 +1265,12 @@ setAbhaId("")
               १३. वाचण्यास त्रास होणे / Difficulty in reading
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group  onChange={(e) => setQuestion13B1(e.target.value)} value={question13B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion13B1(e.target.value)}
+                value={question13B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -967,9 +1280,12 @@ setAbhaId("")
               of eye pain for more than a week
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion14B1(e.target.value)} value={question14B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion14B1(e.target.value)}
+                value={question14B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -979,9 +1295,12 @@ setAbhaId("")
               more than a week
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion15B1(e.target.value)} value={question15B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion15B1(e.target.value)}
+                value={question15B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -990,18 +1309,24 @@ setAbhaId("")
               १६. आपल्याला ऐकण्यास त्रास होणे / You have trouble hearing
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion16B1(e.target.value)} value={question16B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion16B1(e.target.value)}
+                value={question16B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
           <QuestionRow>
             <QuestionCol>१७. फीटक्याचा इतिहास / History of Featka</QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion17B1(e.target.value)} value={question17B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion17B1(e.target.value)}
+                value={question17B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1010,9 +1335,12 @@ setAbhaId("")
               १८. तोंड उघडण्यास त्रास होणे / Difficulty opening the mouth
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion18B1(e.target.value)} value={question18B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion18B1(e.target.value)}
+                value={question18B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1022,9 +1350,12 @@ setAbhaId("")
               of mouth sores for more than two weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion19B1(e.target.value)} value={question19B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion19B1(e.target.value)}
+                value={question19B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1034,9 +1365,12 @@ setAbhaId("")
               Non-healing growth in mouth for more than two weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion20B1(e.target.value)} value={question20B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion20B1(e.target.value)}
+                value={question20B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1047,9 +1381,12 @@ setAbhaId("")
               two weeks
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion21B1(e.target.value)} value={question21B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion21B1(e.target.value)}
+                value={question21B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1058,18 +1395,24 @@ setAbhaId("")
               २२. चघळताना वेदना होणे / Pain while chewing
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion22B1(e.target.value)} value={question22B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion22B1(e.target.value)}
+                value={question22B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
           <QuestionRow>
             <QuestionCol>२३. आवाजात बदल होणे/ Changes in voice</QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion23B1(e.target.value)} value={question23B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion23B1(e.target.value)}
+                value={question23B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1080,9 +1423,12 @@ setAbhaId("")
               sensation
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion24B1(e.target.value)} value={question24B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion24B1(e.target.value)}
+                value={question24B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1092,9 +1438,12 @@ setAbhaId("")
               skin in any part of the body
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion25B1(e.target.value)} value={question25B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion25B1(e.target.value)}
+                value={question25B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1104,9 +1453,12 @@ setAbhaId("")
               part of the body
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion26B1(e.target.value)} value={question26B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion26B1(e.target.value)}
+                value={question26B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1116,9 +1468,12 @@ setAbhaId("")
               of palms on hands and feet
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion27B1(e.target.value)} value={question27B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion27B1(e.target.value)}
+                value={question27B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>{" "}
@@ -1127,9 +1482,12 @@ setAbhaId("")
               २८. हाताची आणि पायाची बोटे वाकडी होणे/ Crooked fingers and toes
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion28B1(e.target.value)} value={question28B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion28B1(e.target.value)}
+                value={question28B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1139,9 +1497,12 @@ setAbhaId("")
               hands and feet and deafness
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion29B1(e.target.value)} value={question29B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion29B1(e.target.value)}
+                value={question29B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1151,9 +1512,12 @@ setAbhaId("")
               eyelids
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion30B1(e.target.value)} value={question30B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion30B1(e.target.value)}
+                value={question30B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1163,9 +1527,12 @@ setAbhaId("")
               Difficulty grasping objects properly in the claws of the hands
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion31B1(e.target.value)} value={question31B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion31B1(e.target.value)}
+                value={question31B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1175,9 +1542,12 @@ setAbhaId("")
               due to weakness in legs
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion32B1(e.target.value)} value={question32B1}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion32B1(e.target.value)}
+                value={question32B1}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1187,9 +1557,12 @@ setAbhaId("")
               १. स्तनामध्ये गाठ असणे/ Having a lump in the breast
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion1B2(e.target.value)} value={question1B2}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion1B2(e.target.value)}
+                value={question1B2}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1199,9 +1572,12 @@ setAbhaId("")
               the nipple
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion2B2(e.target.value)} value={question2B2}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion2B2(e.target.value)}
+                value={question2B2}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1210,9 +1586,12 @@ setAbhaId("")
               ३. स्तनाच्या आकारात बदल होणे/ Changes in breast size
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion3B2(e.target.value)} value={question3B2}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion3B2(e.target.value)}
+                value={question3B2}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1222,9 +1601,12 @@ setAbhaId("")
               two periods
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion4B2(e.target.value)} value={question4B2}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion4B2(e.target.value)}
+                value={question4B2}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1234,9 +1616,12 @@ setAbhaId("")
               cessation of menstruation
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion5B2(e.target.value)} value={question5B2}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion5B2(e.target.value)}
+                value={question5B2}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1245,9 +1630,12 @@ setAbhaId("")
               ६. संभोगानंतर रक्तस्त्राव/ Bleeding after intercourse
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion6B2(e.target.value)} value={question6B2}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion6B2(e.target.value)}
+                value={question6B2}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1256,9 +1644,12 @@ setAbhaId("")
               ७. योनीमधून दुर्गंधीयुक्त स्त्राव/ Foul smelling vaginal discharge
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion7B2(e.target.value)} value={question7B2}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion7B2(e.target.value)}
+                value={question7B2}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1272,9 +1663,12 @@ setAbhaId("")
               feel unsteady while standing or walking?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion1B3(e.target.value)} value={question1B3}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion1B3(e.target.value)}
+                value={question1B3}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1284,9 +1678,12 @@ setAbhaId("")
               Impairment of movement if suffering from physical disability
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion2B3(e.target.value)} value={question2B3}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion2B3(e.target.value)}
+                value={question2B3}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1299,9 +1696,12 @@ setAbhaId("")
               walking or using the toilet?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion3B3(e.target.value)} value={question3B3}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion3B3(e.target.value)}
+                value={question3B3}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1311,9 +1711,12 @@ setAbhaId("")
               Forgetting your home address or household names?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion4B3(e.target.value)} value={question4B3}>
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
+              <Radio.Group
+                onChange={(e) => setQuestion4B3(e.target.value)}
+                value={question4B3}
+              >
+                <Radio value="true">Yes / होय</Radio>
+                <Radio value="false">No / नाही</Radio>
               </Radio.Group>
             </AnswerCol>
           </QuestionRow>
@@ -1328,48 +1731,115 @@ setAbhaId("")
           </FormHeader>
           <QuestionRow>
             <QuestionCol>
-              १. सर्व लागू असलेले मंडळ / All applicable circles
+              १.स्वयंपाक करण्यासाठी वापरल्या जाणा-या इंधनाचा प्रकार ? / Type of
+              fuel used for cooking?
             </QuestionCol>
-            <AnswerCol>
-              <InputForm
-                type="text"
-                onChange={(e) => setQuestion1C(e.target.value)}
-                value={question1C}
-              ></InputForm>
-            </AnswerCol>
           </QuestionRow>
+
+          <>
+            <QuestionSubRow>
+              <QuestionSubCol>A. सरपण/Firewood</QuestionSubCol>
+              <AnswerSubCol>
+                <Checkbox
+                  onChange={(e) => setquestion1C1(e.target.checked)}
+                  value={question1C1}
+                ></Checkbox>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol> B. पीक अवशेष/Crop residue</QuestionSubCol>
+              <AnswerSubCol>
+                <Checkbox
+                  onChange={(e) => setquestion2C1(e.target.checked)}
+                  value={question2C1}
+                ></Checkbox>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol> C. शेण गौरी/Dung cake</QuestionSubCol>
+              <AnswerSubCol>
+                <Checkbox
+                  onChange={(e) => setquestion3C1(e.target.checked)}
+                  value={question3C1}
+                ></Checkbox>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>D. कोळसा/Coal</QuestionSubCol>
+              <AnswerSubCol>
+                <Checkbox
+                  onChange={(e) => setquestion4C1(e.target.checked)}
+                  value={question4C1}
+                ></Checkbox>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol> E. रॉकेल/ Kerosene</QuestionSubCol>
+              <AnswerSubCol>
+                <Checkbox
+                  onChange={(e) => setquestion5C1(e.target.checked)}
+                  value={question5C1}
+                ></Checkbox>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol> E. स्वंयपाकाचा गॅस/ LPG</QuestionSubCol>
+              <AnswerSubCol>
+                <Checkbox
+                  onChange={(e) => setquestion6C1(e.target.checked)}
+                  value={question6C1}
+                ></Checkbox>
+              </AnswerSubCol>
+            </QuestionSubRow>
+          </>
+
           <QuestionRow>
             <QuestionCol>
-              २. स्वयंपाक करण्यासाठी वापरल्या जाणा-या इंधनाचा प्रकार – फायरवुड /
-              पीक अवशेष / शेण केक / कोळसा / केरोसीन / एलपीजी / Type of fuel used
-              for cooking – Firewood / Crop residue / Dung cake / Coal /
-              Kerosene / LPG
+              2.व्यावसायिक प्रदर्शन / occupational exposure
             </QuestionCol>
-            <AnswerCol>
-              <TextAreaForm
-                type="text"
-                onChange={(e) => setQuestion2C(e.target.value)}
-                value={question2C}
-              ></TextAreaForm>
-            </AnswerCol>
           </QuestionRow>
-          <QuestionRow>
-            <QuestionCol>
-              ३. व्यावसायिक प्रदर्शनासह – पिकाचे अवशेष जाळणे / कचरा जाळणे – पाने
-              / धूर, वायू आणि धूळ प्रदर्शनासह उद्योगांमध्ये काम करणे जसे की
-              पीटभट्टया आणि काचेच्या कारखाने इ. / With occupational exposure –
-              burning of crop residues / burning of waste – leaves / working in
-              industries with exposure to fumes, gases and dust like peat kilns
-              and glass factories etc.
-            </QuestionCol>
-            <AnswerCol>
-              <TextAreaForm
-                type="text"
-                onChange={(e) => setQuestion3C(e.target.value)}
-                value={question3C}
-              ></TextAreaForm>
-            </AnswerCol>
-          </QuestionRow>
+
+          <>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                A. पिकाचे अवशेष जाळणे/burning of crop residues
+              </QuestionSubCol>
+              <AnswerSubCol>
+                <Checkbox
+                  onChange={(e) => setQuestion1C2(e.target.checked)}
+                  value={question1C2}
+                ></Checkbox>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                B. कचरा - पाने जाळणे/burning of waste – leaves
+              </QuestionSubCol>
+              <AnswerSubCol>
+                <Checkbox
+                  onChange={(e) => setQuestion2C2(e.target.checked)}
+                  value={question2C2}
+                ></Checkbox>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                C. मध्ये काम करत आहे पीट भट्ट्यांसारखे धूर, वायू आणि धूळ यांच्या
+                संपर्कात असलेले उद्योग आणि काचेचे कारखाने इ./ working in
+                industries with exposure to fumes, gases and dust like peat
+                kilns and glass factories etc.
+              </QuestionSubCol>
+              <AnswerSubCol>
+                <Checkbox
+                  onChange={(e) => setQuestion3C2(e.target.checked)}
+                  value={question3C2}
+                ></Checkbox>
+              </AnswerSubCol>
+            </QuestionSubRow>
+          </>
+
           <SubmitButtonDiv>
             <Button onClick={() => onKeyChange("2")}>Back</Button>
             <SubmitButton onClick={() => onKeyChange("4")}>Next</SubmitButton>
@@ -1426,7 +1896,10 @@ setAbhaId("")
               1. तुम्हाला ताप आहे का? / Do you have fever?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setDoYouHaveFever(e.target.value)} value={doYouhaveFever}>
+              <Radio.Group
+                onChange={(e) => setDoYouHaveFever(e.target.value)}
+                value={doYouhaveFever}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1490,6 +1963,18 @@ setAbhaId("")
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
+              <QuestionSubRow>
+                <QuestionSubCol>
+                  {" "}
+                  E. संवेदना सह / with Altered Sensorium
+                </QuestionSubCol>
+                <AnswerSubCol>
+                  <Checkbox
+                    onChange={(e) => setDoYouHaveFever6(e.target.checked)}
+                    value={doYouhaveFever6}
+                  ></Checkbox>
+                </AnswerSubCol>
+              </QuestionSubRow>
             </>
           ) : (
             <></>
@@ -1501,7 +1986,10 @@ setAbhaId("")
               Conjuctivitis ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setConjuctivitis(e.target.value)} value={conjuctivitis}>
+              <Radio.Group
+                onChange={(e) => setConjuctivitis(e.target.value)}
+                value={conjuctivitis}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1549,7 +2037,10 @@ setAbhaId("")
               3. तुम्हाला लेप्टोस्पायरोसिस आहे का? Do you have leptospirosis? ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setLeptospirosis(e.target.value)} value={leptospirosis}>
+              <Radio.Group
+                onChange={(e) => setLeptospirosis(e.target.value)}
+                value={leptospirosis}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1592,7 +2083,10 @@ setAbhaId("")
               4. तुम्हाला जुलाब, हगवण, संडास आहे का ? Do you have loose motion ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setLooseMotion(e.target.value)} value={looseMotion}>
+              <Radio.Group
+                onChange={(e) => setLooseMotion(e.target.value)}
+                value={looseMotion}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1639,7 +2133,10 @@ setAbhaId("")
               Jaundice ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setHepatitis(e.target.value)} value={hepatitis}>
+              <Radio.Group
+                onChange={(e) => setHepatitis(e.target.value)}
+                value={hepatitis}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1672,7 +2169,10 @@ setAbhaId("")
               ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setAnimalBitten(e.target.value)} value={animalBitten}>
+              <Radio.Group
+                onChange={(e) => setAnimalBitten(e.target.value)}
+                value={animalBitten}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1683,7 +2183,10 @@ setAbhaId("")
               7. तुम्हाला साप चावला आहे का ? did Snake have Bitten you ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setSnakeBitten(e.target.value)} value={snakeBitten}>
+              <Radio.Group
+                onChange={(e) => setSnakeBitten(e.target.value)}
+                value={snakeBitten}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1694,7 +2197,10 @@ setAbhaId("")
               8. तुम्हाला कुष्ठरोग आहे का ? do you have Leprosy ?
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setLeprosy(e.target.value)} value={leprosy}>
+              <Radio.Group
+                onChange={(e) => setLeprosy(e.target.value)}
+                value={leprosy}
+              >
                 <Radio value="yes">Yes / होय</Radio>
                 <Radio value="no">No / नाही</Radio>
               </Radio.Group>
@@ -1772,7 +2278,7 @@ setAbhaId("")
 
           <SubmitButtonDiv>
             <Button onClick={() => onKeyChange("4")}>Back</Button>
-            <SubmitButton onClick={handleConsentModalShow}>Next</SubmitButton>
+            <SubmitButton onClick={handleFormSubmit}>Next</SubmitButton>
           </SubmitButtonDiv>
         </Tabs.TabPane>
       </DocsTab>
@@ -1786,20 +2292,19 @@ setAbhaId("")
           <SubmitButton
             onClick={() => {
               if (totalFamilyMembers - noOfMembersCompleted > 0) {
-                  familyMembersArray.push(memberData)
-                handleClearGeneralPart();
+                familyMembersArray.push(memberData);
                 handleClearPartA();
                 handleClearPartB();
                 handleClearPartC();
                 handleClearPartD();
                 handleClearPartE();
                 onKeyChange("1");
-                setNoOfMembersComplted(noOfMembersCompleted + 1);  
+                handleClearGeneralPart();
+                setNoOfMembersComplted(noOfMembersCompleted + 1);
               } else {
-                familyMembersArray.push(memberData)
+                familyMembersArray.push(memberData);
                 handleSubmit();
-               handleClearFamilyHead();
-              } 
+              }
               handleConsentModalClose();
             }}
           >

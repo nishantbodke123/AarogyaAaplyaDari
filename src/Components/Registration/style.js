@@ -114,6 +114,16 @@ export const AnswerCol = styled(Col)`
   //   width: 300px;
   // }
 `;
+export const AnswerCol1 = styled(Col)`
+  margin: 20px 150px;
+  @media (max-width: 820px) {
+    width: 100%;
+    margin: 20px 20px;
+  }
+  // @media (max-width: 450px) {
+  //   width: 300px;
+  // }
+`;
 export const AnswerSubCol = styled(Col)`
   @media (max-width: 820px) {
     width: 40%;
