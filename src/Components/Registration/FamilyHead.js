@@ -49,49 +49,66 @@ import axios, { Axios } from "axios";
 import { BASE_URL } from "../../Utils/BaseURL";
 
 function FamilyHead(props) {
+  let axiosConfig = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    },
+  };
   useEffect(() => {
     setShowModal(true);
     axios
-      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
-        headers: sessionStorage.getItem("Token"),
-      })
+      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, axiosConfig)
       .then((response) => {
         setWardList(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
+
+    axios
+      .get(
+        `${BASE_URL}/allauth/api/GetHealthPostAreas/${sessionStorage.getItem(
+          "healthPostID"
+        )}`,
+        axiosConfig
+      )
+      .then((response) => {
+        setHealthPostAreasList(response.data.data[0].areas);
+      })
+      .catch((error) => {
+        console.log(error, "health post areas error ");
+      });
   }, []);
 
-  const handleWardSelection = (value) => {
-    setWard_name(value);
-    axios
-      .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, ward_name, {
-        headers: sessionStorage.getItem("Token"),
-      })
-      .then((response) => {
-        setHealthPostList(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const handleWardSelection = (value) => {
+  //   setWard_name(value);
+  //   axios
+  //     .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, ward_name, axiosConfig)
+  //     .then((response) => {
+  //       setHealthPostList(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
-  const handleHealthPostSelect = (value) => {
-    setHealthPost(value);
-    axios
-      .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, healthPost, {
-        headers: sessionStorage.getItem("Token"),
-      })
-      .then((response) => {
-        setSectionList(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const handleHealthPostSelect = (value) => {
+  //   setHealthPost(value);
+  //   axios
+  //     .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, healthPost, {
+  //       headers: sessionStorage.getItem("Token"),
+  //     })
+  //     .then((response) => {
+  //       setSectionList(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   const handleSectionSelect = (value) => {
+    console.log(value);
     setSection(value);
   };
 
@@ -100,7 +117,8 @@ function FamilyHead(props) {
   const [noOfMember, setNoOfMember] = useState(1);
   const [wardList, setWardList] = useState([]);
   const [healthPostList, setHealthPostList] = useState([]);
-  const [section, setSection] = useState();
+  const [healthPostAreas, setHealthPostAreasList] = useState([]);
+  const [section, setSection] = useState("");
   const [sectionList, setSectionList] = useState([]);
 
   const handleShowModalClose = () => {
@@ -108,12 +126,8 @@ function FamilyHead(props) {
   };
 
   const handleWardSelectionModal = () => {
-    if (ward_name == "") {
-      message.warning("Please Select Ward");
-    } else if (healthPost == "") {
-      message.warning("Please Select Health Post");
-    } else if (section == "") {
-      message.warning("Please Select Section");
+    if (section == "") {
+      message.warning("Please select area");
     } else {
       handleShowModalClose();
     }
@@ -131,6 +145,7 @@ function FamilyHead(props) {
   const [totalFamilyMembers, setTotalFamilyMembers] = useState("");
   const [ward_name, setWard_name] = useState("");
   const [healthPost, setHealthPost] = useState("");
+  const [PartialSubmit ,setPartialSubmit]=useState(false);
 
   const Data = {
     ward_name: ward_name,
@@ -148,6 +163,12 @@ function FamilyHead(props) {
   };
 
   const handleFamilyHeadSubmit = () => {
+    let axiosConfig = {
+      headers: {
+        Authorization: sessionStorage.getItem("Token"),
+      },
+    };
+
     if (familyHeadName == "") {
       message.warning("Please Enter First Name");
     } else if (mobileNo == "") {
@@ -158,8 +179,24 @@ function FamilyHead(props) {
       message.warning("Please Enter PinCode");
     } else if (totalFamilyMembers == "") {
       message.warning("Please Enter number Family members above 50 years");
+    } else if (section == "") {
+      message.warning("Please Select Section");
     } else {
-      setFamilyHeadRegister("yes");
+      axios
+        .get(
+          `${BASE_URL}/healthworker/api/verifyMobileNumber/${mobileNo}`,
+          axiosConfig
+        )
+        .then((response) => {
+          console.log(response.status);
+          if (response.status == 200) {
+            setFamilyHeadRegister("yes");
+          }
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+          message.warning(error.response.data.message);
+        });
     }
   };
 
@@ -206,6 +243,8 @@ function FamilyHead(props) {
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState("");
   const [abhaId, setAbhaId] = useState("");
+  const [adharNoStatus,setAadharNoStatus]=useState();
+  const [abhaNoStatus ,setAbhaNoStatus]=useState();
 
   const handleFormSubmit = () => {
     if (name == "") {
@@ -216,8 +255,36 @@ function FamilyHead(props) {
       message.warning("Please Mention Gender");
     } else if (age == "") {
       message.warning("Please Enter Age");
+    } else if (age < 50) {
+      message.warning("Age cannot be less than 50");
+    } else if(abhaId ==""){
+      message.warning("Please Enter Abha ID");
     } else {
-      handleConsentModalShow();
+      axios
+        .get(`${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`, {
+          headers: sessionStorage.getItem("Token"),
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            setAadharNoStatus(response.status);
+          }
+        })
+        .catch((error) => {
+          message.warning(error.response.data.message);
+        });
+
+        axios.get(`${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`,{headers:sessionStorage.getItem("Token")}).then((response)=>{
+          console.log("Abha Success")
+          if(response.status==200){
+            setAbhaNoStatus(response.status);
+          }  
+        }).catch((error)=>{
+          message.warning(error.response.data.message)
+        })
+
+        if(adharNoStatus == 200 && abhaNoStatus == 200){
+          handleConsentModalShow();
+        }
     }
   };
 
@@ -279,15 +346,15 @@ function FamilyHead(props) {
   const [question4B3, setQuestion4B3] = useState("");
 
   //Part C questions's state
-  const [question1C1, setquestion1C1] = useState("");
-  const [question2C1, setquestion2C1] = useState("");
-  const [question3C1, setquestion3C1] = useState("");
-  const [question4C1, setquestion4C1] = useState("");
-  const [question5C1, setquestion5C1] = useState("");
-  const [question6C1, setquestion6C1] = useState("");
-  const [question1C2, setQuestion1C2] = useState("");
-  const [question2C2, setQuestion2C2] = useState("");
-  const [question3C2, setQuestion3C2] = useState("");
+  const [question1C1, setquestion1C1] = useState();
+  const [question2C1, setquestion2C1] = useState();
+  const [question3C1, setquestion3C1] = useState();
+  const [question4C1, setquestion4C1] = useState();
+  const [question5C1, setquestion5C1] = useState();
+  const [question6C1, setquestion6C1] = useState();
+  const [question1C2, setQuestion1C2] = useState();
+  const [question2C2, setQuestion2C2] = useState();
+  const [question3C2, setQuestion3C2] = useState();
 
   //Part D question's state
   const [question1D, setQuestion1D] = useState("");
@@ -507,10 +574,11 @@ function FamilyHead(props) {
         Lumps_on_any_part_of_the_body: question26B1,
         Thickening_of_the_skin_in_any_part_of_the_body: question25B1,
         Lightcolored_patches_or_spots_in_the_mouth_with_no_sensation:
-        question24B1,
+          question24B1,
         Change_in_voice: question23B1,
         Pain_while_chewing: question22B1,
-        Nonhealing_white_or_red_sores_in_the_mouth_for_more_than_two_weeks:question21B1,
+        Nonhealing_white_or_red_sores_in_the_mouth_for_more_than_two_weeks:
+          question21B1,
         Nonhealing_growth_in_mouth_for_more_than_two_weeks: question20B1,
         Nonhealing_of_mouth_sores_for_more_than_two_weeks: question19B1,
         Difficulty_opening_the_mouth: question18B1,
@@ -521,7 +589,7 @@ function FamilyHead(props) {
         Difficulty_in_reading: question13B1,
         Blurred_and_blurred_vision: question12B1,
       },
-      B_Women_only:{
+      B_Women_only: {
         Foul_smelling_vaginal_discharge: question7B2,
         Bleeding_after_intercourse: question6B2,
         Bleeding_after_menopause: question5B2,
@@ -530,16 +598,17 @@ function FamilyHead(props) {
         Blood_stained_discharge_from_the_nipple: question2B2,
         Change_in_shape_and_size_of_breast: question3B2,
       },
-      BFor_Senior_Citizens__years_and_above:{
+      BFor_Senior_Citizens__years_and_above: {
         Do_you_feel_unsteady_while_standing_or_walking: question1B3,
-        Impairment_of_movement_if_suffering_from_physical_disability: question2B3,
+        Impairment_of_movement_if_suffering_from_physical_disability:
+          question2B3,
         Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet:
-        question3B3,
+          question3B3,
         Forgetting_your_home_address_or_household_names: question4B3,
-      } 
+      },
     },
     partC: {
-      Type_of_Fuel_used_for_cooking:{
+      Type_of_Fuel_used_for_cooking: {
         Firewood: question1C1,
         Crop_Residue: question2C1,
         Cow_dung_cake: question3C1,
@@ -548,19 +617,19 @@ function FamilyHead(props) {
         LPG: question6C1,
       },
 
-      Occupational_exposure:{
+      Occupational_exposure: {
         Crop_residue_burning: question1C2,
         burning_of_garbage_leaves: question2C2,
         working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc:
           question3C2,
-      }  
+      },
     },
     partD: {
       Little_interest_of_pleasure_in_doing_things: question1D,
       Feeling_down_depressed_or_hopeless: question2D,
     },
     partE: {
-      Fever:{
+      Fever: {
         More_than__days: doYouhaveFever1,
         Less_than__days: doYouhaveFever2,
         With_Chills: doYouhaveFever3,
@@ -568,41 +637,40 @@ function FamilyHead(props) {
         with_Bleeding: doYouhaveFever5,
         with_Altered_Sensorium: doYouhaveFever6,
       },
-      Conjuctivitis:{
+      Conjuctivitis: {
         watery: conjuctivitis1,
         redness: conjuctivitis2,
         itching_eyes: conjuctivitis3,
       },
-      Lepto:{
+      Lepto: {
         Waddling_in_water: leptospirosis1,
         Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent:
           leptospirosis2,
       },
-    
-      Hepatitis__Jaundice:{
+
+      Hepatitis__Jaundice: {
         Eating_outside__uncovered_food__drinking_contaminated_water: hepatitis1,
       },
-      Loose_Motion:{
+      Loose_Motion: {
         With_Blood: looseMotion1,
         Without_Blood: looseMotion2,
         Vomitting: looseMotion3,
       },
-      Leprosy:{
+      Leprosy: {
         Numbness__Tingling_in_handsfeet: leprosy1,
         Loss_of_sensation_in_any_parts_of_bod: leprosy2,
         Swelling__Nodule_on_FaceHandsFeet: leprosy3,
         Loss_of_eyelash_or_eyebrow: leprosy4,
         Thickened_earlobes: leprosy5,
       },
-      Animal_Bite:{
+      Animal_Bite: {
         Animal_Bite: animalBitten,
-        
       },
-      Snake_Bite:{
+      Snake_Bite: {
         Snake_Bite: snakeBitten,
-      }
+      },
     },
-    bloodConsent:true,
+    bloodConsent: true,
     bloodCollectionLocation: bloodSampleHome
       ? "Home"
       : bloodSampleCenter
@@ -614,33 +682,36 @@ function FamilyHead(props) {
 
   const handleSubmit = () => {
     const Data = {
-      ward_name: ward_name,
-      healthPost: healthPost,
+      ward_name: sessionStorage.getItem("ward"),
+      healthPost: sessionStorage.getItem("healthPostName"),
+      healthPostArea: section,
       name: familyHeadName,
       mobileNo: mobileNo,
       plotNo: plotNumber,
       addressLine1: addressLine1,
       pincode: pincode,
       totalFamilyMembers: totalFamilyMembers,
+      partialSubmit:PartialSubmit,
       familyMembers_details: familyMembersArray,
     };
+
     let axiosConfig = {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
+        Authorization: `Token ${sessionStorage.getItem("Token")}`,
       },
     };
+    console.log(axiosConfig);
     console.log(Data);
     axios
-      .post(
-        `http://10.202.100.236:9007/healthworker/api/PostSurveyForm`,
-        Data,
-        axiosConfig
-      )
+      .post(`${BASE_URL}/healthworker/api/PostSurveyForm`, Data, axiosConfig)
       .then((response) => {
         console.log(response);
+        message.success(response.data.message);
       })
       .catch((error) => {
-        console.log(error);
+        familyMembersArray.pop();
+        message.warning(error.response.data.message);
       });
   };
 
@@ -693,11 +764,11 @@ function FamilyHead(props) {
                     "Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे",
                 },
                 {
-                  max: 13,
+                  max: 10,
                   message: "Mobile Number can not be longer than 10 digits",
                 },
                 {
-                  min: 13,
+                  min: 10,
                   message: "Mobile Number can not be shorter than 10 digits",
                 },
               ]}
@@ -706,7 +777,8 @@ function FamilyHead(props) {
                 type="text"
                 value={mobileNo}
                 name="mobile number"
-                defaultValue="+91"
+                placeholder="+91"
+                // defaultValue="+91"
                 onChange={(e) => setMobileNo(e.target.value)}
               ></Input>
             </FormItem>
@@ -763,6 +835,7 @@ function FamilyHead(props) {
               name="pinCode"
               rules={[
                 { max: 6, message: "Pin code can not be longer than 6 digit" },
+                { min: 6, message: "Pin code can not be shorter than 6 digit" },
                 { required: "true", message: "Please Enter Pin Code" },
               ]}
             >
@@ -822,8 +895,9 @@ function FamilyHead(props) {
       >
         <div>
           <Form layout="vertical">
-            <ModalFormItem label="Select Ward / प्रभाग निवडा" required>
-              <Select
+            <ModalFormItem label="Ward / प्रभाग ">
+              <Input value={sessionStorage.getItem("ward")} disabled></Input>
+              {/* <Select
                 onChange={(value) => handleWardSelection(value)}
                 value={ward_name}
               >
@@ -834,13 +908,14 @@ function FamilyHead(props) {
                     </Option>
                   </>
                 ))}
-              </Select>
+              </Select> */}
             </ModalFormItem>
-            <ModalFormItem
-              label="Select Health Post / आरोग्य पोस्ट निवडा"
-              required
-            >
-              <Select
+            <ModalFormItem label="Health Post / आरोग्य पोस्ट ">
+              <Input
+                value={sessionStorage.getItem("healthPostName")}
+                disabled
+              ></Input>
+              {/* <Select
                 onChange={(value) => handleHealthPostSelect(value)}
                 value={healthPost}
               >
@@ -849,16 +924,16 @@ function FamilyHead(props) {
                     {data.healthPostName}
                   </Option>
                 ))}
-              </Select>
+              </Select> */}
             </ModalFormItem>
-            <ModalFormItem label="Select Section/ विभाग निवडा" required>
+            <ModalFormItem label="Select Area/ क्षेत्र निवडा" required>
               <Select
                 value={section}
                 onChange={(value) => handleSectionSelect(value)}
               >
-                {sectionList.map((data, key) => (
-                  <Option key={key} value={data.sectionName}>
-                    {data.sectionName}
+                {healthPostAreas.map((data, key) => (
+                  <Option key={key} value={data}>
+                    {data}
                   </Option>
                 ))}
               </Select>
@@ -932,7 +1007,6 @@ function FamilyHead(props) {
                 ]}
               >
                 <Input
-                  defaultValue="+91"
                   type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -947,6 +1021,7 @@ function FamilyHead(props) {
                 <Input
                   type="text"
                   name="abha card id"
+                  required
                   value={abhaId}
                   onChange={(e) => setAbhaId(e.target.value)}
                 ></Input>
@@ -1026,7 +1101,10 @@ function FamilyHead(props) {
               ४. कंबरेचा घेर (सेमी मध्ये) / Waist circumference (in cm)
             </QuestionCol>
             <AnswerCol>
-              <Radio.Group onChange={(e) => setQuestion4A(e.target.value)}>
+              <Radio.Group
+                onChange={(e) => setQuestion4A(e.target.value)}
+                value={question4A}
+              >
                 <Radio value="80 cm or less">
                   80 cm or less/80 सेमी किंवा कमी
                 </Radio>
@@ -2275,7 +2353,7 @@ function FamilyHead(props) {
           ) : (
             <></>
           )}
-
+        
           <SubmitButtonDiv>
             <Button onClick={() => onKeyChange("4")}>Back</Button>
             <SubmitButton onClick={handleFormSubmit}>Next</SubmitButton>
@@ -2371,6 +2449,7 @@ function FamilyHead(props) {
             </Button>
           </BloodSampleButtonCol>
         </BloodSampleButtonsRow>
+        <div style={{display:"flex" , justifyContent:"end" ,marginRight:"10%" }}><Checkbox onChange={(e)=>setPartialSubmit(e.target.checked)}></Checkbox><h4 style={{marginLeft:"10px"}}>Partial Submit</h4></div>
       </Modal>
     </>
   );

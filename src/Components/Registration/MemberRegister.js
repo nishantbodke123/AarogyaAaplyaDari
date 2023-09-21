@@ -78,12 +78,12 @@ function MemberRegister(props) {
  
 
   //Family Member field
-  const [name, setName] = useState();
-  const [gender, setGender] = useState();
-  const [age, setAge] = useState();
-  const [phone, setPhone] = useState();
-  const [aadharCard, setAadharCard] = useState();
-  const [abhaId, setAbhaId] = useState();
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+  const [phone, setPhone] = useState("");
+  const [aadharCard, setAadharCard] = useState("");
+  const [abhaId, setAbhaId] = useState("");
 
   // Part A question's state
   const [question1A, setQuestion1A] = useState("");

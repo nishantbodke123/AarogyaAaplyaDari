@@ -38,12 +38,20 @@ function Login() {
       },
     };
     axios.post(`${BASE_URL}/allauth/api/login`,formData, axiosConfig ).then((response)=>{
-      console.log(response.data.Token);
+      console.log(response.data);
       sessionStorage.setItem("Token",response.data.Token);
-      message.success(response.data.message);
-      window.location.replace("/user");
+      sessionStorage.setItem("ward",response.data.ward);
+      sessionStorage.setItem("healthPostName",response.data.healthPostName);
+      sessionStorage.setItem("healthPostID",response.data.healthPostID);
+      message.success(response.data.Message);
+     
+      setTimeout(()=>{
+        window.location.replace("/user");
+      },1000)
+      
       setShowLoading(false);
     }).catch((error)=>{console.log(error);
+      message.error(error.response.data.Message);
       setShowLoading(false)})
    
   }

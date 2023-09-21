@@ -6,7 +6,7 @@ export const HeaderBar = styled.div`
   display: flex;
 `;
 export const HeaderBarSubDiv = styled.div`
-  margin: 1% 90%;
+  margin: 0% 90%;
   cursor: pointer;
 
   @media (max-width: 820px) {
@@ -17,12 +17,14 @@ export const HeaderBarSubDiv = styled.div`
   }
 `;
 export const LogOutIcon = styled(FontAwesomeIcon)`
+  
   &:hover {
     font-size: 20px;
   }
 `;
 export const HeaderLogo = styled.img`
   margin-left: 30px;
+  margin-right: 20px;
   height: 40px;
   width: 60px;
 `;
