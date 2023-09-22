@@ -18,7 +18,6 @@ function App() {
           <Route path="/" element={<Protected />}>
             <Route path="dashboard" element={<Dashboard/>}></Route>
             <Route path="user" element={<User />}></Route>
-            <Route path="member-list" element={<UserList/>}></Route>
             <Route path="register" element={<Register />}></Route>
           </Route>
           <Route path="/*" element={<Error/>}></Route>

@@ -145,6 +145,7 @@ function FamilyHead(props) {
   const [totalFamilyMembers, setTotalFamilyMembers] = useState("");
   const [ward_name, setWard_name] = useState("");
   const [healthPost, setHealthPost] = useState("");
+  const [bloodConsent ,setBloodConsent]=useState("");
   const [PartialSubmit ,setPartialSubmit]=useState(false);
 
   const Data = {
@@ -670,7 +671,7 @@ function FamilyHead(props) {
         Snake_Bite: snakeBitten,
       },
     },
-    bloodConsent: true,
+    bloodConsent: bloodConsent,
     bloodCollectionLocation: bloodSampleHome
       ? "Home"
       : bloodSampleCenter
@@ -2449,7 +2450,9 @@ function FamilyHead(props) {
             </Button>
           </BloodSampleButtonCol>
         </BloodSampleButtonsRow>
-        <div style={{display:"flex" , justifyContent:"end" ,marginRight:"10%" }}><Checkbox onChange={(e)=>setPartialSubmit(e.target.checked)}></Checkbox><h4 style={{marginLeft:"10px"}}>Partial Submit</h4></div>
+        {bloodSampleDenied ?(<></>):(<> <div><p><Checkbox style={{marginRight:"10px"}} onChange={(e)=>setBloodConsent(e.target.checked)}></Checkbox>I have been explained about the consent as stated above and hereby provide my consent for blood sample collection and any more procedures for the aforementioned purposes.</p></div></>)}
+       
+        {/* <div style={{display:"flex" , justifyContent:"end" ,marginRight:"10%" }}><Checkbox onChange={(e)=>setPartialSubmit(e.target.checked)}></Checkbox><h4 style={{marginLeft:"10px"}}>Partial Submit</h4></div> */}
       </Modal>
     </>
   );

@@ -43,15 +43,15 @@ function Login() {
       sessionStorage.setItem("ward",response.data.ward);
       sessionStorage.setItem("healthPostName",response.data.healthPostName);
       sessionStorage.setItem("healthPostID",response.data.healthPostID);
-      message.success(response.data.Message);
+      message.success(response.data.message);
      
       setTimeout(()=>{
-        window.location.replace("/user");
+        window.location.replace("/dashboard");
       },1000)
       
       setShowLoading(false);
     }).catch((error)=>{console.log(error);
-      message.error(error.response.data.Message);
+      message.error(error.response.data.message);
       setShowLoading(false)})
    
   }
