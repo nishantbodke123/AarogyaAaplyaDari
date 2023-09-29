@@ -1,0 +1,453 @@
+{
+  "part_a": [
+    {
+      "qkey": "What_is_your_age_completeyears",
+      "type": "CO",
+      "score": "",
+      "options": ["50-79 year", "80 and 80 above"],
+      "translate": ["_year", "_and__above"],
+      "selectedOptions": ["80 and 80 above"]
+    },
+    {
+      "qkey": "Do_you_smoke_or_consume_smokeless_products_such_as_gutka_or_khaini",
+      "type": "CO",
+      "score": "",
+      "options": [
+        "Never",
+        "Used to consume in the past / Sometimes now",
+        "Daily"
+      ],
+      "translate": [
+        "Never",
+        "Used_to_consume_in_the_past_Sometimes_now",
+        "Daily"
+      ],
+      "selectedOptions": ["Used to consume in the past / Sometimes now"]
+    },
+    {
+      "qkey": "Do_you_consume_alcohol_daily",
+      "type": "CO",
+      "score": "",
+      "options": ["No", "Yes"],
+      "translate": ["No", "Yes"],
+      "selectedOptions": ["Yes"]
+    },
+    {
+      "qkey": "Measurement_of_waist_in_cm",
+      "type": "CO",
+      "score": "",
+      "options": ["80 cm or less", "81-100 cm", "More than 100 cm"],
+      "translate": ["cm_80_cm_or_less", "cm_81_100_cm", "More_than_100_cm"],
+      "selectedOptions": ["81-100 cm"]
+    },
+    {
+      "qkey": "Do_you_undertake_any_physical_activities_for_minimum_of__minutes_in_a_week",
+      "type": "CO",
+      "score": "",
+      "options": [
+        "At least 150 minutes in a week",
+        "Less than 150 minutes in a week"
+      ],
+      "translate": [
+        "At_least_150_minutes_in_a_week",
+        "Less_than_150_minutes_in_a_week"
+      ],
+      "selectedOptions": ["At least 150 minutes in a week"]
+    },
+    {
+      "qkey": "Do_you_have_a_family_history_any_one_of_your_parents_or_siblings_of_high_blood_pressure_diabetes_and_heart_disease",
+      "type": "CO",
+      "score": "",
+      "options": ["No", "Yes"],
+      "translate": ["No", "Yes"],
+      "selectedOptions": ["Yes"]
+    }
+  ],
+  "part_b": [
+    {
+      "qkey": "B_Women_and_Men",
+      "type": "MCQ",
+      "score": "",
+      "options": [
+        "Shortness_of_breath_difficulty_breathing",
+        "Coughing_more_than__weeks",
+        "Blood_in_sputum",
+        "Fever_for_more_than__weeks",
+        "Weight_loss",
+        "Night_sweats",
+        "Are_you_currently_taking_medicines_to_treat_TB",
+        "Is_any_family_member_currently_suffering_from_TB_disease",
+        "A_history_of_TB_disease",
+        "Frequent_bruising_of_hands_and_soles_of_feet",
+        "Frequent_tingling_in_palms_of_hands_and_feet",
+        "Blurred_and_blurred_vision",
+        "Difficulty_in_reading",
+        "Relapse_of_eye_pain_for_more_than_a_week",
+        "Eye_redness_for_more_than_a_week",
+        "You_have_trouble_hearing",
+        "History_of_Feetka",
+        "Difficulty_opening_the_mouth",
+        "Nonhealing_of_mouth_sores_for_more_than_two_weeks",
+        "Nonhealing_growth_in_mouth_for_more_than_two_weeks",
+        "Nonhealing_white_or_red_sores_in_the_mouth_for_more_than_two_weeks",
+        "Pain_while_chewing",
+        "Change_in_voice",
+        "Lightcolored_patches_or_spots_in_the_mouth_with_no_sensation",
+        "Thickening_of_the_skin_in_any_part_of_the_body",
+        "Lumps_on_any_part_of_the_body",
+        "Frequent_numbness_of_the_palms_of_the_hands_and_feet",
+        "Crooked_fingers_and_toes",
+        "Tingling_and_numbness_in_hands_and_feet",
+        "Incomplete_closure_of_the_eyelids",
+        "Difficulty_grasping_objects_properly_in_the_hands",
+        "Difficulty_walking_due_to_weakness_in_legs"
+      ],
+      "translate": [],
+      "selectedOptions": [
+        "Shortness_of_breath_difficulty_breathing",
+        "Coughing_more_than__weeks",
+        "Blood_in_sputum",
+        "Fever_for_more_than__weeks",
+        "Weight_loss",
+        "Night_sweats",
+        "Are_you_currently_taking_medicines_to_treat_TB",
+        "Is_any_family_member_currently_suffering_from_TB_disease",
+        "A_history_of_TB_disease",
+        "Frequent_bruising_of_hands_and_soles_of_feet",
+        "Frequent_tingling_in_palms_of_hands_and_feet",
+        "Difficulty_walking_due_to_weakness_in_legs",
+        "Difficulty_grasping_objects_properly_in_the_hands",
+        "Incomplete_closure_of_the_eyelids",
+        "Tingling_and_numbness_in_hands_and_feet",
+        "Crooked_fingers_and_toes",
+        "Frequent_numbness_of_the_palms_of_the_hands_and_feet",
+        "Lumps_on_any_part_of_the_body",
+        "Thickening_of_the_skin_in_any_part_of_the_body",
+        "Lightcolored_patches_or_spots_in_the_mouth_with_no_sensation",
+        "Change_in_voice",
+        "Pain_while_chewing",
+        "Nonhealing_white_or_red_sores_in_the_mouth_for_more_than_two_weeks",
+        "Nonhealing_growth_in_mouth_for_more_than_two_weeks",
+        "Nonhealing_of_mouth_sores_for_more_than_two_weeks",
+        "Difficulty_opening_the_mouth",
+        "History_of_Feetka",
+        "You_have_trouble_hearing",
+        "Eye_redness_for_more_than_a_week",
+        "Relapse_of_eye_pain_for_more_than_a_week",
+        "Difficulty_in_reading",
+        "Blurred_and_blurred_vision"
+      ]
+    },
+    {
+      "qkey": "B_Women_only",
+      "type": "MCQ",
+      "score": "",
+      "options": [
+        "Lump_in_the_breast",
+        "Blood_stained_discharge_from_the_nipple",
+        "Change_in_shape_and_size_of_breast",
+        "Bleeding_between_periods",
+        "Bleeding_after_menopause",
+        "Bleeding_after_intercourse",
+        "Foul_smelling_vaginal_discharge"
+      ],
+      "translate": [],
+      "selectedOptions": [
+        "Foul_smelling_vaginal_discharge",
+        "Bleeding_after_intercourse",
+        "Bleeding_after_menopause",
+        "Bleeding_between_periods",
+        "Change_in_shape_and_size_of_breast",
+        "Blood_stained_discharge_from_the_nipple",
+        "Lump_in_the_breast"
+      ]
+    },
+    {
+      "qkey": "BFor_Senior_Citizens__years_and_above",
+      "type": "MCQ",
+      "score": "",
+      "options": [
+        "Do_you_feel_unsteady_while_standing_or_walking",
+        "Impairment_of_movement_if_suffering_from_physical_disability",
+        "Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet",
+        "Forgetting_your_home_address_or_household_names"
+      ],
+      "translate": [],
+      "selectedOptions": [
+        "Do_you_feel_unsteady_while_standing_or_walking",
+        "Impairment_of_movement_if_suffering_from_physical_disability",
+        "Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet",
+        "Forgetting_your_home_address_or_household_names"
+      ]
+    }
+  ],
+  "part_c": [
+    {
+      "qkey": "Type_of_Fuel_used_for_cooking",
+      "type": "MCQ",
+      "score": "",
+      "options": [
+        "Firewood",
+        "Crop Residue",
+        "Cow dung cake",
+        "Coal",
+        "Kerosene",
+        "LPG"
+      ],
+      "translate": [
+        "Firewood",
+        "Crop_Residue",
+        "Cow_dung_cake",
+        "Coal",
+        "Kerosene",
+        "LPG"
+      ],
+      "selectedOptions": [
+        "Firewood",
+        "Crop Residue",
+        "Cow dung cake",
+        "Coal",
+        "Kerosene",
+        "LPG"
+      ]
+    },
+    {
+      "qkey": "Occupational_exposure",
+      "type": "MCQ",
+      "score": "",
+      "options": [
+        "Crop residue burning",
+        "burning of garbage - leaves",
+        "working in industries with smoke, gas and dust exposure such as brick kilns and glass factories etc."
+      ],
+      "translate": [
+        "Crop_residue_burning",
+        "burning_of_garbage_leaves",
+        "working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc"
+      ],
+      "selectedOptions": [
+        "Crop residue burning",
+        "burning of garbage - leaves",
+        "working in industries with smoke, gas and dust exposure such as brick kilns and glass factories etc."
+      ]
+    }
+  ],
+  "part_d": [
+    {
+      "qkey": "Little_interest_of_pleasure_in_doing_things",
+      "type": "CO",
+      "score": "",
+      "options": [
+        "Not at all",
+        "Several days",
+        "More than half days",
+        "Nearly every days"
+      ],
+      "translate": [
+        "Not_at_all",
+        "Several_days",
+        "More_than_half_days",
+        "Nearly_every_days"
+      ],
+      "selectedOptions": ["More than half days"]
+    },
+    {
+      "qkey": "Feeling_down_depressed_or_hopeless",
+      "type": "CO",
+      "score": "",
+      "options": [
+        "Not at all",
+        "Several days",
+        "More than half days",
+        "Nearly every days"
+      ],
+      "translate": [
+        "Not_at_all",
+        "Several_days",
+        "More_than_half_days",
+        "Nearly_every_days"
+      ],
+      "selectedOptions": ["More than half days"]
+    }
+  ],
+  "part_e": [
+    {
+      "qkey": "Fever",
+      "type": "MCQ",
+      "score": "",
+      "options": [
+        "More than 7 days",
+        "Less than 7 days",
+        "With Chills",
+        "With Rash",
+        "With Bleeding",
+        "With Altered Sensorium"
+      ],
+      "translate": [
+        "More_than__days",
+        "Less_than__days",
+        "With_Chills",
+        "With_Rash",
+        "with_Bleeding",
+        "with_Altered_Sensorium"
+      ],
+      "selectedOptions": [
+        "More than 7 days",
+        "Less than 7 days",
+        "With Chills",
+        "With Rash",
+        "With Bleeding",
+        "With Altered Sensorium"
+      ]
+    },
+    {
+      "qkey": "Conjuctivitis",
+      "type": "MCQ",
+      "score": "",
+      "options": ["Watery", "Redness", "Itching eyes"],
+      "translate": ["watery", "redness", "itching_eyes"],
+      "selectedOptions": ["Watery", "Redness", "Itching eyes"]
+    },
+    {
+      "qkey": "Lepto",
+      "type": "MCQ",
+      "score": "",
+      "options": [
+        "Waddling in water",
+        "Exposure to domestic animal like cattle / Dog / Cat / Pig / Rodent"
+      ],
+      "translate": [
+        "Waddling_in_water",
+        "Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent"
+      ],
+      "selectedOptions": ["Waddling in water"]
+    },
+    {
+      "qkey": "Loose_Motion",
+      "type": "MCQ",
+      "score": "",
+      "options": ["With Blood", "Without Blood", "Vomiting"],
+      "translate": ["With_Blood", "Without_Blood", "Vomitting "],
+      "selectedOptions": ["Without Blood"]
+    },
+    {
+      "qkey": "Hepatitis__Jaundice",
+      "type": "MCQ",
+      "score": "",
+      "options": [
+        "Eating outside / uncovered food / drinking contaminated water"
+      ],
+      "translate": [
+        "Eating_outside__uncovered_food__drinking_contaminated_water"
+      ],
+      "selectedOptions": [
+        "Eating outside / uncovered food / drinking contaminated water"
+      ]
+    },
+    {
+      "qkey": "Animal_Bite",
+      "type": "MCQ",
+      "score": "",
+      "options": ["Animal Bite"],
+      "translate": ["Animal_Bite"],
+      "selectedOptions": ["Animal Bite"]
+    },
+    {
+      "qkey": "Snake_Bite",
+      "type": "MCQ",
+      "score": "",
+      "options": ["Snake Bite"],
+      "translate": ["Snake_Bite"],
+      "selectedOptions": ["Snake Bite"]
+    },
+    {
+      "qkey": "Leprosy",
+      "type": "MCQ",
+      "score": "",
+      "options": [
+        "Numbness / Tingling in hands/ feet",
+        "Loss of sensation in any parts of body",
+        "Swelling / Nodule on Face/Hands/ Feet",
+        "Loss of eyelash or eyebrow",
+        "Thickened earlobes"
+      ],
+      "translate": [
+        "Numbness__Tingling_in_handsfeet",
+        "Loss_of_sensation_in_any_parts_of_body",
+        "Swelling__Nodule_on_FaceHandsFeet",
+        "Loss_of_eyelash_or_eyebrow",
+        "Thickened_earlobes"
+      ],
+      "selectedOptions": [
+        "Numbness / Tingling in hands/ feet",
+        "Loss of sensation in any parts of body",
+        "Swelling / Nodule on Face/Hands/ Feet",
+        "Loss of eyelash or eyebrow",
+        "Thickened earlobes"
+      ]
+    }
+  ]
+}
+
+
+
+
+                 
+// import React, { useState } from 'react';
+// import { Radio } from 'antd';
+
+// import React, { useState } from 'react';
+
+// const YourComponent = () => {
+//   // The options array
+//   const options = [
+//     "Shortness_of_breath_difficulty_breathing",
+//     "Coughing_more_than__weeks",
+//     // ... (other options)
+//     "Difficulty_walking_due_to_weakness_in_legs"
+//   ];
+
+//   // State to store the selected options
+//   const [selectedOptions, setSelectedOptions] = useState([]);
+
+//   // Function to handle checkbox changes
+//   const handleCheckboxChange = (option) => {
+//     // Check if the option is already selected
+//     if (selectedOptions.includes(option)) {
+//       // If selected, remove it
+//       setSelectedOptions(selectedOptions.filter(item => item !== option));
+//     } else {
+//       // If not selected, add it
+//       setSelectedOptions([...selectedOptions, option]);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       {/* Render checkboxes based on options */}
+//       {options.map((option, index) => (
+//         <div key={index}>
+//           <input
+//             type="checkbox"
+//             value={option}
+//             checked={selectedOptions.includes(option)}
+//             onChange={() => handleCheckboxChange(option)}
+//           />
+//           <label>{option}</label>
+//         </div>
+//       ))}
+
+//       {/* Display the selected options */}
+//       <div>
+//         <h4>Selected Options:</h4>
+//         <ul>
+//           {selectedOptions.map((option, index) => (
+//             <li key={index}>{option}</li>
+//           ))}
+//         </ul>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default YourComponent;

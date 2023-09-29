@@ -1252,7 +1252,7 @@ function MemberRegister(props) {
               handleConsentModalClose();
             }}
           >
-            Submit
+            Submit 
           </SubmitButton>
         }
       >
