@@ -48,10 +48,12 @@ import { faHouse, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import axios, { Axios } from "axios";
 import { BASE_URL } from "../../Utils/BaseURL";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 function FamilyHead(props) {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
+  const { state }=useLocation();
   let axiosConfig = {
     headers: {
       "Content-Type": "application/json",
@@ -248,8 +250,12 @@ function FamilyHead(props) {
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState("");
   const [abhaId, setAbhaId] = useState("");
-  const [adharNoStatus, setAadharNoStatus] = useState();
-  const [abhaNoStatus, setAbhaNoStatus] = useState();
+  const [pulse ,setPulse]=useState("");
+  const [bloodPressure ,setBloodPressure]=useState("");
+  const [weight ,setWeight]=useState("");
+  const [height,setHeight]=useState("");
+  const [BMI ,setBMI]=useState("");
+  const [cbacScore,setCbacScore]=useState("");
 
   const handleFormSubmit = async () => {
     if (name === "") {
@@ -303,64 +309,64 @@ function FamilyHead(props) {
   const [question6A, setQuestion6A] = useState("");
 
   // Part B question's state
-  const [question1B1, setQuestion1B1] = useState("");
-  const [question2B1, setQuestion2B1] = useState("");
-  const [question3B1, setQuestion3B1] = useState("");
-  const [question4B1, setQuestion4B1] = useState("");
-  const [question5B1, setQuestion5B1] = useState("");
-  const [question6B1, setQuestion6B1] = useState("");
-  const [question7B1, setQuestion7B1] = useState("");
-  const [question8B1, setQuestion8B1] = useState("");
-  const [question9B1, setQuestion9B1] = useState("");
-  const [question10B1, setQuestion10B1] = useState("");
-  const [question11B1, setQuestion11B1] = useState("");
-  const [question12B1, setQuestion12B1] = useState("");
-  const [question13B1, setQuestion13B1] = useState("");
-  const [question14B1, setQuestion14B1] = useState("");
-  const [question15B1, setQuestion15B1] = useState("");
-  const [question16B1, setQuestion16B1] = useState("");
-  const [question17B1, setQuestion17B1] = useState("");
-  const [question18B1, setQuestion18B1] = useState("");
-  const [question19B1, setQuestion19B1] = useState("");
-  const [question20B1, setQuestion20B1] = useState("");
-  const [question21B1, setQuestion21B1] = useState("");
-  const [question22B1, setQuestion22B1] = useState("");
-  const [question23B1, setQuestion23B1] = useState("");
-  const [question24B1, setQuestion24B1] = useState("");
-  const [question25B1, setQuestion25B1] = useState("");
-  const [question26B1, setQuestion26B1] = useState("");
-  const [question27B1, setQuestion27B1] = useState("");
-  const [question28B1, setQuestion28B1] = useState("");
-  const [question29B1, setQuestion29B1] = useState("");
-  const [question30B1, setQuestion30B1] = useState("");
-  const [question31B1, setQuestion31B1] = useState("");
-  const [question32B1, setQuestion32B1] = useState("");
+  // const [question1B1, setQuestion1B1] = useState("");
+  // const [question2B1, setQuestion2B1] = useState("");
+  // const [question3B1, setQuestion3B1] = useState("");
+  // const [question4B1, setQuestion4B1] = useState("");
+  // const [question5B1, setQuestion5B1] = useState("");
+  // const [question6B1, setQuestion6B1] = useState("");
+  // const [question7B1, setQuestion7B1] = useState("");
+  // const [question8B1, setQuestion8B1] = useState("");
+  // const [question9B1, setQuestion9B1] = useState("");
+  // const [question10B1, setQuestion10B1] = useState("");
+  // const [question11B1, setQuestion11B1] = useState("");
+  // const [question12B1, setQuestion12B1] = useState("");
+  // const [question13B1, setQuestion13B1] = useState("");
+  // const [question14B1, setQuestion14B1] = useState("");
+  // const [question15B1, setQuestion15B1] = useState("");
+  // const [question16B1, setQuestion16B1] = useState("");
+  // const [question17B1, setQuestion17B1] = useState("");
+  // const [question18B1, setQuestion18B1] = useState("");
+  // const [question19B1, setQuestion19B1] = useState("");
+  // const [question20B1, setQuestion20B1] = useState("");
+  // const [question21B1, setQuestion21B1] = useState("");
+  // const [question22B1, setQuestion22B1] = useState("");
+  // const [question23B1, setQuestion23B1] = useState("");
+  // const [question24B1, setQuestion24B1] = useState("");
+  // const [question25B1, setQuestion25B1] = useState("");
+  // const [question26B1, setQuestion26B1] = useState("");
+  // const [question27B1, setQuestion27B1] = useState("");
+  // const [question28B1, setQuestion28B1] = useState("");
+  // const [question29B1, setQuestion29B1] = useState("");
+  // const [question30B1, setQuestion30B1] = useState("");
+  // const [question31B1, setQuestion31B1] = useState("");
+  // const [question32B1, setQuestion32B1] = useState("");
 
   //B2
-  const [question1B2, setQuestion1B2] = useState("");
-  const [question2B2, setQuestion2B2] = useState("");
-  const [question3B2, setQuestion3B2] = useState("");
-  const [question4B2, setQuestion4B2] = useState("");
-  const [question5B2, setQuestion5B2] = useState("");
-  const [question6B2, setQuestion6B2] = useState("");
-  const [question7B2, setQuestion7B2] = useState("");
+  // const [question1B2, setQuestion1B2] = useState("");
+  // const [question2B2, setQuestion2B2] = useState("");
+  // const [question3B2, setQuestion3B2] = useState("");
+  // const [question4B2, setQuestion4B2] = useState("");
+  // const [question5B2, setQuestion5B2] = useState("");
+  // const [question6B2, setQuestion6B2] = useState("");
+  // const [question7B2, setQuestion7B2] = useState("");
 
   //B3
-  const [question1B3, setQuestion1B3] = useState("");
-  const [question2B3, setQuestion2B3] = useState("");
-  const [question3B3, setQuestion3B3] = useState("");
-  const [question4B3, setQuestion4B3] = useState("");
+  // const [question1B3, setQuestion1B3] = useState("");
+  // const [question2B3, setQuestion2B3] = useState("");
+  // const [question3B3, setQuestion3B3] = useState("");
+  // const [question4B3, setQuestion4B3] = useState("");
 
   //Part C questions's state
-  const [question1C1, setquestion1C1] = useState();
-  const [question2C1, setquestion2C1] = useState();
-  const [question3C1, setquestion3C1] = useState();
-  const [question4C1, setquestion4C1] = useState();
-  const [question5C1, setquestion5C1] = useState();
-  const [question6C1, setquestion6C1] = useState();
-  const [question1C2, setQuestion1C2] = useState();
-  const [question2C2, setQuestion2C2] = useState();
-  const [question3C2, setQuestion3C2] = useState();
+  // const [question1C1, setquestion1C1] = useState();
+  // const [question2C1, setquestion2C1] = useState();
+  // const [question3C1, setquestion3C1] = useState();
+  // const [question4C1, setquestion4C1] = useState();
+  // const [question5C1, setquestion5C1] = useState();
+  // const [question6C1, setquestion6C1] = useState();
+  // const [question1C2, setQuestion1C2] = useState();
+  // const [question2C2, setQuestion2C2] = useState();
+  // const [question3C2, setQuestion3C2] = useState();
 
   //Part D question's state
   const [question1D, setQuestion1D] = useState("");
@@ -369,31 +375,31 @@ function FamilyHead(props) {
   //Part E question's state
   //E1
   const [doYouhaveFever, setDoYouHaveFever] = useState("no");
-  const [doYouhaveFever1, setDoYouHaveFever1] = useState();
-  const [doYouhaveFever2, setDoYouHaveFever2] = useState();
-  const [doYouhaveFever3, setDoYouHaveFever3] = useState();
-  const [doYouhaveFever4, setDoYouHaveFever4] = useState();
-  const [doYouhaveFever5, setDoYouHaveFever5] = useState();
-  const [doYouhaveFever6, setDoYouHaveFever6] = useState();
+  // const [doYouhaveFever1, setDoYouHaveFever1] = useState();
+  // const [doYouhaveFever2, setDoYouHaveFever2] = useState();
+  // const [doYouhaveFever3, setDoYouHaveFever3] = useState();
+  // const [doYouhaveFever4, setDoYouHaveFever4] = useState();
+  // const [doYouhaveFever5, setDoYouHaveFever5] = useState();
+  // const [doYouhaveFever6, setDoYouHaveFever6] = useState();
   //E2
   const [conjuctivitis, setConjuctivitis] = useState("no");
-  const [conjuctivitis1, setConjuctivitis1] = useState();
-  const [conjuctivitis2, setConjuctivitis2] = useState();
-  const [conjuctivitis3, setConjuctivitis3] = useState();
+  // const [conjuctivitis1, setConjuctivitis1] = useState();
+  // const [conjuctivitis2, setConjuctivitis2] = useState();
+  // const [conjuctivitis3, setConjuctivitis3] = useState();
   //E3
   const [leptospirosis, setLeptospirosis] = useState("no");
-  const [leptospirosis1, setLeptospirosis1] = useState();
-  const [leptospirosis2, setLeptospirosis2] = useState();
+  // const [leptospirosis1, setLeptospirosis1] = useState();
+  // const [leptospirosis2, setLeptospirosis2] = useState();
 
   //E4
   const [looseMotion, setLooseMotion] = useState("no");
-  const [looseMotion1, setLooseMotion1] = useState();
-  const [looseMotion2, setLooseMotion2] = useState();
-  const [looseMotion3, setLooseMotion3] = useState();
+  // const [looseMotion1, setLooseMotion1] = useState();
+  // const [looseMotion2, setLooseMotion2] = useState();
+  // const [looseMotion3, setLooseMotion3] = useState();
 
   //E5
   const [hepatitis, setHepatitis] = useState("no");
-  const [hepatitis1, setHepatitis1] = useState();
+  // const [hepatitis1, setHepatitis1] = useState();
 
   //E6
   const [animalBitten, setAnimalBitten] = useState("");
@@ -403,11 +409,11 @@ function FamilyHead(props) {
 
   //E8
   const [leprosy, setLeprosy] = useState("");
-  const [leprosy1, setLeprosy1] = useState();
-  const [leprosy2, setLeprosy2] = useState();
-  const [leprosy3, setLeprosy3] = useState();
-  const [leprosy4, setLeprosy4] = useState();
-  const [leprosy5, setLeprosy5] = useState();
+  // const [leprosy1, setLeprosy1] = useState();
+  // const [leprosy2, setLeprosy2] = useState();
+  // const [leprosy3, setLeprosy3] = useState();
+  // const [leprosy4, setLeprosy4] = useState();
+  // const [leprosy5, setLeprosy5] = useState();
 
   const [familyMembersArray, setFamilyMembersArray] = useState([]);
 
@@ -450,61 +456,68 @@ function FamilyHead(props) {
   };
 
   const handleClearPartB = () => {
-    setQuestion1B1("");
-    setQuestion2B1("");
-    setQuestion3B1("");
-    setQuestion4B1("");
-    setQuestion5B1("");
-    setQuestion6B1("");
-    setQuestion7B1("");
-    setQuestion8B1("");
-    setQuestion9B1("");
-    setQuestion10B1("");
-    setQuestion11B1("");
-    setQuestion12B1("");
-    setQuestion13B1("");
-    setQuestion14B1("");
-    setQuestion15B1("");
-    setQuestion16B1("");
-    setQuestion17B1("");
-    setQuestion18B1("");
-    setQuestion19B1("");
-    setQuestion20B1("");
-    setQuestion21B1("");
-    setQuestion22B1("");
-    setQuestion23B1("");
-    setQuestion24B1("");
-    setQuestion25B1("");
-    setQuestion26B1("");
-    setQuestion27B1("");
-    setQuestion28B1("");
-    setQuestion29B1("");
-    setQuestion30B1("");
-    setQuestion31B1("");
-    setQuestion32B1("");
-    setQuestion1B2("");
-    setQuestion2B2("");
-    setQuestion3B2("");
-    setQuestion4B2("");
-    setQuestion5B2("");
-    setQuestion6B2("");
-    setQuestion7B2("");
-    setQuestion1B3("");
-    setQuestion2B3("");
-    setQuestion3B3("");
-    setQuestion4B3("");
+    setPartB1OptionsSelected([]);
+    setPartB2OptionSelected([]);
+    setPartB3OptionsSelected([]);
+
+    // setQuestion1B1("");
+    // setQuestion2B1("");
+    // setQuestion3B1("");
+    // setQuestion4B1("");
+    // setQuestion5B1("");
+    // setQuestion6B1("");
+    // setQuestion7B1("");
+    // setQuestion8B1("");
+    // setQuestion9B1("");
+    // setQuestion10B1("");
+    // setQuestion11B1("");
+    // setQuestion12B1("");
+    // setQuestion13B1("");
+    // setQuestion14B1("");
+    // setQuestion15B1("");
+    // setQuestion16B1("");
+    // setQuestion17B1("");
+    // setQuestion18B1("");
+    // setQuestion19B1("");
+    // setQuestion20B1("");
+    // setQuestion21B1("");
+    // setQuestion22B1("");
+    // setQuestion23B1("");
+    // setQuestion24B1("");
+    // setQuestion25B1("");
+    // setQuestion26B1("");
+    // setQuestion27B1("");
+    // setQuestion28B1("");
+    // setQuestion29B1("");
+    // setQuestion30B1("");
+    // setQuestion31B1("");
+    // setQuestion32B1("");
+    // setQuestion1B2("");
+    // setQuestion2B2("");
+    // setQuestion3B2("");
+    // setQuestion4B2("");
+    // setQuestion5B2("");
+    // setQuestion6B2("");
+    // setQuestion7B2("");
+    // setQuestion1B3("");
+    // setQuestion2B3("");
+    // setQuestion3B3("");
+    // setQuestion4B3("");
   };
 
   const handleClearPartC = () => {
-    setquestion1C1("");
-    setquestion2C1("");
-    setquestion3C1("");
-    setquestion4C1("");
-    setquestion5C1("");
-    setquestion6C1("");
-    setQuestion1C2("");
-    setQuestion2C2("");
-    setQuestion3C2("");
+    setPartC1OptionSelect([]);
+    setPartC2OptionSelect([]);
+
+    // setquestion1C1("");
+    // setquestion2C1("");
+    // setquestion3C1("");
+    // setquestion4C1("");
+    // setquestion5C1("");
+    // setquestion6C1("");
+    // setQuestion1C2("");
+    // setQuestion2C2("");
+    // setQuestion3C2("");
   };
 
   const handleClearPartD = () => {
@@ -512,35 +525,42 @@ function FamilyHead(props) {
     setQuestion2D("");
   };
   const handleClearPartE = () => {
-    setDoYouHaveFever("");
-    setDoYouHaveFever1("");
-    setDoYouHaveFever2("");
-    setDoYouHaveFever3("");
-    setDoYouHaveFever4("");
-    setDoYouHaveFever5("");
-    setConjuctivitis("");
-    setConjuctivitis1("");
-    setConjuctivitis2("");
-    setConjuctivitis3("");
-    setLeptospirosis("");
-    setLeptospirosis1("");
-    setLeptospirosis2("");
-    setLooseMotion("");
-    setLooseMotion1("");
-    setLooseMotion2("");
-    setLooseMotion3("");
-    setHepatitis("");
+    setPartE1OptionSelect([]);
+    setPartE2OptionSelect([]);
+    setPartE3OptionSelect([]);
+    setPartE4OptionSelect([]);
+    setPartE5OptionSelect([]);
     setAnimalBitten("");
     setSnakeBitten("");
+    setPartE8OptionSelect([]);
+    setDoYouHaveFever("");
+    // setDoYouHaveFever1("");
+    // setDoYouHaveFever2("");
+    // setDoYouHaveFever3("");
+    // setDoYouHaveFever4("");
+    // setDoYouHaveFever5("");
+    setConjuctivitis("");
+    // setConjuctivitis1("");
+    // setConjuctivitis2("");
+    // setConjuctivitis3("");
+    // setLeptospirosis("");
+    // setLeptospirosis1("");
+    // setLeptospirosis2("");
+    setLooseMotion("");
+    // setLooseMotion1("");
+    // setLooseMotion2("");
+    // setLooseMotion3("");
+    // setHepatitis("");
+    // setAnimalBitten("");
+    // setSnakeBitten("");
     setLeprosy("");
-    setLeprosy1("");
-    setLeprosy2("");
-    setLeprosy3("");
-    setLeprosy4("");
-    setLeprosy5("");
+    // setLeprosy1("");
+    // setLeprosy2("");
+    // setLeprosy3("");
+    // setLeprosy4("");
+    // setLeprosy5("");
   };
 
- 
   const handleSubmitAndNext = () => {
     if (partialSubmit) {
       familyMembersArray.push(memberData);
@@ -566,17 +586,17 @@ function FamilyHead(props) {
     const Data = {
       ward_name: sessionStorage.getItem("ward"),
       healthPost: sessionStorage.getItem("healthPostName"),
-      healthPostArea: section,
+      area: section,
       name: familyHeadName,
       mobileNo: mobileNo,
       plotNo: plotNumber,
-      addressLine1: addressLine1,
+      address: addressLine1,
       pincode: pincode,
       totalFamilyMembers: totalFamilyMembers,
       partialSubmit: partialSubmit,
       familyMembers_details: familyMembersArray,
     };
-
+    console.log(Data);
     let axiosConfig = {
       headers: {
         "Content-Type": "application/json",
@@ -777,17 +797,19 @@ function FamilyHead(props) {
       setPartE4OptionSelect([...partE4OptionSelect, option]);
     }
   };
-  const partE5Option=[
-    "Eating outside / uncovered food / drinking contaminated water"
-  ]
-  const [partE5OptionSelect,setPartE5OptionSelect]=useState([]);
-  const handlePartE5Select=(option)=>{
-    if(partE5OptionSelect.includes(option)){
-      setPartE5OptionSelect(partE5OptionSelect.filter(item=>item !== option))
-    }else{
-      setPartE5OptionSelect([...partE5OptionSelect,option])
+  const partE5Option = [
+    "Eating outside / uncovered food / drinking contaminated water",
+  ];
+  const [partE5OptionSelect, setPartE5OptionSelect] = useState([]);
+  const handlePartE5Select = (option) => {
+    if (partE5OptionSelect.includes(option)) {
+      setPartE5OptionSelect(
+        partE5OptionSelect.filter((item) => item !== option)
+      );
+    } else {
+      setPartE5OptionSelect([...partE5OptionSelect, option]);
     }
-  }
+  };
 
   const partE8Options = [
     "Numbness / Tingling in hands/ feet",
@@ -811,256 +833,272 @@ function FamilyHead(props) {
     name: name,
     gender: gender,
     age: age,
-    phone: phone,
+    mobileNo: phone,
+    aadharAndAbhaConsent: "true",
     aadharCard: aadharCard,
     abhaId: abhaId,
-    part_a: [
-      {
-        qkey: "What_is_your_age_completeyears",
-        type: "CO",
-        score: "",
-        options: ["50-79 year", "80 and 80 above"],
-        translate: ["_year", "_and__above"],
-        selectedOptions: [question1A],
-      },
-      {
-        qkey: "Do_you_smoke_or_consume_smokeless_products_such_as_gutka_or_khaini",
-        type: "CO",
-        score: "",
-        options: [
-          "Never",
-          "Used to consume in the past / Sometimes now",
-          "Daily",
-        ],
-        translate: [
-          "Never",
-          "Used_to_consume_in_the_past_Sometimes_now",
-          "Daily",
-        ],
-        selectedOptions: [question2A],
-      },
-      {
-        qkey: "Do_you_consume_alcohol_daily",
-        type: "CO",
-        score: "",
-        options: ["No", "Yes"],
-        translate: ["No", "Yes"],
-        selectedOptions: [question3A],
-      },
-      {
-        qkey: "Measurement_of_waist_in_cm",
-        type: "CO",
-        score: "",
-        options: ["80 cm or less", "81-100 cm", "More than 100 cm"],
-        translate: ["cm_80_cm_or_less", "cm_81_100_cm", "More_than_100_cm"],
-        selectedOptions: [question4A],
-      },
-      {
-        qkey: "Do_you_undertake_any_physical_activities_for_minimum_of__minutes_in_a_week",
-        type: "CO",
-        score: "",
-        options: [
-          "At least 150 minutes in a week",
-          "Less than 150 minutes in a week",
-        ],
-        translate: [
-          "At_least_150_minutes_in_a_week",
-          "Less_than_150_minutes_in_a_week",
-        ],
-        selectedOptions: [question5A],
-      },
-      {
-        qkey: "Do_you_have_a_family_history_any_one_of_your_parents_or_siblings_of_high_blood_pressure_diabetes_and_heart_disease",
-        type: "CO",
-        score: "",
-        options: ["No", "Yes"],
-        translate: ["No", "Yes"],
-        selectedOptions: [question6A],
-      },
-    ],
-    part_b: [
-      {
-        qkey: "B_Women_and_Men",
-        type: "MCQ",
-        score: "",
-        options: [partB1Options],
-        translate: [],
-        selectedOptions: partB1OptionsSelected
-      },
-      {
-        qkey: "B_Women_only",
-        type: "MCQ",
-        score: "",
-        options: partB2Options,
-        translate: [],
-        selectedOptions: partB2OptionSelected
-      },
-      {
-        qkey: "BFor_Senior_Citizens__years_and_above",
-        type: "MCQ",
-        score: "",
-        options: partB3Options,
-        "translate": [],
-        "selectedOptions": partB3OptionsSelected
-      }
-    ],
-    part_c: [
-      {
-        qkey: "Type_of_Fuel_used_for_cooking",
-        type: "MCQ",
-        score: "",
-        options: partC1Options,
-        translate: [
-          "Firewood",
-          "Crop_Residue",
-          "Cow_dung_cake",
-          "Coal",
-          "Kerosene",
-          "LPG"
-        ],
-        selectedOptions: partC1OptionSelect
-      },
-      {
-        qkey: "Occupational_exposure",
-        type: "MCQ",
-        score: "",
-        options: partC2Options,
-        translate: [
-          "Crop_residue_burning",
-          "burning_of_garbage_leaves",
-          "working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc"
-        ],
-        selectedOptions: partC2OptionSelect
-      }
-    ],
-    part_d: [
-      {
-        qkey: "Little_interest_of_pleasure_in_doing_things",
-        type: "CO",
-        score: "",
-        options: [
-          "Not at all",
-          "Several days",
-          "More than half days",
-          "Nearly every days"
-        ],
-        translate: [
-          "Not_at_all",
-          "Several_days",
-          "More_than_half_days",
-          "Nearly_every_days"
-        ],
-        selectedOption: [question1D]
-      },
-      {
-        qkey: "Feeling_down_depressed_or_hopeless",
-        type: "CO",
-        score: "",
-        options: [
-          "Not at all",
-          "Several days",
-          "More than half days",
-          "Nearly every days"
-        ],
-        translate: [
-          "Not_at_all",
-          "Several_days",
-          "More_than_half_days",
-          "Nearly_every_days"
-        ],
-        selectedOptions: [question2D]
-      }
-    ],
-    part_e: [
-      {
-        qkey: "Fever",
-        type: "MCQ",
-        score: "",
-        options: partE1Options,
-        translate: [
-          "More_than__days",
-          "Less_than__days",
-          "With_Chills",
-          "With_Rash",
-          "with_Bleeding",
-          "with_Altered_Sensorium"
-        ],
-        selectedOptions: partE1OptionSelect
-      },
-      {
-        qkey: "Conjuctivitis",
-        type: "MCQ",
-        score: "",
-        options: partE2Options,
-        translate: ["watery", "redness", "itching_eyes"],
-        selectedOptions: partE2OptionSelect
-      },
-      {
-        qkey: "Lepto",
-        type: "MCQ",
-        score: "",
-        options: partE3Options,
-        translate: [
-          "Waddling_in_water",
-          "Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent"
-        ],
-        selectedOptions: partE3OptionSelect
-      },
-      {
-        qkey: "Loose_Motion",
-        type: "MCQ",
-        score: "",
-        options: partE4Options,
-        translate: ["With_Blood", "Without_Blood", "Vomitting "],
-        selectedOptions: partE4OptionSelect
-      },
-      {
-        qkey: "Hepatitis__Jaundice",
-        type: "MCQ",
-        score: "",
-        options: [
-          partE5Option
-        ],
-        translate: [
-          "Eating_outside__uncovered_food__drinking_contaminated_water"
-        ],
-        selectedOptions: [
-          partE5OptionSelect
-        ]
-      },
-      {
-        qkey: "Animal_Bite",
-        type: "MCQ",
-        score: "",
-        options: ["Animal Bite"],
-        translate: ["Animal_Bite"],
-        selectedOptions: [animalBitten]
-      },
-      {
-        qkey: "Snake_Bite",
-        type: "MCQ",
-        score: "",
-        options: ["Snake Bite"],
-        translate: ["Snake_Bite"],
-        selectedOptions: [snakeBitten]
-      },
-      {
-        qkey: "Leprosy",
-        type: "MCQ",
-        score: "",
-        options: [partE8Options],
-        translate: [
-          "Numbness__Tingling_in_handsfeet",
-          "Loss_of_sensation_in_any_parts_of_body",
-          "Swelling__Nodule_on_FaceHandsFeet",
-          "Loss_of_eyelash_or_eyebrow",
-          "Thickened_earlobes"
-        ],
-        selectedOptions: [
-      partE8OptionSelect
-        ]
-      }
-    ]
+    pulse: pulse,
+    bloodPressure: bloodPressure,
+    weight: weight,
+    height: height,
+    BMI: BMI,
+    questionsConsent: true,
+    cbacScore: "4",
+    Questionnaire: {
+      part_a: [
+        {
+          qkey: "What_is_your_age_completeyears",
+          type: "CO",
+          score: "",
+          options: ["50-79 year", "80 and 80 above"],
+          translate: ["_year", "_and__above"],
+          selectedOptions: [question1A],
+        },
+        {
+          qkey: "Do_you_smoke_or_consume_smokeless_products_such_as_gutka_or_khaini",
+          type: "CO",
+          score: "",
+          options: [
+            "Never",
+            "Used to consume in the past / Sometimes now",
+            "Daily",
+          ],
+          translate: [
+            "Never",
+            "Used_to_consume_in_the_past_Sometimes_now",
+            "Daily",
+          ],
+          selectedOptions: [question2A],
+        },
+        {
+          qkey: "Do_you_consume_alcohol_daily",
+          type: "CO",
+          score: "",
+          options: ["No", "Yes"],
+          translate: ["No", "Yes"],
+          selectedOptions: [question3A],
+        },
+        {
+          qkey: "Measurement_of_waist_in_cm",
+          type: "CO",
+          score: "",
+          options: ["80 cm or less", "81-100 cm", "More than 100 cm"],
+          translate: ["cm_80_cm_or_less", "cm_81_100_cm", "More_than_100_cm"],
+          selectedOptions: [question4A],
+        },
+        {
+          qkey: "Do_you_undertake_any_physical_activities_for_minimum_of__minutes_in_a_week",
+          type: "CO",
+          score: "",
+          options: [
+            "At least 150 minutes in a week",
+            "Less than 150 minutes in a week",
+          ],
+          translate: [
+            "At_least_150_minutes_in_a_week",
+            "Less_than_150_minutes_in_a_week",
+          ],
+          selectedOptions: [question5A],
+        },
+        {
+          qkey: "Do_you_have_a_family_history_any_one_of_your_parents_or_siblings_of_high_blood_pressure_diabetes_and_heart_disease",
+          type: "CO",
+          score: "",
+          options: ["No", "Yes"],
+          translate: ["No", "Yes"],
+          selectedOptions: [question6A],
+        },
+      ],
+      part_b: [
+        {
+          qkey: "B_Women_and_Men",
+          type: "MCQ",
+          score: "",
+          options: partB1Options,
+          translate: [],
+          selectedOptions: partB1OptionsSelected,
+        },
+        {
+          qkey: "B_Women_only",
+          type: "MCQ",
+          score: "",
+          options: partB2Options,
+          translate: [],
+          selectedOptions: partB2OptionSelected,
+        },
+        {
+          qkey: "BFor_Senior_Citizens__years_and_above",
+          type: "MCQ",
+          score: "",
+          options: partB3Options,
+          translate: [],
+          selectedOptions: partB3OptionsSelected,
+        },
+      ],
+      part_c: [
+        {
+          qkey: "Type_of_Fuel_used_for_cooking",
+          type: "MCQ",
+          score: "",
+          options: partC1Options,
+          translate: [
+            "Firewood",
+            "Crop_Residue",
+            "Cow_dung_cake",
+            "Coal",
+            "Kerosene",
+            "LPG",
+          ],
+          selectedOptions: partC1OptionSelect,
+        },
+        {
+          qkey: "Occupational_exposure",
+          type: "MCQ",
+          score: "",
+          options: partC2Options,
+          translate: [
+            "Crop_residue_burning",
+            "burning_of_garbage_leaves",
+            "working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc",
+          ],
+          selectedOptions: partC2OptionSelect,
+        },
+      ],
+      part_d: [
+        {
+          qkey: "Little_interest_of_pleasure_in_doing_things",
+          type: "CO",
+          score: "",
+          options: [
+            "Not at all",
+            "Several days",
+            "More than half days",
+            "Nearly every days",
+          ],
+          translate: [
+            "Not_at_all",
+            "Several_days",
+            "More_than_half_days",
+            "Nearly_every_days",
+          ],
+          selectedOption: [question1D],
+        },
+        {
+          qkey: "Feeling_down_depressed_or_hopeless",
+          type: "CO",
+          score: "",
+          options: [
+            "Not at all",
+            "Several days",
+            "More than half days",
+            "Nearly every days",
+          ],
+          translate: [
+            "Not_at_all",
+            "Several_days",
+            "More_than_half_days",
+            "Nearly_every_days",
+          ],
+          selectedOptions: [question2D],
+        },
+      ],
+      part_e: [
+        {
+          qkey: "Fever",
+          type: "MCQ",
+          score: "",
+          options: partE1Options,
+          translate: [
+            "More_than__days",
+            "Less_than__days",
+            "With_Chills",
+            "With_Rash",
+            "with_Bleeding",
+            "with_Altered_Sensorium",
+          ],
+          selectedOptions: partE1OptionSelect,
+        },
+        {
+          qkey: "Conjuctivitis",
+          type: "MCQ",
+          score: "",
+          options: partE2Options,
+          translate: ["watery", "redness", "itching_eyes"],
+          selectedOptions: partE2OptionSelect,
+        },
+        {
+          qkey: "Lepto",
+          type: "MCQ",
+          score: "",
+          options: partE3Options,
+          translate: [
+            "Waddling_in_water",
+            "Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent",
+          ],
+          selectedOptions: partE3OptionSelect,
+        },
+        {
+          qkey: "Loose_Motion",
+          type: "MCQ",
+          score: "",
+          options: partE4Options,
+          translate: ["With_Blood", "Without_Blood", "Vomitting "],
+          selectedOptions: partE4OptionSelect,
+        },
+        {
+          qkey: "Hepatitis__Jaundice",
+          type: "MCQ",
+          score: "",
+          options: partE5Option,
+          translate: [
+            "Eating_outside__uncovered_food__drinking_contaminated_water",
+          ],
+          selectedOptions: partE5OptionSelect,
+        },
+        {
+          qkey: "Animal_Bite",
+          type: "MCQ",
+          score: "",
+          options: ["Animal Bite"],
+          translate: ["Animal_Bite"],
+          selectedOptions: [animalBitten],
+        },
+        {
+          qkey: "Snake_Bite",
+          type: "MCQ",
+          score: "",
+          options: ["Snake Bite"],
+          translate: ["Snake_Bite"],
+          selectedOptions: [snakeBitten],
+        },
+        {
+          qkey: "Leprosy",
+          type: "MCQ",
+          score: "",
+          options: partE8Options,
+          translate: [
+            "Numbness__Tingling_in_handsfeet",
+            "Loss_of_sensation_in_any_parts_of_body",
+            "Swelling__Nodule_on_FaceHandsFeet",
+            "Loss_of_eyelash_or_eyebrow",
+            "Thickened_earlobes",
+          ],
+          selectedOptions: partE8OptionSelect,
+        },
+      ],
+    },
+    bloodConsent: bloodConsent,
+    bloodCollectionLocation:
+      age > 60
+        ? bloodSampleHome
+          ? "Home"
+          : bloodSampleCenter
+          ? "Center"
+          : bloodSampleDenied
+          ? "Denied"
+          : ""
+        : "",
+
     // partA:
     //   age > 30
     //     ? {
@@ -1230,9 +1268,9 @@ function FamilyHead(props) {
     //   : "",
   };
 
-
   return familyHeadRegister == "no" ? (
     <>
+    {console.log(state)}
       <FormHeader>
         Family Head/ कुटुंब प्रमुख{" "}
         <Button
@@ -1557,7 +1595,40 @@ function FamilyHead(props) {
               </FormItem>
             </Column>
           </Row>
-          <Row></Row>
+          <Row>
+            <Column>
+              <FormItem label="Pulse">
+                <Input type="text" onChange={(e)=>setPulse(e.target.value)}></Input>
+              </FormItem>
+            </Column>
+            <Column>
+              <FormItem label="Blood Pressure">
+                <Input type="text" onChange={(e)=>setBloodPressure(e.target.value)}></Input>
+              </FormItem>
+            </Column>
+            <Column>
+              <FormItem label="Weight">
+                <Input type="text" onChange={(e)=>setWeight(e.target.value)}></Input>
+              </FormItem>
+            </Column>
+          </Row>
+          <Row>
+            <Column>
+              <FormItem label="Height">
+                <Input type="text" onChange={(e)=>setHeight(e.target.value)}></Input>
+              </FormItem>
+            </Column>
+            <Column>
+              <FormItem label="BMI">
+                <Input type="text" onChange={(e)=>setBMI(e.target.value)}></Input>
+              </FormItem>
+            </Column>
+            <Column>
+              <FormItem label="Cbac Score ">
+                <Input type="text" onChange={(e)=>setCbacScore(e.target.value)}></Input>
+              </FormItem>
+            </Column>
+          </Row>
         </FormContainer>
       </Container>
       {age <= 30 ? (
@@ -2948,20 +3019,21 @@ function FamilyHead(props) {
             </QuestionRow>
             {hepatitis == "yes" ? (
               <>
-              {partE5Option.map((item,index)=>(
-                <>        
-                <QuestionSubRow key={index}>
-                <QuestionSubCol>
-                {t(item)}/{item}
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  <Checkbox
-                    onChange={() => handlePartE5Select(item)}
-                    value={partE5OptionSelect.includes(item)}
-                  ></Checkbox>
-                </AnswerSubCol>
-              </QuestionSubRow></>
-              ))}
+                {partE5Option.map((item, index) => (
+                  <>
+                    <QuestionSubRow key={index}>
+                      <QuestionSubCol>
+                        {t(item)}/{item}
+                      </QuestionSubCol>
+                      <AnswerSubCol>
+                        <Checkbox
+                          onChange={() => handlePartE5Select(item)}
+                          value={partE5OptionSelect.includes(item)}
+                        ></Checkbox>
+                      </AnswerSubCol>
+                    </QuestionSubRow>
+                  </>
+                ))}
               </>
             ) : (
               <></>
@@ -3012,7 +3084,7 @@ function FamilyHead(props) {
             </QuestionRow>
             {leprosy == "yes" ? (
               <>
-             {partE8Options.map((item, index) => (
+                {partE8Options.map((item, index) => (
                   <QuestionSubRow key={index}>
                     <QuestionSubCol>
                       {t(item)}/{item}

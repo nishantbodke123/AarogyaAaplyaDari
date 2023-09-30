@@ -6,6 +6,7 @@ import Protected from "./Auth/Protected";
 import Error from "./Auth/error";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import UserList from "./Components/UserList/UserList";
+import MemberUpdate from "./Components/Registration/MemberUpdate";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard/>}></Route>
             <Route path="user" element={<User />}></Route>
             <Route path="register" element={<Register />}></Route>
+            <Route path="update" element={<MemberUpdate/>}></Route>
           </Route>
           <Route path="/*" element={<Error/>}></Route>
         </Routes>

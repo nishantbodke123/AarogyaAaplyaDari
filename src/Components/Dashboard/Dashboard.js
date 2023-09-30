@@ -153,6 +153,7 @@ const Dashboard = () => {
 
   const handleFamilyMembersView=(data)=>{
      console.log(data);
+     navigate('/update',{state:data});
   }
   const FamilyMemberItems = [
     {
