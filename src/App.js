@@ -7,6 +7,7 @@ import Error from "./Auth/error";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import UserList from "./Components/UserList/UserList";
 import MemberUpdate from "./Components/Registration/MemberUpdate";
+import MemberAdd from "./Components/Registration/MemberAdd";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="user" element={<User />}></Route>
             <Route path="register" element={<Register />}></Route>
             <Route path="update" element={<MemberUpdate/>}></Route>
+            <Route path="addMember" element={<MemberAdd/>}></Route>
           </Route>
           <Route path="/*" element={<Error/>}></Route>
         </Routes>

@@ -1,25 +1,50 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header/Header";
-import { Button, Card, Col, Row, Spin, Table, Tabs, message } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Input,
+  Row,
+  Select,
+  Spin,
+  Table,
+  Tabs,
+  message,
+} from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { BASE_URL } from "../../Utils/BaseURL";
 import {
+  AddButton,
   Box,
   BoxContainer,
+  ColorStrip,
+  Column,
   Container,
   CountIcon,
+  FormContainer,
+  FormHeader,
+  FormItem,
+  ModalFormItem,
   StyledTabs,
   SubContainer,
   TableContainer,
   TableHeading,
+  ToDayCitizenCountModal,
+  ToDayFamilyCountModal,
+  TotalCountModal,
+  TotalFamilyCount,
+  UpdateButton,
+  UpdateModal,
   ViewButton,
   ViewModal,
 } from "./style";
 import TabPane from "antd/es/tabs/TabPane";
 import { useNavigate } from "react-router-dom";
 import FamilyHead from "../Registration/FamilyHead";
+import TextArea from "antd/es/input/TextArea";
 
 const Dashboard = () => {
   const [dashboardCounts, setDashboardCounts] = useState({});
@@ -28,12 +53,90 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [familyMemeberDetails, setFamilyMemberDetails] = useState([]);
+  const [familyID, setFamilyID] = useState();
+  const [noOfFamilyMembers, setNoOfFamilyMembers] = useState();
+  const [familyMemberArrayLength, setFamilyMemberArrayLength] = useState();
+  const [showToDayCitizenCountModal, setShowToDayCitizenCountModal] =
+    useState(false);
+  const [TodayCitizenCountList, setTodayCitizenCountList] = useState();
+  const [showTodayFamilyCountModal, setShowTodayFamilyCountModal] =
+    useState(false);
+  const [TodayFamilyCountList, setTodayFamilyCountList] = useState();
+  const [showTotalCountModal, setShowTotalCountModal] = useState(false);
+  const [totolCountList, setTotalCountList] = useState();
+  const [showTotalFamilyCountModal, setShowTotalFamilyCountModal] =
+    useState(false);
+  const [totalFamilyCountList, setTotalFamilyCountList] = useState();
   const navigate = useNavigate();
+
   let axiosConfig = {
     headers: {
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
+
+  const handleShowToDayCitizenCountModal = () => {
+    axios
+      .get(`${BASE_URL}/healthworker/api/GetCitizenList/Today`, axiosConfig)
+      .then((response) => {
+        console.log(response.data);
+        setTodayCitizenCountList(response.data);
+        setShowToDayCitizenCountModal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleHideToDayCitizenCountModal = () => {
+    setShowToDayCitizenCountModal(false);
+  };
+  const handleShowTodayFamilyCountModal = () => {
+    axios
+      .get(`${BASE_URL}/healthworker/api/GetFamilyList/Today`, axiosConfig)
+      .then((response) => {
+        console.log(response.data);
+        setTodayFamilyCountList(response.data);
+        setShowTodayFamilyCountModal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleHideTodayFamilyCountModal = () => {
+    setShowTodayFamilyCountModal(false);
+  };
+
+  const handleShowTotalCountModal = () => {
+    axios
+      .get(`${BASE_URL}/healthworker/api/GetCitizenList/All`, axiosConfig)
+      .then((response) => {
+        console.log(response.data);
+        setTotalCountList(response.data);
+        setShowTotalCountModal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleHideTotalCountModal = () => {
+    setShowTotalCountModal(false);
+  };
+  const handleShowTotalFamilyCountModal = () => {
+    axios
+      .get(`${BASE_URL}/healthworker/api/GetFamilyList/All`, axiosConfig)
+      .then((response) => {
+        console.log(response.data);
+        setTotalFamilyCountList(response.data);
+        setShowTotalFamilyCountModal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleHideTotalFamilyCountModal = () => {
+    setShowTotalFamilyCountModal(false);
+  };
+
   useEffect(() => {
     setLoading(true);
 
@@ -94,14 +197,14 @@ const Dashboard = () => {
     axios
       .get(`${BASE_URL}/healthworker/api/GetFamilyMembersDetails`, axiosConfig)
       .then((response) => {
-        console.log(response);
+        console.log(response.data.length);
+        setFamilyMemberArrayLength(response.data.length);
         setFamilyMemberDetails(response.data);
-        message.success(response.status)
         setShowViewModal(true);
       })
       .catch((error) => {
         console.log(error);
-        message.warning(error.status)
+        message.warning(error.status);
       });
   };
   const handleHideViewModal = () => {
@@ -126,8 +229,8 @@ const Dashboard = () => {
       dataIndex: "mobileNo",
     },
     {
-      title:"Address",
-      dataIndex:"address"
+      title: "Address",
+      dataIndex: "address",
     },
     {
       title: "Total Family Members",
@@ -140,6 +243,8 @@ const Dashboard = () => {
           <>
             <ViewButton
               onClick={() => {
+                setFamilyID(data.id);
+                setNoOfFamilyMembers(data.totalFamilyMembers);
                 handleViewModal(data.familyId);
               }}
             >
@@ -151,10 +256,15 @@ const Dashboard = () => {
     },
   ];
 
-  const handleFamilyMembersView=(data)=>{
-     console.log(data);
-     navigate('/update',{state:data});
-  }
+  const handleFamilyMembersView = (data) => {
+    console.log(data);
+    navigate("/update", { state: data });
+  };
+
+  const handleNewFamilyMemberAdd = () => {
+    console.log(familyID, noOfFamilyMembers);
+    navigate("/addMember", { state: familyID });
+  };
   const FamilyMemberItems = [
     {
       title: "ID",
@@ -189,11 +299,80 @@ const Dashboard = () => {
       dataIndex: "abhaId",
     },
     {
-      title:"Action",
-      render:(data)=>{
-        return(<ViewButton onClick={()=>handleFamilyMembersView(data)}>View</ViewButton>)
-      }
-    }
+      title: "Action",
+      render: (data) => {
+        return (
+          <ViewButton onClick={() => handleFamilyMembersView(data)}>
+            View
+          </ViewButton>
+        );
+      },
+    },
+  ];
+
+  const TodayCitizenCountTitleList = [
+    {
+      title: "Member ID",
+      dataIndex: "memberId",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+    },
+  ];
+  const TodayFamilyCountTitleList = [
+    {
+      title: "Family ID",
+      dataIndex: "familyId",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+    },
+  ];
+  const TotalCountTitleList = [
+    {
+      title: "Member ID",
+      dataIndex: "memberId",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+    },
+  ];
+  const TotalFamilyCountList = [
+    {
+      title: "Family ID",
+      dataIndex: "familyId",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+    },
   ];
   return (
     <>
@@ -201,7 +380,8 @@ const Dashboard = () => {
         <Header />
         <Container>
           <SubContainer>
-            <Box>
+            <Box onClick={() => handleShowToDayCitizenCountModal()}>
+              <ColorStrip />
               <BoxContainer>
                 <Row>
                   <Col>
@@ -214,7 +394,8 @@ const Dashboard = () => {
                 {dashboardCounts.todays_count}
               </BoxContainer>
             </Box>
-            <Box>
+            <Box onClick={() => handleShowTodayFamilyCountModal()}>
+              <div style={{ backgroundColor: "#ff8551", height: "20%" }}></div>
               <BoxContainer>
                 <Row>
                   <Col>
@@ -227,7 +408,8 @@ const Dashboard = () => {
                 {dashboardCounts.today_family_count}
               </BoxContainer>
             </Box>
-            <Box>
+            <Box onClick={() => handleShowTotalCountModal()}>
+              <div style={{ backgroundColor: "#ff8551", height: "20%" }}></div>
               <BoxContainer>
                 <Row>
                   <Col>
@@ -241,7 +423,8 @@ const Dashboard = () => {
               </BoxContainer>
             </Box>
 
-            <Box>
+            <Box onClick={() => handleShowTotalFamilyCountModal()}>
+              <div style={{ backgroundColor: "#ff8551", height: "20%" }}></div>
               <BoxContainer>
                 <Row>
                   <Col>
@@ -255,6 +438,7 @@ const Dashboard = () => {
               </BoxContainer>
             </Box>
             <Box>
+              <div style={{ backgroundColor: "#ff8551", height: "20%" }}></div>
               <BoxContainer>
                 <Row>
                   <Col>
@@ -287,12 +471,83 @@ const Dashboard = () => {
             </TabPane>
           </StyledTabs>
         </TableContainer>
-        <ViewModal footer={<><Button>Submit</Button></>} width={1200} open={showViewModal} onCancel={handleHideViewModal}>
+        <ViewModal
+          footer={<></>}
+          width={1200}
+          open={showViewModal}
+          onCancel={handleHideViewModal}
+        >
           <Table
             columns={FamilyMemberItems}
             dataSource={familyMemeberDetails}
           ></Table>
+          {familyMemberArrayLength == noOfFamilyMembers ? (
+            <></>
+          ) : (
+            <>
+              {" "}
+              <AddButton
+                onClick={() => {
+                  handleNewFamilyMemberAdd();
+                }}
+              >
+                Add Member
+              </AddButton>
+            </>
+          )}
         </ViewModal>
+        <ToDayCitizenCountModal
+          open={showToDayCitizenCountModal}
+          onCancel={handleHideToDayCitizenCountModal}
+          width={800}
+          footer={<></>}
+        >
+          <h3>Today's Citizen Count</h3>
+          <Table
+            columns={TodayCitizenCountTitleList}
+            dataSource={TodayCitizenCountList}
+            bordered
+            scroll={{ y: 300 }}
+          ></Table>
+        </ToDayCitizenCountModal>
+        <ToDayFamilyCountModal
+          open={showTodayFamilyCountModal}
+          onCancel={handleHideTodayFamilyCountModal}
+          footer={<></>}
+        >
+          <h3>Today's Family Count</h3>
+          <Table
+            columns={TodayFamilyCountTitleList}
+            dataSource={TodayFamilyCountList}
+            bordered
+            scroll={{ y: 300 }}
+          ></Table>
+        </ToDayFamilyCountModal>
+        <TotalCountModal
+          open={showTotalCountModal}
+          width={800}
+          onCancel={handleHideTotalCountModal}
+          footer={<></>}
+        >
+          <h3>Total Count</h3>
+          <Table
+            columns={TotalCountTitleList}
+            dataSource={totolCountList}
+            scroll={{ y: 300 }}
+          ></Table>
+        </TotalCountModal>
+        <TotalFamilyCount
+          open={showTotalFamilyCountModal}
+          onCancel={handleHideTotalFamilyCountModal}
+          footer={<></>}
+        >
+          <h3>Total Family Count</h3>
+          <Table
+            columns={TotalFamilyCountList}
+            dataSource={totalFamilyCountList}
+            scroll={{ y: 300 }}
+          ></Table>
+        </TotalFamilyCount>
       </Spin>
     </>
   );

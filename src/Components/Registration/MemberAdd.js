@@ -49,14 +49,9 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import Header from "../Header/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHouse,
-  faPlug,
-  faPlus,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 
-function MemberUpdate(props) {
+function MemberAdd(props) {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const { state } = useLocation();
@@ -68,57 +63,11 @@ function MemberUpdate(props) {
   };
   useEffect(() => {
     i18n.changeLanguage("mr");
-    console.log(state);
-    setName(state.name);
-    setGender(state.gender);
-    setAge(state.age);
-    setPhone(state.mobileNo);
-    setAadharCard(state.aadharCard);
-    setAbhaId(state.abhaId);
-    setPulse(state.pulse);
-    setBloodPressure(state.bloodPressure);
-    setWeight(state.weight);
-    setHeight(state.height);
-    setBMI(state.BMI);
-    setBloodConsent(state.bloodConsent);
-    if (state.bloodCollectionLocation == "Home") {
-      setBloodSampleHome(true);
-    } else if (state.bloodCollectionLocation == "Center") {
-      setBloodSampleCenter(true);
-    } else if (state.bloodCollectionLocation == "Denied") {
-      setBloodSampleDenied(true);
-    } else {
-    }
-
-    setCbacScore(state.cbacScore);
-    setQuestion1A(state.Questionnaire.part_a[0].selectedOptions[0]);
-    setQuestion2A(state.Questionnaire.part_a[1].selectedOptions[0]);
-    setQuestion3A(state.Questionnaire.part_a[2].selectedOptions[0]);
-    setQuestion4A(state.Questionnaire.part_a[3].selectedOptions[0]);
-    setQuestion5A(state.Questionnaire.part_a[4].selectedOptions[0]);
-    setQuestion6A(state.Questionnaire.part_a[5].selectedOptions[0]);
-    setPartB1OptionsSelected(state.Questionnaire.part_b[0].selectedOptions);
-    setPartB2OptionSelected(state.Questionnaire.part_b[1].selectedOptions);
-    setPartB3OptionsSelected(state.Questionnaire.part_b[2].selectedOptions);
-    setPartC1OptionSelect(state.Questionnaire.part_c[0].selectedOptions);
-    setPartC2OptionSelect(state.Questionnaire.part_c[1].selectedOptions);
-    setQuestion1D(state.Questionnaire.part_d[0].selectedOption[0]);
-    setQuestion2D(state.Questionnaire.part_d[1].selectedOptions[0]);
-    setPartE1OptionSelect(state.Questionnaire.part_e[0].selectedOptions);
-    setPartE2OptionSelect(state.Questionnaire.part_e[1].selectedOptions);
-    setPartE3OptionSelect(state.Questionnaire.part_e[2].selectedOptions);
-    setPartE4OptionSelect(state.Questionnaire.part_e[3].selectedOptions);
-    setPartE5OptionSelect(state.Questionnaire.part_e[4].selectedOptions);
-    setAnimalBitten(state.Questionnaire.part_e[5].selectedOptions);
-    setAnimalBitten(state.Questionnaire.part_e[6].selectedOptions);
-    setPartE8OptionSelect(state.Questionnaire.part_e[7].selectedOptions);
   }, []);
 
   //Family Head Form States
 
   const [familyHeadName, setFamilyHeadName] = useState("");
-  // const [middelName, setMiddleName] = useState("");
-  // const [lastName, setLastName] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [plotNumber, setPlotNumber] = useState("");
   const [addressLine1, setAddressLine1] = useState("");
@@ -138,14 +87,6 @@ function MemberUpdate(props) {
     pincode: pincode,
     totalFamilyMembers: totalFamilyMembers,
     healthPost: healthPost,
-  };
-
-  const handleFormSubmit = () => {
-    if (age >= 60) {
-      handleConsentModalShow();
-    } else {
-      handleUpdate();
-    }
   };
 
   // Member's Form
@@ -219,59 +160,6 @@ function MemberUpdate(props) {
   const [snakeBitten, setSnakeBitten] = useState("");
 
   const [familyMembersArray, setFamilyMembersArray] = useState([]);
-
-  const handleClearFamilyHead = () => {
-    setFamilyHeadName("");
-    setMobileNo("");
-    setPlotNumber("");
-    setAddressLine1("");
-    setPinCode("");
-    setTotalFamilyMembers("");
-  };
-
-  const handleClearGeneralPart = () => {
-    setName("");
-    setGender("");
-    setAge("");
-    setPhone("");
-    setAadharCard("");
-    setAbhaId("");
-  };
-
-  const handleClearPartA = () => {
-    setQuestion1A("");
-    setQuestion2A("");
-    setQuestion3A("");
-    setQuestion4A("");
-    setQuestion5A("");
-    setQuestion6A("");
-  };
-
-  const handleClearPartB = () => {
-    setPartB1OptionsSelected([]);
-    setPartB2OptionSelected([]);
-    setPartB3OptionsSelected([]);
-  };
-
-  const handleClearPartC = () => {
-    setPartC1OptionSelect([]);
-    setPartC2OptionSelect([]);
-  };
-
-  const handleClearPartD = () => {
-    setQuestion1D("");
-    setQuestion2D("");
-  };
-  const handleClearPartE = () => {
-    setPartE1OptionSelect([]);
-    setPartE2OptionSelect([]);
-    setPartE3OptionSelect([]);
-    setPartE4OptionSelect([]);
-    setPartE5OptionSelect([]);
-    setAnimalBitten("");
-    setSnakeBitten("");
-    setPartE8OptionSelect([]);
-  };
 
   const partB1Options = [
     "Shortness_of_breath_difficulty_breathing",
@@ -486,6 +374,7 @@ function MemberUpdate(props) {
     gender: gender,
     age: age,
     mobileNo: phone,
+    familyHead: state,
     aadharAndAbhaConsent: "true",
     aadharCard: aadharCard,
     abhaId: abhaId,
@@ -751,10 +640,54 @@ function MemberUpdate(props) {
           : ""
         : "",
   };
-  const handleUpdate = () => {
+
+  const handleFormSubmit = async () => {
+    if (name === "") {
+      message.warning("Please Enter Name");
+    } else if (aadharCard === "") {
+      message.warning("Please Enter Aadhar Card Number");
+    } else if (gender === "") {
+      message.warning("Please Mention Gender");
+    } else if (age === "") {
+      message.warning("Please Enter Age");
+    } else if (abhaId === "") {
+      message.warning("Please Enter Abha ID");
+    } else {
+      try {
+        const [aadharResponse, abhaResponse] = await Promise.all([
+          axios.get(
+            `${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`,
+            {
+              headers: sessionStorage.getItem("Token"),
+            }
+          ),
+          axios.get(`${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`, {
+            headers: sessionStorage.getItem("Token"),
+          }),
+        ]);
+
+        const adharNoStatus = aadharResponse.status;
+        const abhaNoStatus = abhaResponse.status;
+
+        console.log(adharNoStatus, "+", abhaNoStatus, "+", age);
+
+        if (adharNoStatus === 200 && abhaNoStatus === 200 && age >= 60) {
+          handleConsentModalShow();
+        } else if (adharNoStatus === 200 && abhaNoStatus === 200) {
+          handleAdd();
+        } else {
+          message.warning("Not Submitted");
+        }
+      } catch (error) {
+        message.warning(error.response.data.message);
+      }
+    }
+  };
+
+  const handleAdd = () => {
     axios
-      .patch(
-        `${BASE_URL}/healthworker/api/UpdateFamilyDetails/${state.id}`,
+      .post(
+        `${BASE_URL}/healthworker/api/PostFamilyDetails`,
         memberData,
         axiosConfig
       )
@@ -773,6 +706,7 @@ function MemberUpdate(props) {
 
   return (
     <>
+      {console.log(state)}
       <Header />
       <Container>
         <FormContainer layout="vertical">
@@ -915,7 +849,7 @@ function MemberUpdate(props) {
       {age <= 30 ? (
         <>
           <SubmitButtonDiv>
-            <SubmitButton onClick={() => handleUpdate()}>Update</SubmitButton>
+            <SubmitButton onClick={() => handleAdd()}>Submit</SubmitButton>
           </SubmitButtonDiv>
         </>
       ) : (
@@ -1484,7 +1418,7 @@ function MemberUpdate(props) {
                 <SubmitButtonDiv>
                   <Button onClick={() => onKeyChange("4")}>Back</Button>
                   <SubmitButton onClick={() => handleFormSubmit()}>
-                    {age >= 60 ? "Next" : "Submit"}
+                    {age > 60 ? "Next" : "Submit"}
                   </SubmitButton>
                 </SubmitButtonDiv>
               </>
@@ -1495,7 +1429,7 @@ function MemberUpdate(props) {
             onCancel={handleConsentModalClose}
             title="Blood Sample / रक्त नमुना"
             footer={
-              <SubmitButton onClick={() => handleUpdate()}>Update</SubmitButton>
+              <SubmitButton onClick={() => handleAdd()}>Submit</SubmitButton>
             }
           >
             <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
@@ -1577,4 +1511,4 @@ function MemberUpdate(props) {
   );
 }
 
-export default MemberUpdate;
+export default MemberAdd;
