@@ -408,33 +408,54 @@ function FamilyHead(props) {
     setSnakeBitten("");
     setPartE8OptionSelect([]);
     setDoYouHaveFever("");
-
     setConjuctivitis("");
-
     setLooseMotion("");
-
     setLeprosy("");
   };
 
   const handleSubmitAndNext = () => {
-    if (partialSubmit) {
-      familyMembersArray.push(memberData);
-      handleSubmit();
-    } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
-      familyMembersArray.push(memberData);
-      handleClearPartA();
-      handleClearPartB();
-      handleClearPartC();
-      handleClearPartD();
-      handleClearPartE();
-      onKeyChange("1");
-      handleClearGeneralPart();
-      setNoOfMembersComplted(noOfMembersCompleted + 1);
+    if (age >= 60) {
+      if (bloodConsent || bloodSampleDenied) {
+        if (partialSubmit) {
+          familyMembersArray.push(memberData);
+          handleSubmit();
+        } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
+          familyMembersArray.push(memberData);
+          handleClearPartA();
+          handleClearPartB();
+          handleClearPartC();
+          handleClearPartD();
+          handleClearPartE();
+          onKeyChange("1");
+          handleClearGeneralPart();
+          setNoOfMembersComplted(noOfMembersCompleted + 1);
+        } else {
+          familyMembersArray.push(memberData);
+          handleSubmit();
+        }
+        handleConsentModalClose();
+      } else {
+        message.warning("Blood Sample Collection Consent Required");
+      }
     } else {
-      familyMembersArray.push(memberData);
-      handleSubmit();
+      if (partialSubmit) {
+        familyMembersArray.push(memberData);
+        handleSubmit();
+      } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
+        familyMembersArray.push(memberData);
+        handleClearPartA();
+        handleClearPartB();
+        handleClearPartC();
+        handleClearPartD();
+        handleClearPartE();
+        onKeyChange("1");
+        handleClearGeneralPart();
+        setNoOfMembersComplted(noOfMembersCompleted + 1);
+      } else {
+        familyMembersArray.push(memberData);
+        handleSubmit();
+      }
     }
-    handleConsentModalClose();
   };
 
   const handleSubmit = () => {
@@ -956,174 +977,6 @@ function FamilyHead(props) {
           ? "Denied"
           : ""
         : "",
-
-    // partA:
-    //   age > 30
-    //     ? {
-    //         What_is_your_age_completeyears: question1A,
-    //         Do_you_smoke_or_consume_smokeless_products_such_as_gutka_or_khaini:
-    //           question2A,
-    //         Do_you_consume_alcohol_daily: question3A,
-    //         Measurement_of_waist_in_cm: question4A,
-    //         Do_you_undertake_any_physical_activities_for_minimum_of__minutes_in_a_week:
-    //           question5A,
-    //         Do_you_have_a_family_history_any_one_of_your_parents_or_siblings_of_high_blood_pressure_diabetes_and_heart_disease:
-    //           question6A,
-    //       }
-    //     : {},
-    // partB:
-    //   age > 30
-    //     ? {
-    //         B_Women_and_Men: {
-    //           Shortness_of_breath_difficulty_breathing: question1B1,
-    //           Coughing_more_than__weeks: question2B1,
-    //           Blood_in_sputum: question3B1,
-    //           Fever_for_more_than__weeks: question4B1,
-    //           Weight_loss: question5B1,
-    //           Night_sweats: question6B1,
-    //           Are_you_currently_taking_medicines_to_treat_TB: question7B1,
-    //           Is_any_family_member_currently_suffering_from_TB_disease:
-    //             question8B1,
-    //           A_history_of_TB_disease: question9B1,
-    //           Frequent_bruising_of_hands_and_soles_of_feet: question10B1,
-    //           Frequent_tingling_in_palms_of_hands_and_feet: question11B1,
-    //           Difficulty_walking_due_to_weakness_in_legs: question32B1,
-    //           Difficulty_grasping_objects_properly_in_the_hands: question31B1,
-    //           Incomplete_closure_of_the_eyelids: question30B1,
-    //           Tingling_and_numbness_in_hands_and_feet: question29B1,
-    //           Crooked_fingers_and_toes: question28B1,
-    //           Frequent_numbness_of_the_palms_of_the_hands_and_feet:
-    //             question27B1,
-    //           Lumps_on_any_part_of_the_body: question26B1,
-    //           Thickening_of_the_skin_in_any_part_of_the_body: question25B1,
-    //           Lightcolored_patches_or_spots_in_the_mouth_with_no_sensation:
-    //             question24B1,
-    //           Change_in_voice: question23B1,
-    //           Pain_while_chewing: question22B1,
-    //           Nonhealing_white_or_red_sores_in_the_mouth_for_more_than_two_weeks:
-    //             question21B1,
-    //           Nonhealing_growth_in_mouth_for_more_than_two_weeks: question20B1,
-    //           Nonhealing_of_mouth_sores_for_more_than_two_weeks: question19B1,
-    //           Difficulty_opening_the_mouth: question18B1,
-    //           History_of_Feetka: question17B1,
-    //           You_have_trouble_hearing: question16B1,
-    //           Eye_redness_for_more_than_a_week: question15B1,
-    //           Relapse_of_eye_pain_for_more_than_a_week: question14B1,
-    //           Difficulty_in_reading: question13B1,
-    //           Blurred_and_blurred_vision: question12B1,
-    //         },
-    //         B_Women_only: {
-    //           Foul_smelling_vaginal_discharge: question7B2,
-    //           Bleeding_after_intercourse: question6B2,
-    //           Bleeding_after_menopause: question5B2,
-    //           Bleeding_between_periods: question4B2,
-    //           Lump_in_the_breast: question1B2,
-    //           Blood_stained_discharge_from_the_nipple: question2B2,
-    //           Change_in_shape_and_size_of_breast: question3B2,
-    //         },
-    //         BFor_Senior_Citizens__years_and_above: {
-    //           Do_you_feel_unsteady_while_standing_or_walking: question1B3,
-    //           Impairment_of_movement_if_suffering_from_physical_disability:
-    //             question2B3,
-    //           Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet:
-    //             question3B3,
-    //           Forgetting_your_home_address_or_household_names: question4B3,
-    //         },
-    //       }
-    //     : {},
-    // partC:
-    //   age > 30
-    //     ? {
-    //         Type_of_Fuel_used_for_cooking: {
-    //           Firewood: question1C1,
-    //           Crop_Residue: question2C1,
-    //           Cow_dung_cake: question3C1,
-    //           Coal: question4C1,
-    //           Kerosene: question5C1,
-    //           LPG: question6C1,
-    //         },
-
-    //         Occupational_exposure: {
-    //           Crop_residue_burning: question1C2,
-    //           burning_of_garbage_leaves: question2C2,
-    //           working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc:
-    //             question3C2,
-    //         },
-    //       }
-    //     : {},
-    // partD:
-    //   age > 30
-    //     ? {
-    //         Little_interest_of_pleasure_in_doing_things: question1D,
-    //         Feeling_down_depressed_or_hopeless: question2D,
-    //       }
-    //     : {},
-    // partE:
-    //   age > 60
-    //     ? {
-    //         Fever: {
-    //           More_than__days: doYouhaveFever1,
-    //           Less_than__days: doYouhaveFever2,
-    //           With_Chills: doYouhaveFever3,
-    //           With_Rash: doYouhaveFever4,
-    //           with_Bleeding: doYouhaveFever5,
-    //           with_Altered_Sensorium: doYouhaveFever6,
-    //         },
-    //         Conjuctivitis: {
-    //           watery: conjuctivitis1,
-    //           redness: conjuctivitis2,
-    //           itching_eyes: conjuctivitis3,
-    //         },
-    //         Lepto: {
-    //           Waddling_in_water: leptospirosis1,
-    //           Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent:
-    //             leptospirosis2,
-    //         },
-
-    //         Hepatitis__Jaundice: {
-    //           Eating_outside__uncovered_food__drinking_contaminated_water:
-    //             hepatitis1,
-    //         },
-    //         Loose_Motion: {
-    //           With_Blood: looseMotion1,
-    //           Without_Blood: looseMotion2,
-    //           Vomitting: looseMotion3,
-    //         },
-    //         Leprosy: {
-    //           Numbness__Tingling_in_handsfeet: leprosy1,
-    //           Loss_of_sensation_in_any_parts_of_bod: leprosy2,
-    //           Swelling__Nodule_on_FaceHandsFeet: leprosy3,
-    //           Loss_of_eyelash_or_eyebrow: leprosy4,
-    //           Thickened_earlobes: leprosy5,
-    //         },
-    //         Animal_Bite: {
-    //           Animal_Bite: animalBitten,
-    //         },
-    //         Snake_Bite: {
-    //           Snake_Bite: snakeBitten,
-    //         },
-    //       }
-    //     : {},
-    // bloodConsent: bloodConsent,
-    // bloodCollectionLocation:
-    //   age > 60
-    //     ? bloodSampleHome
-    //       ? "Home"
-    //       : bloodSampleCenter
-    //       ? "Center"
-    //       : bloodSampleDenied
-    //       ? "Denied"
-    //       : ""
-    //     : "",
-
-    // bloodConsent: bloodConsent,
-    // bloodCollectionLocation: bloodSampleHome
-    //   ? "Home"
-    //   : bloodSampleCenter
-    //   ? "Center"
-    //   : bloodSampleDenied
-    //   ? "Denied"
-    //   : "",
   };
 
   return familyHeadRegister == "no" ? (

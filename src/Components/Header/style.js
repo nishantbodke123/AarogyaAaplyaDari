@@ -1,4 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Select } from "antd";
+import { Option } from "antd/es/mentions";
 import { styled } from "styled-components";
 
 export const HeaderBar = styled.div`
@@ -16,10 +18,22 @@ export const HeaderBarSubDiv = styled.div`
     margin: 2% 70%;
   }
 `;
-export const LogOutIcon = styled(FontAwesomeIcon)`
-  
+// export const LogOutIcon = styled(FontAwesomeIcon)`
+
+//   &:hover {
+//     font-size: 20px;
+//   }
+// `;
+export const UserSelect = styled(Select)`
   &:hover {
     font-size: 20px;
+    color: white;
+  }
+`;
+export const LogoutOption = styled(Option)`
+  &:hover {
+    font-size: 20px;
+    color: white;
   }
 `;
 export const HeaderLogo = styled.img`

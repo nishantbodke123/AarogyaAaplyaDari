@@ -685,23 +685,48 @@ function MemberAdd(props) {
   };
 
   const handleAdd = () => {
-    axios
-      .post(
-        `${BASE_URL}/healthworker/api/PostFamilyDetails`,
-        memberData,
-        axiosConfig
-      )
-      .then((response) => {
-        console.log(response.data.message);
-        message.success(response.data.message);
-        setTimeout(() => {
-          window.location.replace("/dashboard");
-        }, 1000);
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-        message.warning(error.response.data.message);
-      });
+    if (age >= 60) {
+      if (bloodConsent || bloodSampleDenied) {
+        axios
+          .post(
+            `${BASE_URL}/healthworker/api/PostFamilyDetails`,
+            memberData,
+            axiosConfig
+          )
+          .then((response) => {
+            console.log(response.data.message);
+            message.success(response.data.message);
+            setTimeout(() => {
+              window.location.replace("/dashboard");
+            }, 1000);
+          })
+          .catch((error) => {
+            console.log(error.response.data.message);
+            message.warning(error.response.data.message);
+          });
+      }else{
+        message.warning("Blood Sample Collection Consent Required")
+      }
+    }else{
+        axios
+        .post(
+          `${BASE_URL}/healthworker/api/PostFamilyDetails`,
+          memberData,
+          axiosConfig
+        )
+        .then((response) => {
+          console.log(response.data.message);
+          message.success(response.data.message);
+          setTimeout(() => {
+            window.location.replace("/dashboard");
+          }, 1000);
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+          message.warning(error.response.data.message);
+        });
+    }
+    
   };
 
   return (

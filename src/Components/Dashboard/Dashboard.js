@@ -28,6 +28,7 @@ import {
   FormHeader,
   FormItem,
   ModalFormItem,
+  PartialSurveyCountModal,
   StyledTabs,
   SubContainer,
   TableContainer,
@@ -67,6 +68,8 @@ const Dashboard = () => {
   const [showTotalFamilyCountModal, setShowTotalFamilyCountModal] =
     useState(false);
   const [totalFamilyCountList, setTotalFamilyCountList] = useState();
+  const [showPartialCountModal, setShowPartialCountModal] = useState(false);
+  const [partialCountList, setPartialCountList] = useState();
   const navigate = useNavigate();
 
   let axiosConfig = {
@@ -135,6 +138,28 @@ const Dashboard = () => {
   };
   const handleHideTotalFamilyCountModal = () => {
     setShowTotalFamilyCountModal(false);
+  };
+
+  const handleShowPartialCountModal = () => {
+    setLoading(true);
+    axios
+      .get(
+        `${BASE_URL}/healthworker/api/GetPartiallyInsertedRecord`,
+        axiosConfig
+      )
+      .then((response) => {
+        console.log(response.data);
+        setLoading(false);
+        setPartialCountList(response.data);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
+    setShowPartialCountModal(true);
+  };
+  const handleHidePartialCountModal = () => {
+    setShowPartialCountModal(false);
   };
 
   useEffect(() => {
@@ -374,6 +399,24 @@ const Dashboard = () => {
       dataIndex: "address",
     },
   ];
+  const PartialCountTitleList = [
+    {
+      title: "ID",
+      dataIndex: "id",
+    },
+    {
+      title: "Family ID",
+      dataIndex: "familyId",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Mobile No",
+      dataIndex: "mobileNo",
+    },
+  ];
   return (
     <>
       <Spin tip="Loading" spinning={loading}>
@@ -416,7 +459,7 @@ const Dashboard = () => {
                     <CountIcon icon={faBars} />
                   </Col>
                   <Col>
-                    <h3>Total Count</h3>
+                    <h3>Total Citizen Count</h3>
                   </Col>
                 </Row>
                 {dashboardCounts.total_count}
@@ -437,7 +480,7 @@ const Dashboard = () => {
                 {dashboardCounts.total_family_count}
               </BoxContainer>
             </Box>
-            <Box>
+            <Box onClick={() => handleShowPartialCountModal()}>
               <div style={{ backgroundColor: "#ff8551", height: "20%" }}></div>
               <BoxContainer>
                 <Row>
@@ -548,6 +591,16 @@ const Dashboard = () => {
             scroll={{ y: 300 }}
           ></Table>
         </TotalFamilyCount>
+        <PartialSurveyCountModal
+          open={showPartialCountModal}
+          onCancel={handleHidePartialCountModal}
+          footer={<></>}
+        >
+          <Table
+            columns={PartialCountTitleList}
+            dataSource={partialCountList}
+          ></Table>
+        </PartialSurveyCountModal>
       </Spin>
     </>
   );

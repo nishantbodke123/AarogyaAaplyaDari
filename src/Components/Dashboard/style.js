@@ -15,9 +15,11 @@ export const Box = styled.div`
   width: 220px;
   height: 110px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  border-radius: 5px 5px;
   &:hover {
     width: 220px;
     height: 130px;
+    box-shadow: #ff8551 0px 4px 6px -1px,#ff8551 0px 2px 4px -1px;
   }
 `;
 export const BoxContainer = styled.div`
@@ -176,7 +178,7 @@ export const AddButton = styled(Button)`
   }
 `;
 export const ColorStrip = styled.div`
-  background-color: #FF9B50;
+  background-color: #ff8551;
   height: 20% ;
 `;
 export const ToDayCitizenCountModal=styled(Modal)`
@@ -186,4 +188,6 @@ export const ToDayFamilyCountModal=styled(Modal)`
 export const TotalCountModal=styled(Modal)`
 `;
 export const TotalFamilyCount=styled(Modal)`
+`;
+export const PartialSurveyCountModal=styled(Modal)`
 `;
