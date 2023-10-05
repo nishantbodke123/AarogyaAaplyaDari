@@ -87,7 +87,14 @@ const Dashboard = () => {
         setShowToDayCitizenCountModal(true);
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response.status == 401) {
+          message.warning("system is logged out");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 1000);
+        } else {
+          message.error(error.message);
+        }
       });
   };
   const handleHideToDayCitizenCountModal = () => {
@@ -102,7 +109,14 @@ const Dashboard = () => {
         setShowTodayFamilyCountModal(true);
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response.status == 401) {
+          message.warning("system is logged out");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 1000);
+        } else {
+          message.error(error.message);
+        }
       });
   };
   const handleHideTodayFamilyCountModal = () => {
@@ -118,7 +132,14 @@ const Dashboard = () => {
         setShowTotalCountModal(true);
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response.status == 401) {
+          message.warning("system is logged out");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 1000);
+        } else {
+          message.error(error.message);
+        }
       });
   };
   const handleHideTotalCountModal = () => {
@@ -133,7 +154,14 @@ const Dashboard = () => {
         setShowTotalFamilyCountModal(true);
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response.status == 401) {
+          message.warning("system is logged out");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 1000);
+        } else {
+          message.error(error.message);
+        }
       });
   };
   const handleHideTotalFamilyCountModal = () => {
@@ -153,8 +181,14 @@ const Dashboard = () => {
         setPartialCountList(response.data);
       })
       .catch((error) => {
-        setLoading(false);
-        console.log(error);
+        if (error.response.status == 401) {
+          message.warning("system is logged out");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 1000);
+        } else {
+          message.error(error.message);
+        }
       });
     setShowPartialCountModal(true);
   };
@@ -175,7 +209,14 @@ const Dashboard = () => {
       })
       .catch((error) => {
         console.log(error);
-        message.error(error.message);
+        if (error.response.status == 401) {
+          message.warning("system is logged out");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 1000);
+        } else {
+          message.error(error.message);
+        }
         setLoading(false);
       });
     axios
@@ -186,7 +227,15 @@ const Dashboard = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.status);
+        if (error.response.status == 401) {
+          message.warning("system is logged out");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 1000);
+        } else {
+          // message.error(error.message);
+        }
         setLoading(false);
       });
 
@@ -228,8 +277,14 @@ const Dashboard = () => {
         setShowViewModal(true);
       })
       .catch((error) => {
-        console.log(error);
-        message.warning(error.status);
+        if (error.response.status == 401) {
+          message.warning("system is logged out");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 1000);
+        } else {
+          message.error(error.message);
+        }
       });
   };
   const handleHideViewModal = () => {

@@ -1121,7 +1121,7 @@ function FamilyHead(props) {
           <Column>
             <FormItem
               name="familyMembers"
-              label="Number of family members  / कुटुंबातील सदस्यांची संख्या"
+              label="Number of family members/ कुटुंबातील सदस्यांची संख्या"
               rules={[
                 {
                   required: true,
@@ -1410,8 +1410,8 @@ function FamilyHead(props) {
                   onChange={(e) => setQuestion1A(e.target.value)}
                   value={question1A}
                 >
-                  <Radio value="60 to 79 Years">
-                    60 to 79 Years / 60 ते 79 वर्षे
+                  <Radio value="50 to 79 Years">
+                    50 to 79 Years / 50 ते 79 वर्षे
                   </Radio>
                   <br />
                   <Radio value="80 and 80 above">

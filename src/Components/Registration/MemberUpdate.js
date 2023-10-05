@@ -769,7 +769,14 @@ function MemberUpdate(props) {
           })
           .catch((error) => {
             console.log(error.response.data.message);
-            message.warning(error.response.data.message);
+            if (error.response.status == 401) {
+              message.warning("system is logged out");
+              setTimeout(() => {
+                window.location.replace("/");
+              }, 1000);
+            } else {
+              message.warning(error.response.data.message);
+            }
           });
       } else {
         message.warning("Blood Sample Collection Consent Required");
@@ -790,7 +797,14 @@ function MemberUpdate(props) {
         })
         .catch((error) => {
           console.log(error.response.data.message);
-          message.warning(error.response.data.message);
+          if (error.response.status == 401) {
+            message.warning("system is logged out");
+            setTimeout(() => {
+              window.location.replace("/");
+            }, 1000);
+          } else {
+            message.warning(error.response.data.message);
+          }
         });
     }
   };
