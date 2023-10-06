@@ -25,6 +25,11 @@ export const HeaderBarSubDiv = styled.div`
 //   }
 // `;
 export const UserSelect = styled(Select)`
+  width: 180px;
+
+  .ant-select-selection-search {
+  }
+
   &:hover {
     font-size: 20px;
     color: white;

@@ -19,6 +19,7 @@ import axios from "axios";
 
 import { BASE_URL } from "../../Utils/BaseURL";
 import { Option } from "antd/es/mentions";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 function Header() {
   const menuItems = [
@@ -92,10 +93,14 @@ function Header() {
             <Link to={item.link}>{item.title}</Link>
           </Menu.Item>
         ))}
-        <div style={{ position: "absolute", right: "30px", top: "5px" }}>
+        <div style={{ position: "absolute", right: "30px", top: "2px" }}>
           {/* <Tooltip title="Logout">
             <LogOutIcon icon={faRightFromBracket} onClick={() => Logout()} />
           </Tooltip> */}
+          <FontAwesomeIcon
+            icon={faUser}
+            style={{ marginRight: "5px", fontSize: "18px" }}
+          />
           <UserSelect
             value={sessionStorage.getItem("name")}
             onChange={() => Logout()}
