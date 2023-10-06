@@ -84,6 +84,14 @@ function FamilyHead(props) {
       })
       .catch((error) => {
         console.log(error, "health post areas error ");
+        if (error.response.status == 401) {
+          message.warning("System is LogedOut");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 1000);
+        } else {
+          message.warning(error.response.status);
+        }
       });
   }, []);
 
@@ -256,6 +264,37 @@ function FamilyHead(props) {
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
   const [cbacScore, setCbacScore] = useState("");
+
+  const handleNameChange = (e) => {
+    const regex = /^[ a-zA-Z]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setName(e.target.value);
+    }
+  };
+  const handleAadharCardChange = (e) => {
+    const regex = /^[0-9]{1,12}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setAadharCard(e.target.value);
+    }
+  };
+  const handleAgeChange = (e) => {
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setAge(e.target.value);
+    }
+  };
+  const handleMobileNumberChange = (e) => {
+    const regex = /^[0-9]{1,10}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setPhone(e.target.value);
+    }
+  };
+  const handleAbhaIDChange = (e) => {
+    const regex = /^[0-9a-zA-z]{1,12}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setAbhaId(e.target.value);
+    }
+  };
 
   const handleFormSubmit = async () => {
     if (name === "") {
@@ -1236,7 +1275,9 @@ function FamilyHead(props) {
                 <Input
                   type="text"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => handleNameChange(e)}
+                  pattern="[a-zA-Z]+"
+                  allowClear
                 ></Input>
               </FormItem>
             </Column>
@@ -1248,7 +1289,7 @@ function FamilyHead(props) {
                   value={aadharCard}
                   maxLength={12}
                   allowClear
-                  onChange={(e) => setAadharCard(e.target.value)}
+                  onChange={(e) => handleAadharCardChange(e)}
                 ></Input>
               </FormItem>
             </Column>
@@ -1270,7 +1311,8 @@ function FamilyHead(props) {
                 <Input
                   type="number"
                   value={age}
-                  onChange={(e) => setAge(e.target.value)}
+                  allowClear
+                  onChange={(e) => handleAgeChange(e)}
                 ></Input>
               </FormItem>
             </Column>
@@ -1289,7 +1331,7 @@ function FamilyHead(props) {
                   type="text"
                   value={phone}
                   maxLength={10}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => handleMobileNumberChange(e)}
                 ></Input>
               </FormItem>
             </Column>
@@ -1299,8 +1341,7 @@ function FamilyHead(props) {
                   type="text"
                   value={abhaId}
                   maxLength={14}
-                  required
-                  onChange={(e) => setAbhaId(e.target.value)}
+                  onChange={(e) => handleAbhaIDChange(e)}
                 ></Input>
               </FormItem>
             </Column>

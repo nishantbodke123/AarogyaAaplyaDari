@@ -139,6 +139,38 @@ function MemberAdd(props) {
   const [BMI, setBMI] = useState("");
   const [cbacScore, setCbacScore] = useState("");
 
+  const handleNameChange = (e) => {
+    const regex = /^[ a-zA-Z]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setName(e.target.value);
+    }
+  };
+  const handleAadharCardChange = (e) => {
+    const regex = /^[0-9]{1,12}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setAadharCard(e.target.value);
+    }
+  };
+  const handleAgeChange = (e) => {
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setAge(e.target.value);
+    }
+  };
+  const handleMobileNumberChange = (e) => {
+    const regex = /^[0-9]{1,10}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setPhone(e.target.value);
+    }
+  };
+  const handleAbhaIDChange = (e) => {
+    const regex = /^[0-9a-zA-z]{1,12}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setAbhaId(e.target.value);
+    }
+  };
+
+
   // Part A question's state
   const [question1A, setQuestion1A] = useState("");
   const [question2A, setQuestion2A] = useState("");
@@ -763,7 +795,7 @@ function MemberAdd(props) {
                 <Input
                   type="text"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => handleNameChange(e)}
                 ></Input>
               </FormItem>
             </Column>
@@ -775,7 +807,7 @@ function MemberAdd(props) {
                   value={aadharCard}
                   maxLength={12}
                   allowClear
-                  onChange={(e) => setAadharCard(e.target.value)}
+                  onChange={(e) => handleAadharCardChange(e)}
                 ></Input>
               </FormItem>
             </Column>
@@ -797,7 +829,7 @@ function MemberAdd(props) {
                 <Input
                   type="number"
                   value={age}
-                  onChange={(e) => setAge(e.target.value)}
+                  onChange={(e) => handleAgeChange(e)}
                 ></Input>
               </FormItem>
             </Column>
@@ -816,7 +848,7 @@ function MemberAdd(props) {
                   type="text"
                   value={phone}
                   maxLength={10}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => handleMobileNumberChange(e)}
                 ></Input>
               </FormItem>
             </Column>
@@ -827,7 +859,7 @@ function MemberAdd(props) {
                   value={abhaId}
                   maxLength={14}
                   required
-                  onChange={(e) => setAbhaId(e.target.value)}
+                  onChange={(e) => handleAbhaIDChange(e)}
                 ></Input>
               </FormItem>
             </Column>

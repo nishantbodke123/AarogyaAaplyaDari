@@ -611,6 +611,7 @@ const Dashboard = () => {
         <ToDayFamilyCountModal
           open={showTodayFamilyCountModal}
           onCancel={handleHideTodayFamilyCountModal}
+          width={800}
           footer={<></>}
         >
           <h3>Today's Family Count</h3>
@@ -637,17 +638,19 @@ const Dashboard = () => {
         <TotalFamilyCount
           open={showTotalFamilyCountModal}
           onCancel={handleHideTotalFamilyCountModal}
+          width={800}
           footer={<></>}
         >
           <h3>Total Family Count</h3>
           <Table
             columns={TotalFamilyCountList}
             dataSource={totalFamilyCountList}
-            scroll={{ y: 300 }}
+            scroll={{ y: 400 }}
           ></Table>
         </TotalFamilyCount>
         <PartialSurveyCountModal
           open={showPartialCountModal}
+          width={800}
           onCancel={handleHidePartialCountModal}
           footer={<></>}
         >
