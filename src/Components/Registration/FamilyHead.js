@@ -264,6 +264,7 @@ function FamilyHead(props) {
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
   const [cbacScore, setCbacScore] = useState("");
+  const [demandLetter, setDemandLetter] = useState("");
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -294,6 +295,19 @@ function FamilyHead(props) {
     if (e.target.value === "" || regex.test(e.target.value)) {
       setAbhaId(e.target.value);
     }
+  };
+
+  const handleDemandLetter = (file) => {
+    console.log(file);
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      console.log("called: ", reader);
+      console.log(reader.result);
+      setDemandLetter(reader.result);
+    };
   };
 
   const handleFormSubmit = async () => {
@@ -454,27 +468,31 @@ function FamilyHead(props) {
 
   const handleSubmitAndNext = () => {
     if (age >= 60) {
-      if (bloodConsent || bloodSampleDenied) {
-        if (partialSubmit) {
-          familyMembersArray.push(memberData);
-          handleSubmit();
-        } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
-          familyMembersArray.push(memberData);
-          handleClearPartA();
-          handleClearPartB();
-          handleClearPartC();
-          handleClearPartD();
-          handleClearPartE();
-          onKeyChange("1");
-          handleClearGeneralPart();
-          setNoOfMembersComplted(noOfMembersCompleted + 1);
-        } else {
-          familyMembersArray.push(memberData);
-          handleSubmit();
-        }
-        handleConsentModalClose();
+      if (bloodSampleHome && demandLetter === "") {
+        message.warning("Demand letter required");
       } else {
-        message.warning("Blood Sample Collection Consent Required");
+        if (bloodConsent || bloodSampleDenied) {
+          if (partialSubmit) {
+            familyMembersArray.push(memberData);
+            handleSubmit();
+          } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
+            familyMembersArray.push(memberData);
+            handleClearPartA();
+            handleClearPartB();
+            handleClearPartC();
+            handleClearPartD();
+            handleClearPartE();
+            onKeyChange("1");
+            handleClearGeneralPart();
+            setNoOfMembersComplted(noOfMembersCompleted + 1);
+          } else {
+            familyMembersArray.push(memberData);
+            handleSubmit();
+          }
+          handleConsentModalClose();
+        } else {
+          message.warning("Blood Sample Collection Consent Required");
+        }
       }
     } else {
       if (partialSubmit) {
@@ -1016,6 +1034,7 @@ function FamilyHead(props) {
           ? "Denied"
           : ""
         : "",
+    demandLetter: demandLetter,
   };
 
   return familyHeadRegister == "no" ? (
@@ -2026,11 +2045,27 @@ function FamilyHead(props) {
             </Button>
           </BloodSampleButtonCol>
         </BloodSampleButtonsRow>
+        {bloodSampleHome ? (
+          <>
+            <Form layout="vertical">
+              <Form.Item
+                label="Demand letter"
+                style={{ margin: "20px 5px", width: "200px" }}
+              >
+                <Input
+                  type="file"
+                  onChange={(e) => handleDemandLetter(e.target.files[0])}
+                ></Input>
+              </Form.Item>
+            </Form>
+          </>
+        ) : (
+          <></>
+        )}
         {bloodSampleDenied ? (
           <></>
         ) : (
           <>
-            {" "}
             <div>
               <p>
                 <Checkbox

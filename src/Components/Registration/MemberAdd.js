@@ -138,6 +138,7 @@ function MemberAdd(props) {
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
   const [cbacScore, setCbacScore] = useState("");
+  const [demandLetter, setDemandLetter] = useState("");
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -170,6 +171,18 @@ function MemberAdd(props) {
     }
   };
 
+  const handleDemandLetter = (file) => {
+    console.log(file);
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      console.log("called: ", reader);
+      console.log(reader.result);
+      setDemandLetter(reader.result);
+    };
+  };
 
   // Part A question's state
   const [question1A, setQuestion1A] = useState("");
@@ -726,33 +739,37 @@ function MemberAdd(props) {
 
   const handleAdd = () => {
     if (age >= 60) {
-      if (bloodConsent || bloodSampleDenied) {
-        axios
-          .post(
-            `${BASE_URL}/healthworker/api/PostFamilyDetails`,
-            memberData,
-            axiosConfig
-          )
-          .then((response) => {
-            console.log(response.data.message);
-            message.success(response.data.message);
-            setTimeout(() => {
-              window.location.replace("/dashboard");
-            }, 1000);
-          })
-          .catch((error) => {
-            console.log(error.response.data.message);
-            if (error.response.status == 401) {
-              message.warning("system is logged out");
-              setTimeout(() => {
-                window.location.replace("/");
-              }, 1000);
-            } else {
-              message.warning(error.response.data.message);
-            }
-          });
+      if (bloodSampleHome && demandLetter === "") {
+        message.warning("Demand letter required");
       } else {
-        message.warning("Blood Sample Collection Consent Required");
+        if (bloodConsent || bloodSampleDenied) {
+          axios
+            .post(
+              `${BASE_URL}/healthworker/api/PostFamilyDetails`,
+              memberData,
+              axiosConfig
+            )
+            .then((response) => {
+              console.log(response.data.message);
+              message.success(response.data.message);
+              setTimeout(() => {
+                window.location.replace("/dashboard");
+              }, 1000);
+            })
+            .catch((error) => {
+              console.log(error.response.data.message);
+              if (error.response.status == 401) {
+                message.warning("system is logged out");
+                setTimeout(() => {
+                  window.location.replace("/");
+                }, 1000);
+              } else {
+                message.warning(error.response.data.message);
+              }
+            });
+        } else {
+          message.warning("Blood Sample Collection Consent Required");
+        }
       }
     } else {
       axios
@@ -1563,6 +1580,23 @@ function MemberAdd(props) {
                 </Button>
               </BloodSampleButtonCol>
             </BloodSampleButtonsRow>
+            {bloodSampleHome ? (
+              <>
+                <Form layout="vertical">
+                  <Form.Item
+                    label="Demand letter"
+                    style={{ margin: "20px 5px", width: "200px" }}
+                  >
+                    <Input
+                      type="file"
+                      onChange={(e) => handleDemandLetter(e.target.files[0])}
+                    ></Input>
+                  </Form.Item>
+                </Form>
+              </>
+            ) : (
+              <></>
+            )}
             {bloodSampleDenied ? (
               <></>
             ) : (

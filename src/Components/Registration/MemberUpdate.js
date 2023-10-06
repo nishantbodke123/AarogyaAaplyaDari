@@ -197,6 +197,7 @@ function MemberUpdate(props) {
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
   const [cbacScore, setCbacScore] = useState("");
+  const [demandLetter, setDemandLetter] = useState("");
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -227,6 +228,18 @@ function MemberUpdate(props) {
     if (e.target.value === "" || regex.test(e.target.value)) {
       setAbhaId(e.target.value);
     }
+  };
+  const handleDemandLetter = (file) => {
+    console.log(file);
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      console.log("called: ", reader);
+      console.log(reader.result);
+      setDemandLetter(reader.result);
+    };
   };
 
   // Part A question's state
@@ -784,33 +797,37 @@ function MemberUpdate(props) {
   };
   const handleUpdate = () => {
     if (age >= 60) {
-      if (bloodConsent || bloodSampleDenied) {
-        axios
-          .patch(
-            `${BASE_URL}/healthworker/api/UpdateFamilyDetails/${state.id}`,
-            memberData,
-            axiosConfig
-          )
-          .then((response) => {
-            console.log(response.data.message);
-            message.success(response.data.message);
-            setTimeout(() => {
-              window.location.replace("/dashboard");
-            }, 1000);
-          })
-          .catch((error) => {
-            console.log(error.response.data.message);
-            if (error.response.status == 401) {
-              message.warning("system is logged out");
-              setTimeout(() => {
-                window.location.replace("/");
-              }, 1000);
-            } else {
-              message.warning(error.response.data.message);
-            }
-          });
+      if (bloodSampleHome && demandLetter === "") {
+        message.warning("Demand letter required");
       } else {
-        message.warning("Blood Sample Collection Consent Required");
+        if (bloodConsent || bloodSampleDenied) {
+          axios
+            .patch(
+              `${BASE_URL}/healthworker/api/UpdateFamilyDetails/${state.id}`,
+              memberData,
+              axiosConfig
+            )
+            .then((response) => {
+              console.log(response.data.message);
+              message.success(response.data.message);
+              setTimeout(() => {
+                window.location.replace("/dashboard");
+              }, 1000);
+            })
+            .catch((error) => {
+              console.log(error.response.data.message);
+              if (error.response.status == 401) {
+                message.warning("system is logged out");
+                setTimeout(() => {
+                  window.location.replace("/");
+                }, 1000);
+              } else {
+                message.warning(error.response.data.message);
+              }
+            });
+        } else {
+          message.warning("Blood Sample Collection Consent Required");
+        }
       }
     } else {
       axios
@@ -913,7 +930,7 @@ function MemberUpdate(props) {
               <FormItem label="Abha ID / आभा आयडी">
                 <Input
                   type="text"
-                  value={abhaId}   
+                  value={abhaId}
                   required
                   onChange={(e) => handleAbhaIDChange(e)}
                 ></Input>
@@ -1619,6 +1636,23 @@ function MemberUpdate(props) {
                 </Button>
               </BloodSampleButtonCol>
             </BloodSampleButtonsRow>
+            {bloodSampleHome ? (
+              <>
+                <Form layout="vertical">
+                  <Form.Item
+                    label="Demand letter"
+                    style={{ margin: "20px 5px", width: "200px" }}
+                  >
+                    <Input
+                      type="file"
+                      onChange={(e) => handleDemandLetter(e.target.files[0])}
+                    ></Input>
+                  </Form.Item>
+                </Form>
+              </>
+            ) : (
+              <></>
+            )}
             {bloodSampleDenied ? (
               <></>
             ) : (
