@@ -5,6 +5,15 @@ import { styled } from "styled-components";
 export const Container = styled.div`
   // background-color: #dde6ed;
 `;
+export const SelectWardButton = styled(Button)`
+  margin-left: 75%;
+
+  @media (max-width: 820px) {
+    
+  }
+  @media (max-width: 450px) {
+  }
+`;
 
 export const FormContainer = styled(Form)`
   margin: 20px 40px;

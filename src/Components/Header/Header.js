@@ -1,11 +1,15 @@
 import { Button, Dropdown, Layout, Menu, Row, Select, Tooltip } from "antd";
 import React from "react";
 import {
+  DesktopMenu,
   HeaderBar,
   HeaderBarSubDiv,
   HeaderLogo,
   LogOutIcon,
   LogoutOption,
+  MobileMenu,
+  SubMenu,
+  UserIcon,
   UserSelect,
 } from "./style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -81,7 +85,8 @@ function Header() {
           </Tooltip>
         </HeaderBarSubDiv>
       </HeaderBar> */}
-      <Menu
+
+      <DesktopMenu
         mode="horizontal"
         theme="dark"
         defaultSelectedKeys={window.location.pathname}
@@ -93,14 +98,11 @@ function Header() {
             <Link to={item.link}>{item.title}</Link>
           </Menu.Item>
         ))}
-        <div style={{ position: "absolute", right: "30px", top: "2px" }}>
+        <SubMenu>
           {/* <Tooltip title="Logout">
             <LogOutIcon icon={faRightFromBracket} onClick={() => Logout()} />
           </Tooltip> */}
-          <FontAwesomeIcon
-            icon={faUser}
-            style={{ marginRight: "5px", fontSize: "18px" }}
-          />
+          <UserIcon icon={faUser} />
           <UserSelect
             value={sessionStorage.getItem("name")}
             onChange={() => Logout()}
@@ -109,8 +111,35 @@ function Header() {
               <FontAwesomeIcon icon={faRightFromBracket} /> Logout
             </LogoutOption>
           </UserSelect>
-        </div>
-      </Menu>
+        </SubMenu>
+      </DesktopMenu>
+      <MobileMenu
+        mode="vertical"
+        theme="dark"
+        defaultSelectedKeys={window.location.pathname}
+        className="ant-menu"
+      >
+        <HeaderLogo src="logo (1).svg"></HeaderLogo>
+        <SubMenu>
+          {/* <Tooltip title="Logout">
+            <LogOutIcon icon={faRightFromBracket} onClick={() => Logout()} />
+          </Tooltip> */}
+          <UserIcon icon={faUser} />
+          <UserSelect
+            value={sessionStorage.getItem("name")}
+            onChange={() => Logout()}
+          >
+            <LogoutOption key="1">
+              <FontAwesomeIcon icon={faRightFromBracket} /> Logout
+            </LogoutOption>
+          </UserSelect>
+        </SubMenu>
+        {menuItems.map((item) => (
+          <Menu.Item key={item.link}>
+            <Link to={item.link}>{item.title}</Link>
+          </Menu.Item>
+        ))}
+      </MobileMenu>
     </div>
   );
 }

@@ -41,6 +41,7 @@ import {
   QuestionSubRow,
   TextAreaForm,
   AnswerCol1,
+  SelectWardButton,
 } from "./style";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -296,6 +297,38 @@ function FamilyHead(props) {
       setAbhaId(e.target.value);
     }
   };
+  const handlePulseChange = (e) => {
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setPulse(e.target.value);
+    }
+  };
+
+  const handleBloodPressureChange = (e) => {
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setBloodPressure(e.target.value);
+    }
+  };
+  const handleWeightChange = (e) => {
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setWeight(e.target.value);
+    }
+  };
+
+  const handleHeightChange = (e) => {
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setHeight(e.target.value);
+    }
+  };
+  const handleBMIChange = (e) => {
+    const regex = /^[0-9]{1,1}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setBMI(e.target.value);
+    }
+  };
 
   const handleDemandLetter = (file) => {
     console.log(file);
@@ -424,7 +457,6 @@ function FamilyHead(props) {
     setWeight("");
     setHeight("");
     setBMI("");
-    setCbacScore("");
   };
 
   const handleClearPartA = () => {
@@ -1041,12 +1073,12 @@ function FamilyHead(props) {
     <>
       <FormHeader>
         Family Head/ कुटुंब प्रमुख{" "}
-        <Button
+        <SelectWardButton
           style={{ marginLeft: "75%" }}
           onClick={() => setShowModal(true)}
         >
           Select Ward
-        </Button>
+        </SelectWardButton>
       </FormHeader>
       <FormContainer layout="vertical">
         <Row>
@@ -1367,40 +1399,40 @@ function FamilyHead(props) {
           </Row>
           <Row>
             <Column>
-              <FormItem label="Pulse">
+              <FormItem label="Pulse / नाडी">
                 <Input
                   type="text"
                   value={pulse}
-                  onChange={(e) => setPulse(e.target.value)}
+                  onChange={(e) => handlePulseChange(e)}
                 ></Input>
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Blood Pressure">
+              <FormItem label="Blood Pressure / रक्तदाब">
                 <Input
                   type="text"
                   value={bloodPressure}
-                  onChange={(e) => setBloodPressure(e.target.value)}
+                  onChange={(e) => handleBloodPressureChange(e)}
                 ></Input>
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Weight">
+              <FormItem label="Weight / वजन">
                 <Input
                   type="text"
                   value={weight}
-                  onChange={(e) => setWeight(e.target.value)}
+                  onChange={(e) => handleWeightChange(e)}
                 ></Input>
               </FormItem>
             </Column>
           </Row>
           <Row>
             <Column>
-              <FormItem label="Height">
+              <FormItem label="Height / उंची">
                 <Input
                   type="text"
                   value={height}
-                  onChange={(e) => setHeight(e.target.value)}
+                  onChange={(e) => handleHeightChange(e)}
                 ></Input>
               </FormItem>
             </Column>
@@ -1409,11 +1441,11 @@ function FamilyHead(props) {
                 <Input
                   type="text"
                   value={BMI}
-                  onChange={(e) => setBMI(e.target.value)}
+                  onChange={(e) => handleBMIChange(e)}
                 ></Input>
               </FormItem>
             </Column>
-            <Column>
+            {/* <Column>
               <FormItem label="Cbac Score ">
                 <Input
                   type="text"
@@ -1421,7 +1453,7 @@ function FamilyHead(props) {
                   onChange={(e) => setCbacScore(e.target.value)}
                 ></Input>
               </FormItem>
-            </Column>
+            </Column> */}
           </Row>
         </FormContainer>
       </Container>

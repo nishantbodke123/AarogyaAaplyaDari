@@ -58,9 +58,9 @@ function Login() {
         sessionStorage.setItem("name", response.data.name);
         message.success(response.data.message);
 
-        setTimeout(()=>{
+        setTimeout(() => {
           window.location.replace("/dashboard");
-        },1000)
+        }, 1000);
 
         setShowLoading(false);
       })
@@ -83,7 +83,7 @@ function Login() {
                 <Form layout="vertical">
                   <LoginFormHeading>Sign In</LoginFormHeading>
                   <FormItem
-                    label="Mobile number"
+                    label="User ID"
                     name="mobile number"
                     rules={[
                       { required: true, message: "Mobile Number required" },

@@ -12,7 +12,6 @@ export const Logout = async () => {
     axiosConfig
   );
   return (
-   
     response,
     sessionStorage.clear(),
     setTimeout(() => {

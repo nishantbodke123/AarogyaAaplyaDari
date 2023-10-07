@@ -20,13 +20,17 @@ import {
   AddButton,
   Box,
   BoxContainer,
+  CardHeader,
   ColorStrip,
   Column,
   Container,
   CountIcon,
+  DesktopContainer,
   FormContainer,
   FormHeader,
   FormItem,
+  MobileCardColumn,
+  MobileContainer,
   ModalFormItem,
   PartialSurveyCountModal,
   StyledTabs,
@@ -476,7 +480,93 @@ const Dashboard = () => {
     <>
       <Spin tip="Loading" spinning={loading}>
         <Header />
-        <Container>
+        <MobileContainer>
+          <SubContainer>
+            <Row>
+              <MobileCardColumn>
+                <Box onClick={() => handleShowToDayCitizenCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Today's Citizen Count</CardHeader>
+                      </Col>
+                    </Row>
+                    {dashboardCounts.todays_count}
+                  </BoxContainer>
+                </Box>
+              </MobileCardColumn>
+              <MobileCardColumn>
+                <Box onClick={() => handleShowTodayFamilyCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Today's Family Count </CardHeader>
+                      </Col>
+                    </Row>
+                    {dashboardCounts.today_family_count}
+                  </BoxContainer>
+                </Box>
+              </MobileCardColumn>
+              <MobileCardColumn>
+                <Box onClick={() => handleShowTotalCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Total Citizen Count</CardHeader>
+                      </Col>
+                    </Row>
+                    {dashboardCounts.total_count}
+                  </BoxContainer>
+                </Box>
+              </MobileCardColumn>
+              <MobileCardColumn>
+                <Box onClick={() => handleShowTotalFamilyCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Total Family Count</CardHeader>
+                      </Col>
+                    </Row>
+                    {dashboardCounts.total_family_count}
+                  </BoxContainer>
+                </Box>
+              </MobileCardColumn>
+              <MobileCardColumn>
+                <Box onClick={() => handleShowPartialCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Partial Survey </CardHeader>
+                      </Col>
+                    </Row>
+                    {dashboardCounts.partial_survey_count}
+                  </BoxContainer>
+                </Box>
+              </MobileCardColumn>
+            </Row>
+          </SubContainer>
+        </MobileContainer>
+        <DesktopContainer>
           <SubContainer>
             <Box onClick={() => handleShowToDayCitizenCountModal()}>
               <ColorStrip />
@@ -486,35 +576,35 @@ const Dashboard = () => {
                     <CountIcon icon={faBars} />
                   </Col>
                   <Col>
-                    <h3>Today's Citizen Count</h3>
+                    <CardHeader>Today's Citizen Count</CardHeader>
                   </Col>
                 </Row>
                 {dashboardCounts.todays_count}
               </BoxContainer>
             </Box>
             <Box onClick={() => handleShowTodayFamilyCountModal()}>
-              <div style={{ backgroundColor: "#ff8551", height: "20%" }}></div>
+              <ColorStrip />
               <BoxContainer>
                 <Row>
                   <Col>
                     <CountIcon icon={faBars} />
                   </Col>
                   <Col>
-                    <h3>Today's Family Count </h3>
+                    <CardHeader>Today's Family Count </CardHeader>
                   </Col>
                 </Row>
                 {dashboardCounts.today_family_count}
               </BoxContainer>
             </Box>
             <Box onClick={() => handleShowTotalCountModal()}>
-              <div style={{ backgroundColor: "#ff8551", height: "20%" }}></div>
+              <ColorStrip />
               <BoxContainer>
                 <Row>
                   <Col>
                     <CountIcon icon={faBars} />
                   </Col>
                   <Col>
-                    <h3>Total Citizen Count</h3>
+                    <CardHeader>Total Citizen Count</CardHeader>
                   </Col>
                 </Row>
                 {dashboardCounts.total_count}
@@ -522,35 +612,36 @@ const Dashboard = () => {
             </Box>
 
             <Box onClick={() => handleShowTotalFamilyCountModal()}>
-              <div style={{ backgroundColor: "#ff8551", height: "20%" }}></div>
+              <ColorStrip />
               <BoxContainer>
                 <Row>
                   <Col>
                     <CountIcon icon={faBars} />
                   </Col>
                   <Col>
-                    <h3>Total Family Count</h3>
+                    <CardHeader>Total Family Count</CardHeader>
                   </Col>
                 </Row>
                 {dashboardCounts.total_family_count}
               </BoxContainer>
             </Box>
             <Box onClick={() => handleShowPartialCountModal()}>
-              <div style={{ backgroundColor: "#ff8551", height: "20%" }}></div>
+              <ColorStrip />
               <BoxContainer>
                 <Row>
                   <Col>
                     <CountIcon icon={faBars} />
                   </Col>
                   <Col>
-                    <h3>Partial Survey </h3>
+                    <CardHeader>Partial Survey </CardHeader>
                   </Col>
                 </Row>
                 {dashboardCounts.partial_survey_count}
               </BoxContainer>
             </Box>
           </SubContainer>
-        </Container>
+        </DesktopContainer>
+
         <TableContainer>
           <TableHeading>Family Heads Details </TableHeading>
           <StyledTabs defaultActiveKey="1" centered size="large">
@@ -654,6 +745,7 @@ const Dashboard = () => {
           onCancel={handleHidePartialCountModal}
           footer={<></>}
         >
+          <h3>Partial Survey</h3>
           <Table
             columns={PartialCountTitleList}
             dataSource={partialCountList}

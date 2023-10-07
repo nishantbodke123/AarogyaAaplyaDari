@@ -5,6 +5,10 @@ import styled from "styled-components";
 export const Container = styled.div`
   margin: 5px;
   height: 150px;
+  @media (max-width: 1200px) {
+  }
+  @media (max-width: 550) {
+  }
 `;
 export const SubContainer = styled.div`
   display: flex;
@@ -13,29 +17,62 @@ export const SubContainer = styled.div`
 `;
 export const Box = styled.div`
   width: 220px;
+  margin-top: 15px;
   height: 110px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   border-radius: 5px 5px;
   &:hover {
     width: 220px;
     height: 130px;
-    box-shadow: #ff8551 0px 4px 6px -1px,#ff8551 0px 2px 4px -1px;
+    box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
+  }
+  @media (max-width: 1200px) {
+    width: 200px;
+    height: 110px;
+  }
+  @media (max-width: 420px) {
+    width: 185px;
+    height: 120px;
+  }
+  @media (max-width: 390px) {
+    width: 170px;
+  }
+  @media (max-width: 360px) {
+    width: 150px;
   }
 `;
 export const BoxContainer = styled.div`
   margin: 2px 10px;
+  @media (max-width: 1200px) {
+    margin: 1px 5px;
+  }
 `;
 export const CountIcon = styled(FontAwesomeIcon)`
   margin-top: 22px;
   margin-right: 7px;
+  @media (max-width: 1200px) {
+    margin: 22px 5px;
+  }
+  @media (max-width: 415px) {
+    display: none;
+  }
 `;
 export const TableContainer = styled.div`
   margin: 50px 40px;
+  @media (max-width: 550px) {
+    margin: 50px 0px;
+  }
 `;
 export const TableHeading = styled.p`
   font-size: 22px;
   font-family: sans-serif;
   font-weight: 650;
+  @media (max-width: 820px) {
+    font-size: 18px;
+  }
+  @media (max-width: 450px) {
+    font-size: 14px;
+  }
 `;
 
 export const StyledTabs = styled(Tabs)`
@@ -179,15 +216,47 @@ export const AddButton = styled(Button)`
 `;
 export const ColorStrip = styled.div`
   background-color: #ff8551;
-  height: 20% ;
+  height: 20%;
 `;
-export const ToDayCitizenCountModal=styled(Modal)`
+export const ToDayCitizenCountModal = styled(Modal)``;
+export const ToDayFamilyCountModal = styled(Modal)``;
+export const TotalCountModal = styled(Modal)``;
+export const TotalFamilyCount = styled(Modal)``;
+export const PartialSurveyCountModal = styled(Modal)``;
+export const CardHeader = styled.p`
+  font-weight: 750;
+  font-family: Arial;
+  margin-top: 20px;
+  font-size: 15px;
+
+  @media (max-width: 1200) {
+    font-size: 15px;
+    margin-top: 10px;
+  }
 `;
-export const ToDayFamilyCountModal=styled(Modal)`
+export const DesktopContainer = styled.div`
+  margin: 5px;
+  height: 150px;
+  @media (max-width: 1200px) {
+  }
+  @media (max-width: 1100px) {
+    display: none;
+  }
 `;
-export const TotalCountModal=styled(Modal)`
+export const MobileContainer = styled.div`
+  margin: 5px;
+  @media (min-width: 1100px) {
+    display: none;
+  }
+  @media (max-width: 1100) {
+  }
 `;
-export const TotalFamilyCount=styled(Modal)`
-`;
-export const PartialSurveyCountModal=styled(Modal)`
+export const MobileCardColumn = styled(Col)`
+  width: 25%;
+  @media (max-width: 850px) {
+    width: 33.33%;
+  }
+  @media (max-width: 650px) {
+    width: 50%;
+  }
 `;
