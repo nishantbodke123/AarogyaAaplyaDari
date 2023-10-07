@@ -175,7 +175,10 @@ function FamilyHead(props) {
   };
 
   const handleFamilyMembers = (e) => {
-    setTotalFamilyMembers(e.target.value);
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setTotalFamilyMembers(e.target.value);
+    }
   };
 
   const handleFamilyHeadSubmit = () => {
@@ -1210,19 +1213,18 @@ function FamilyHead(props) {
           </Column>
           <Column>
             <FormItem
-              name="familyMembers"
+              // name="familyMembers"
               label="Number of family members/ कुटुंबातील सदस्यांची संख्या"
-              rules={[
-                {
-                  required: true,
-                  message: "Number of family members required",
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: "Number of family members required",
+              //   },
+              // ]}
             >
               <Input
-                type="number"
+                type="text"
                 value={totalFamilyMembers}
-                name="familyMembers"
                 onChange={(e) => handleFamilyMembers(e)}
               ></Input>
             </FormItem>
@@ -1502,6 +1504,10 @@ function FamilyHead(props) {
                   onChange={(e) => setQuestion1A(e.target.value)}
                   value={question1A}
                 >
+                  <Radio value="50 and 50 below">
+                    50 and 50 below / 50 आणि 50 खाली
+                  </Radio>
+                  <br />
                   <Radio value="50 to 79 Years">
                     50 to 79 Years / 50 ते 79 वर्षे
                   </Radio>
@@ -1651,36 +1657,42 @@ function FamilyHead(props) {
                 </AnswerCol>
               </QuestionRow>
             ))}
-
-            <FormHeader>B2 : Women only / बी २ : केवळ महिला</FormHeader>
-            {partB2Options.map((item, key) => (
-              <QuestionRow
-                style={{
-                  backgroundColor: partB2OptionSelected.includes(item)
-                    ? "#8EACCD"
-                    : "#dde6ed",
-                }}
-                key={key}
-              >
-                <QuestionCol>
-                  {t(item)} / {item}
-                </QuestionCol>
-                <AnswerCol>
-                  <Row>
-                    <Col>
-                      <Checkbox
-                        value={item}
-                        checked={partB2OptionSelected.includes(item)}
-                        onChange={() => handlePartB2Select(item)}
-                      ></Checkbox>
-                    </Col>
-                    <Col>
-                      <p style={{ margin: "0px 10px" }}>होय / Yes </p>
-                    </Col>
-                  </Row>
-                </AnswerCol>
-              </QuestionRow>
-            ))}
+            {gender == "female" ? (
+              <>
+                {" "}
+                <FormHeader>B2 : Women only / बी २ : केवळ महिला</FormHeader>
+                {partB2Options.map((item, key) => (
+                  <QuestionRow
+                    style={{
+                      backgroundColor: partB2OptionSelected.includes(item)
+                        ? "#8EACCD"
+                        : "#dde6ed",
+                    }}
+                    key={key}
+                  >
+                    <QuestionCol>
+                      {t(item)} / {item}
+                    </QuestionCol>
+                    <AnswerCol>
+                      <Row>
+                        <Col>
+                          <Checkbox
+                            value={item}
+                            checked={partB2OptionSelected.includes(item)}
+                            onChange={() => handlePartB2Select(item)}
+                          ></Checkbox>
+                        </Col>
+                        <Col>
+                          <p style={{ margin: "0px 10px" }}>होय / Yes </p>
+                        </Col>
+                      </Row>
+                    </AnswerCol>
+                  </QuestionRow>
+                ))}
+              </>
+            ) : (
+              <></>
+            )}
 
             <FormHeader>
               B3 : For Senior Citizens (60 years and above)/बी ३ :
