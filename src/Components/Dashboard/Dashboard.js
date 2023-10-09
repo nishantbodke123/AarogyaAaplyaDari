@@ -650,12 +650,14 @@ const Dashboard = () => {
                 columns={Items}
                 dataSource={familyHeadList}
                 bordered
+                scroll={{ x: 500 }}
               ></Table>
             </TabPane>
             <TabPane tab="Partially Submitted Family Details" key="2">
               <Table
                 columns={Items}
                 dataSource={partiallyFamilyHeadList}
+                scroll={{x: 500}}
               ></Table>
             </TabPane>
           </StyledTabs>
@@ -669,6 +671,7 @@ const Dashboard = () => {
           <Table
             columns={FamilyMemberItems}
             dataSource={familyMemeberDetails}
+            scroll={{ x: 800, y: 800 }}
           ></Table>
           {familyMemberArrayLength == noOfFamilyMembers ? (
             <></>
@@ -696,7 +699,7 @@ const Dashboard = () => {
             columns={TodayCitizenCountTitleList}
             dataSource={TodayCitizenCountList}
             bordered
-            scroll={{ y: 300 }}
+            scroll={{ y: 300, x: 500 }}
           ></Table>
         </ToDayCitizenCountModal>
         <ToDayFamilyCountModal

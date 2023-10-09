@@ -29,16 +29,31 @@ export const Box = styled.div`
   @media (max-width: 1200px) {
     width: 200px;
     height: 110px;
+      &:hover {
+    width: 205px;
+    height: 130px;
+    box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
   }
   @media (max-width: 420px) {
     width: 185px;
     height: 120px;
+      &:hover {
+    width: 190px;
+    height: 120px;
+    box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
   }
   @media (max-width: 390px) {
     width: 170px;
+      &:hover {
+    width: 175px;
+    box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
   }
   @media (max-width: 360px) {
     width: 150px;
+      &:hover {
+    width: 155px;
+    
+    box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
   }
 `;
 export const BoxContainer = styled.div`
@@ -59,6 +74,7 @@ export const CountIcon = styled(FontAwesomeIcon)`
 `;
 export const TableContainer = styled.div`
   margin: 50px 40px;
+
   @media (max-width: 550px) {
     margin: 50px 0px;
   }
@@ -244,7 +260,7 @@ export const DesktopContainer = styled.div`
   }
 `;
 export const MobileContainer = styled.div`
-  margin: 5px;
+  margin: 2px 5px;
   @media (min-width: 1100px) {
     display: none;
   }

@@ -47,6 +47,7 @@ export const LogoutOption = styled(Option)`
 `;
 export const HeaderLogo = styled.img`
   margin-left: 30px;
+  margin-top: 5px;
   margin-right: 20px;
   height: 40px;
   width: 60px;
