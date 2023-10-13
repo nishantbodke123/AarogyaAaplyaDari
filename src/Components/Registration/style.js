@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row, Tabs } from "antd";
+import { Button, Col, Form, Input, Modal, Row, Tabs } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { styled } from "styled-components";
 
@@ -9,7 +9,6 @@ export const SelectWardButton = styled(Button)`
   margin-left: 75%;
 
   @media (max-width: 820px) {
-    
   }
   @media (max-width: 450px) {
   }
@@ -79,7 +78,7 @@ export const QuestionRow = styled(Row)`
   //   width: 450px;
   // }
   // @media (max-width: 450px) {
-  //   width: 300px;
+  //   width: 360px;
   // }
 `;
 export const QuestionSubRow = styled(Row)`
@@ -246,4 +245,7 @@ export const BloodSampleButtonCol = styled(Col)`
   @media (max-width: 450px) {
     width: 100%;
   }
+`;
+export const AadharOtpLinkedModal = styled(Modal)`
+
 `;

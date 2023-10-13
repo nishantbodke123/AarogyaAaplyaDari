@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
+import { JSEncrypt } from "jsencrypt";
 
 //
 import {
@@ -42,6 +43,7 @@ import {
   TextAreaForm,
   AnswerCol1,
   SelectWardButton,
+  AadharOtpLinkedModal,
 } from "./style";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -49,21 +51,54 @@ import { faHouse, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import axios, { Axios } from "axios";
 import { BASE_URL } from "../../Utils/BaseURL";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
+import { json, useLocation } from "react-router-dom";
+import { LogOut } from "../../Auth/Logout";
+import { type } from "@testing-library/user-event/dist/type";
+import OtpInput from "react-otp-input";
 
 function FamilyHead(props) {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const { state } = useLocation();
+
+  var encrypt = new JSEncrypt();
+  var publicKey = `MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAstWB95C5pHLXiYW59qyO
+  4Xb+59KYVm9Hywbo77qETZVAyc6VIsxU+UWhd/k/YtjZibCznB+HaXWX9TVTFs9N
+  wgv7LRGq5uLczpZQDrU7dnGkl/urRA8p0Jv/f8T0MZdFWQgks91uFffeBmJOb58u
+  68ZRxSYGMPe4hb9XXKDVsgoSJaRNYviH7RgAI2QhTCwLEiMqIaUX3p1SAc178ZlN
+  8qHXSSGXvhDR1GKM+y2DIyJqlzfik7lD14mDY/I4lcbftib8cv7llkybtjX1Aayf
+  Zp4XpmIXKWv8nRM488/jOAF81Bi13paKgpjQUUuwq9tb5Qd/DChytYgBTBTJFe7i
+  rDFCmTIcqPr8+IMB7tXA3YXPp3z605Z6cGoYxezUm2Nz2o6oUmarDUntDhq/PnkN
+  ergmSeSvS8gD9DHBuJkJWZweG3xOPXiKQAUBr92mdFhJGm6fitO5jsBxgpmulxpG
+  0oKDy9lAOLWSqK92JMcbMNHn4wRikdI9HSiXrrI7fLhJYTbyU3I4v5ESdEsayHXu
+  iwO/1C8y56egzKSw44GAtEpbAkTNEEfK5H5R0QnVBIXOvfeF4tzGvmkfOO6nNXU3
+  o/WAdOyV3xSQ9dqLY5MEL4sJCGY1iJBIAQ452s8v0ynJG5Yq+8hNhsCVnklCzAls
+  IzQpnSVDUVEzv17grVAw078CAwEAAQ==`;
+  encrypt.setPublicKey(publicKey);
+
   let axiosConfig = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
+  // const accessToken = () => {
+  //   axios
+  //     .post(`https://dev.abdm.gov.in/gateway/v0.5/sessions`, {
+  //       clientId: "SBX_004200",
+  //       clientSecret: "bed456a5-46bb-4de5-94ef-6caa2dc77a00",
+  //     })
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
   useEffect(() => {
     i18n.changeLanguage("mr");
     setShowModal(true);
+
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, axiosConfig)
       .then((response) => {
@@ -88,39 +123,13 @@ function FamilyHead(props) {
         if (error.response.status == 401) {
           message.warning("System is LogedOut");
           setTimeout(() => {
-            window.location.replace("/");
+            LogOut();
           }, 1000);
         } else {
           message.warning(error.response.status);
         }
       });
   }, []);
-
-  // const handleWardSelection = (value) => {
-  //   setWard_name(value);
-  //   axios
-  //     .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, ward_name, axiosConfig)
-  //     .then((response) => {
-  //       setHealthPostList(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  // const handleHealthPostSelect = (value) => {
-  //   setHealthPost(value);
-  //   axios
-  //     .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, healthPost, {
-  //       headers: sessionStorage.getItem("Token"),
-  //     })
-  //     .then((response) => {
-  //       setSectionList(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   const handleSectionSelect = (value) => {
     console.log(value);
@@ -197,7 +206,7 @@ function FamilyHead(props) {
     } else if (pincode == "") {
       message.warning("Please Enter PinCode");
     } else if (totalFamilyMembers == "") {
-      message.warning("Please Enter number Family members above 50 years");
+      message.warning("Please Enter number Family members ");
     } else if (section == "") {
       message.warning("Please Select Section");
     } else {
@@ -219,6 +228,52 @@ function FamilyHead(props) {
     }
   };
 
+  // Abha ID Modal
+  const [showAadharOtpLinkedModal, setShowAadharOtpLinkedModal] =
+    useState(false);
+  const [otp, setOtp] = useState();
+
+  const handleShowAadharOtpLinkedModal = () => {
+    // const data = {
+    //   clientId: "SBX_004200",
+    //   clientSecret: "bed456a5-46bb-4de5-94ef-6caa2dc77a00",
+    // };
+    const formData = new FormData();
+    formData.append("clientId", "SBX_004200");
+    formData.append("clientSecret", "bed456a5-46bb-4de5-94ef-6caa2dc77a00");
+    axios
+      .post("https://dev.abdm.gov.in/gateway/v0.5/sessions", formData, {
+        "Content-Type": "application/json",
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setShowAadharOtpLinkedModal(true);
+  };
+  const handleHideAadharOtpLinkedModal = () => {
+    setShowAadharOtpLinkedModal(false);
+  };
+
+  const [aadharNumber, setAadharNumber] = useState();
+  const [aadharNumberSubmitted, setAadharNumberSubmitted] = useState(false);
+  const handleAadharNumberSubmit = () => {
+    var data = encrypt.encrypt(aadharNumber);
+    setAadharNumberSubmitted(true);
+    axios
+      .post(
+        `https://healthidsbx.abdm.gov.in/api/v2/registration/aadhaar/generateOtp`,
+        data
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   // Member's Form
   let [noOfMembersCompleted, setNoOfMembersComplted] = useState(1);
   const [activeTab, setActiveTab] = useState("1");
@@ -427,17 +482,6 @@ function FamilyHead(props) {
   const [leprosy, setLeprosy] = useState("");
 
   const [familyMembersArray, setFamilyMembersArray] = useState([]);
-
-  // const [firstName, setFirstName] = useState();
-  // const [middelName, setMiddleName] = useState();
-  // const [lastName, setLastName] = useState();
-  // const [mobileNo, setMobileNo] = useState();
-  // const [plotNumber, setPlotNumber] = useState();
-  // const [addressLine1, setAddressLine1] = useState();
-  // const [pincode, setPinCode] = useState();
-  // const [totalFamilyMembers, setTotalFamilyMembers] = useState(1);
-  // const [ward_name, setWard_name] = useState();
-  // const [healthPost, setHealthPost] = useState();
 
   const handleClearFamilyHead = () => {
     setFamilyHeadName("");
@@ -1150,27 +1194,6 @@ function FamilyHead(props) {
               ></Input>
             </FormItem>
           </Column>
-          {/* <Column>
-            <FormItem name="middleName" label="Middle Name /मधले नाव" rules={[{ required: true, message: 'Middle Name is required / मधले नाव आवश्यक आहे' },
-                 { pattern: /^[a-z,A-Z ]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' },]}>
-              <Input
-                type="text"
-                name="middleName"
-                value={middelName}
-                onChange={(e) => setMiddleName(e.target.value)}
-              ></Input>
-            </FormItem>
-          </Column>
-          <Column>
-            <FormItem label="Last Name/आडनाव" name="last name" rules={[{required:true ,message:"Last Name required / आडनाव आवश्यक आहे "},{ pattern: /^[a-z ,A-Z ]*$/, message: 'Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे' }]}>
-              <Input
-                type="text"
-                name="last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              ></Input>
-            </FormItem>
-          </Column> */}
         </Row>
 
         <Row>
@@ -1212,16 +1235,7 @@ function FamilyHead(props) {
             </FormItem>
           </Column>
           <Column>
-            <FormItem
-              // name="familyMembers"
-              label="Number of family members/ कुटुंबातील सदस्यांची संख्या"
-              // rules={[
-              //   {
-              //     required: true,
-              //     message: "Number of family members required",
-              //   },
-              // ]}
-            >
+            <FormItem label="Number of family members/ कुटुंबातील सदस्यांची संख्या">
               <Input
                 type="text"
                 value={totalFamilyMembers}
@@ -1259,35 +1273,10 @@ function FamilyHead(props) {
         <div>
           <Form layout="vertical">
             <ModalFormItem label="Ward / प्रभाग ">
-              <Input value={sessionStorage.getItem("ward")} disabled></Input>
-              {/* <Select
-                onChange={(value) => handleWardSelection(value)}
-                value={ward_name}
-              >
-                {wardList.map((data, key) => (
-                  <>
-                    <Option key={key} value={data.id}>
-                      {data.wardName}
-                    </Option>
-                  </>
-                ))}
-              </Select> */}
+              <Input value={sessionStorage.getItem("ward")}></Input>
             </ModalFormItem>
             <ModalFormItem label="Health Post / आरोग्य पोस्ट ">
-              <Input
-                value={sessionStorage.getItem("healthPostName")}
-                disabled
-              ></Input>
-              {/* <Select
-                onChange={(value) => handleHealthPostSelect(value)}
-                value={healthPost}
-              >
-                {healthPostList.map((data, key) => (
-                  <Option key={key} value={data.id}>
-                    {data.healthPostName}
-                  </Option>
-                ))}
-              </Select> */}
+              <Input value={sessionStorage.getItem("healthPostName")}></Input>
             </ModalFormItem>
             <ModalFormItem label="Select Area/ क्षेत्र निवडा" required>
               <Select
@@ -1308,11 +1297,6 @@ function FamilyHead(props) {
     </>
   ) : (
     <>
-      {/* {
-      partC2OptionSelect.map((data ,index)=>(
-       <p key={index}>{data}</p>
-      ))
-    } */}
       <Container>
         <FormHeader>
           1.Family Member {noOfMembersCompleted} out of {totalFamilyMembers}/
@@ -1352,6 +1336,7 @@ function FamilyHead(props) {
                 <Select onChange={(value) => setGender(value)} value={gender}>
                   <Option value="male">Male / पुरुष</Option>
                   <Option value="female">Female / स्त्री</Option>
+                  <Option value="transgender">Transgender/समलैंगिक</Option>
                 </Select>
               </FormItem>
             </Column>
@@ -1397,8 +1382,15 @@ function FamilyHead(props) {
                   onChange={(e) => handleAbhaIDChange(e)}
                 ></Input>
               </FormItem>
+              <p style={{ margin: "-20px 90px 15px", fontSize: "14px" }}>
+                If don't have Abha ID?{" "}
+                <a onClick={() => handleShowAadharOtpLinkedModal()}>
+                  Create Abha ID
+                </a>
+              </p>
             </Column>
           </Row>
+
           <Row>
             <Column>
               <FormItem label="Pulse / नाडी">
@@ -1447,15 +1439,6 @@ function FamilyHead(props) {
                 ></Input>
               </FormItem>
             </Column>
-            {/* <Column>
-              <FormItem label="Cbac Score ">
-                <Input
-                  type="text"
-                  value={cbacScore}
-                  onChange={(e) => setCbacScore(e.target.value)}
-                ></Input>
-              </FormItem>
-            </Column> */}
           </Row>
         </FormContainer>
       </Container>
@@ -2131,6 +2114,49 @@ function FamilyHead(props) {
           <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
         </div>
       </Modal>
+      <AadharOtpLinkedModal
+        open={showAadharOtpLinkedModal}
+        onCancel={handleHideAadharOtpLinkedModal}
+        footer={
+          <>
+            <Button onClick={handleAadharNumberSubmit}>Submit</Button>
+          </>
+        }
+      >
+        <div style={{ margin: "20px" }}>
+          <Form layout="vertical">
+            <Form.Item label="Aadhar Number">
+              <Input
+                type="text"
+                placeholder="Enter Aadhar Number "
+                style={{ width: "400px " }}
+                onChange={(e) => setAadharNumber(e.target.value)}
+              ></Input>
+            </Form.Item>
+            {aadharNumberSubmitted ? (
+              <>
+                {" "}
+                <Form.Item label="OTP">
+                  <OtpInput
+                    inputStyle={{
+                      width: "30px",
+                      height: "30px",
+                      margin: "2px 25px",
+                    }}
+                    value={otp}
+                    numInputs={4}
+                    onChange={setOtp}
+                    renderSeparator={<span></span>}
+                    renderInput={(props) => <input {...props} />}
+                  ></OtpInput>
+                </Form.Item>
+              </>
+            ) : (
+              <></>
+            )}
+          </Form>
+        </div>
+      </AadharOtpLinkedModal>
     </>
   );
 }

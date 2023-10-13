@@ -28,7 +28,10 @@ import Link from "antd/es/typography/Link";
 import OtpInput from "react-otp-input";
 import axios from "axios";
 import { BASE_URL } from "../Utils/BaseURL";
+import { useNavigate } from "react-router-dom";
+import Dashboard from "../Components/Dashboard/Dashboard";
 function Login() {
+  const navigate = useNavigate();
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState("");
   const [showLoading, setShowLoading] = useState(false);
@@ -50,18 +53,18 @@ function Login() {
     axios
       .post(`${BASE_URL}/allauth/api/login`, formData, axiosConfig)
       .then((response) => {
-        console.log(response.data);
+        console.log(response.data.Group);
         sessionStorage.setItem("Token", response.data.Token);
         sessionStorage.setItem("ward", response.data.ward);
         sessionStorage.setItem("healthPostName", response.data.healthPostName);
         sessionStorage.setItem("healthPostID", response.data.healthPostID);
         sessionStorage.setItem("name", response.data.name);
+        sessionStorage.setItem("group", response.data.Group);
         message.success(response.data.message);
 
         setTimeout(() => {
-          window.location.replace("/dashboard");
+          window.location.replace("/user");
         }, 1000);
-
         setShowLoading(false);
       })
       .catch((error) => {
@@ -117,9 +120,9 @@ function Login() {
                       onChange={(e) => setPassword(e.target.value)}
                     ></InputBox.Password>
                   </FormItem>
-                  {/* { showOtpInput ?(<>  <FormItem label="OTP">
+                  { showOtpInput ?(<>  <FormItem label="OTP">
                     <OtpInput inputStyle={{width:"40px" ,height:"20px" ,marginLeft:"40px"}} value={otp} numInputs={4} onChange={setOtp} renderSeparator={<span></span>} renderInput={(props) => <input {...props} />}></OtpInput>
-                </FormItem></>):(<></>)} */}
+                </FormItem></>):(<></>)}
 
                   <SubmitButton htmlType="submit" onClick={handleLoginSubmit}>
                     Submit

@@ -55,6 +55,7 @@ import {
   faPlus,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { LogOut } from "../../Auth/Logout";
 
 function MemberUpdate(props) {
   const { t } = useTranslation();
@@ -851,7 +852,7 @@ function MemberUpdate(props) {
               if (error.response.status == 401) {
                 message.warning("system is logged out");
                 setTimeout(() => {
-                  window.location.replace("/");
+                  LogOut();
                 }, 1000);
               } else {
                 message.warning(error.response.data.message);
@@ -880,7 +881,7 @@ function MemberUpdate(props) {
           if (error.response.status == 401) {
             message.warning("system is logged out");
             setTimeout(() => {
-              window.location.replace("/");
+              LogOut();
             }, 1000);
           } else {
             message.warning(error.response.data.message);

@@ -24,39 +24,40 @@ import axios from "axios";
 import { BASE_URL } from "../../Utils/BaseURL";
 import { Option } from "antd/es/mentions";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { LogOut } from "../../Auth/Logout";
 
 function Header() {
   const menuItems = [
     { key: "1", title: "Dashboard", link: "/dashboard" },
-    { key: "2", title: "Survey Form", link: "/user" },
+    { key: "2", title: "Survey Form", link: "/register" },
     // Add more menu items as needed
   ];
-  const Logout = () => {
-    sessionStorage.clear();
-    window.location.replace("/");
-    // let axiosConfig = {
-    //   headers: {
-    //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //   },
-    // };
-    // axios
-    //   .post(`${BASE_URL}/allauth/api/logout`, axiosConfig)
-    //   .then((res) => {
-    //     console.log(res);
-    //     try {
-    //       sessionStorage.clear();
-    //       window.location.replace("/");
-    //     } catch (error) {
-    //       console.error(
-    //         "Error clearing session storage or redirecting:",
-    //         error
-    //       );
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Logout error:", error);
-    //   });
-  };
+  // const Logout = () => {
+  //   sessionStorage.clear();
+  //   window.location.replace("/");
+  // let axiosConfig = {
+  //   headers: {
+  //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
+  //   },
+  // };
+  // axios
+  //   .post(`${BASE_URL}/allauth/api/logout`, axiosConfig)
+  //   .then((res) => {
+  //     console.log(res);
+  //     try {
+  //       sessionStorage.clear();
+  //       window.location.replace("/");
+  //     } catch (error) {
+  //       console.error(
+  //         "Error clearing session storage or redirecting:",
+  //         error
+  //       );
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.error("Logout error:", error);
+  //   });
+  // };
 
   const LogoutItems = [
     {
@@ -64,7 +65,7 @@ function Header() {
       label: (
         <a
           onClick={() => {
-            Logout();
+            LogOut();
           }}
         >
           Logout
@@ -105,7 +106,7 @@ function Header() {
           <UserIcon icon={faUser} />
           <UserSelect
             value={sessionStorage.getItem("name")}
-            onChange={() => Logout()}
+            onChange={() => LogOut()}
           >
             <LogoutOption key="1">
               <FontAwesomeIcon icon={faRightFromBracket} /> Logout
@@ -127,7 +128,7 @@ function Header() {
           <UserIcon icon={faUser} />
           <UserSelect
             value={sessionStorage.getItem("name")}
-            onChange={() => Logout()}
+            onChange={() => LogOut()}
           >
             <LogoutOption key="1">
               <FontAwesomeIcon icon={faRightFromBracket} /> Logout

@@ -50,6 +50,7 @@ import { useLocation } from "react-router-dom";
 import Header from "../Header/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { LogOut } from "../../Auth/Logout";
 
 function MemberAdd(props) {
   const { t } = useTranslation();
@@ -760,7 +761,7 @@ function MemberAdd(props) {
         if (error.response.status == 401) {
           message.warning("system is logged out");
           setTimeout(() => {
-            window.location.replace("/");
+            LogOut();
           }, 1000);
         } else {
           message.warning(error.response.data.message);
@@ -793,7 +794,7 @@ function MemberAdd(props) {
               if (error.response.status == 401) {
                 message.warning("system is logged out");
                 setTimeout(() => {
-                  window.location.replace("/");
+                  LogOut();
                 }, 1000);
               } else {
                 message.warning(error.response.data.message);
@@ -822,7 +823,7 @@ function MemberAdd(props) {
           if (error.response.status == 401) {
             message.warning("system is logged out");
             setTimeout(() => {
-              window.location.replace("/");
+              LogOut();
             }, 1000);
           } else {
             message.warning(error.response.data.message);

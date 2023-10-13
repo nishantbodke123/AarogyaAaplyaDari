@@ -50,6 +50,7 @@ import TabPane from "antd/es/tabs/TabPane";
 import { useNavigate } from "react-router-dom";
 import FamilyHead from "../Registration/FamilyHead";
 import TextArea from "antd/es/input/TextArea";
+import { LogOut } from "../../Auth/Logout";
 
 const Dashboard = () => {
   const [dashboardCounts, setDashboardCounts] = useState({});
@@ -216,7 +217,7 @@ const Dashboard = () => {
         if (error.response.status == 401) {
           message.warning("system is logged out");
           setTimeout(() => {
-            window.location.replace("/");
+            LogOut();
           }, 1000);
         } else {
           message.error(error.message);
@@ -235,7 +236,7 @@ const Dashboard = () => {
         if (error.response.status == 401) {
           message.warning("system is logged out");
           setTimeout(() => {
-            window.location.replace("/");
+            LogOut();
           }, 1000);
         } else {
           // message.error(error.message);
@@ -284,7 +285,7 @@ const Dashboard = () => {
         if (error.response.status == 401) {
           message.warning("system is logged out");
           setTimeout(() => {
-            window.location.replace("/");
+            LogOut();
           }, 1000);
         } else {
           message.error(error.message);
@@ -657,7 +658,7 @@ const Dashboard = () => {
               <Table
                 columns={Items}
                 dataSource={partiallyFamilyHeadList}
-                scroll={{x: 500}}
+                scroll={{ x: 500 }}
               ></Table>
             </TabPane>
           </StyledTabs>
