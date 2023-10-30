@@ -63,7 +63,11 @@ function Login() {
         message.success(response.data.message);
 
         setTimeout(() => {
-          window.location.replace("/user");
+          if (response.data.Group == "healthworker") {
+            window.location.replace("/dashboard");
+          } else {
+            window.location.replace("/phlebo");
+          }
         }, 1000);
         setShowLoading(false);
       })
@@ -120,20 +124,27 @@ function Login() {
                       onChange={(e) => setPassword(e.target.value)}
                     ></InputBox.Password>
                   </FormItem>
-                  { showOtpInput ?(<>  <FormItem label="OTP">
+                  {/* { showOtpInput ?(<>  <FormItem label="OTP">
                     <OtpInput inputStyle={{width:"40px" ,height:"20px" ,marginLeft:"40px"}} value={otp} numInputs={4} onChange={setOtp} renderSeparator={<span></span>} renderInput={(props) => <input {...props} />}></OtpInput>
-                </FormItem></>):(<></>)}
-
-                  <SubmitButton htmlType="submit" onClick={handleLoginSubmit}>
-                    Submit
-                  </SubmitButton>
+                </FormItem></>):(<></>)} */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SubmitButton htmlType="submit" onClick={handleLoginSubmit}>
+                      Submit
+                    </SubmitButton>
+                  </div>
                   {/* <ForgetPasswordPara>
                   Forget Password?
                   <ClickHereLink>Click here</ClickHereLink>
                 </ForgetPasswordPara> */}
                 </Form>
               </LoginForm>
-            </div>
+            </div>{" "}
+            s
           </FormContainer>
         </Container>
       </Spin>

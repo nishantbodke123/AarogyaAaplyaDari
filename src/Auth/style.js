@@ -95,16 +95,14 @@ export const FormItem = styled(Form.Item)`
 `;
 export const SubmitButton = styled(Button)`
   background-color: #ff8551;
-  width: 50%;
+  width: 100%;
   height: 35px;
   color: black;
   font-size: 18px;
   border: none;
-  border-radius: 15px;
   &:hover {
-    background-color: #f86f03;
-    color: none;
-    font-size: 20px;
+    color: white;
+    font-size: 19px;
   }
   margin: 30px 100px;
   @media (max-width: 415px) {

@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Input, Menu, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import { styled } from "styled-components";
+import { theme } from "../../Utils/theme";
 
 export const HeaderBar = styled.div`
   background-color: #ffe5ad;
@@ -76,7 +77,7 @@ export const SubMenu = styled.div`
   }
 `;
 export const UserIcon = styled(FontAwesomeIcon)`
-  margin-right: 5px;
+  margin:5px 5px;
   font-size: 18px;
   @media (max-width: 820px) {
     font-size: 15px;
@@ -103,22 +104,16 @@ export const MobileMenu = styled(Menu)`
 
 export const LogoutDiv = styled.div`
   display: flex;
-  border-radius: 20px;
-  margin: 425px 50px;
+  justify-content: end;
+  margin: 20px;
   font-size: 15px;
   font-weight: 600;
-  &:hover {
-    font-size: 17px;
-    font-weight: 650;
-    background-color: #daaa6b;
-  }
 `;
 export const SearchButton = styled(Button)`
   margin-left: 20px;
   border-radius: 15px;
   background-color: #ff8551;
   &:hover {
-    
   }
 `;
 export const SearchInput = styled(Input)`
@@ -126,4 +121,8 @@ export const SearchInput = styled(Input)`
 `;
 export const SearchBoxDiv = styled.div`
   margin: 15px 50px;
+`;
+export const ViewButton = styled(Button)`
+  background-color: ${theme.BG_COLOR.Button_Background};
+  border-radius: 60px;
 `;

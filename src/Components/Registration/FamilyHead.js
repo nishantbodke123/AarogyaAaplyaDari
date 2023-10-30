@@ -44,17 +44,25 @@ import {
   AnswerCol1,
   SelectWardButton,
   AadharOtpLinkedModal,
+  CheckAndGenerateMobileOtpModal,
+  HealthIdModal,
 } from "./style";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faExclamationCircle,
+  faHouse,
+  faPlus,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import axios, { Axios } from "axios";
 import { BASE_URL } from "../../Utils/BaseURL";
 import { useTranslation } from "react-i18next";
-import { json, useLocation } from "react-router-dom";
+import { Link, json, useLocation } from "react-router-dom";
 import { LogOut } from "../../Auth/Logout";
 import { type } from "@testing-library/user-event/dist/type";
 import OtpInput from "react-otp-input";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 function FamilyHead(props) {
   const { t } = useTranslation();
@@ -116,7 +124,8 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((response) => {
-        setHealthPostAreasList(response.data.data[0].areas);
+        console.log(response.data.data);
+        setHealthPostAreasList(response.data.data);
       })
       .catch((error) => {
         console.log(error, "health post areas error ");
@@ -193,11 +202,12 @@ function FamilyHead(props) {
   const handleFamilyHeadSubmit = () => {
     let axiosConfig = {
       headers: {
-        Authorization: sessionStorage.getItem("Token"),
+        Authorization: `Token ${sessionStorage.getItem("Token")}`,
       },
     };
-
-    if (familyHeadName == "") {
+    if (section == "") {
+      message.warning("Please Select Area");
+    } else if (familyHeadName == "") {
       message.warning("Please Enter First Name");
     } else if (mobileNo == "") {
       message.warning("Plese Enter Mobile Number");
@@ -207,8 +217,6 @@ function FamilyHead(props) {
       message.warning("Please Enter PinCode");
     } else if (totalFamilyMembers == "") {
       message.warning("Please Enter number Family members ");
-    } else if (section == "") {
-      message.warning("Please Select Section");
     } else {
       axios
         .get(
@@ -232,6 +240,14 @@ function FamilyHead(props) {
   const [showAadharOtpLinkedModal, setShowAadharOtpLinkedModal] =
     useState(false);
   const [otp, setOtp] = useState();
+  // const [aadharLinkedSelect, setAadharLinkedSelect] = useState("adharLinked");
+  const [mobileNumberForAbhaID, setMobileNumberForAbhaID] = useState();
+  const [aadharLinkedMobileNumber, setAadharLinkedMobileNumber] =
+    useState(true);
+  const [
+    showCheckAndGenerateMobileOtpModal,
+    setShowCheckAndGenerateMobileOtpModal,
+  ] = useState();
 
   const handleShowAadharOtpLinkedModal = () => {
     // const data = {
@@ -242,38 +258,259 @@ function FamilyHead(props) {
     formData.append("clientId", "SBX_004200");
     formData.append("clientSecret", "bed456a5-46bb-4de5-94ef-6caa2dc77a00");
     axios
-      .post("https://dev.abdm.gov.in/gateway/v0.5/sessions", formData, {
+      .post(`${BASE_URL}/abdm/api/GetGatewaySessionTokenAPI`, formData, {
         "Content-Type": "application/json",
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data.accessToken);
+        sessionStorage.setItem("BearerToken", res.data.accessToken);
       })
       .catch((error) => {
         console.log(error);
       });
     setShowAadharOtpLinkedModal(true);
   };
+
   const handleHideAadharOtpLinkedModal = () => {
+    setAadharNumber();
+    setOtp();
+    setAadharNumberSubmitted(false);
     setShowAadharOtpLinkedModal(false);
   };
 
   const [aadharNumber, setAadharNumber] = useState();
+  const [txnId, settxnID] = useState();
   const [aadharNumberSubmitted, setAadharNumberSubmitted] = useState(false);
+  const handleAadharNumberChange = (e) => {
+    const regex = /^[0-9]{1,12}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setAadharNumber(e.target.value);
+    }
+  };
   const handleAadharNumberSubmit = () => {
     var data = encrypt.encrypt(aadharNumber);
-    setAadharNumberSubmitted(true);
+
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
     axios
       .post(
-        `https://healthidsbx.abdm.gov.in/api/v2/registration/aadhaar/generateOtp`,
-        data
+        `${BASE_URL}/abdm/api/generateAadharOtpAPI`,
+        {
+          aadhaar: data,
+        },
+        axiosConfig
+      )
+      .then((response) => {
+        console.log(response.data.txnId);
+        settxnID(response.data.txnId);
+        if (response.status == 200) {
+          setAadharNumberSubmitted(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+        message.warning(error.response.data.message);
+      });
+  };
+
+  const handleAadharVerify = () => {
+    var data = encrypt.encrypt(otp);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+    axios
+      .post(
+        `${BASE_URL}/abdm/api/verifyAadharOTP`,
+        {
+          otp: data,
+          txnId: txnId,
+        },
+        axiosConfig
       )
       .then((response) => {
         console.log(response);
+        handleHideAadharOtpLinkedModal();
+        if (response.data.healthIdNumber === null) {
+          setAbhaId(response.data.healthIdNumber);
+          Modal.info({
+            title: "ABHA ID Already Exists",
+            content: (
+              <div>
+                <p>
+                  Abha ID Already Exist with this Aadhar card Number ,ABHA ID is
+                  as given :
+                </p>
+                <h4>{response.data.healthIdNumber}</h4>
+              </div>
+            ),
+          });
+        } else {
+          handleShowCheckAndGeneratedMobileOtp();
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.data.message);
+        message.warning(error.response.data.message);
       });
   };
+
+  const abhaIDAlreadyExistMessage = () => {
+    Modal.info({
+      title: "ABHA ID Already Exists",
+      content: (
+        <div>
+          <p>
+            Abha ID Already Exist with this Aadhar card Number ,ABHA ID is as
+            given :
+          </p>
+          <h4>{abhaId}</h4>
+        </div>
+      ),
+    });
+  };
+
+  const handleShowCheckAndGeneratedMobileOtp = () => {
+    setShowCheckAndGenerateMobileOtpModal(true);
+  };
+  const handleHideCheckAndGeneratedMobileOtp = () => {
+    setMobileNumberForAbhaID("");
+    setOtp("");
+    setAadharLinkedMobileNumber(true);
+    setShowCheckAndGenerateMobileOtpModal(false);
+  };
+
+  const [aadharPhotoURL, setAadharPhotoURL] = useState("");
+  const [aadharCardName, setAadharCardName] = useState();
+  const [aadharMobileNumber, setAadharMobileNumber] = useState();
+  const [healthNumber, setHealthNumber] = useState();
+  const [healthId, setHealthId] = useState();
+
+  const handleCheckAndGenerateMobileOtp = () => {
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+    const formData = new FormData();
+    formData.append("mobile", mobileNumberForAbhaID);
+    formData.append("txnId", txnId);
+    axios
+      .post(
+        `${BASE_URL}/abdm/api/checkAndGenerateMobileOTP`,
+        formData,
+        axiosConfig
+      )
+      .then((res) => {
+        console.log(res.data.txnId);
+        settxnID(res.data.txnId);
+        if (res.data.mobileLinked) {
+          Modal.confirm({
+            title: "Create Health ID",
+            icon: <ExclamationCircleOutlined />,
+            content: (
+              <>
+                <p>
+                  This Number is linked with Your Aadhar Card , Do You want link
+                  with Abha Card?
+                </p>
+              </>
+            ),
+            okText: "Confirm",
+            onOk() {
+              console.log("Confirmed");
+              axios
+                .post(
+                  `${BASE_URL}/abdm/api/createHealthIdByAdhaarAPI`,
+                  {
+                    consent: res.data.mobileLinked,
+                    consentVersion: "v1.0",
+                    txnId: res.data.txnId,
+                  },
+                  formData,
+                  {
+                    Authorization: `Bearer ${sessionStorage.getItem(
+                      "BearerToken"
+                    )}`,
+                  }
+                )
+                .then((res) => {
+                  console.log(res);
+                  setAadharPhotoURL(res.data.kycPhoto);
+                  setAadharCardName(res.data.name);
+                  setAadharMobileNumber(res.data.mobile);
+                  setHealthNumber(res.data.healthIdNumber);
+                  setHealthId(res.data.healthId);
+                  setMobileNumberForAbhaID("");
+                  handleShowHealthIdModal();
+                  handleHideCheckAndGeneratedMobileOtp();
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            },
+            onCancel() {
+              console.log("Cancel");
+            },
+            cancelText: "Cancel",
+          });
+        } else {
+          setAadharLinkedMobileNumber(res.data.mobileLinked);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const [showHealthIdModal, setShowHealthIdModal] = useState(false);
+  const handleShowHealthIdModal = () => {
+    setShowHealthIdModal(true);
+  };
+  const handleHideHealthIdModal = () => {
+    setShowHealthIdModal(false);
+  };
+
+  const handleVerifyNumberLinktoAbhaCard = () => {
+    var data = encrypt.encrypt(otp);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+    console.log(axiosConfig);
+    axios
+      .post(
+        `${BASE_URL}/abdm/api/verifyAadharOTP`,
+        {
+          otp: data,
+          txnId: txnId,
+        },
+        axiosConfig
+      )
+      .then((res) => {
+        console.log(res);
+        handleHideCheckAndGeneratedMobileOtp();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // const handleVerifyNewNumberLinkedAbhaCard = () => {
+  //   const formData = new FormData();
+  //   formData.append("otp", otp);
+  //   formData.append("txnId", txnId);
+  //   axios.post(`${BASE_URL}/abdm/api/verifyMobileOTP`);
+  // };
   // Member's Form
   let [noOfMembersCompleted, setNoOfMembersComplted] = useState(1);
   const [activeTab, setActiveTab] = useState("1");
@@ -1284,9 +1521,9 @@ function FamilyHead(props) {
                 showSearch
                 onChange={(value) => handleSectionSelect(value)}
               >
-                {healthPostAreas.map((data, key) => (
-                  <Option key={key} value={data}>
-                    {data}
+                {healthPostAreas.map((data) => (
+                  <Option key={data.id} value={data.areas}>
+                    {console.log(data.areas)}
                   </Option>
                 ))}
               </Select>
@@ -2119,18 +2356,37 @@ function FamilyHead(props) {
         onCancel={handleHideAadharOtpLinkedModal}
         footer={
           <>
-            <Button onClick={handleAadharNumberSubmit}>Submit</Button>
+            {aadharNumberSubmitted ? (
+              <SubmitButton onClick={handleAadharVerify}>
+                Verify OTP
+              </SubmitButton>
+            ) : (
+              <SubmitButton onClick={handleAadharNumberSubmit}>
+                Submit
+              </SubmitButton>
+            )}
           </>
         }
       >
         <div style={{ margin: "20px" }}>
           <Form layout="vertical">
+            <p
+              style={{
+                margin: "10px 5px",
+                fontFamily: "-moz-initial",
+                fontSize: "18px",
+                fontStyle: "oblique",
+              }}
+            >
+              *Validate your Aadhar number before generating your abha number
+            </p>
             <Form.Item label="Aadhar Number">
               <Input
                 type="text"
                 placeholder="Enter Aadhar Number "
                 style={{ width: "400px " }}
-                onChange={(e) => setAadharNumber(e.target.value)}
+                value={aadharNumber}
+                onChange={(e) => handleAadharNumberChange(e)}
               ></Input>
             </Form.Item>
             {aadharNumberSubmitted ? (
@@ -2141,14 +2397,24 @@ function FamilyHead(props) {
                     inputStyle={{
                       width: "30px",
                       height: "30px",
-                      margin: "2px 25px",
+                      margin: "2px 15px",
                     }}
                     value={otp}
-                    numInputs={4}
-                    onChange={setOtp}
+                    numInputs={6}
+                    type="number"
+                    onChange={(value) => setOtp(value)}
                     renderSeparator={<span></span>}
                     renderInput={(props) => <input {...props} />}
                   ></OtpInput>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      margin: "10px 40px ",
+                    }}
+                  >
+                    <a onClick={handleAadharNumberSubmit}>Resend OTP</a>
+                  </div>
                 </Form.Item>
               </>
             ) : (
@@ -2157,6 +2423,152 @@ function FamilyHead(props) {
           </Form>
         </div>
       </AadharOtpLinkedModal>
+      <CheckAndGenerateMobileOtpModal
+        open={showCheckAndGenerateMobileOtpModal}
+        onCancel={handleHideCheckAndGeneratedMobileOtp}
+        footer={
+          <>
+            {aadharLinkedMobileNumber ? (
+              <>
+                <SubmitButton onClick={() => handleCheckAndGenerateMobileOtp()}>
+                  Submit
+                </SubmitButton>
+              </>
+            ) : (
+              <>
+                <SubmitButton
+                  onClick={() => {
+                    handleVerifyNumberLinktoAbhaCard();
+                  }}
+                >
+                  Submit OTP
+                </SubmitButton>
+              </>
+            )}
+          </>
+        }
+      >
+        <>
+          <Form layout="vertical">
+            <p
+              style={{
+                margin: "10px 5px",
+                fontFamily: "-moz-initial",
+                fontSize: "18px",
+                fontStyle: "oblique",
+              }}
+            >
+              *Enter Mobile number to linked with ABHA CARD
+            </p>
+            {/* <Radio.Group
+              style={{ padding: "20px" }}
+              value={aadharLinkedSelect}
+              onChange={(e) => setAadharLinkedSelect(e.target.value)}
+            >
+              <Radio value="adharLinked">Adhar Linked</Radio>
+              <Radio value="other">Other</Radio>
+            </Radio.Group> */}
+            <Form.Item label="Mobile Number" style={{ padding: "20px" }}>
+              <Input
+                type="text"
+                placeholder="Enter Mobile Number"
+                style={{ width: "400px" }}
+                value={mobileNumberForAbhaID}
+                onChange={(e) => setMobileNumberForAbhaID(e.target.value)}
+              ></Input>
+              {aadharLinkedMobileNumber ? (
+                <></>
+              ) : (
+                <>
+                  <Form.Item label="OTP">
+                    <OtpInput
+                      inputStyle={{
+                        width: "30px",
+                        height: "30px",
+                        margin: "2px 15px",
+                      }}
+                      value={otp}
+                      numInputs={6}
+                      type="number"
+                      onChange={(value) => setOtp(value)}
+                      renderSeparator={<span></span>}
+                      renderInput={(props) => <input {...props} />}
+                    ></OtpInput>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        margin: "10px 40px ",
+                      }}
+                    >
+                      <a onClick={handleCheckAndGenerateMobileOtp}>
+                        Resend OTP
+                      </a>
+                    </div>
+                  </Form.Item>
+                </>
+              )}
+            </Form.Item>
+          </Form>
+        </>
+      </CheckAndGenerateMobileOtpModal>
+      <HealthIdModal
+        open={showHealthIdModal}
+        onCancel={handleHideHealthIdModal}
+        footer={
+          <>
+            <SubmitButton>Submit</SubmitButton>
+          </>
+        }
+      >
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <img
+              width={100}
+              src={`data:image/jpeg;base64, ${aadharPhotoURL}`}
+            ></img>
+          </div>
+          <div style={{ margin: "15px 50px" }}>
+            <Form layout="vertical">
+              {/* <Form.Item label="Name">
+                <InputForm
+                  type="text"
+                  value={aadharCardName}
+                  // onChange={(e) => setAadharCardName(e.target.value)}
+                ></InputForm>
+              </Form.Item> */}
+              <h3>Name : {aadharCardName}</h3>
+              <h3> Mobile No : {aadharMobileNumber} </h3>
+              <h3>Health No : {healthNumber}</h3>
+              {/* <Form.Item label="Mobile Number">
+                <InputForm
+                  type="text"
+                  value={aadharMobileNumber}
+                  // onChange={(e) => setAadharMobileNumber(e.target.value)}
+                ></InputForm>
+              </Form.Item> */}
+              {/* <FormItem label="Health Number">
+                <InputForm type="text" value={healthNumber}></InputForm>
+              </FormItem> */}
+              <FormItem label="Create Your Health ID">
+                <InputForm
+                  type="text"
+                  value={healthId}
+                  placeholder="Enter Health ID"
+                  onChange={(e) => setHealthId(e.target.value)}
+                ></InputForm>
+              </FormItem>
+              <p>e.g nishant.bodke@sbx</p>
+            </Form>
+          </div>
+        </div>
+      </HealthIdModal>
     </>
   );
 }

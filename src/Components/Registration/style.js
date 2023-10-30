@@ -246,6 +246,7 @@ export const BloodSampleButtonCol = styled(Col)`
     width: 100%;
   }
 `;
-export const AadharOtpLinkedModal = styled(Modal)`
+export const AadharOtpLinkedModal = styled(Modal)``;
+export const CheckAndGenerateMobileOtpModal = styled(Modal)``;
 
-`;
+export const HealthIdModal = styled(Modal)``;

@@ -1,37 +1,106 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Button, Form, Input, Layout, Menu, theme } from "antd";
 import {
-  HeaderLogo,
-  LogoutOption,
-  SearchBoxDiv,
-  SearchButton,
-  SearchInput,
-  SubMenu,
-  UserIcon,
-  UserSelect,
-} from "./style";
+  Button,
+  Col,
+  Form,
+  Input,
+  Layout,
+  Menu,
+  Modal,
+  Row,
+  Table,
+  theme,
+} from "antd";
+import { SearchBoxDiv, SearchButton, SearchInput, ViewButton } from "./style";
 import SideBar from "./SideBar";
-import { faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
-import { LogOut } from "../../Auth/Logout";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { BASE_URL } from "../../Utils/BaseURL";
+import { GetPhleboFamilyMembersDetailsInstance } from "../../Utils/APIs";
+import { COMMON_ROUTES } from "../../Utils/Routes";
 const { Header, Content, Footer, Sider } = Layout;
 
-const handleCitizenSearch = () => {
-  console.log("Citizen Searched");
-};
 const CitizenDetails = () => {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+  const [citizenDetailsSearch, setCitizenDetailsSearch] = useState();
+  const [citizenDetailsData, setCitizenDetailsData] = useState([]);
+  const [showCBACModal, setShowCBACModal] = useState(false);
+
+  const handleCitizenSearch = () => {
+    console.log("Citizen Searched");
+    const axiosConfig = {
+      headers: {
+        Authorization: `Token ${sessionStorage.getItem("Token")} `,
+      },
+      params: {
+        search: citizenDetailsSearch,
+      },
+    };
+    axios
+      .get(`${BASE_URL}/phlebo/api/GetCitizenBasicDetailsAPI`, axiosConfig)
+      .then((response) => {
+        console.log(response.data);
+        setCitizenDetailsData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const columns = [
+    {
+      title: "Member ID",
+      dataIndex: "memberId",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+    },
+    {
+      title: "Mobile Number",
+      dataIndex: "mobileNo",
+    },
+    {
+      title: "Aadhar Card No",
+      dataIndex: "aadharCard",
+    },
+    {
+      title: "Aabha ID",
+      dataIndex: "abhaId",
+    },
+    {
+      title: "Lab Test Status",
+      dataIndex: "isLabTestAdded",
+      render: (data) => {
+        return data ? "Yes" : "No";
+      },
+    },
+    {
+      title: "Blood Sample Collected",
+      dataIndex: "isSampleCollected",
+      render: (data) => {
+        return data ? "Yes" : "No";
+      },
+    },
+    {
+      title: "Lab Test Report Generated",
+      dataIndex: "isLabTestReportGenerated",
+      render: (data) => {
+        return data ? "Yes" : "No";
+      },
+    },
+  ];
+
   return (
     <Layout>
       <SideBar />
-
       <Layout>
         <Header
           style={{
@@ -44,8 +113,14 @@ const CitizenDetails = () => {
           <SearchBoxDiv>
             <Form layout="vertical">
               <Form.Item label="Citizen ID">
-                <SearchInput type="text"></SearchInput>
-                <SearchButton onClick={() => handleCitizenSearch()}>
+                <SearchInput
+                  type="text"
+                  onChange={(e) => setCitizenDetailsSearch(e.target.value)}
+                ></SearchInput>
+                <SearchButton
+                  htmlType="Submit"
+                  onClick={() => handleCitizenSearch()}
+                >
                   Search
                 </SearchButton>
               </Form.Item>
@@ -59,12 +134,16 @@ const CitizenDetails = () => {
         >
           <div
             style={{
-              padding: 50,
+              padding: "50px 20px",
               minHeight: 455,
               background: "#E5E5E5",
             }}
           >
-            content
+            <Table
+              columns={columns}
+              dataSource={citizenDetailsData}
+              scroll={{ y: 210 }}
+            ></Table>
           </div>
         </Content>
       </Layout>

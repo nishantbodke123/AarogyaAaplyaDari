@@ -2,31 +2,96 @@ import Login from "./Auth/Login";
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import Register from "./Components/Registration/Register";
 import User from "./Components/User/user";
-import Protected from "./Auth/Protected";
+import { HealthworkerProtected, PhleboProtected } from "./Auth/Protected";
 import Error from "./Auth/error";
 import Dashboard from "./Components/Dashboard/Dashboard";
-import UserList from "./Components/UserList/UserList";
+
 import MemberUpdate from "./Components/Registration/MemberUpdate";
 import MemberAdd from "./Components/Registration/MemberAdd";
-
-import CitizenDetails from "./Components/Phlebotomist/CitizenDetails";
+import Phlebo from "./Components/Phlebotomist/Phlebo";
 
 function App() {
+  let Token = sessionStorage.getItem("Token");
+  let Group = sessionStorage.getItem("group");
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/" element={<Protected />}>
-            <Route path="dashboard" element={<Dashboard />}></Route>
-            <Route path="user" element={<User />}></Route>
-            <Route path="register" element={<Register />}></Route>
-            <Route path="update" element={<MemberUpdate />}></Route>
-            <Route path="addMember" element={<MemberAdd />}></Route>
+          <Route
+            path="/"
+            element={
+              Token !== "" && Group == "healthworker" ? (
+                <Navigate to="/dashboard" />
+              ) : Token !== "" && Group == "phlebotomist" ? (
+                <Navigate to="/phlebo" />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          ></Route>
+          <Route
+            path="/login"
+            element={
+              Token !== "" && Group == "healthworker" ? (
+                <Navigate to="/dashboard" />
+              ) : Token !== "" && Group == "phlebotomist" ? (
+                <Navigate to="/phlebo" />
+              ) : (
+                <Login />
+              )
+            }
+          ></Route>
+          
 
-            <Route path="citizendetails" element={<CitizenDetails />}></Route>
-          </Route>
+          <Route
+            path="/dashboard"
+            element={
+              <HealthworkerProtected>
+                <Dashboard />
+              </HealthworkerProtected>
+            }
+          ></Route>
+          <Route
+            path="/user"
+            element={
+              <HealthworkerProtected>
+                <User />
+              </HealthworkerProtected>
+            }
+          ></Route>
+          <Route
+            path="/register"
+            element={
+              <HealthworkerProtected>
+                <Register />
+              </HealthworkerProtected>
+            }
+          ></Route>
+          <Route
+            path="/update"
+            element={
+              <HealthworkerProtected>
+                <MemberUpdate />
+              </HealthworkerProtected>
+            }
+          ></Route>
+          <Route
+            path="/addMember"
+            element={
+              <HealthworkerProtected>
+                <MemberAdd />
+              </HealthworkerProtected>
+            }
+          ></Route>
+          <Route
+            path="/phlebo"
+            element={
+              <PhleboProtected>
+                <Phlebo />
+              </PhleboProtected>
+            }
+          ></Route>
+
           <Route path="/*" element={<Error />}></Route>
         </Routes>
       </BrowserRouter>

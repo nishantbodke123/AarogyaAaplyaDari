@@ -1,15 +1,25 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
-function Protected(){
-    let loginToken=sessionStorage.getItem("Token");
 
-    if(loginToken == null){
-        return window.location.replace("/login")
-    }else{
-        return(<Outlet></Outlet>)
-    }
-
+let loginToken = sessionStorage.getItem("Token");
+let userGroup = sessionStorage.getItem("group");
+export function HealthworkerProtected({ children }) {
+  const navigate = useNavigate();
+  if (loginToken !== "" && userGroup === "healthworker") {
+    return children;
+  } else {
+    navigate("/");
+    return null;
+  }
 }
 
-export default Protected;
+export function PhleboProtected({ children }) {
+  const navigate = useNavigate();
+  if (loginToken !== "" && userGroup === "phlebotomist") {
+    return children;
+  } else {
+    navigate("/");
+    return null;
+  }
+}
