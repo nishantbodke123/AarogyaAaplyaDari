@@ -1,5 +1,9 @@
 export const theme = {
   BG_COLOR: {
-    Button_Background: "#ff8551"
+    Header_Background: "",
+    Button_Background: "#ff8551",
+    White_Color: "#FFF6F6",
+    QuestionRow_Background: "#dde6ed",
+    Tab_Color : "#ff8551"
   },
 };

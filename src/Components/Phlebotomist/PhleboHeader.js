@@ -5,26 +5,26 @@ import { SearchBoxDiv, SearchButton, SearchInput } from "./style";
 import { BASE_URL } from "../../Utils/BaseURL";
 const { Header, Content, Footer, Sider } = Layout;
 function PhleboHeader(props) {
-//   const [citizenDetailsSearch, setCitizenDetailsSearch] = useState();
-//   const handleCitizenSearch = () => {
-//     console.log("Citizen Searched");
-//     const axiosConfig = {
-//       headers: {
-//         Authorization: `Token ${sessionStorage.getItem("Token")} `,
-//       },
-//       params: {
-//         search: citizenDetailsSearch,
-//       },
-//     };
-//     axios
-//       .get(`${BASE_URL}/phlebo/api/GetCitizenBasicDetailsAPI`, axiosConfig)
-//       .then((response) => {
-//         console.log(response.data);
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
-//   };
+  //   const [citizenDetailsSearch, setCitizenDetailsSearch] = useState();
+  //   const handleCitizenSearch = () => {
+  //     console.log("Citizen Searched");
+  //     const axiosConfig = {
+  //       headers: {
+  //         Authorization: `Token ${sessionStorage.getItem("Token")} `,
+  //       },
+  //       params: {
+  //         search: citizenDetailsSearch,
+  //       },
+  //     };
+  //     axios
+  //       .get(`${BASE_URL}/phlebo/api/GetCitizenBasicDetailsAPI`, axiosConfig)
+  //       .then((response) => {
+  //         console.log(response.data);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   };
 
   return (
     <>

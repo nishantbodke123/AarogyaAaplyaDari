@@ -1,6 +1,8 @@
 import { Button, Col, Form, Input, Modal, Row, Tabs } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { styled } from "styled-components";
+import { theme } from "../../Utils/theme";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Container = styled.div`
   // background-color: #dde6ed;
@@ -71,7 +73,7 @@ export const FormHeader = styled.p`
   // }
 `;
 export const QuestionRow = styled(Row)`
-  background-color: #dde6ed;
+  background-color: ${theme.BG_COLOR.QuestionRow_Background};
   margin: 20px 20px;
 
   // @media (max-width: 820px) {
@@ -148,12 +150,12 @@ export const DocsTab = styled(Tabs)`
     margin: 10px 50px;
   }
   .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #ff8551;
+    color: ${theme.BG_COLOR.Tab_Color};
     font-weight: 700;
     font-size: 15px;
   }
   .ant-tabs-ink-bar {
-    background-color: #ff8551;
+    background-color: ${theme.BG_COLOR.Tab_Color};
   }
 
   @media (max-width: 820px) {
@@ -203,13 +205,13 @@ export const SubmitButtonDiv = styled.div`
 `;
 
 export const SubmitButton = styled(Button)`
-  background-color: #ff8551;
+  background-color: ${theme.BG_COLOR.Button_Background};
   color: black;
   font-weight: 600;
   margin-left: 10px;
   &:hover {
     background-color: #f29727;
-    color: none;
+    border: none;
   }
 `;
 
@@ -246,7 +248,34 @@ export const BloodSampleButtonCol = styled(Col)`
     width: 100%;
   }
 `;
+export const InputBox = styled(Input)`
+  height: 40px;
+  @media (max-width: 415px) {
+    height: 30px;
+  }
+`;
+export const ABHACardDownLoad = styled(FontAwesomeIcon)`
+  margin-top: 35px;
+  font-size: 22px;
+  cursor: pointer;
+  &:hover {
+    font-size: 25px;
+  }
+`;
+export const ABHAIDSubmitButton = styled.button`
+  border: none;
+  cursor: pointer;
+  width: 60px;
+  height: 23px;
+  border-radius: 10px;
+  background-color: #ff8551;
+  &:hover {
+    color: white;
+    background-color: #f29727;
+  }
+`;
 export const AadharOtpLinkedModal = styled(Modal)``;
 export const CheckAndGenerateMobileOtpModal = styled(Modal)``;
-
+export const HealthNumberModal = styled(Modal)``;
 export const HealthIdModal = styled(Modal)``;
+export const CreateHealthIdModal = styled(Modal)``;

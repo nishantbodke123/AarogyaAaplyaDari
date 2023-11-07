@@ -2,9 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import { styled } from "styled-components";
+import { theme } from "../../Utils/theme";
 
 export const HeaderBar = styled.div`
-  background-color: #ffe5ad;
+  background-color: ${theme.BG_COLOR.Header_Background};
   display: flex;
 `;
 export const HeaderBarSubDiv = styled.div`
@@ -42,7 +43,7 @@ export const UserSelect = styled(Select)`
 export const LogoutOption = styled(Option)`
   &:hover {
     font-size: 20px;
-    color: white;
+    color: ${theme.BG_COLOR.White_Color};
   }
 `;
 export const HeaderLogo = styled.img`

@@ -1,7 +1,6 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
-
 let loginToken = sessionStorage.getItem("Token");
 let userGroup = sessionStorage.getItem("group");
 export function HealthworkerProtected({ children }) {

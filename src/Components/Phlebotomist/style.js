@@ -77,7 +77,7 @@ export const SubMenu = styled.div`
   }
 `;
 export const UserIcon = styled(FontAwesomeIcon)`
-  margin:5px 5px;
+  margin: 5px 5px;
   font-size: 18px;
   @media (max-width: 820px) {
     font-size: 15px;

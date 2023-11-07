@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
 import { JSEncrypt } from "jsencrypt";
+import LoadingBar from "react-top-loading-bar";
 
-//
 import {
   Checkbox,
   Radio,
@@ -17,6 +17,9 @@ import {
   Select,
   Col,
   message,
+  Spin,
+  Tooltip,
+  Popover,
 } from "antd";
 
 import {
@@ -37,20 +40,24 @@ import {
   DocsTab,
   FormHeader,
   FormItem,
-  InputForm,
   QuestionSubCol,
   QuestionSubRow,
-  TextAreaForm,
-  AnswerCol1,
   SelectWardButton,
   AadharOtpLinkedModal,
   CheckAndGenerateMobileOtpModal,
   HealthIdModal,
+  HealthNumberModal,
+  CreateHealthIdModal,
+  InputForm,
+  InputBox,
+  ABHACardDownLoad,
+  ABHAIDSubmitButton,
 } from "./style";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faExclamationCircle,
+  faBackward,
+  faFileArrowDown,
   faHouse,
   faPlus,
   faXmark,
@@ -68,7 +75,10 @@ function FamilyHead(props) {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const { state } = useLocation();
+  // state for progress bar
+  const [progress, setProgress] = useState(0);
 
+  //1 st public key
   var encrypt = new JSEncrypt();
   var publicKey = `MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAstWB95C5pHLXiYW59qyO
   4Xb+59KYVm9Hywbo77qETZVAyc6VIsxU+UWhd/k/YtjZibCznB+HaXWX9TVTFs9N
@@ -84,25 +94,24 @@ function FamilyHead(props) {
   IzQpnSVDUVEzv17grVAw078CAwEAAQ==`;
   encrypt.setPublicKey(publicKey);
 
+  // 2 nd public key
+  var encrypt2 = new JSEncrypt();
+  var publicKey2 = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7Zq7YKcjmccSBnR9CDHd
+  6IX96V7D/a2XSMs+yCgejSe956mqjA/0Q9h+Xnx7ZZdwe2Tf2Jq/mWXa+gYdnta5
+  8otreXg/5oGnNV3Edlixz1Oc8tJg5bG4sIUCGZcbEQGSbm1iC+Fp1kS+YLVG4Su8
+  KoRxcCvRJI2QkfqAruX3JoFjggOkv0TgWCo9z6NV6PPmPN3UsXyH3OPDi3Ewnvd6
+  4ngCUKPSBiIDwhLj2yYSShcxH8aWbrz00SJodBJzqgjvCfZuljBXXIN4Ngi/nzqE
+  J7woKQ1kNgWoHFZy7YL74PihW//4OlniSRoITX+7ChILIv2ezSmAdIjpNJ9Dg9XK
+  cQIDAQAB`;
+  encrypt2.setPublicKey(publicKey2);
+
   let axiosConfig = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
-  // const accessToken = () => {
-  //   axios
-  //     .post(`https://dev.abdm.gov.in/gateway/v0.5/sessions`, {
-  //       clientId: "SBX_004200",
-  //       clientSecret: "bed456a5-46bb-4de5-94ef-6caa2dc77a00",
-  //     })
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+
   useEffect(() => {
     i18n.changeLanguage("mr");
     setShowModal(true);
@@ -114,6 +123,14 @@ function FamilyHead(props) {
       })
       .catch((error) => {
         console.log(error);
+        if (error.response.status == 401) {
+          message.warning("System is LogedOut");
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        } else {
+          message.warning(error.response.status);
+        }
       });
 
     axios
@@ -145,15 +162,14 @@ function FamilyHead(props) {
     setSection(value);
   };
 
+  const [loading, setLoading] = useState(false);
   const [familyHeadRegister, setFamilyHeadRegister] = useState("no");
   const [showModal, setShowModal] = useState(false);
-  const [noOfMember, setNoOfMember] = useState(1);
   const [wardList, setWardList] = useState([]);
-  const [healthPostList, setHealthPostList] = useState([]);
   const [healthPostAreas, setHealthPostAreasList] = useState([]);
   const [section, setSection] = useState("");
-  const [sectionList, setSectionList] = useState([]);
 
+  //  modal of area selection
   const handleShowModalClose = () => {
     setShowModal(false);
   };
@@ -169,8 +185,6 @@ function FamilyHead(props) {
   //Family Head Form States
 
   const [familyHeadName, setFamilyHeadName] = useState("");
-  // const [middelName, setMiddleName] = useState("");
-  // const [lastName, setLastName] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [plotNumber, setPlotNumber] = useState("");
   const [addressLine1, setAddressLine1] = useState("");
@@ -240,8 +254,13 @@ function FamilyHead(props) {
   const [showAadharOtpLinkedModal, setShowAadharOtpLinkedModal] =
     useState(false);
   const [otp, setOtp] = useState();
-  // const [aadharLinkedSelect, setAadharLinkedSelect] = useState("adharLinked");
   const [mobileNumberForAbhaID, setMobileNumberForAbhaID] = useState();
+  const handleMobileNumberForAbhaId = (e) => {
+    const regex = /^[0-9]{1,10}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setMobileNumberForAbhaID(e.target.value);
+    }
+  };
   const [aadharLinkedMobileNumber, setAadharLinkedMobileNumber] =
     useState(true);
   const [
@@ -249,11 +268,8 @@ function FamilyHead(props) {
     setShowCheckAndGenerateMobileOtpModal,
   ] = useState();
 
+  // 1st modal to aadhar verification
   const handleShowAadharOtpLinkedModal = () => {
-    // const data = {
-    //   clientId: "SBX_004200",
-    //   clientSecret: "bed456a5-46bb-4de5-94ef-6caa2dc77a00",
-    // };
     const formData = new FormData();
     formData.append("clientId", "SBX_004200");
     formData.append("clientSecret", "bed456a5-46bb-4de5-94ef-6caa2dc77a00");
@@ -279,6 +295,8 @@ function FamilyHead(props) {
   };
 
   const [aadharNumber, setAadharNumber] = useState();
+  const [mobileNumberLinkedWithAadhar, setMobileNumberLinkedWithAadhar] =
+    useState();
   const [txnId, settxnID] = useState();
   const [aadharNumberSubmitted, setAadharNumberSubmitted] = useState(false);
   const handleAadharNumberChange = (e) => {
@@ -287,7 +305,11 @@ function FamilyHead(props) {
       setAadharNumber(e.target.value);
     }
   };
+
+  // adhar verification 1st step
   const handleAadharNumberSubmit = () => {
+    setProgress(20);
+    setLoading(true);
     var data = encrypt.encrypt(aadharNumber);
 
     let axiosConfig = {
@@ -305,19 +327,27 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((response) => {
-        console.log(response.data.txnId);
+        setProgress(70);
+        setLoading(false);
+        console.log(response);
+        setMobileNumberLinkedWithAadhar(response.data.mobileNumber);
         settxnID(response.data.txnId);
         if (response.status == 200) {
+          setProgress(100);
           setAadharNumberSubmitted(true);
         }
       })
       .catch((error) => {
+        setLoading(false);
         console.log(error.response.data.message);
         message.warning(error.response.data.message);
       });
   };
 
+  // aadhar verify by OTP in 1st step
   const handleAadharVerify = () => {
+    setProgress(20);
+    setLoading(true);
     var data = encrypt.encrypt(otp);
     let axiosConfig = {
       headers: {
@@ -335,6 +365,8 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((response) => {
+        setProgress(70);
+        setLoading(false);
         console.log(response);
         handleHideAadharOtpLinkedModal();
         if (response.data.healthIdNumber === null) {
@@ -354,26 +386,13 @@ function FamilyHead(props) {
         } else {
           handleShowCheckAndGeneratedMobileOtp();
         }
+        setProgress(100);
       })
       .catch((error) => {
+        setLoading(false);
         console.log(error.response.data.message);
         message.warning(error.response.data.message);
       });
-  };
-
-  const abhaIDAlreadyExistMessage = () => {
-    Modal.info({
-      title: "ABHA ID Already Exists",
-      content: (
-        <div>
-          <p>
-            Abha ID Already Exist with this Aadhar card Number ,ABHA ID is as
-            given :
-          </p>
-          <h4>{abhaId}</h4>
-        </div>
-      ),
-    });
   };
 
   const handleShowCheckAndGeneratedMobileOtp = () => {
@@ -385,14 +404,26 @@ function FamilyHead(props) {
     setAadharLinkedMobileNumber(true);
     setShowCheckAndGenerateMobileOtpModal(false);
   };
+  const handleBackButtonOfCheckAndGenerateMobileOtpModal = () => {
+    setAadharLinkedMobileNumber(true);
+    setOtp();
+  };
 
+  // state for creations of abha number in 2nd step
   const [aadharPhotoURL, setAadharPhotoURL] = useState("");
   const [aadharCardName, setAadharCardName] = useState();
   const [aadharMobileNumber, setAadharMobileNumber] = useState();
   const [healthNumber, setHealthNumber] = useState();
+  const [authMethods, setAuthMethods] = useState([]);
+  const [selectedAuthMethods, setSelectedAuthMethods] = useState();
   const [healthId, setHealthId] = useState();
+  const [healthIdPassword, setHealthIdPassword] = useState();
+  const [listOfSuggestedHealthID, setListOfSuggestedHealthID] = useState([]);
 
+  // 2nd step check mobile number linked with adhar or not for link with abha ID
   const handleCheckAndGenerateMobileOtp = () => {
+    setProgress(20);
+    setLoading(true);
     let axiosConfig = {
       headers: {
         "Content-Type": "application/json",
@@ -409,22 +440,27 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((res) => {
+        setProgress(70);
+        setLoading(false);
         console.log(res.data.txnId);
         settxnID(res.data.txnId);
         if (res.data.mobileLinked) {
+          setProgress(100);
           Modal.confirm({
             title: "Create Health ID",
             icon: <ExclamationCircleOutlined />,
             content: (
               <>
                 <p>
-                  This Number is linked with Your Aadhar Card , Do You want link
-                  with Abha Card?
+                  This number is associated with your Aadhar card. Would you
+                  like to link it with your Abha card?
                 </p>
               </>
             ),
             okText: "Confirm",
             onOk() {
+              setProgress(20);
+              setLoading(true);
               console.log("Confirmed");
               axios
                 .post(
@@ -434,27 +470,27 @@ function FamilyHead(props) {
                     consentVersion: "v1.0",
                     txnId: res.data.txnId,
                   },
-                  formData,
-                  {
-                    Authorization: `Bearer ${sessionStorage.getItem(
-                      "BearerToken"
-                    )}`,
-                  }
+                  axiosConfig
                 )
                 .then((res) => {
+                  setProgress(70);
                   console.log(res);
+                  setLoading(false);
                   setAadharPhotoURL(res.data.kycPhoto);
                   setAadharCardName(res.data.name);
                   setAadharMobileNumber(res.data.mobile);
                   setHealthNumber(res.data.healthIdNumber);
                   setHealthId(res.data.healthId);
                   setMobileNumberForAbhaID("");
-                  handleShowHealthIdModal();
+                  handleShowHealthNumberModal();
                   handleHideCheckAndGeneratedMobileOtp();
                 })
                 .catch((error) => {
+                  setProgress(70);
+                  setLoading(false);
                   console.log(error);
                 });
+              setProgress(100);
             },
             onCancel() {
               console.log("Cancel");
@@ -466,19 +502,61 @@ function FamilyHead(props) {
         }
       })
       .catch((err) => {
+        setProgress(70);
         console.log(err);
       });
+    setProgress(100);
+  };
+
+  const [showHealthNumberModal, setHealthNumberModal] = useState(false);
+  const handleShowHealthNumberModal = () => {
+    setHealthNumberModal(true);
+  };
+  const handleHideHealthNumberModal = () => {
+    setHealthNumberModal(false);
   };
 
   const [showHealthIdModal, setShowHealthIdModal] = useState(false);
   const handleShowHealthIdModal = () => {
-    setShowHealthIdModal(true);
+    setProgress(20);
+    setLoading(true);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+    axios
+      .post(
+        `${BASE_URL}/abdm/api/v1/phr/registration/hid/search/auth-methods`,
+        {
+          healhtIdNumber: healthNumber,
+        },
+        axiosConfig
+      )
+      .then((res) => {
+        setProgress(70);
+        setLoading(false);
+        console.log(res.data.authMethods);
+        setAuthMethods(res.data.authMethods);
+        setShowHealthIdModal(true);
+      })
+      .catch((error) => {
+        setProgress(70);
+        setLoading(false);
+        console.log(error);
+      });
+    setProgress(100);
   };
   const handleHideHealthIdModal = () => {
+    setSelectedAuthMethods();
+    setOtp();
     setShowHealthIdModal(false);
   };
 
   const handleVerifyNumberLinktoAbhaCard = () => {
+    setProgress(20);
+    setLoading(true);
     var data = encrypt.encrypt(otp);
     let axiosConfig = {
       headers: {
@@ -497,20 +575,183 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((res) => {
-        console.log(res);
-        handleHideCheckAndGeneratedMobileOtp();
+        setProgress(70);
+        setLoading(false);
+        console.log(res.data.message);
       })
       .catch((err) => {
-        console.log(err);
+        setProgress(70);
+        setLoading(false);
+        console.log(err.response.data.message);
+        message.warning(err.response.data.message);
       });
+    setProgress(100);
+  };
+  const handleSelectAuthMethods = (e) => {
+    setProgress(20);
+    setLoading(true);
+    console.log(e.target.value);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+    setSelectedAuthMethods(e.target.value);
+    axios
+      .post(
+        `${BASE_URL}/abdm/api/v1/phr/registration/hid/init/AuthMethodAPI`,
+        {
+          authMethod: e.target.value,
+          healhtIdNumber: healthNumber,
+        },
+        axiosConfig
+      )
+      .then((response) => {
+        setProgress(70);
+        setLoading(false);
+        settxnID(response.data.transactionId);
+        console.log(response);
+      })
+      .catch((error) => {
+        setProgress(70);
+        setLoading(false);
+        console.log(error);
+        message.warning(error.response.data.details[0].message);
+      });
+    setProgress(100);
+  };
+  const handleVerifyWhileHealthIDGeneration = () => {
+    setProgress(20);
+    setLoading(true);
+    let data = encrypt2.encrypt(otp);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+    axios
+      .post(
+        `${BASE_URL}/abdm/api/v1/phr/registration/hid/confirm/credential`,
+        {
+          transactionId: txnId,
+          value: data,
+        },
+        axiosConfig
+      )
+      .then((res) => {
+        setProgress(50);
+        setLoading(false);
+        console.log(res);
+        settxnID(res.data.transactionId);
+        axios
+          .post(
+            `${BASE_URL}/abdm/api/v1/phr/registration/phr/suggestion`,
+            {
+              transactionId: res.data.transactionId,
+            },
+            axiosConfig
+          )
+          .then((res) => {
+            setProgress(70);
+            console.log(res);
+            setListOfSuggestedHealthID(res.data);
+            handleShowCreateHealthIdModal();
+            handleHideHealthNumberModal();
+          })
+          .catch((err) => {
+            setProgress(70);
+            console.log(err);
+          });
+
+        console.log(res.data.transactionId);
+        handleHideHealthIdModal();
+      })
+      .catch((err) => {
+        setProgress(70);
+        setLoading(false);
+        console.log(err);
+        message.warning(err.response.data.message);
+      });
+    setProgress(100);
   };
 
-  // const handleVerifyNewNumberLinkedAbhaCard = () => {
-  //   const formData = new FormData();
-  //   formData.append("otp", otp);
-  //   formData.append("txnId", txnId);
-  //   axios.post(`${BASE_URL}/abdm/api/verifyMobileOTP`);
-  // };
+  const [showCreateHealthIdModal, setShowCreateHealthIdModal] = useState(false);
+  const handleShowCreateHealthIdModal = () => {
+    console.log(txnId);
+    setShowCreateHealthIdModal(true);
+  };
+  const handleHideCreateHealthIdModal = () => {
+    setHealthId();
+    setHealthIdPassword();
+    setShowCreateHealthIdModal(false);
+  };
+  const handleCreateHealthID = () => {
+    console.log(healthId);
+    console.log(healthIdPassword);
+    console.log(txnId);
+    if (healthId == "") {
+      message.warning("Health ID Required");
+    } else if (healthIdPassword == "") {
+      message.warning("Password is required");
+    } else {
+      setProgress(20);
+      axios
+        .get(
+          `${BASE_URL}/abdm/api/v1/phr/search/isExist?phrAddress=${healthId}`,
+          {
+            Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          if (res.data) {
+            setProgress(100);
+            message.warning("Health ID Already Exist");
+          } else {
+            setProgress(70);
+            axios
+              .post(
+                `${BASE_URL}/abdm/api/v1/phr/registration/hid/create-phr-address`,
+                {
+                  Password: healthIdPassword,
+                  transactionId: txnId,
+                  phrAddress: healthId,
+                }
+              )
+              .then((res) => {
+                setProgress(100);
+                console.log(res);
+                handleHideCreateHealthIdModal();
+                Modal.success({
+                  title: "ABHA Address Created",
+                  content: (
+                    <>
+                      <div>
+                        Your ABHA Address :<b>{res.data.phrAdress}</b> is
+                        successfuly created .
+                      </div>
+                    </>
+                  ),
+                  okText: "Finish",
+                });
+              })
+              .catch((err) => {
+                setProgress(100);
+                console.log(err);
+                message.warning(err.response.data.message);
+              });
+          }
+        })
+        .catch((err) => {
+          setProgress(100);
+          console.log(err);
+          message.warning(err.response.data.message);
+        });
+    }
+  };
+
   // Member's Form
   let [noOfMembersCompleted, setNoOfMembersComplted] = useState(1);
   const [activeTab, setActiveTab] = useState("1");
@@ -553,7 +794,7 @@ function FamilyHead(props) {
   const [age, setAge] = useState("");
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState("");
-  const [abhaId, setAbhaId] = useState("");
+  const [abhaId, setAbhaId] = useState();
   const [pulse, setPulse] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
   const [weight, setWeight] = useState("");
@@ -586,12 +827,87 @@ function FamilyHead(props) {
       setPhone(e.target.value);
     }
   };
+  // const handleAbhaIDChange = (e) => {
+  //   const regex = /^[0-9a-zA-z]{1,17}$/;
+  //   if (e.target.value === "" || regex.test(e.target.value)) {
+  //     setAbhaId(e.target.value);
+  //   }
+  // };
+
   const handleAbhaIDChange = (e) => {
-    const regex = /^[0-9a-zA-z]{1,12}$/;
-    if (e.target.value === "" || regex.test(e.target.value)) {
-      setAbhaId(e.target.value);
+    const alphanumericText = e.target.value.replace(/[^0-9]/g, ""); // Remove non-alphanumeric characters
+
+    let formattedText = "";
+    for (let i = 0; i < alphanumericText.length; i++) {
+      if (i === 2 || i === 6 || i === 10) {
+        formattedText += "-";
+      }
+      formattedText += alphanumericText[i];
     }
+
+    // Ensure that the input does not start with a hyphen
+    if (formattedText.startsWith("-")) {
+      formattedText = formattedText.substring(1);
+    }
+
+    setAbhaId(formattedText);
   };
+
+  const [ABHAIDSubmited, setABHAIDSubmited] = useState(false);
+  const [mobileNumberLinkedWithABHAID, setMobileNumberLinkedWithABHAID] =
+    useState();
+  const handleABHAIDSubmit = () => {
+    console.log("ABHA ID Submitted");
+    setABHAIDSubmited(true);
+  };
+  const ABHACARDDownloadInputContent = (
+    <>
+      <Form layout="vertical">
+        <Form.Item label="Health ID">
+          <InputForm type="text" placeholder="Enter ABHA ID"></InputForm>
+        </Form.Item>
+        {ABHAIDSubmited ? (
+          <>
+            {" "}
+            <Form.Item
+              label="OTP"
+            >
+              <OtpInput
+                inputStyle={{
+                  width: "25px",
+                  height: "25px",
+                  margin: "2px 10px",
+                }}
+                value={otp}
+                numInputs={6}
+                type="number"
+                onChange={(value) => setOtp(value)}
+                renderSeparator={<span></span>}
+                renderInput={(props) => <input {...props} />}
+              ></OtpInput>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  margin: "10px 40px ",
+                }}
+              >
+                <a onClick={handleABHAIDSubmit}>Resend OTP</a>
+              </div>
+            </Form.Item>
+          </>
+        ) : (
+          <></>
+        )}
+        <div style={{ display: "flex", justifyContent: "end" }}>
+          <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
+            Submit
+          </ABHAIDSubmitButton>
+        </div>
+      </Form>
+    </>
+  );
+
   const handlePulseChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
     if (e.target.value === "" || regex.test(e.target.value)) {
@@ -654,21 +970,21 @@ function FamilyHead(props) {
         const [aadharResponse, abhaResponse] = await Promise.all([
           axios.get(
             `${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`,
-            {
-              headers: sessionStorage.getItem("Token"),
-            }
+            axiosConfig
           ),
-          axios.get(`${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`, {
-            headers: sessionStorage.getItem("Token"),
-          }),
+          axios.get(
+            `${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`,
+            axiosConfig
+          ),
         ]);
 
         const adharNoStatus = aadharResponse.status;
         const abhaNoStatus = abhaResponse.status;
 
         console.log(adharNoStatus, "+", abhaNoStatus, "+", age);
-
-        if (adharNoStatus === 200 && abhaNoStatus === 200 && age >= 60) {
+        if (adharNoStatus === 401 && abhaNoStatus === 401) {
+          LogOut();
+        } else if (adharNoStatus === 200 && abhaNoStatus === 200 && age >= 60) {
           handleConsentModalShow();
         } else if (adharNoStatus === 200 && abhaNoStatus === 200) {
           handleSubmitAndNext();
@@ -1522,8 +1838,8 @@ function FamilyHead(props) {
                 onChange={(value) => handleSectionSelect(value)}
               >
                 {healthPostAreas.map((data) => (
-                  <Option key={data.id} value={data.areas}>
-                    {console.log(data.areas)}
+                  <Option key={data.id} value={data.id}>
+                    {data.areas}
                   </Option>
                 ))}
               </Select>
@@ -1534,154 +1850,848 @@ function FamilyHead(props) {
     </>
   ) : (
     <>
-      <Container>
-        <FormHeader>
-          1.Family Member {noOfMembersCompleted} out of {totalFamilyMembers}/
-          कुटुंबातील सदस्य
-          {totalFamilyMembers} पैकी {noOfMembersCompleted}
-        </FormHeader>
+      <LoadingBar
+        progress={progress}
+        color="#FF5B22"
+        size="lg"
+        onLoaderFinished={() => setProgress(0)}
+      ></LoadingBar>
+      <Spin tip="Loading..." spinning={loading}>
+        <Container>
+          <FormHeader>
+            1.Family Member {noOfMembersCompleted} out of {totalFamilyMembers}/
+            कुटुंबातील सदस्य
+            {totalFamilyMembers} पैकी {noOfMembersCompleted}
+          </FormHeader>
 
-        <FormContainer layout="vertical">
-          <Row>
-            <Column>
-              {/* rules={[{required:true ,message:"name required / नाव आवश्यक आहे"},{pattern:/^[a-z A-Z]*$/ ,message:"Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे"}]} */}
-              <FormItem label="Name /  नाव" required>
-                <Input
-                  type="text"
-                  value={name}
-                  onChange={(e) => handleNameChange(e)}
-                  pattern="[a-zA-Z]+"
-                  allowClear
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              {/* rules={[{required:true ,message:"aadhar number required / आधार क्रमांक आवश्यक आहे"},{pattern:/^[0-9]*$/ ,message:"Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे"}]} */}
-              <FormItem label="Aadhar Card Number/ आधार क्रमांक">
-                <Input
-                  type="text"
-                  value={aadharCard}
-                  maxLength={12}
-                  allowClear
-                  onChange={(e) => handleAadharCardChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              {/* rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]} */}
-              <FormItem label="Gender / लिंग" required>
-                <Select onChange={(value) => setGender(value)} value={gender}>
-                  <Option value="male">Male / पुरुष</Option>
-                  <Option value="female">Female / स्त्री</Option>
-                  <Option value="transgender">Transgender/समलैंगिक</Option>
-                </Select>
-              </FormItem>
-            </Column>
-          </Row>
+          <FormContainer layout="vertical">
+            <Row>
+              <Column>
+                {/* rules={[{required:true ,message:"name required / नाव आवश्यक आहे"},{pattern:/^[a-z A-Z]*$/ ,message:"Only alphabetic characters and spaces allowed / केवळ वर्णमाला वर्ण आणि रिक्त स्थानांना अनुमती आहे"}]} */}
+                <FormItem label="Name /  नाव" required>
+                  <Input
+                    type="text"
+                    value={name}
+                    onChange={(e) => handleNameChange(e)}
+                    pattern="[a-zA-Z]+"
+                    allowClear
+                  ></Input>
+                </FormItem>
+              </Column>
+              <Column>
+                {/* rules={[{required:true ,message:"aadhar number required / आधार क्रमांक आवश्यक आहे"},{pattern:/^[0-9]*$/ ,message:"Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे"}]} */}
+                <FormItem label="Aadhar Card Number/ आधार क्रमांक">
+                  <Input
+                    type="text"
+                    value={aadharCard}
+                    maxLength={12}
+                    allowClear
+                    onChange={(e) => handleAadharCardChange(e)}
+                  ></Input>
+                </FormItem>
+              </Column>
+              <Column>
+                {/* rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]} */}
+                <FormItem label="Gender / लिंग" required>
+                  <Select onChange={(value) => setGender(value)} value={gender}>
+                    <Option value="male">Male / पुरुष</Option>
+                    <Option value="female">Female / स्त्री</Option>
+                    <Option value="transgender">Transgender/समलैंगिक</Option>
+                  </Select>
+                </FormItem>
+              </Column>
+            </Row>
 
-          <Row>
-            <Column>
-              {/*  rules={[{required:true ,message:"Age mention required / वय नमूद करणे आवश्यक आहे"}]} */}
-              <FormItem label="Age / वय" required>
-                <Input
-                  type="number"
-                  value={age}
-                  allowClear
-                  onChange={(e) => handleAgeChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              <FormItem
-                label="Mobile Number / मोबाईल नंबर"
-                rules={[
-                  {
-                    pattern: /^[0-9+]*$/,
-                    message:
-                      "Mobile number must be numeric / मोबाईल क्रमांक अंकीय असणे आवश्यक आहे",
-                  },
-                ]}
+            <Row>
+              <Column span={8}>
+                {/*  rules={[{required:true ,message:"Age mention required / वय नमूद करणे आवश्यक आहे"}]} */}
+                <FormItem label="Age / वय" required>
+                  <Input
+                    type="number"
+                    value={age}
+                    allowClear
+                    onChange={(e) => handleAgeChange(e)}
+                  ></Input>
+                </FormItem>
+              </Column>
+              <Column span={8}>
+                <FormItem
+                  label="Mobile Number / मोबाईल नंबर"
+                  rules={[
+                    {
+                      pattern: /^[0-9+]*$/,
+                      message:
+                        "Mobile number must be numeric / मोबाईल क्रमांक अंकीय असणे आवश्यक आहे",
+                    },
+                  ]}
+                >
+                  <Input
+                    type="text"
+                    value={phone}
+                    maxLength={10}
+                    onChange={(e) => handleMobileNumberChange(e)}
+                  ></Input>
+                </FormItem>
+              </Column>
+              <Column span={7}>
+                <FormItem label="Abha ID / आभा आयडी">
+                  <Input
+                    type="text"
+                    value={abhaId}
+                    maxLength={17}
+                    onChange={(e) => handleAbhaIDChange(e)}
+                  ></Input>
+                </FormItem>
+                <p style={{ margin: "-20px 50px 15px", fontSize: "14px" }}>
+                  If you don't have ABHA ID?
+                  <a onClick={() => handleShowAadharOtpLinkedModal()}>
+                    Click here
+                  </a>
+                </p>
+              </Column>
+              <Column span={1}>
+                <Tooltip title="ABHA Card Download">
+                  <Popover
+                    content={ABHACARDDownloadInputContent}
+                    trigger="click"
+                    placement="left"
+                  >
+                    <ABHACardDownLoad icon={faFileArrowDown} />
+                  </Popover>
+                </Tooltip>
+              </Column>
+            </Row>
+
+            <Row>
+              <Column>
+                <FormItem label="Pulse / नाडी">
+                  <Input
+                    type="text"
+                    value={pulse}
+                    onChange={(e) => handlePulseChange(e)}
+                  ></Input>
+                </FormItem>
+              </Column>
+              <Column>
+                <FormItem label="Blood Pressure / रक्तदाब">
+                  <Input
+                    type="text"
+                    value={bloodPressure}
+                    onChange={(e) => handleBloodPressureChange(e)}
+                  ></Input>
+                </FormItem>
+              </Column>
+              <Column>
+                <FormItem label="Weight / वजन">
+                  <Input
+                    type="text"
+                    value={weight}
+                    onChange={(e) => handleWeightChange(e)}
+                  ></Input>
+                </FormItem>
+              </Column>
+            </Row>
+            <Row>
+              <Column>
+                <FormItem label="Height / उंची">
+                  <Input
+                    type="text"
+                    value={height}
+                    onChange={(e) => handleHeightChange(e)}
+                  ></Input>
+                </FormItem>
+              </Column>
+              <Column>
+                <FormItem label="BMI">
+                  <Input
+                    type="text"
+                    value={BMI}
+                    onChange={(e) => handleBMIChange(e)}
+                  ></Input>
+                </FormItem>
+              </Column>
+            </Row>
+          </FormContainer>
+        </Container>
+
+        {age <= 30 ? (
+          <>
+            {" "}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                marginRight: "10%",
+              }}
+            >
+              <Checkbox onChange={(e) => handlePartialSelect(e)}></Checkbox>
+              <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
+        {age <= 30 ? (
+          <SubmitButtonDiv>
+            <SubmitButton onClick={handleFormSubmit}>
+              {noOfMembersCompleted == totalFamilyMembers || partialSubmit
+                ? "Submit"
+                : "Submit & Next"}
+            </SubmitButton>
+          </SubmitButtonDiv>
+        ) : (
+          <DocsTab
+            centered
+            defaultActiveKey="1"
+            activeKey={activeTab}
+            onChange={onKeyChange}
+          >
+            <Tabs.TabPane tab="1) Part A /भाग अ" key="1">
+              <FormHeader> A. Risk assessment/जोखमीचे मुल्यांकन</FormHeader>
+
+              <QuestionRow>
+                <QuestionCol>
+                  १. आपले वय काय आहे ? (पूर्ण वर्षात) / what is your age (in
+                  full year)
+                </QuestionCol>
+                <AnswerCol>
+                  <Radio.Group
+                    onChange={(e) => setQuestion1A(e.target.value)}
+                    value={question1A}
+                  >
+                    <Radio value="50 and 50 below">
+                      50 and 50 below / 50 आणि 50 खाली
+                    </Radio>
+                    <br />
+                    <Radio value="50 to 79 Years">
+                      50 to 79 Years / 50 ते 79 वर्षे
+                    </Radio>
+                    <br />
+                    <Radio value="80 and 80 above">
+                      80 and 80 above / 80 आणि 80 वर
+                    </Radio>
+                  </Radio.Group>
+                </AnswerCol>
+              </QuestionRow>
+              <QuestionRow>
+                <QuestionCol>
+                  २. तुम्ही धूम्रपान किंवा धूर रहित उत्पादने जसे गुटखा व
+                  खैनीसारख्या वापर करता ? / Do you smoke or smokeless products
+                  like gutkha and Use like Khaini?
+                </QuestionCol>
+                <AnswerCol>
+                  <Radio.Group
+                    onChange={(e) => setQuestion2A(e.target.value)}
+                    value={question2A}
+                  >
+                    <Radio value="never">Never / कधीच नाही</Radio>
+                    <br />
+                    <Radio value="Used to consume in the past/ Sometimes now">
+                      Used to consume in the past/ Sometimes now /<br /> पूर्वी
+                      करायचो/ कधी कधी आता
+                    </Radio>
+                    <br />
+                    <Radio value="Daily">Daily / दररोज</Radio>
+                  </Radio.Group>
+                </AnswerCol>
+              </QuestionRow>
+              <QuestionRow>
+                <QuestionCol>
+                  ३. तुम्ही दररोज मद्यपान करता ? / Do you drink alcohol every
+                  day?
+                </QuestionCol>
+                <AnswerCol>
+                  <Radio.Group
+                    onChange={(e) => setQuestion3A(e.target.value)}
+                    value={question3A}
+                  >
+                    <Radio value="yes">Yes / होय</Radio>
+                    <Radio value="no">No / नाही</Radio>
+                  </Radio.Group>
+                </AnswerCol>
+              </QuestionRow>
+              <QuestionRow>
+                <QuestionCol>
+                  ४. कंबरेचा घेर (सेमी मध्ये) / Waist circumference (in cm)
+                </QuestionCol>
+                <AnswerCol>
+                  <Radio.Group
+                    onChange={(e) => setQuestion4A(e.target.value)}
+                    value={question4A}
+                  >
+                    <Radio value="80 cm or less">
+                      80 cm or less/80 सेमी किंवा कमी
+                    </Radio>
+                    <br />
+                    <Radio value="80-100 cm">80-100 cm/80-100 सेमी</Radio>
+                    <br />
+                    <Radio value="More than 100 cm">
+                      More than 100 cm / 100 सेमी पेक्षा जास्त
+                    </Radio>
+                  </Radio.Group>
+                </AnswerCol>
+              </QuestionRow>
+              <QuestionRow>
+                <QuestionCol>
+                  ५. तुम्ही आठवड्यातून किमान 150 मिनिटे कोणतीही शारीरिक क्रिया
+                  करता का? / Do you undertake any physical activities for
+                  minimum of 150 minutes in a week?
+                </QuestionCol>
+                <AnswerCol>
+                  <Radio.Group
+                    onChange={(e) => setQuestion5A(e.target.value)}
+                    value={question5A}
+                  >
+                    <Radio value="At least 150 minutes in a week">
+                      At least 150 minutes in a weak / <br />
+                      एका आठवड्यात किमान 150 मिनिटे
+                    </Radio>
+                    <br />
+                    <Radio value="Less than 150 minutes in a week ">
+                      Less than 150 minutes in a week /<br /> एका आठवड्यात 150
+                      मिनिटांपेक्षा कमी
+                    </Radio>
+                  </Radio.Group>
+                </AnswerCol>
+              </QuestionRow>
+              <QuestionRow>
+                <QuestionCol>
+                  ६. आपल्याकडे कौटुंबिक इतिहास आहे का ? (आपले पालक किंवा भावंडां
+                  पैकी) उच्च रक्तदाब, मधुमेह आणि हृदयरोग आहे का ? / 6. Do you
+                  have a family history? Have high blood pressure, diabetes and
+                  heart disease (from your parents or siblings)?
+                </QuestionCol>
+                <AnswerCol>
+                  <Radio.Group
+                    onChange={(e) => setQuestion6A(e.target.value)}
+                    value={question6A}
+                  >
+                    <Radio value="yes">Yes / होय</Radio>
+                    <Radio value="no">No / नाही</Radio>
+                  </Radio.Group>
+                </AnswerCol>
+              </QuestionRow>
+              <SubmitButtonDiv>
+                <Button onClick={() => setFamilyHeadRegister("no")}>
+                  Back
+                </Button>
+                <SubmitButton onClick={() => onKeyChange("2")}>
+                  Next
+                </SubmitButton>
+              </SubmitButtonDiv>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="2) Part B/भाग ब" key="2">
+              <FormHeader>
+                B: Early Screening: Ask the patient if they have any of these
+                symptoms / लवकर तपासणी : रुग्णाला यापैकी काही लक्षणे आहेत का ते
+                विचारा
+              </FormHeader>
+              <FormHeader>
+                B1 : Female and male / बी १ : महिला आणि पुरुष
+              </FormHeader>
+              {partB1Options.map((item, key) => (
+                <QuestionRow
+                  style={{
+                    backgroundColor: partB1OptionsSelected.includes(item)
+                      ? "#8EACCD"
+                      : "#dde6ed",
+                  }}
+                  key={key}
+                >
+                  <QuestionCol>
+                    {t(item)} / {item}
+                  </QuestionCol>
+                  <AnswerCol>
+                    <Row>
+                      <Col>
+                        <Checkbox
+                          value={item}
+                          checked={partB1OptionsSelected.includes(item)}
+                          onChange={() => handlePartB1select(item)}
+                        ></Checkbox>
+                      </Col>
+                      <Col>
+                        <p style={{ margin: "0px 10px" }}>होय / Yes </p>
+                      </Col>
+                    </Row>
+                  </AnswerCol>
+                </QuestionRow>
+              ))}
+              {gender == "female" ? (
+                <>
+                  {" "}
+                  <FormHeader>B2 : Women only / बी २ : केवळ महिला</FormHeader>
+                  {partB2Options.map((item, key) => (
+                    <QuestionRow
+                      style={{
+                        backgroundColor: partB2OptionSelected.includes(item)
+                          ? "#8EACCD"
+                          : "#dde6ed",
+                      }}
+                      key={key}
+                    >
+                      <QuestionCol>
+                        {t(item)} / {item}
+                      </QuestionCol>
+                      <AnswerCol>
+                        <Row>
+                          <Col>
+                            <Checkbox
+                              value={item}
+                              checked={partB2OptionSelected.includes(item)}
+                              onChange={() => handlePartB2Select(item)}
+                            ></Checkbox>
+                          </Col>
+                          <Col>
+                            <p style={{ margin: "0px 10px" }}>होय / Yes </p>
+                          </Col>
+                        </Row>
+                      </AnswerCol>
+                    </QuestionRow>
+                  ))}
+                </>
+              ) : (
+                <></>
+              )}
+
+              <FormHeader>
+                B3 : For Senior Citizens (60 years and above)/बी ३ :
+                वयोवृध्दांसाठी (६० वर्ष व त्यापेक्षा अधिक)
+              </FormHeader>
+              {partB3Options.map((item, key) => (
+                <QuestionRow
+                  style={{
+                    backgroundColor: partB3OptionsSelected.includes(item)
+                      ? "#8EACCD"
+                      : "#dde6ed",
+                  }}
+                  key={key}
+                >
+                  <QuestionCol>
+                    {t(item)} / {item}
+                  </QuestionCol>
+                  <AnswerCol>
+                    <Row>
+                      <Col>
+                        <Checkbox
+                          value={item}
+                          checked={partB3OptionsSelected.includes(item)}
+                          onChange={() => handlePartB3Select(item)}
+                        ></Checkbox>
+                      </Col>
+                      <Col>
+                        <p style={{ margin: "0px 10px" }}>होय / Yes </p>
+                      </Col>
+                    </Row>
+                  </AnswerCol>
+                </QuestionRow>
+              ))}
+
+              <SubmitButtonDiv>
+                <Button onClick={() => onKeyChange("1")}>Back</Button>
+                <SubmitButton onClick={() => onKeyChange("3")}>
+                  Next
+                </SubmitButton>
+              </SubmitButtonDiv>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="3) Part C / भाग क" key="3">
+              <FormHeader>
+                C: Risk factors for COPD / भाग सी : सीओपीडीसाठी जोखीम घटक
+              </FormHeader>
+              <QuestionRow>
+                <QuestionCol>
+                  १.स्वयंपाक करण्यासाठी वापरल्या जाणा-या इंधनाचा प्रकार ? / Type
+                  of fuel used for cooking?
+                </QuestionCol>
+              </QuestionRow>
+              {partC1Options.map((item, index) => (
+                <QuestionSubRow key={index}>
+                  <QuestionSubCol>
+                    {t(item)} / {item}
+                  </QuestionSubCol>
+                  <AnswerSubCol>
+                    <Checkbox
+                      value={partC1OptionSelect.includes(item)}
+                      onChange={() => handlePartC1Select(item)}
+                    ></Checkbox>
+                  </AnswerSubCol>
+                </QuestionSubRow>
+              ))}
+
+              <QuestionRow>
+                <QuestionCol>
+                  2.व्यावसायिक प्रदर्शन / occupational exposure
+                </QuestionCol>
+              </QuestionRow>
+              {partC2Options.map((item, index) => (
+                <>
+                  <QuestionSubRow key={index}>
+                    <QuestionSubCol>
+                      {t(item)}/{item}
+                    </QuestionSubCol>
+                    <AnswerSubCol>
+                      <Checkbox
+                        value={partC2OptionSelect.includes(item)}
+                        onChange={() => handlePartC2Select(item)}
+                      ></Checkbox>
+                    </AnswerSubCol>
+                  </QuestionSubRow>
+                </>
+              ))}
+
+              <SubmitButtonDiv>
+                <Button onClick={() => onKeyChange("2")}>Back</Button>
+                <SubmitButton onClick={() => onKeyChange("4")}>
+                  Next
+                </SubmitButton>
+              </SubmitButtonDiv>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="4) Part D / भाग डी" key="4">
+              <FormHeader>D : PHQ 2 / डी : पीएचक्यू २</FormHeader>
+              <FormHeader>
+                · गेल्या २ आठवडयांत, आपण खालील समस्यांद्वारे किती वेळा त्रास
+                दिला आहे- / In the past 2 weeks, how often have you been
+                bothered by the following problems? is-
+              </FormHeader>
+              <QuestionRow>
+                <QuestionCol style={{ width: "100%" }}>
+                  १. गोष्टी करण्यात थोडीशी आवड किंवा आनंद असणे ? / Having little
+                  interest or pleasure in doing things?
+                </QuestionCol>
+
+                <Radio.Group
+                  style={{ margin: "1% 7%" }}
+                  onChange={(e) => setQuestion1D(e.target.value)}
+                  value={question1D}
+                >
+                  <Radio value="Not at all">Not at all</Radio>
+                  <Radio value="Several days">Several days</Radio>
+                  <Radio value="More than half days">More than half days</Radio>
+                  <Radio value="Nearly every days">Nearly every days</Radio>
+                </Radio.Group>
+              </QuestionRow>
+
+              <QuestionRow>
+                <QuestionCol style={{ width: "100%" }}>
+                  २. निराश किंवा उदासीन असणे ? Being depressed ?
+                </QuestionCol>
+                <Radio.Group
+                  style={{ margin: "1% 7%" }}
+                  onChange={(e) => setQuestion2D(e.target.value)}
+                  value={question2D}
+                >
+                  <Radio value="Not at all">Not at all</Radio>
+                  <Radio value="Several days">Several days</Radio>
+                  <Radio value="More than half days">More than half days</Radio>
+                  <Radio value="Nearly every days">Nearly every days</Radio>
+                </Radio.Group>
+              </QuestionRow>
+              <SubmitButtonDiv>
+                <Button onClick={() => onKeyChange("3")}>Back</Button>
+                <SubmitButton onClick={() => onKeyChange("5")}>
+                  Next
+                </SubmitButton>
+              </SubmitButtonDiv>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="5) Part E / भाग ई" key="5">
+              <QuestionRow>
+                <QuestionCol>
+                  1. तुम्हाला ताप आहे का? / Do you have fever?
+                </QuestionCol>
+              </QuestionRow>
+              {partE1Options.map((item, index) => (
+                <QuestionSubRow key={index}>
+                  <QuestionSubCol>
+                    {t(item)}/{item}
+                  </QuestionSubCol>
+                  <AnswerSubCol>
+                    <Checkbox
+                      checked={partE1OptionSelect.includes(item)}
+                      onChange={() => handlePartE1Select(item)}
+                    ></Checkbox>
+                  </AnswerSubCol>
+                </QuestionSubRow>
+              ))}
+
+              <QuestionRow>
+                <QuestionCol>
+                  2. डोळ्यांच्या बुबुळाच्या पुढील भागाचा होणारा दाह (डोळा येणे)
+                  ? Conjuctivitis ?
+                </QuestionCol>
+              </QuestionRow>
+
+              <>
+                {partE2Options.map((item, index) => (
+                  <QuestionSubRow>
+                    <QuestionSubCol>
+                      {t(item)}/{item}
+                    </QuestionSubCol>
+                    <AnswerSubCol>
+                      <Checkbox
+                        checked={partE2OptionSelect.includes(item)}
+                        onChange={() => handlePartE2Select(item)}
+                      ></Checkbox>
+                    </AnswerSubCol>
+                  </QuestionSubRow>
+                ))}
+              </>
+
+              <QuestionRow>
+                <QuestionCol>
+                  3. तुम्हाला लेप्टोस्पायरोसिस आहे का? Do you have
+                  leptospirosis? ?
+                </QuestionCol>
+              </QuestionRow>
+
+              <>
+                {partE3Options.map((item, index) => (
+                  <>
+                    <QuestionSubRow key={index}>
+                      <QuestionSubCol>
+                        {t(item)}/{item}
+                      </QuestionSubCol>
+                      <AnswerSubCol>
+                        <Checkbox
+                          checked={partE3OptionSelect.includes(item)}
+                          onChange={() => handlePartE3Select(item)}
+                        ></Checkbox>
+                      </AnswerSubCol>
+                    </QuestionSubRow>
+                  </>
+                ))}
+              </>
+
+              <QuestionRow>
+                <QuestionCol>
+                  4. तुम्हाला जुलाब, हगवण, संडास आहे का ? Do you have loose
+                  motion ?
+                </QuestionCol>
+              </QuestionRow>
+
+              <>
+                {partE4Options.map((item, index) => (
+                  <>
+                    <QuestionSubRow key={index}>
+                      <QuestionSubCol>
+                        {t(item)}/{item}
+                      </QuestionSubCol>
+                      <AnswerSubCol>
+                        <Checkbox
+                          checked={partE4OptionSelect.includes(item)}
+                          onChange={() => handlePartE4Select(item)}
+                        ></Checkbox>
+                      </AnswerSubCol>
+                    </QuestionSubRow>
+                  </>
+                ))}
+              </>
+
+              <QuestionRow>
+                <QuestionCol>
+                  5. तुम्हाला लिव्हरला सूज / कावीळ आहे का ? Do you have
+                  Hepatitis / Jaundice ?
+                </QuestionCol>
+              </QuestionRow>
+
+              {partE5Option.map((item, index) => (
+                <>
+                  <QuestionSubRow key={index}>
+                    <QuestionSubCol>
+                      {t(item)}/{item}
+                    </QuestionSubCol>
+                    <AnswerSubCol>
+                      <Checkbox
+                        onChange={() => handlePartE5Select(item)}
+                        value={partE5OptionSelect.includes(item)}
+                      ></Checkbox>
+                    </AnswerSubCol>
+                  </QuestionSubRow>
+                </>
+              ))}
+
+              <QuestionRow>
+                <QuestionCol>
+                  6. तुम्हाला प्राण्यांनी चावले आहे का ? did animals have Bitten
+                  you ?
+                </QuestionCol>
+                <AnswerCol>
+                  <Radio.Group
+                    onChange={(e) => setAnimalBitten(e.target.value)}
+                    value={animalBitten}
+                  >
+                    <Radio value="Animal Bite">Yes / होय</Radio>
+                    <Radio value="">No / नाही</Radio>
+                  </Radio.Group>
+                </AnswerCol>
+              </QuestionRow>
+              <QuestionRow>
+                <QuestionCol>
+                  7. तुम्हाला साप चावला आहे का ? did Snake have Bitten you ?
+                </QuestionCol>
+                <AnswerCol>
+                  <Radio.Group
+                    onChange={(e) => setSnakeBitten(e.target.value)}
+                    value={snakeBitten}
+                  >
+                    <Radio value="Snake_Bite">Yes / होय</Radio>
+                    <Radio value="">No / नाही</Radio>
+                  </Radio.Group>
+                </AnswerCol>
+              </QuestionRow>
+              <QuestionRow>
+                <QuestionCol>
+                  8. तुम्हाला कुष्ठरोग आहे का ? do you have Leprosy ?
+                </QuestionCol>
+              </QuestionRow>
+
+              {partE8Options.map((item, index) => (
+                <QuestionSubRow key={index}>
+                  <QuestionSubCol>
+                    {t(item)}/{item}
+                  </QuestionSubCol>
+                  <AnswerSubCol>
+                    <Checkbox
+                      checked={partE8OptionSelect.includes(item)}
+                      onChange={() => handlePartE8Select(item)}
+                    ></Checkbox>
+                  </AnswerSubCol>
+                </QuestionSubRow>
+              ))}
+              {age < 60 ? (
+                <>
+                  {" "}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "end",
+                      marginRight: "10%",
+                    }}
+                  >
+                    <Checkbox
+                      onChange={(e) => handlePartialSelect(e)}
+                    ></Checkbox>
+                    <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
+
+              <SubmitButtonDiv>
+                <Button onClick={() => onKeyChange("4")}>Back</Button>
+                <SubmitButton onClick={handleFormSubmit}>
+                  {noOfMembersCompleted == totalFamilyMembers || partialSubmit
+                    ? age > 60
+                      ? "Next"
+                      : "Submit"
+                    : "Submit & next"}
+                </SubmitButton>
+              </SubmitButtonDiv>
+            </Tabs.TabPane>
+          </DocsTab>
+        )}
+
+        {/* Blood Consent Modal */}
+        <Modal
+          open={consentModalShow}
+          onCancel={handleConsentModalClose}
+          title="Blood Sample / रक्त नमुना"
+          footer={
+            <SubmitButton onClick={() => handleSubmitAndNext()}>
+              {noOfMembersCompleted == totalFamilyMembers || partialSubmit
+                ? "Submit"
+                : "Submit & Next"}
+            </SubmitButton>
+          }
+        >
+          <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
+
+          <BloodSampleText>
+            Citizen will give his blood sample at / येथे नागरिक आपल्या रक्ताचा
+            नमुना देईल :
+          </BloodSampleText>
+          <BloodSampleButtonsRow>
+            <BloodSampleButtonCol>
+              <Button
+                style={
+                  bloodSampleHome
+                    ? { backgroundColor: "#E9B384" }
+                    : { backgroundColor: "white" }
+                }
+                onClick={handleBloodSampleHomeSelct}
               >
-                <Input
-                  type="text"
-                  value={phone}
-                  maxLength={10}
-                  onChange={(e) => handleMobileNumberChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              <FormItem label="Abha ID / आभा आयडी">
-                <Input
-                  type="text"
-                  value={abhaId}
-                  maxLength={14}
-                  onChange={(e) => handleAbhaIDChange(e)}
-                ></Input>
-              </FormItem>
-              <p style={{ margin: "-20px 90px 15px", fontSize: "14px" }}>
-                If don't have Abha ID?{" "}
-                <a onClick={() => handleShowAadharOtpLinkedModal()}>
-                  Create Abha ID
-                </a>
-              </p>
-            </Column>
-          </Row>
+                <span style={{ marginRight: "10px" }}>
+                  <FontAwesomeIcon icon={faHouse} />
+                </span>
+                Home / घर
+              </Button>
+            </BloodSampleButtonCol>
+            <BloodSampleButtonCol>
+              <Button
+                style={
+                  bloodSampleCenter
+                    ? { backgroundColor: "#E9B384" }
+                    : { backgroundColor: "white" }
+                }
+                onClick={handleBloodSampleCenterSelect}
+              >
+                <span style={{ marginRight: "10px" }}>
+                  <FontAwesomeIcon icon={faPlus} />
+                </span>
+                Center / केंद्र
+              </Button>
+            </BloodSampleButtonCol>
+            <BloodSampleButtonCol>
+              <Button
+                style={
+                  bloodSampleDenied
+                    ? { backgroundColor: "#E9B384" }
+                    : { backgroundColor: "white" }
+                }
+                onClick={handleBloodSampleDesiedSelect}
+              >
+                <span style={{ marginRight: "10px" }}>
+                  <FontAwesomeIcon icon={faXmark} />
+                </span>
+                Denied / नाकारले
+              </Button>
+            </BloodSampleButtonCol>
+          </BloodSampleButtonsRow>
+          {bloodSampleHome ? (
+            <>
+              <Form layout="vertical">
+                <Form.Item
+                  label="Demand letter"
+                  style={{ margin: "20px 5px", width: "200px" }}
+                >
+                  <Input
+                    type="file"
+                    onChange={(e) => handleDemandLetter(e.target.files[0])}
+                  ></Input>
+                </Form.Item>
+              </Form>
+            </>
+          ) : (
+            <></>
+          )}
+          {bloodSampleDenied ? (
+            <></>
+          ) : (
+            <>
+              <div>
+                <p>
+                  <Checkbox
+                    style={{ marginRight: "10px" }}
+                    onChange={(e) => setBloodConsent(e.target.checked)}
+                  ></Checkbox>
+                  I have been explained about the consent as stated above and
+                  hereby provide my consent for blood sample collection and any
+                  more procedures for the aforementioned purposes.
+                </p>
+              </div>
+            </>
+          )}
 
-          <Row>
-            <Column>
-              <FormItem label="Pulse / नाडी">
-                <Input
-                  type="text"
-                  value={pulse}
-                  onChange={(e) => handlePulseChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              <FormItem label="Blood Pressure / रक्तदाब">
-                <Input
-                  type="text"
-                  value={bloodPressure}
-                  onChange={(e) => handleBloodPressureChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              <FormItem label="Weight / वजन">
-                <Input
-                  type="text"
-                  value={weight}
-                  onChange={(e) => handleWeightChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-          </Row>
-          <Row>
-            <Column>
-              <FormItem label="Height / उंची">
-                <Input
-                  type="text"
-                  value={height}
-                  onChange={(e) => handleHeightChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              <FormItem label="BMI">
-                <Input
-                  type="text"
-                  value={BMI}
-                  onChange={(e) => handleBMIChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-          </Row>
-        </FormContainer>
-      </Container>
-      {age <= 30 ? (
-        <>
-          {" "}
           <div
             style={{
               display: "flex",
@@ -1692,800 +2702,62 @@ function FamilyHead(props) {
             <Checkbox onChange={(e) => handlePartialSelect(e)}></Checkbox>
             <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
           </div>
-        </>
-      ) : (
-        <></>
-      )}
-      {age <= 30 ? (
-        <SubmitButtonDiv>
-          <SubmitButton onClick={handleFormSubmit}>
-            {noOfMembersCompleted == totalFamilyMembers || partialSubmit
-              ? "Submit"
-              : "Submit & Next"}
-          </SubmitButton>
-        </SubmitButtonDiv>
-      ) : (
-        <DocsTab
-          centered
-          defaultActiveKey="1"
-          activeKey={activeTab}
-          onChange={onKeyChange}
-        >
-          <Tabs.TabPane tab="1) Part A /भाग अ" key="1">
-            <FormHeader> A. Risk assessment/जोखमीचे मुल्यांकन</FormHeader>
-
-            <QuestionRow>
-              <QuestionCol>
-                १. आपले वय काय आहे ? (पूर्ण वर्षात) / what is your age (in full
-                year)
-              </QuestionCol>
-              <AnswerCol>
-                <Radio.Group
-                  onChange={(e) => setQuestion1A(e.target.value)}
-                  value={question1A}
-                >
-                  <Radio value="50 and 50 below">
-                    50 and 50 below / 50 आणि 50 खाली
-                  </Radio>
-                  <br />
-                  <Radio value="50 to 79 Years">
-                    50 to 79 Years / 50 ते 79 वर्षे
-                  </Radio>
-                  <br />
-                  <Radio value="80 and 80 above">
-                    80 and 80 above / 80 आणि 80 वर
-                  </Radio>
-                </Radio.Group>
-              </AnswerCol>
-            </QuestionRow>
-            <QuestionRow>
-              <QuestionCol>
-                २. तुम्ही धूम्रपान किंवा धूर रहित उत्पादने जसे गुटखा व
-                खैनीसारख्या वापर करता ? / Do you smoke or smokeless products
-                like gutkha and Use like Khaini?
-              </QuestionCol>
-              <AnswerCol>
-                <Radio.Group
-                  onChange={(e) => setQuestion2A(e.target.value)}
-                  value={question2A}
-                >
-                  <Radio value="never">Never / कधीच नाही</Radio>
-                  <br />
-                  <Radio value="Used to consume in the past/ Sometimes now">
-                    Used to consume in the past/ Sometimes now /<br /> पूर्वी
-                    करायचो/ कधी कधी आता
-                  </Radio>
-                  <br />
-                  <Radio value="Daily">Daily / दररोज</Radio>
-                </Radio.Group>
-              </AnswerCol>
-            </QuestionRow>
-            <QuestionRow>
-              <QuestionCol>
-                ३. तुम्ही दररोज मद्यपान करता ? / Do you drink alcohol every day?
-              </QuestionCol>
-              <AnswerCol>
-                <Radio.Group
-                  onChange={(e) => setQuestion3A(e.target.value)}
-                  value={question3A}
-                >
-                  <Radio value="yes">Yes / होय</Radio>
-                  <Radio value="no">No / नाही</Radio>
-                </Radio.Group>
-              </AnswerCol>
-            </QuestionRow>
-            <QuestionRow>
-              <QuestionCol>
-                ४. कंबरेचा घेर (सेमी मध्ये) / Waist circumference (in cm)
-              </QuestionCol>
-              <AnswerCol>
-                <Radio.Group
-                  onChange={(e) => setQuestion4A(e.target.value)}
-                  value={question4A}
-                >
-                  <Radio value="80 cm or less">
-                    80 cm or less/80 सेमी किंवा कमी
-                  </Radio>
-                  <br />
-                  <Radio value="80-100 cm">80-100 cm/80-100 सेमी</Radio>
-                  <br />
-                  <Radio value="More than 100 cm">
-                    More than 100 cm / 100 सेमी पेक्षा जास्त
-                  </Radio>
-                </Radio.Group>
-              </AnswerCol>
-            </QuestionRow>
-            <QuestionRow>
-              <QuestionCol>
-                ५. तुम्ही आठवड्यातून किमान 150 मिनिटे कोणतीही शारीरिक क्रिया
-                करता का? / Do you undertake any physical activities for minimum
-                of 150 minutes in a week?
-              </QuestionCol>
-              <AnswerCol>
-                <Radio.Group
-                  onChange={(e) => setQuestion5A(e.target.value)}
-                  value={question5A}
-                >
-                  <Radio value="At least 150 minutes in a week">
-                    At least 150 minutes in a weak / <br />
-                    एका आठवड्यात किमान 150 मिनिटे
-                  </Radio>
-                  <br />
-                  <Radio value="Less than 150 minutes in a week ">
-                    Less than 150 minutes in a week /<br /> एका आठवड्यात 150
-                    मिनिटांपेक्षा कमी
-                  </Radio>
-                </Radio.Group>
-              </AnswerCol>
-            </QuestionRow>
-            <QuestionRow>
-              <QuestionCol>
-                ६. आपल्याकडे कौटुंबिक इतिहास आहे का ? (आपले पालक किंवा भावंडां
-                पैकी) उच्च रक्तदाब, मधुमेह आणि हृदयरोग आहे का ? / 6. Do you have
-                a family history? Have high blood pressure, diabetes and heart
-                disease (from your parents or siblings)?
-              </QuestionCol>
-              <AnswerCol>
-                <Radio.Group
-                  onChange={(e) => setQuestion6A(e.target.value)}
-                  value={question6A}
-                >
-                  <Radio value="yes">Yes / होय</Radio>
-                  <Radio value="no">No / नाही</Radio>
-                </Radio.Group>
-              </AnswerCol>
-            </QuestionRow>
-            <SubmitButtonDiv>
-              <Button onClick={() => setFamilyHeadRegister("no")}>Back</Button>
-              <SubmitButton onClick={() => onKeyChange("2")}>Next</SubmitButton>
-            </SubmitButtonDiv>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="2) Part B/भाग ब" key="2">
-            <FormHeader>
-              B: Early Screening: Ask the patient if they have any of these
-              symptoms / लवकर तपासणी : रुग्णाला यापैकी काही लक्षणे आहेत का ते
-              विचारा
-            </FormHeader>
-            <FormHeader>
-              B1 : Female and male / बी १ : महिला आणि पुरुष
-            </FormHeader>
-            {partB1Options.map((item, key) => (
-              <QuestionRow
-                style={{
-                  backgroundColor: partB1OptionsSelected.includes(item)
-                    ? "#8EACCD"
-                    : "#dde6ed",
-                }}
-                key={key}
-              >
-                <QuestionCol>
-                  {t(item)} / {item}
-                </QuestionCol>
-                <AnswerCol>
-                  <Row>
-                    <Col>
-                      <Checkbox
-                        value={item}
-                        checked={partB1OptionsSelected.includes(item)}
-                        onChange={() => handlePartB1select(item)}
-                      ></Checkbox>
-                    </Col>
-                    <Col>
-                      <p style={{ margin: "0px 10px" }}>होय / Yes </p>
-                    </Col>
-                  </Row>
-                </AnswerCol>
-              </QuestionRow>
-            ))}
-            {gender == "female" ? (
-              <>
-                {" "}
-                <FormHeader>B2 : Women only / बी २ : केवळ महिला</FormHeader>
-                {partB2Options.map((item, key) => (
-                  <QuestionRow
-                    style={{
-                      backgroundColor: partB2OptionSelected.includes(item)
-                        ? "#8EACCD"
-                        : "#dde6ed",
-                    }}
-                    key={key}
-                  >
-                    <QuestionCol>
-                      {t(item)} / {item}
-                    </QuestionCol>
-                    <AnswerCol>
-                      <Row>
-                        <Col>
-                          <Checkbox
-                            value={item}
-                            checked={partB2OptionSelected.includes(item)}
-                            onChange={() => handlePartB2Select(item)}
-                          ></Checkbox>
-                        </Col>
-                        <Col>
-                          <p style={{ margin: "0px 10px" }}>होय / Yes </p>
-                        </Col>
-                      </Row>
-                    </AnswerCol>
-                  </QuestionRow>
-                ))}
-              </>
-            ) : (
-              <></>
-            )}
-
-            <FormHeader>
-              B3 : For Senior Citizens (60 years and above)/बी ३ :
-              वयोवृध्दांसाठी (६० वर्ष व त्यापेक्षा अधिक)
-            </FormHeader>
-            {partB3Options.map((item, key) => (
-              <QuestionRow
-                style={{
-                  backgroundColor: partB3OptionsSelected.includes(item)
-                    ? "#8EACCD"
-                    : "#dde6ed",
-                }}
-                key={key}
-              >
-                <QuestionCol>
-                  {t(item)} / {item}
-                </QuestionCol>
-                <AnswerCol>
-                  <Row>
-                    <Col>
-                      <Checkbox
-                        value={item}
-                        checked={partB3OptionsSelected.includes(item)}
-                        onChange={() => handlePartB3Select(item)}
-                      ></Checkbox>
-                    </Col>
-                    <Col>
-                      <p style={{ margin: "0px 10px" }}>होय / Yes </p>
-                    </Col>
-                  </Row>
-                </AnswerCol>
-              </QuestionRow>
-            ))}
-
-            <SubmitButtonDiv>
-              <Button onClick={() => onKeyChange("1")}>Back</Button>
-              <SubmitButton onClick={() => onKeyChange("3")}>Next</SubmitButton>
-            </SubmitButtonDiv>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="3) Part C / भाग क" key="3">
-            <FormHeader>
-              C: Risk factors for COPD / भाग सी : सीओपीडीसाठी जोखीम घटक
-            </FormHeader>
-            <QuestionRow>
-              <QuestionCol>
-                १.स्वयंपाक करण्यासाठी वापरल्या जाणा-या इंधनाचा प्रकार ? / Type
-                of fuel used for cooking?
-              </QuestionCol>
-            </QuestionRow>
-            {partC1Options.map((item, index) => (
-              <QuestionSubRow key={index}>
-                <QuestionSubCol>
-                  {t(item)} / {item}
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  <Checkbox
-                    value={partC1OptionSelect.includes(item)}
-                    onChange={() => handlePartC1Select(item)}
-                  ></Checkbox>
-                </AnswerSubCol>
-              </QuestionSubRow>
-            ))}
-
-            <QuestionRow>
-              <QuestionCol>
-                2.व्यावसायिक प्रदर्शन / occupational exposure
-              </QuestionCol>
-            </QuestionRow>
-            {partC2Options.map((item, index) => (
-              <>
-                <QuestionSubRow key={index}>
-                  <QuestionSubCol>
-                    {t(item)}/{item}
-                  </QuestionSubCol>
-                  <AnswerSubCol>
-                    <Checkbox
-                      value={partC2OptionSelect.includes(item)}
-                      onChange={() => handlePartC2Select(item)}
-                    ></Checkbox>
-                  </AnswerSubCol>
-                </QuestionSubRow>
-              </>
-            ))}
-
-            <SubmitButtonDiv>
-              <Button onClick={() => onKeyChange("2")}>Back</Button>
-              <SubmitButton onClick={() => onKeyChange("4")}>Next</SubmitButton>
-            </SubmitButtonDiv>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="4) Part D / भाग डी" key="4">
-            <FormHeader>D : PHQ 2 / डी : पीएचक्यू २</FormHeader>
-            <FormHeader>
-              · गेल्या २ आठवडयांत, आपण खालील समस्यांद्वारे किती वेळा त्रास दिला
-              आहे- / In the past 2 weeks, how often have you been bothered by
-              the following problems? is-
-            </FormHeader>
-            <QuestionRow>
-              <QuestionCol style={{ width: "100%" }}>
-                १. गोष्टी करण्यात थोडीशी आवड किंवा आनंद असणे ? / Having little
-                interest or pleasure in doing things?
-              </QuestionCol>
-
-              <Radio.Group
-                style={{ margin: "1% 7%" }}
-                onChange={(e) => setQuestion1D(e.target.value)}
-                value={question1D}
-              >
-                <Radio value="Not at all">Not at all</Radio>
-                <Radio value="Several days">Several days</Radio>
-                <Radio value="More than half days">More than half days</Radio>
-                <Radio value="Nearly every days">Nearly every days</Radio>
-              </Radio.Group>
-            </QuestionRow>
-
-            <QuestionRow>
-              <QuestionCol style={{ width: "100%" }}>
-                २. निराश किंवा उदासीन असणे ? Being depressed ?
-              </QuestionCol>
-              <Radio.Group
-                style={{ margin: "1% 7%" }}
-                onChange={(e) => setQuestion2D(e.target.value)}
-                value={question2D}
-              >
-                <Radio value="Not at all">Not at all</Radio>
-                <Radio value="Several days">Several days</Radio>
-                <Radio value="More than half days">More than half days</Radio>
-                <Radio value="Nearly every days">Nearly every days</Radio>
-              </Radio.Group>
-            </QuestionRow>
-            <SubmitButtonDiv>
-              <Button onClick={() => onKeyChange("3")}>Back</Button>
-              <SubmitButton onClick={() => onKeyChange("5")}>Next</SubmitButton>
-            </SubmitButtonDiv>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="5) Part E / भाग ई" key="5">
-            <QuestionRow>
-              <QuestionCol>
-                1. तुम्हाला ताप आहे का? / Do you have fever?
-              </QuestionCol>
-            </QuestionRow>
-            {partE1Options.map((item, index) => (
-              <QuestionSubRow key={index}>
-                <QuestionSubCol>
-                  {t(item)}/{item}
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  <Checkbox
-                    checked={partE1OptionSelect.includes(item)}
-                    onChange={() => handlePartE1Select(item)}
-                  ></Checkbox>
-                </AnswerSubCol>
-              </QuestionSubRow>
-            ))}
-
-            <QuestionRow>
-              <QuestionCol>
-                2. डोळ्यांच्या बुबुळाच्या पुढील भागाचा होणारा दाह (डोळा येणे) ?
-                Conjuctivitis ?
-              </QuestionCol>
-            </QuestionRow>
-
+        </Modal>
+        <AadharOtpLinkedModal
+          open={showAadharOtpLinkedModal}
+          onCancel={handleHideAadharOtpLinkedModal}
+          title="Validate your Aadhar number before generating your abha number"
+          footer={
             <>
-              {partE2Options.map((item, index) => (
-                <QuestionSubRow>
-                  <QuestionSubCol>
-                    {t(item)}/{item}
-                  </QuestionSubCol>
-                  <AnswerSubCol>
-                    <Checkbox
-                      checked={partE2OptionSelect.includes(item)}
-                      onChange={() => handlePartE2Select(item)}
-                    ></Checkbox>
-                  </AnswerSubCol>
-                </QuestionSubRow>
-              ))}
-            </>
-
-            <QuestionRow>
-              <QuestionCol>
-                3. तुम्हाला लेप्टोस्पायरोसिस आहे का? Do you have leptospirosis?
-                ?
-              </QuestionCol>
-            </QuestionRow>
-
-            <>
-              {partE3Options.map((item, index) => (
-                <>
-                  <QuestionSubRow key={index}>
-                    <QuestionSubCol>
-                      {t(item)}/{item}
-                    </QuestionSubCol>
-                    <AnswerSubCol>
-                      <Checkbox
-                        checked={partE3OptionSelect.includes(item)}
-                        onChange={() => handlePartE3Select(item)}
-                      ></Checkbox>
-                    </AnswerSubCol>
-                  </QuestionSubRow>
-                </>
-              ))}
-            </>
-
-            <QuestionRow>
-              <QuestionCol>
-                4. तुम्हाला जुलाब, हगवण, संडास आहे का ? Do you have loose motion
-                ?
-              </QuestionCol>
-            </QuestionRow>
-
-            <>
-              {partE4Options.map((item, index) => (
-                <>
-                  <QuestionSubRow key={index}>
-                    <QuestionSubCol>
-                      {t(item)}/{item}
-                    </QuestionSubCol>
-                    <AnswerSubCol>
-                      <Checkbox
-                        checked={partE4OptionSelect.includes(item)}
-                        onChange={() => handlePartE4Select(item)}
-                      ></Checkbox>
-                    </AnswerSubCol>
-                  </QuestionSubRow>
-                </>
-              ))}
-            </>
-
-            <QuestionRow>
-              <QuestionCol>
-                5. तुम्हाला लिव्हरला सूज / कावीळ आहे का ? Do you have Hepatitis
-                / Jaundice ?
-              </QuestionCol>
-            </QuestionRow>
-
-            {partE5Option.map((item, index) => (
-              <>
-                <QuestionSubRow key={index}>
-                  <QuestionSubCol>
-                    {t(item)}/{item}
-                  </QuestionSubCol>
-                  <AnswerSubCol>
-                    <Checkbox
-                      onChange={() => handlePartE5Select(item)}
-                      value={partE5OptionSelect.includes(item)}
-                    ></Checkbox>
-                  </AnswerSubCol>
-                </QuestionSubRow>
-              </>
-            ))}
-
-            <QuestionRow>
-              <QuestionCol>
-                6. तुम्हाला प्राण्यांनी चावले आहे का ? did animals have Bitten
-                you ?
-              </QuestionCol>
-              <AnswerCol>
-                <Radio.Group
-                  onChange={(e) => setAnimalBitten(e.target.value)}
-                  value={animalBitten}
+              {aadharNumberSubmitted ? (
+                <SubmitButton htmlType="submit" onClick={handleAadharVerify}>
+                  Verify OTP
+                </SubmitButton>
+              ) : (
+                <SubmitButton
+                  htmlType="submit"
+                  onClick={handleAadharNumberSubmit}
                 >
-                  <Radio value="Animal Bite">Yes / होय</Radio>
-                  <Radio value="">No / नाही</Radio>
-                </Radio.Group>
-              </AnswerCol>
-            </QuestionRow>
-            <QuestionRow>
-              <QuestionCol>
-                7. तुम्हाला साप चावला आहे का ? did Snake have Bitten you ?
-              </QuestionCol>
-              <AnswerCol>
-                <Radio.Group
-                  onChange={(e) => setSnakeBitten(e.target.value)}
-                  value={snakeBitten}
-                >
-                  <Radio value="Snake_Bite">Yes / होय</Radio>
-                  <Radio value="">No / नाही</Radio>
-                </Radio.Group>
-              </AnswerCol>
-            </QuestionRow>
-            <QuestionRow>
-              <QuestionCol>
-                8. तुम्हाला कुष्ठरोग आहे का ? do you have Leprosy ?
-              </QuestionCol>
-            </QuestionRow>
-
-            {partE8Options.map((item, index) => (
-              <QuestionSubRow key={index}>
-                <QuestionSubCol>
-                  {t(item)}/{item}
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  <Checkbox
-                    checked={partE8OptionSelect.includes(item)}
-                    onChange={() => handlePartE8Select(item)}
-                  ></Checkbox>
-                </AnswerSubCol>
-              </QuestionSubRow>
-            ))}
-            {age < 60 ? (
-              <>
-                {" "}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "end",
-                    marginRight: "10%",
-                  }}
-                >
-                  <Checkbox onChange={(e) => handlePartialSelect(e)}></Checkbox>
-                  <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
-                </div>
-              </>
-            ) : (
-              <></>
-            )}
-
-            <SubmitButtonDiv>
-              <Button onClick={() => onKeyChange("4")}>Back</Button>
-              <SubmitButton onClick={handleFormSubmit}>
-                {noOfMembersCompleted == totalFamilyMembers || partialSubmit
-                  ? age > 60
-                    ? "Next"
-                    : "Submit"
-                  : "Submit & next"}
-              </SubmitButton>
-            </SubmitButtonDiv>
-          </Tabs.TabPane>
-        </DocsTab>
-      )}
-
-      {/* Blood Consent Modal */}
-      <Modal
-        open={consentModalShow}
-        onCancel={handleConsentModalClose}
-        title="Blood Sample / रक्त नमुना"
-        footer={
-          <SubmitButton onClick={() => handleSubmitAndNext()}>
-            {noOfMembersCompleted == totalFamilyMembers || partialSubmit
-              ? "Submit"
-              : "Submit & Next"}
-          </SubmitButton>
-        }
-      >
-        <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
-
-        <BloodSampleText>
-          Citizen will give his blood sample at / येथे नागरिक आपल्या रक्ताचा
-          नमुना देईल :
-        </BloodSampleText>
-        <BloodSampleButtonsRow>
-          <BloodSampleButtonCol>
-            <Button
-              style={
-                bloodSampleHome
-                  ? { backgroundColor: "#E9B384" }
-                  : { backgroundColor: "white" }
-              }
-              onClick={handleBloodSampleHomeSelct}
-            >
-              <span style={{ marginRight: "10px" }}>
-                <FontAwesomeIcon icon={faHouse} />
-              </span>
-              Home / घर
-            </Button>
-          </BloodSampleButtonCol>
-          <BloodSampleButtonCol>
-            <Button
-              style={
-                bloodSampleCenter
-                  ? { backgroundColor: "#E9B384" }
-                  : { backgroundColor: "white" }
-              }
-              onClick={handleBloodSampleCenterSelect}
-            >
-              <span style={{ marginRight: "10px" }}>
-                <FontAwesomeIcon icon={faPlus} />
-              </span>
-              Center / केंद्र
-            </Button>
-          </BloodSampleButtonCol>
-          <BloodSampleButtonCol>
-            <Button
-              style={
-                bloodSampleDenied
-                  ? { backgroundColor: "#E9B384" }
-                  : { backgroundColor: "white" }
-              }
-              onClick={handleBloodSampleDesiedSelect}
-            >
-              <span style={{ marginRight: "10px" }}>
-                <FontAwesomeIcon icon={faXmark} />
-              </span>
-              Denied / नाकारले
-            </Button>
-          </BloodSampleButtonCol>
-        </BloodSampleButtonsRow>
-        {bloodSampleHome ? (
-          <>
-            <Form layout="vertical">
-              <Form.Item
-                label="Demand letter"
-                style={{ margin: "20px 5px", width: "200px" }}
-              >
-                <Input
-                  type="file"
-                  onChange={(e) => handleDemandLetter(e.target.files[0])}
-                ></Input>
-              </Form.Item>
-            </Form>
-          </>
-        ) : (
-          <></>
-        )}
-        {bloodSampleDenied ? (
-          <></>
-        ) : (
-          <>
-            <div>
-              <p>
-                <Checkbox
-                  style={{ marginRight: "10px" }}
-                  onChange={(e) => setBloodConsent(e.target.checked)}
-                ></Checkbox>
-                I have been explained about the consent as stated above and
-                hereby provide my consent for blood sample collection and any
-                more procedures for the aforementioned purposes.
-              </p>
-            </div>
-          </>
-        )}
-
-        <div
-          style={{ display: "flex", justifyContent: "end", marginRight: "10%" }}
-        >
-          <Checkbox onChange={(e) => handlePartialSelect(e)}></Checkbox>
-          <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
-        </div>
-      </Modal>
-      <AadharOtpLinkedModal
-        open={showAadharOtpLinkedModal}
-        onCancel={handleHideAadharOtpLinkedModal}
-        footer={
-          <>
-            {aadharNumberSubmitted ? (
-              <SubmitButton onClick={handleAadharVerify}>
-                Verify OTP
-              </SubmitButton>
-            ) : (
-              <SubmitButton onClick={handleAadharNumberSubmit}>
-                Submit
-              </SubmitButton>
-            )}
-          </>
-        }
-      >
-        <div style={{ margin: "20px" }}>
-          <Form layout="vertical">
-            <p
-              style={{
-                margin: "10px 5px",
-                fontFamily: "-moz-initial",
-                fontSize: "18px",
-                fontStyle: "oblique",
-              }}
-            >
-              *Validate your Aadhar number before generating your abha number
-            </p>
-            <Form.Item label="Aadhar Number">
-              <Input
-                type="text"
-                placeholder="Enter Aadhar Number "
-                style={{ width: "400px " }}
-                value={aadharNumber}
-                onChange={(e) => handleAadharNumberChange(e)}
-              ></Input>
-            </Form.Item>
-            {aadharNumberSubmitted ? (
-              <>
-                {" "}
-                <Form.Item label="OTP">
-                  <OtpInput
-                    inputStyle={{
-                      width: "30px",
-                      height: "30px",
-                      margin: "2px 15px",
-                    }}
-                    value={otp}
-                    numInputs={6}
-                    type="number"
-                    onChange={(value) => setOtp(value)}
-                    renderSeparator={<span></span>}
-                    renderInput={(props) => <input {...props} />}
-                  ></OtpInput>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      margin: "10px 40px ",
-                    }}
-                  >
-                    <a onClick={handleAadharNumberSubmit}>Resend OTP</a>
-                  </div>
-                </Form.Item>
-              </>
-            ) : (
-              <></>
-            )}
-          </Form>
-        </div>
-      </AadharOtpLinkedModal>
-      <CheckAndGenerateMobileOtpModal
-        open={showCheckAndGenerateMobileOtpModal}
-        onCancel={handleHideCheckAndGeneratedMobileOtp}
-        footer={
-          <>
-            {aadharLinkedMobileNumber ? (
-              <>
-                <SubmitButton onClick={() => handleCheckAndGenerateMobileOtp()}>
                   Submit
                 </SubmitButton>
-              </>
-            ) : (
-              <>
-                <SubmitButton
-                  onClick={() => {
-                    handleVerifyNumberLinktoAbhaCard();
-                  }}
-                >
-                  Submit OTP
-                </SubmitButton>
-              </>
-            )}
-          </>
-        }
-      >
-        <>
-          <Form layout="vertical">
-            <p
-              style={{
-                margin: "10px 5px",
-                fontFamily: "-moz-initial",
-                fontSize: "18px",
-                fontStyle: "oblique",
-              }}
-            >
-              *Enter Mobile number to linked with ABHA CARD
-            </p>
-            {/* <Radio.Group
-              style={{ padding: "20px" }}
-              value={aadharLinkedSelect}
-              onChange={(e) => setAadharLinkedSelect(e.target.value)}
-            >
-              <Radio value="adharLinked">Adhar Linked</Radio>
-              <Radio value="other">Other</Radio>
-            </Radio.Group> */}
-            <Form.Item label="Mobile Number" style={{ padding: "20px" }}>
-              <Input
-                type="text"
-                placeholder="Enter Mobile Number"
-                style={{ width: "400px" }}
-                value={mobileNumberForAbhaID}
-                onChange={(e) => setMobileNumberForAbhaID(e.target.value)}
-              ></Input>
-              {aadharLinkedMobileNumber ? (
-                <></>
-              ) : (
+              )}
+            </>
+          }
+        >
+          <div style={{ margin: "0px" }}>
+            <Form layout="vertical">
+              <div style={{ display: "flex", justifyContent: "space-around" }}>
+                <img width={100} src="Aadhar-Color.svg"></img>
+                <Form.Item label="Aadhar Number">
+                  <Input
+                    type="text"
+                    placeholder="Enter Aadhar Number "
+                    style={{ width: "300px " }}
+                    value={aadharNumber}
+                    onChange={(e) => handleAadharNumberChange(e)}
+                  ></Input>
+                </Form.Item>
+              </div>
+
+              {aadharNumberSubmitted ? (
                 <>
-                  <Form.Item label="OTP">
+                  {" "}
+                  <Form.Item
+                    label={
+                      <p>
+                        {" "}
+                        <b>OTP </b> (Please enter the One-Time Password (OTP)
+                        that has been sent to the mobile number associated with
+                        your Aadhar registration . Registered Mobile Number is{" "}
+                        <b>{mobileNumberLinkedWithAadhar}</b> ){" "}
+                      </p>
+                    }
+                  >
                     <OtpInput
                       inputStyle={{
                         width: "30px",
                         height: "30px",
-                        margin: "2px 15px",
+                        margin: "2px 20px",
                       }}
                       value={otp}
                       numInputs={6}
@@ -2501,74 +2773,247 @@ function FamilyHead(props) {
                         margin: "10px 40px ",
                       }}
                     >
-                      <a onClick={handleCheckAndGenerateMobileOtp}>
-                        Resend OTP
-                      </a>
+                      <a onClick={handleAadharNumberSubmit}>Resend OTP</a>
                     </div>
                   </Form.Item>
                 </>
+              ) : (
+                <></>
               )}
-            </Form.Item>
-          </Form>
-        </>
-      </CheckAndGenerateMobileOtpModal>
-      <HealthIdModal
-        open={showHealthIdModal}
-        onCancel={handleHideHealthIdModal}
-        footer={
-          <>
-            <SubmitButton>Submit</SubmitButton>
-          </>
-        }
-      >
-        <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <img
-              width={100}
-              src={`data:image/jpeg;base64, ${aadharPhotoURL}`}
-            ></img>
-          </div>
-          <div style={{ margin: "15px 50px" }}>
-            <Form layout="vertical">
-              {/* <Form.Item label="Name">
-                <InputForm
-                  type="text"
-                  value={aadharCardName}
-                  // onChange={(e) => setAadharCardName(e.target.value)}
-                ></InputForm>
-              </Form.Item> */}
-              <h3>Name : {aadharCardName}</h3>
-              <h3> Mobile No : {aadharMobileNumber} </h3>
-              <h3>Health No : {healthNumber}</h3>
-              {/* <Form.Item label="Mobile Number">
-                <InputForm
-                  type="text"
-                  value={aadharMobileNumber}
-                  // onChange={(e) => setAadharMobileNumber(e.target.value)}
-                ></InputForm>
-              </Form.Item> */}
-              {/* <FormItem label="Health Number">
-                <InputForm type="text" value={healthNumber}></InputForm>
-              </FormItem> */}
-              <FormItem label="Create Your Health ID">
-                <InputForm
-                  type="text"
-                  value={healthId}
-                  placeholder="Enter Health ID"
-                  onChange={(e) => setHealthId(e.target.value)}
-                ></InputForm>
-              </FormItem>
-              <p>e.g nishant.bodke@sbx</p>
             </Form>
           </div>
-        </div>
-      </HealthIdModal>
+        </AadharOtpLinkedModal>
+        <CheckAndGenerateMobileOtpModal
+          open={showCheckAndGenerateMobileOtpModal}
+          onCancel={handleHideCheckAndGeneratedMobileOtp}
+          title={
+            <>
+              <Row>
+                <Col span={3}>
+                  <Button
+                    disabled={aadharLinkedMobileNumber}
+                    onClick={handleBackButtonOfCheckAndGenerateMobileOtpModal}
+                  >
+                    <FontAwesomeIcon icon={faBackward} />
+                  </Button>
+                </Col>
+                <Col span={20}>
+                  <h4 style={{ marginTop: "-5px" }}>
+                    Please provide your mobile number for the purpose of linking
+                    it with your ABHA CARD
+                  </h4>
+                </Col>
+              </Row>
+            </>
+          }
+          footer={
+            <>
+              {aadharLinkedMobileNumber ? (
+                <>
+                  <SubmitButton
+                    htmlType="submit"
+                    onClick={() => handleCheckAndGenerateMobileOtp()}
+                  >
+                    Submit
+                  </SubmitButton>
+                </>
+              ) : (
+                <>
+                  <SubmitButton
+                    htmlType="submit"
+                    onClick={() => {
+                      handleVerifyNumberLinktoAbhaCard();
+                    }}
+                  >
+                    Submit OTP
+                  </SubmitButton>
+                </>
+              )}
+            </>
+          }
+        >
+          <>
+            <Form layout="vertical">
+              <Form.Item label="Mobile Number" style={{ padding: "20px" }}>
+                <Input
+                  type="text"
+                  placeholder="Enter Mobile Number"
+                  style={{ width: "400px" }}
+                  value={mobileNumberForAbhaID}
+                  onChange={(e) => handleMobileNumberForAbhaId(e)}
+                ></Input>
+                {aadharLinkedMobileNumber ? (
+                  <></>
+                ) : (
+                  <>
+                    <div style={{ margin: "30px 2px" }}>
+                      <Form.Item label="OTP">
+                        <OtpInput
+                          inputStyle={{
+                            width: "30px",
+                            height: "30px",
+                            margin: "0px 15px",
+                          }}
+                          value={otp}
+                          numInputs={6}
+                          type="number"
+                          onChange={(value) => setOtp(value)}
+                          renderSeparator={<span></span>}
+                          renderInput={(props) => <input {...props} />}
+                        ></OtpInput>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            margin: "10px 40px ",
+                          }}
+                        >
+                          <a onClick={handleCheckAndGenerateMobileOtp}>
+                            Resend OTP
+                          </a>
+                        </div>
+                      </Form.Item>
+                    </div>
+                  </>
+                )}
+              </Form.Item>
+            </Form>
+          </>
+        </CheckAndGenerateMobileOtpModal>
+        <HealthNumberModal
+          open={showHealthNumberModal}
+          onCancel={handleHideHealthNumberModal}
+          footer={
+            <>
+              <SubmitButton onClick={handleHideHealthNumberModal}>
+                Finish
+              </SubmitButton>
+            </>
+          }
+        >
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                width={120}
+                src={`data:image/jpeg;base64, ${aadharPhotoURL}`}
+              ></img>
+            </div>
+            <div style={{ margin: "15px 50px" }}>
+              <h3>Name : {aadharCardName}</h3>
+              <h3> Mobile No : {aadharMobileNumber} </h3>
+              <h3>Health ID : {healthNumber}</h3>
+              <p>
+                Would you like to create your ABHA Address?{" "}
+                <a onClick={handleShowHealthIdModal}>Click Here</a>
+              </p>
+            </div>
+          </div>
+        </HealthNumberModal>
+        <HealthIdModal
+          open={showHealthIdModal}
+          onCancel={handleHideHealthIdModal}
+          footer={
+            <SubmitButton
+              htmlType="submit"
+              onClick={handleVerifyWhileHealthIDGeneration}
+            >
+              Verify
+            </SubmitButton>
+          }
+        >
+          <Form layout="vertical">
+            <Form.Item
+              label={
+                <h4>
+                  Please select one of the following options to receive your OTP
+                </h4>
+              }
+            >
+              {authMethods.map((data) => (
+                <Radio.Group
+                  onChange={(e) => handleSelectAuthMethods(e)}
+                  value={selectedAuthMethods}
+                  style={{ margin: "0px 30px" }}
+                >
+                  <Radio value={data}>{data}</Radio>
+                </Radio.Group>
+              ))}
+            </Form.Item>
+            <Form.Item label={<h4>OTP</h4>}>
+              <OtpInput
+                inputStyle={{
+                  width: "30px",
+                  height: "30px",
+                  margin: "2px 15px",
+                }}
+                value={otp}
+                numInputs={6}
+                type="number"
+                onChange={(value) => setOtp(value)}
+                renderSeparator={<span></span>}
+                renderInput={(props) => <input {...props} />}
+              ></OtpInput>
+              {/* <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                margin: "10px 40px ",
+              }}
+            >
+              <a onClick={handleCheckAndGenerateMobileOtp}>Resend OTP</a>
+            </div> */}
+            </Form.Item>
+          </Form>
+        </HealthIdModal>
+        <CreateHealthIdModal
+          open={showCreateHealthIdModal}
+          onCancel={handleHideCreateHealthIdModal}
+          title="Create Your Health ID"
+          footer={
+            <>
+              <SubmitButton onClick={() => handleCreateHealthID()}>
+                Submit
+              </SubmitButton>
+            </>
+          }
+        >
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Form layout="vertical">
+              <Form.Item label="Health ID">
+                <InputForm
+                  type="text"
+                  placeholder="Enter Health ID"
+                  value={healthId}
+                  onChange={(e) => setHealthId(e.target.value)}
+                ></InputForm>
+              </Form.Item>
+              <Form.Item label="Password">
+                <InputBox.Password
+                  onChange={(e) => setHealthIdPassword(e.target.value)}
+                ></InputBox.Password>
+              </Form.Item>
+            </Form>
+          </div>
+          <div style={{ margin: "-10px 20px" }}>
+            <p style={{ fontSize: "15px", color: "#61A3BA" }}>
+              Suggested Health ID :
+            </p>
+          </div>
+          <div style={{ margin: "0px 150px" }}>
+            <div>
+              {listOfSuggestedHealthID.map((data, index) => (
+                <li key={index}>{data}</li>
+              ))}
+            </div>
+          </div>
+        </CreateHealthIdModal>
+      </Spin>
     </>
   );
 }

@@ -165,11 +165,29 @@ function MemberAdd(props) {
       setPhone(e.target.value);
     }
   };
+  // const handleAbhaIDChange = (e) => {
+  //   const regex = /^[0-9a-zA-z]{1,12}$/;
+  //   if (e.target.value === "" || regex.test(e.target.value)) {
+  //     setAbhaId(e.target.value);
+  //   }
+  // };
   const handleAbhaIDChange = (e) => {
-    const regex = /^[0-9a-zA-z]{1,12}$/;
-    if (e.target.value === "" || regex.test(e.target.value)) {
-      setAbhaId(e.target.value);
+    const alphanumericText = e.target.value.replace(/[^0-9]/g, ""); // Remove non-alphanumeric characters
+
+    let formattedText = "";
+    for (let i = 0; i < alphanumericText.length; i++) {
+      if (i === 2 || i === 6 || i === 10) {
+        formattedText += "-";
+      }
+      formattedText += alphanumericText[i];
     }
+
+    // Ensure that the input does not start with a hyphen
+    if (formattedText.startsWith("-")) {
+      formattedText = formattedText.substring(1);
+    }
+
+    setAbhaId(formattedText);
   };
   const handlePulseChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
@@ -907,7 +925,7 @@ function MemberAdd(props) {
                 <Input
                   type="text"
                   value={abhaId}
-                  maxLength={14}
+                  maxLength={17}
                   required
                   onChange={(e) => handleAbhaIDChange(e)}
                 ></Input>
