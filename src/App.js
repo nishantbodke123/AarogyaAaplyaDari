@@ -9,6 +9,7 @@ import Dashboard from "./Components/Dashboard/Dashboard";
 import MemberUpdate from "./Components/Registration/MemberUpdate";
 import MemberAdd from "./Components/Registration/MemberAdd";
 import Phlebo from "./Components/Phlebotomist/Phlebo";
+import Admin from "./Components/Admin/Admin";
 
 function App() {
   let Token = sessionStorage.getItem("Token");
@@ -90,10 +91,12 @@ function App() {
               </PhleboProtected>
             }
           ></Route>
+          <Route path="/admin" element={<Admin></Admin>}></Route>
 
           <Route path="/*" element={<Error />}></Route>
         </Routes>
       </BrowserRouter>
+      
     </>
   );
 }

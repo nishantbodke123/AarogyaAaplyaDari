@@ -20,6 +20,7 @@ import {
   AddButton,
   Box,
   BoxContainer,
+  CardCount,
   CardHeader,
   ColorStrip,
   Column,
@@ -496,7 +497,7 @@ const Dashboard = () => {
                         <CardHeader>Today's Citizen Count</CardHeader>
                       </Col>
                     </Row>
-                    {dashboardCounts.todays_count}
+                    <CardCount>{dashboardCounts.todays_count}</CardCount>
                   </BoxContainer>
                 </Box>
               </MobileCardColumn>
@@ -512,7 +513,7 @@ const Dashboard = () => {
                         <CardHeader>Today's Family Count </CardHeader>
                       </Col>
                     </Row>
-                    {dashboardCounts.today_family_count}
+                    <CardCount>{dashboardCounts.today_family_count}</CardCount>
                   </BoxContainer>
                 </Box>
               </MobileCardColumn>
@@ -528,7 +529,7 @@ const Dashboard = () => {
                         <CardHeader>Total Citizen Count</CardHeader>
                       </Col>
                     </Row>
-                    {dashboardCounts.total_count}
+                    <CardCount>{dashboardCounts.total_count}</CardCount>
                   </BoxContainer>
                 </Box>
               </MobileCardColumn>
@@ -544,7 +545,7 @@ const Dashboard = () => {
                         <CardHeader>Total Family Count</CardHeader>
                       </Col>
                     </Row>
-                    {dashboardCounts.total_family_count}
+                    <CardCount>{dashboardCounts.total_family_count}</CardCount>
                   </BoxContainer>
                 </Box>
               </MobileCardColumn>
@@ -560,7 +561,9 @@ const Dashboard = () => {
                         <CardHeader>Partial Survey </CardHeader>
                       </Col>
                     </Row>
-                    {dashboardCounts.partial_survey_count}
+                    <CardCount>
+                      {dashboardCounts.partial_survey_count}
+                    </CardCount>
                   </BoxContainer>
                 </Box>
               </MobileCardColumn>
@@ -580,7 +583,7 @@ const Dashboard = () => {
                     <CardHeader>Today's Citizen Count</CardHeader>
                   </Col>
                 </Row>
-                {dashboardCounts.todays_count}
+                <CardCount>{dashboardCounts.todays_count}</CardCount>
               </BoxContainer>
             </Box>
             <Box onClick={() => handleShowTodayFamilyCountModal()}>
@@ -594,7 +597,7 @@ const Dashboard = () => {
                     <CardHeader>Today's Family Count </CardHeader>
                   </Col>
                 </Row>
-                {dashboardCounts.today_family_count}
+                <CardCount>{dashboardCounts.today_family_count}</CardCount>
               </BoxContainer>
             </Box>
             <Box onClick={() => handleShowTotalCountModal()}>
@@ -608,7 +611,7 @@ const Dashboard = () => {
                     <CardHeader>Total Citizen Count</CardHeader>
                   </Col>
                 </Row>
-                {dashboardCounts.total_count}
+                <CardCount>{dashboardCounts.total_count}</CardCount>
               </BoxContainer>
             </Box>
 
@@ -623,7 +626,7 @@ const Dashboard = () => {
                     <CardHeader>Total Family Count</CardHeader>
                   </Col>
                 </Row>
-                {dashboardCounts.total_family_count}
+                <CardCount>{dashboardCounts.total_family_count}</CardCount>
               </BoxContainer>
             </Box>
             <Box onClick={() => handleShowPartialCountModal()}>
@@ -637,7 +640,7 @@ const Dashboard = () => {
                     <CardHeader>Partial Survey </CardHeader>
                   </Col>
                 </Row>
-                {dashboardCounts.partial_survey_count}
+                <CardCount>{dashboardCounts.partial_survey_count}</CardCount>
               </BoxContainer>
             </Box>
           </SubContainer>

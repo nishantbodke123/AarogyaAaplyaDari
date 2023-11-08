@@ -9,9 +9,9 @@ function User() {
   const group = sessionStorage.getItem("group");
   console.log(group);
   return group == "healthworker"
-    ? navigate("/dashboard")
+    ? navigate("/user/dashboard")
     : group == "phlebotomist"
-    ? navigate("/phlebo")
+    ? navigate("/user/phlebo")
     : navigate("/");
 }
 export default User;

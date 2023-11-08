@@ -370,6 +370,7 @@ function FamilyHead(props) {
         console.log(response);
         handleHideAadharOtpLinkedModal();
         if (response.data.healthIdNumber === null) {
+          console.log(response.data.healthIdNumber);
           setAbhaId(response.data.healthIdNumber);
           Modal.info({
             title: "ABHA ID Already Exists",
@@ -795,6 +796,7 @@ function FamilyHead(props) {
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState("");
   const [abhaId, setAbhaId] = useState();
+  const [abhaNumber, setAbhaNumber] = useState();
   const [pulse, setPulse] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
   const [weight, setWeight] = useState("");
@@ -869,9 +871,7 @@ function FamilyHead(props) {
         {ABHAIDSubmited ? (
           <>
             {" "}
-            <Form.Item
-              label="OTP"
-            >
+            <Form.Item label="OTP">
               <OtpInput
                 inputStyle={{
                   width: "25px",
@@ -1933,11 +1933,11 @@ function FamilyHead(props) {
                   ></Input>
                 </FormItem>
               </Column>
-              <Column span={7}>
+              <Column span={8}>
                 <FormItem label="Abha ID / आभा आयडी">
                   <Input
                     type="text"
-                    value={abhaId}
+                    value={healthNumber}
                     maxLength={17}
                     onChange={(e) => handleAbhaIDChange(e)}
                   ></Input>
@@ -1949,7 +1949,7 @@ function FamilyHead(props) {
                   </a>
                 </p>
               </Column>
-              <Column span={1}>
+              {/* <Column span={1}>
                 <Tooltip title="ABHA Card Download">
                   <Popover
                     content={ABHACARDDownloadInputContent}
@@ -1959,7 +1959,7 @@ function FamilyHead(props) {
                     <ABHACardDownLoad icon={faFileArrowDown} />
                   </Popover>
                 </Tooltip>
-              </Column>
+              </Column> */}
             </Row>
 
             <Row>

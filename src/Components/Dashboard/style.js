@@ -250,6 +250,12 @@ export const CardHeader = styled.p`
     margin-top: 10px;
   }
 `;
+export const CardCount = styled.p`
+  font-size: 28px;
+  font-weight: 570;
+  font-family: -moz-initial;
+  margin: -5px 20px;
+`;
 export const DesktopContainer = styled.div`
   margin: 5px;
   height: 150px;
