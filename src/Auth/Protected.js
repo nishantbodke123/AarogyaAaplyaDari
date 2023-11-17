@@ -22,3 +22,12 @@ export function PhleboProtected({ children }) {
     return null;
   }
 }
+export function AdminProtected({ children }) {
+  const navigate = useNavigate();
+  if (loginToken !== "" && userGroup === "admin") {
+    return children;
+  } else {
+    navigate("/");
+    return null;
+  }
+}

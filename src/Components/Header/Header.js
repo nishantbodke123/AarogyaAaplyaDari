@@ -10,16 +10,10 @@ import {
   UserSelect,
 } from "./style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEnvelope,
-  faRightFromBracket,
-} from "@fortawesome/free-solid-svg-icons";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
-import { BASE_URL } from "../../Utils/BaseURL";
-import { Option } from "antd/es/mentions";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { LogOut } from "../../Auth/Logout";
 
@@ -88,7 +82,6 @@ function Header() {
         mode="horizontal"
         theme="dark"
         defaultSelectedKeys={window.location.pathname}
-        className="ant-menu"
       >
         <HeaderLogo src="logo (1).svg"></HeaderLogo>
         {menuItems.map((item) => (
@@ -115,7 +108,6 @@ function Header() {
         mode="vertical"
         theme="dark"
         defaultSelectedKeys={window.location.pathname}
-        className="ant-menu"
       >
         <HeaderLogo src="logo (1).svg"></HeaderLogo>
         <SubMenu>

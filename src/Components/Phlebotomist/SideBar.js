@@ -9,20 +9,8 @@ import {
   UserIcon,
   UserSelect,
 } from "./style";
-import { Menu, Tooltip } from "antd";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  FormOutlined,
-} from "@ant-design/icons";
-import {
-  faPowerOff,
-  faRightFromBracket,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { LogOut } from "../../Auth/Logout";
+import { Menu } from "antd";
+
 import { Link } from "react-router-dom";
 
 // const items = [

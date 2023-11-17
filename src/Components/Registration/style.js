@@ -135,10 +135,13 @@ export const AnswerCol1 = styled(Col)`
   // }
 `;
 export const AnswerSubCol = styled(Col)`
+  margin: 10px 165px;
   @media (max-width: 820px) {
+    margin: 10px 50px;
     width: 40%;
   }
   @media (max-width: 450px) {
+    margin: 10px 10px;
     width: 20%;
   }
 `;

@@ -65,6 +65,8 @@ function Login() {
         setTimeout(() => {
           if (response.data.Group == "healthworker") {
             window.location.replace("/dashboard");
+          } else if (response.data.Group == "admin") {
+            window.location.replace("/admin");
           } else {
             window.location.replace("/phlebo");
           }
@@ -144,7 +146,6 @@ function Login() {
                 </Form>
               </LoginForm>
             </div>{" "}
-            
           </FormContainer>
         </Container>
       </Spin>
