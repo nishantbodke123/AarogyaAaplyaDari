@@ -1214,12 +1214,11 @@ function FamilyHead(props) {
       setQuestionFunction([])
     }
   }
-  const handleAnimalBitten=(quetionNumber ,selectedValue)=>{
-    const setQuestionFunction = eval(`setAnimalBitten`);
+  const handleAnimalBitten=(selectedValue)=>{
     if(selectedValue === "yes" || selectedValue ==="no"){
-      setQuestionFunction([selectedValue])
+      setAnimalBitten([selectedValue])
     } else {
-      setQuestionFunction([])
+      setAnimalBitten([])
     }
   }
   const handleSnakeBitten=(selectedValue)=>{
@@ -1266,18 +1265,31 @@ function FamilyHead(props) {
   };
 
   const handleClearPartA = () => {
-    setQuestion1A("");
-    setQuestion2A("");
-    setQuestion3A("");
-    setQuestion4A("");
-    setQuestion5A("");
-    setQuestion6A("");
+    setQuestion1A([]);
+    setQuestion2A([]);
+    setQuestion3A([]);
+    setQuestion4A([]);
+    setQuestion5A([]);
+    setQuestion6A([]);
   };
 
   const handleClearPartB = () => {
-    setPartB1OptionsSelected([]);
-    setPartB2OptionSelected([]);
-    setPartB3OptionsSelected([]);
+    // setPartB1OptionsSelected([]);
+    for(let questionNumber=1 ;questionNumber<=32;questionNumber++){
+      let setQuestionSelected=eval(`setQuestion${questionNumber}B1`);
+      setQuestionSelected([]);
+    }
+    // setPartB2OptionSelected([]);
+
+    for(let questionNumber=1;questionNumber<=7;questionNumber++){
+      let setQuestionSelected=eval(`setQuestion${questionNumber}B2`);
+      setQuestionSelected([]);
+    }
+    // setPartB3OptionsSelected([]);
+    for(let questionNumber=1;questionNumber<=4;questionNumber++){
+      let setQuestionSelected=eval(`setQuestion${questionNumber}B3`);
+      setQuestionSelected([]);
+    }
   };
 
   const handleClearPartC = () => {
@@ -1286,22 +1298,43 @@ function FamilyHead(props) {
   };
 
   const handleClearPartD = () => {
-    setQuestion1D("");
-    setQuestion2D("");
+    setQuestion1D([]);
+    setQuestion2D([]);
   };
   const handleClearPartE = () => {
-    setPartE1OptionSelect([]);
-    setPartE2OptionSelect([]);
-    setPartE3OptionSelect([]);
-    setPartE4OptionSelect([]);
-    setPartE5OptionSelect([]);
+    // setPartE1OptionSelect([]);
+    for(let questionNumber=1;questionNumber<=6;questionNumber++){
+      let setQuestionSelected=eval(`setDoYouHaveFever${questionNumber}`);
+      setQuestionSelected([]);
+    }
+    // setPartE2OptionSelect([]);
+    for(let questionNumber=1;questionNumber<=3;questionNumber++){
+      let setQuestionSelected=eval(`setConjuctivitis${questionNumber}`);
+      setQuestionSelected([]);
+    }
+    // setPartE3OptionSelect([]);
+    for(let questionNumber=1;questionNumber<=2;questionNumber++){
+      let setQuestionSelected=eval(`setLeptospirosis${questionNumber}`);
+      setQuestionSelected([]);
+    }
+    // setPartE4OptionSelect([]);
+    for(let questionNumber=1;questionNumber<=3;questionNumber++){
+      let setQuestionSelected=eval(`setLooseMotion${questionNumber}`);
+      setQuestionSelected([]);
+    }
+    // setPartE5OptionSelect([]);
+     setHepatitis1([]);
     setAnimalBitten([]);
     setSnakeBitten([]);
-    setPartE8OptionSelect([]);
-    setDoYouHaveFever("");
-    setConjuctivitis("");
-    setLooseMotion("");
-    setLeprosy("");
+    // setPartE8OptionSelect([]);
+    for(let questionNumber=1;questionNumber<=5;questionNumber++){
+      let setQuestionSelected=eval(`setLeprosy${questionNumber}`);
+      setQuestionSelected([]);
+    }
+    // setDoYouHaveFever("");
+    // setConjuctivitis("");
+    // setLooseMotion("");
+    // setLeprosy("");
   };
 
   const handleSubmitAndNext = () => {
@@ -1395,88 +1428,88 @@ function FamilyHead(props) {
     setPartialSubmit(e.target.checked);
   };
 
-  const partB1Options = [
-    "Shortness_of_breath_difficulty_breathing",
-    "Coughing_more_than__weeks",
-    "Blood_in_sputum",
-    "Fever_for_more_than__weeks",
-    "Weight_loss",
-    "Night_sweats",
-    "Are_you_currently_taking_medicines_to_treat_TB",
-    "Is_any_family_member_currently_suffering_from_TB_disease",
-    "A_history_of_TB_disease",
-    "Frequent_bruising_of_hands_and_soles_of_feet",
-    "Frequent_tingling_in_palms_of_hands_and_feet",
-    "Blurred_and_blurred_vision",
-    "Difficulty_in_reading",
-    "Relapse_of_eye_pain_for_more_than_a_week",
-    "Eye_redness_for_more_than_a_week",
-    "You_have_trouble_hearing",
-    "History_of_Feetka",
-    "Difficulty_opening_the_mouth",
-    "Nonhealing_of_mouth_sores_for_more_than_two_weeks",
-    "Nonhealing_growth_in_mouth_for_more_than_two_weeks",
-    "Nonhealing_white_or_red_sores_in_the_mouth_for_more_than_two_weeks",
-    "Pain_while_chewing",
-    "Change_in_voice",
-    "Lightcolored_patches_or_spots_in_the_mouth_with_no_sensation",
-    "Thickening_of_the_skin_in_any_part_of_the_body",
-    "Lumps_on_any_part_of_the_body",
-    "Frequent_numbness_of_the_palms_of_the_hands_and_feet",
-    "Crooked_fingers_and_toes",
-    "Tingling_and_numbness_in_hands_and_feet",
-    "Incomplete_closure_of_the_eyelids",
-    "Difficulty_grasping_objects_properly_in_the_hands",
-    "Difficulty_walking_due_to_weakness_in_legs",
-  ];
+  // const partB1Options = [
+  //   "Shortness_of_breath_difficulty_breathing",
+  //   "Coughing_more_than__weeks",
+  //   "Blood_in_sputum",
+  //   "Fever_for_more_than__weeks",
+  //   "Weight_loss",
+  //   "Night_sweats",
+  //   "Are_you_currently_taking_medicines_to_treat_TB",
+  //   "Is_any_family_member_currently_suffering_from_TB_disease",
+  //   "A_history_of_TB_disease",
+  //   "Frequent_bruising_of_hands_and_soles_of_feet",
+  //   "Frequent_tingling_in_palms_of_hands_and_feet",
+  //   "Blurred_and_blurred_vision",
+  //   "Difficulty_in_reading",
+  //   "Relapse_of_eye_pain_for_more_than_a_week",
+  //   "Eye_redness_for_more_than_a_week",
+  //   "You_have_trouble_hearing",
+  //   "History_of_Feetka",
+  //   "Difficulty_opening_the_mouth",
+  //   "Nonhealing_of_mouth_sores_for_more_than_two_weeks",
+  //   "Nonhealing_growth_in_mouth_for_more_than_two_weeks",
+  //   "Nonhealing_white_or_red_sores_in_the_mouth_for_more_than_two_weeks",
+  //   "Pain_while_chewing",
+  //   "Change_in_voice",
+  //   "Lightcolored_patches_or_spots_in_the_mouth_with_no_sensation",
+  //   "Thickening_of_the_skin_in_any_part_of_the_body",
+  //   "Lumps_on_any_part_of_the_body",
+  //   "Frequent_numbness_of_the_palms_of_the_hands_and_feet",
+  //   "Crooked_fingers_and_toes",
+  //   "Tingling_and_numbness_in_hands_and_feet",
+  //   "Incomplete_closure_of_the_eyelids",
+  //   "Difficulty_grasping_objects_properly_in_the_hands",
+  //   "Difficulty_walking_due_to_weakness_in_legs",
+  // ];
 
-  const [partB1OptionsSelected, setPartB1OptionsSelected] = useState([]);
-  const handlePartB1select = (option) => {
-    if (partB1OptionsSelected.includes(option)) {
-      setPartB1OptionsSelected(
-        partB1OptionsSelected.filter((item) => item !== option)
-      );
-    } else {
-      setPartB1OptionsSelected([...partB1OptionsSelected, option]);
-    }
-  };
+  // const [partB1OptionsSelected, setPartB1OptionsSelected] = useState([]);
+  // const handlePartB1select = (option) => {
+  //   if (partB1OptionsSelected.includes(option)) {
+  //     setPartB1OptionsSelected(
+  //       partB1OptionsSelected.filter((item) => item !== option)
+  //     );
+  //   } else {
+  //     setPartB1OptionsSelected([...partB1OptionsSelected, option]);
+  //   }
+  // };
 
-  const partB2Options = [
-    "Lump_in_the_breast",
-    "Blood_stained_discharge_from_the_nipple",
-    "Change_in_shape_and_size_of_breast",
-    "Bleeding_between_periods",
-    "Bleeding_after_menopause",
-    "Bleeding_after_intercourse",
-    "Foul_smelling_vaginal_discharge",
-  ];
-  const [partB2OptionSelected, setPartB2OptionSelected] = useState([]);
-  const handlePartB2Select = (option) => {
-    if (partB2OptionSelected.includes(option)) {
-      setPartB2OptionSelected(
-        partB2OptionSelected.filter((item) => item !== option)
-      );
-    } else {
-      setPartB2OptionSelected([...partB2OptionSelected, option]);
-    }
-  };
+  // const partB2Options = [
+  //   "Lump_in_the_breast",
+  //   "Blood_stained_discharge_from_the_nipple",
+  //   "Change_in_shape_and_size_of_breast",
+  //   "Bleeding_between_periods",
+  //   "Bleeding_after_menopause",
+  //   "Bleeding_after_intercourse",
+  //   "Foul_smelling_vaginal_discharge",
+  // ];
+  // const [partB2OptionSelected, setPartB2OptionSelected] = useState([]);
+  // const handlePartB2Select = (option) => {
+  //   if (partB2OptionSelected.includes(option)) {
+  //     setPartB2OptionSelected(
+  //       partB2OptionSelected.filter((item) => item !== option)
+  //     );
+  //   } else {
+  //     setPartB2OptionSelected([...partB2OptionSelected, option]);
+  //   }
+  // };
 
-  const partB3Options = [
-    "Do_you_feel_unsteady_while_standing_or_walking",
-    "Impairment_of_movement_if_suffering_from_physical_disability",
-    "Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet",
-    "Forgetting_your_home_address_or_household_names",
-  ];
-  const [partB3OptionsSelected, setPartB3OptionsSelected] = useState([]);
-  const handlePartB3Select = (option) => {
-    if (partB3OptionsSelected.includes(option)) {
-      setPartB3OptionsSelected(
-        partB3OptionsSelected.filter((item) => item !== option)
-      );
-    } else {
-      setPartB3OptionsSelected([...partB3OptionsSelected, option]);
-    }
-  };
+  // const partB3Options = [
+  //   "Do_you_feel_unsteady_while_standing_or_walking",
+  //   "Impairment_of_movement_if_suffering_from_physical_disability",
+  //   "Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet",
+  //   "Forgetting_your_home_address_or_household_names",
+  // ];
+  // const [partB3OptionsSelected, setPartB3OptionsSelected] = useState([]);
+  // const handlePartB3Select = (option) => {
+  //   if (partB3OptionsSelected.includes(option)) {
+  //     setPartB3OptionsSelected(
+  //       partB3OptionsSelected.filter((item) => item !== option)
+  //     );
+  //   } else {
+  //     setPartB3OptionsSelected([...partB3OptionsSelected, option]);
+  //   }
+  // };
 
   const partC1Options = [
     "Firewood",
@@ -3475,7 +3508,7 @@ function FamilyHead(props) {
             <Tabs.TabPane tab="5) Part E / भाग ई" key="5">
               <QuestionRow>
                 <QuestionCol>
-                  1. तुम्हाला ताप आहे का? / Do you have fever?
+                  1.  ताप ? / Fever?
                 </QuestionCol>
               </QuestionRow>
               {/* {partE1Options.map((item, index) => (
@@ -3678,7 +3711,7 @@ function FamilyHead(props) {
 
               <QuestionRow>
                 <QuestionCol>
-                  3. तुम्हाला लेप्टोस्पायरोसिस आहे का? Do you have
+                  3. लेप्टोस्पायरोसिस ?
                   leptospirosis? ?
                 </QuestionCol>
               </QuestionRow>
@@ -3742,7 +3775,7 @@ function FamilyHead(props) {
 
               <QuestionRow>
                 <QuestionCol>
-                  4. तुम्हाला जुलाब, हगवण, संडास आहे का ? Do you have loose
+                  4.  जुलाब ?  loose
                   motion ?
                 </QuestionCol>
               </QuestionRow>
@@ -3818,7 +3851,7 @@ function FamilyHead(props) {
 
               <QuestionRow>
                 <QuestionCol>
-                  5. तुम्हाला लिव्हरला सूज / कावीळ आहे का ? Do you have
+                  5.  लिव्हरला सूज / कावीळ ? 
                   Hepatitis / Jaundice ?
                 </QuestionCol>
               </QuestionRow>
@@ -3891,7 +3924,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  8. तुम्हाला कुष्ठरोग आहे का ? do you have Leprosy ?
+                  8.  कुष्ठरोग  ?  Leprosy ?
                 </QuestionCol>
               </QuestionRow>
               {/* 
