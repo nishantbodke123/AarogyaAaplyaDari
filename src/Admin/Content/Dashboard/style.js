@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const DashboardCard = styled.div`
-  width: 250px;
+  width: 20vw;
   height: 100px;
   border-radius: 10px;
   background-color: #427d9d;
@@ -9,7 +9,7 @@ export const DashboardCard = styled.div`
 
 export const DashboardCardDiv = styled.div`
   height: 40vh;
-  width: 78vw;
+  width: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;

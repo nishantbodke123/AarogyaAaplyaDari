@@ -14,6 +14,10 @@ import MemberUpdate from "./Components/Registration/MemberUpdate";
 import MemberAdd from "./Components/Registration/MemberAdd";
 import Phlebo from "./Components/Phlebotomist/Phlebo";
 import Admin from "./Admin/Admin/Admin";
+import AdminDashboard from "./Admin/Content/Dashboard";
+import Healthworker from "./Admin/Content/Healthworker";
+import CHV from "./Admin/Content/CHV";
+import MO from "./Admin/Content/MO";
 
 function App() {
   let Token = sessionStorage.getItem("Token");
@@ -104,7 +108,40 @@ function App() {
                 <Admin />
               </AdminProtected>
             }
-          ></Route>
+          >
+            <Route
+              path="/admin/adminDashboard"
+              element={
+                <AdminProtected>
+                  <AdminDashboard />
+                </AdminProtected>
+              }
+            ></Route>
+            <Route
+              path="/admin/healthWorker"
+              element={
+                <AdminProtected>
+                  <Healthworker />
+                </AdminProtected>
+              }
+            ></Route>
+            <Route
+              path="/admin/chv"
+              element={
+                <AdminProtected>
+                  <CHV />
+                </AdminProtected>
+              }
+            ></Route>
+            <Route
+              path="/admin/mo"
+              element={
+                <AdminProtected>
+                  <MO />
+                </AdminProtected>
+              }
+            ></Route>
+          </Route>
 
           <Route path="/*" element={<Error />}></Route>
         </Routes>

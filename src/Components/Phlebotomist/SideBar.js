@@ -2,21 +2,13 @@ import Sider from "antd/es/layout/Sider";
 import React from "react";
 import {
   HeaderLogo,
-  LogOutIcon,
-  LogoutDiv,
-  LogoutOption,
-  SubMenu,
-  UserIcon,
-  UserSelect,
+ 
 } from "./style";
 import { Menu } from "antd";
 
 import { Link } from "react-router-dom";
 
-// const items = [
-//   getItem("Citizen Details", "citizendetails", <UserOutlined />),
-//   getItem("CBAC Details", "cbacdetails", <FormOutlined />),
-// ];
+
 const Items = [{ key: "1", title: "Citizen Details", link: "/phlebo" }];
 function SideBar() {
   return (

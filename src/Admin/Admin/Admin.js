@@ -1,41 +1,43 @@
-import { Button, Layout, Menu, theme } from "antd";
-import React, { useState } from "react";
-import { UserOutlined, HomeOutlined } from "@ant-design/icons";
-import { Content, Header } from "antd/es/layout/layout";
+import React, { useState, useEffect } from "react";
+import { Layout } from "antd";
 import Sidebar from "../Sider";
 import HeaderBar from "../Header";
-import ContentArea from "../Content";
+import AdminDashboard from "../Content/Dashboard";
+import Healthworker from "../Content/Healthworker";
+import CHV from "../Content/CHV";
+import MO from "../Content/MO";
+import { useLocation } from "react-router-dom";
+
+const { Content } = Layout;
 
 function Admin() {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+
   const handleCollapse = () => {
     setCollapsed(!collapsed);
   };
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-  const Menus = [
-    {
-      key: "1",
-      icon: <HomeOutlined />,
-      label: "Dashboard",
-    },
-    {
-      key: "2",
-      icon: <UserOutlined />,
-      label: "User Management",
-    },
-  ];
+
+
+
   return (
     <>
       <Layout>
         <Sidebar collapsed={collapsed} />
         <Layout>
           <HeaderBar handleCollapse={handleCollapse} />
-          <ContentArea />
+          <Content>
+            {location.pathname === "/admin/adminDashboard" && (
+              <AdminDashboard />
+            )}
+            {location.pathname === "/admin/healthWorker" && <Healthworker />}
+            {location.pathname === "/admin/chv" && <CHV />}
+            {location.pathname === "/admin/mo" && <MO />}
+          </Content>
         </Layout>
       </Layout>
     </>
   );
 }
+
 export default Admin;

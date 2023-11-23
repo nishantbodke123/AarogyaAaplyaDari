@@ -44,7 +44,11 @@ function HeaderBar(props) {
               icon={faUser}
               style={{ marginRight: "10px", fontSize: "20px" }}
             ></FontAwesomeIcon>
-            <Select value={sessionStorage.getItem("name")} style={{width:"250px"}} onChange={()=>LogOut()}>
+            <Select
+              value={sessionStorage.getItem("name")}
+              style={{ width: "250px" }}
+              onChange={() => LogOut()}
+            >
               <Option>
                 <FontAwesomeIcon icon={faRightFromBracket} />
                 Log Out

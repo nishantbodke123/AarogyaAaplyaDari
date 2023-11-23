@@ -1,9 +1,10 @@
 .adminMenu .ant-menu {
   font-weight: 600;
-  margin-top: 25%;
+  margin-top: 5%;
   background-color: #222c38;
   color: aliceblue;
 }
+
 .adminMenu .ant-menu > .ant-menu-item {
   margin-top: 10%;
 }

@@ -3,11 +3,11 @@
   color: black;
   background-color: #ffe5ad;
 }
- .ant-menu > .ant-menu-item:hover {
+.ant-menu > .ant-menu-item:hover {
   color: white;
   background-color: #ff8551 !important;
 }
- .ant-menu > .ant-menu-item-selected {
+.ant-menu > .ant-menu-item-selected {
   background-color: #ff8551 !important;
   color: white !important;
   border-bottom: 6px solid white;
