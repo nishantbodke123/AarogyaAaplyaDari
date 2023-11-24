@@ -11,6 +11,7 @@ import {
   message,
 } from "antd";
 import { Content } from "antd/es/layout/layout";
+import { EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
@@ -24,6 +25,7 @@ import {
   DeleteButton,
   EditButton,
   InputBox,
+  PasswordUpdateButton,
   SearchButton,
   SubmitButton,
 } from "./style";
@@ -60,7 +62,11 @@ function Healthworker() {
   const [loader, setLoader] = useState(false);
   const [addHealthWorkerModal, setAddHealthWorkerModal] = useState(false);
   const [searchValue, setSearchValue] = useState();
+  const [changePasswordModal, setChangePasswordModal] = useState(false);
+  const [MOid, setMOid] = useState();
 
+  //change password state
+  const [newPassword, setNewPassword] = useState();
 
   //Add User State
   const [name, setName] = useState();
@@ -182,14 +188,14 @@ function Healthworker() {
     setSection();
     setAddHealthWorkerModal(false);
   };
+  let axiosConfig = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    },
+  };
 
   const handleAddUser = () => {
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Token ${sessionStorage.getItem("Token")}`,
-      },
-    };
     let formData = new FormData();
     formData.append("name", name);
     formData.append("username", userName);
@@ -215,17 +221,55 @@ function Healthworker() {
         });
     }
   };
-  const deleteUser = (id) => {
+
+  const deleteUser = (data) => {
+    Modal.confirm({
+      title: `Do you want to Remove user ${data.name}`,
+      okText: "Confirm",
+      cancelText: "Cancel",
+      onOk: () => {
+        axios
+          .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${data.id}`, {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem("Token")}`,
+            },
+          })
+          .then((res) => {
+            console.log(res);
+            message.success(res.data.message);
+            setRefresh(refresh + 1);
+          })
+          .catch((err) => {
+            console.log(err);
+            message.warning(err.response.data.message);
+          });
+      },
+    });
+  };
+  const handleChangePasswordModalView = (id) => {
+    setMOid(id);
+    setChangePasswordModal(true);
+  };
+  const handleChangePasswordModalClose = () => {
+    setNewPassword();
+    setMOid();
+    setChangePasswordModal(false);
+  };
+  const handlePasswordUpdate = () => {
+    console.log(newPassword, MOid);
     axios
-      .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${id}`, {
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+      .patch(
+        `${BASE_URL}/adminportal/api/AdminChangePasswordView/${MOid}`,
+        {
+          newpassword: newPassword,
         },
-      })
+        axiosConfig
+      )
       .then((res) => {
         console.log(res);
         message.success(res.data.message);
         setRefresh(refresh + 1);
+        handleChangePasswordModalClose();
       })
       .catch((err) => {
         console.log(err);
@@ -281,9 +325,20 @@ function Healthworker() {
       title: "Delete",
       render: (data) => {
         return (
-          <DeleteButton onClick={() => deleteUser(data.id)}>
-            Delete
-          </DeleteButton>
+          <DeleteButton onClick={() => deleteUser(data)}>Delete</DeleteButton>
+        );
+      },
+    },
+    {
+      title: "Password",
+      render: (data) => {
+        return (
+          <Button
+            style={{ border: "none" }}
+            onClick={() => handleChangePasswordModalView(data.id)}
+          >
+            <EditOutlined />
+          </Button>
         );
       },
     },
@@ -482,6 +537,28 @@ function Healthworker() {
                   </Select>
                 </FormItem>
               </Row>
+            </Form>
+          </Modal>
+          <Modal
+            open={changePasswordModal}
+            onCancel={handleChangePasswordModalClose}
+            footer={
+              <>
+                <Button onClick={handleChangePasswordModalClose}>Cancel</Button>
+                <PasswordUpdateButton onClick={handlePasswordUpdate}>
+                  Update
+                </PasswordUpdateButton>
+              </>
+            }
+          >
+            <Form layout="vertical">
+              <FormItem label="New Password">
+                <Input.Password
+                  style={{ width: "350px" }}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                ></Input.Password>
+              </FormItem>
             </Form>
           </Modal>
         </Content>

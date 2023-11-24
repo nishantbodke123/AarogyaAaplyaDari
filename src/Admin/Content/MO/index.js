@@ -18,12 +18,14 @@ import { BASE_URL } from "../../../Utils/BaseURL";
 import { useState } from "react";
 import { LogOut } from "../../../Auth/Logout";
 import moment from "moment/moment";
+import { EditOutlined } from "@ant-design/icons";
 import {
   AddButton,
   CancelButton,
   DeleteButton,
   EditButton,
   InputBox,
+  PasswordUpdateButton,
   SearchButton,
   SubmitButton,
 } from "./style";
@@ -52,12 +54,13 @@ function MO() {
       });
   }, [refresh]);
   //generic State
-  const [areaList, setAreaList] = useState([]);
+  const [wardList, setWardList] = useState([]);
   const [MOData, setMOData] = useState([]);
   const [List, setHealthPostNameList] = useState([]);
   const [dispensaryList, setDispensaryList] = useState([]);
   const [loader, setLoader] = useState(false);
   const [addMOModal, setAddMOModal] = useState(false);
+  const [changePasswordModal, setChangePasswordModal] = useState(false);
   const [searchValue, setSearchValue] = useState();
 
   //Add User State
@@ -68,6 +71,10 @@ function MO() {
   const [phoneNumber, setPhoneNumber] = useState();
   const [email, setEmail] = useState();
   const [dispensary, setDispensary] = useState();
+  const [MOid, setMOid] = useState();
+
+  //change password state
+  const [newPassword, setNewPassword] = useState();
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -120,7 +127,7 @@ function MO() {
       })
       .then((res) => {
         console.log(res.data);
-        setAreaList(res.data);
+        setWardList(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -134,12 +141,9 @@ function MO() {
   };
   const handleWardSelect = (id) => {
     axios
-      .get(`${BASE_URL}/allauth/api/GetDispensaryListAPI`, {
+      .get(`${BASE_URL}/allauth/api/GetDispensaryListAPI/${id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-        params: {
-          search: id,
         },
       })
       .then((res) => {
@@ -150,25 +154,6 @@ function MO() {
         console.log(err);
       });
   };
-  // const handleHealthPostSelect = (id) => {
-  //   console.log(id);
-  //   axios
-  //     .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, {
-  //       headers: {
-  //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
-  //       },
-  //       params: {
-  //         search: id,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       setSectionList(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
 
   const handleMOModalClose = () => {
     setName();
@@ -180,14 +165,14 @@ function MO() {
     setDispensary();
     setAddMOModal(false);
   };
+  let axiosConfig = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    },
+  };
 
   const handleAddUser = () => {
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Token ${sessionStorage.getItem("Token")}`,
-      },
-    };
     let formData = new FormData();
     formData.append("name", name);
     formData.append("username", userName);
@@ -213,17 +198,54 @@ function MO() {
         });
     }
   };
-  const deleteUser = (id) => {
+  const deleteUser = (data) => {
+    Modal.confirm({
+      title: `Do you want to Remove user ${data.name}`,
+      okText: "Confirm",
+      onOk: () => {
+        axios
+          .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${data.id}`, {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem("Token")}`,
+            },
+          })
+          .then((res) => {
+            console.log(res);
+            message.success(res.data.message);
+            setRefresh(refresh + 1);
+          })
+          .catch((err) => {
+            console.log(err);
+            message.warning(err.response.data.message);
+          });
+      },
+    });
+  };
+
+  const handleChangePasswordModalView = (id) => {
+    setMOid(id);
+    setChangePasswordModal(true);
+  };
+  const handleChangePasswordModalClose = () => {
+    setNewPassword();
+    setMOid();
+    setChangePasswordModal(false);
+  };
+  const handlePasswordUpdate = () => {
+    console.log(newPassword, MOid);
     axios
-      .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${id}`, {
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+      .patch(
+        `${BASE_URL}/adminportal/api/AdminChangePasswordView/${MOid}`,
+        {
+          newpassword: newPassword,
         },
-      })
+        axiosConfig
+      )
       .then((res) => {
         console.log(res);
         message.success(res.data.message);
         setRefresh(refresh + 1);
+        handleChangePasswordModalClose();
       })
       .catch((err) => {
         console.log(err);
@@ -251,10 +273,6 @@ function MO() {
       dataIndex: "phoneNumber",
     },
     {
-      title: "Section",
-      dataIndex: "section",
-    },
-    {
       title: "Ward",
       dataIndex: "ward",
     },
@@ -275,9 +293,20 @@ function MO() {
       title: "Delete",
       render: (data) => {
         return (
-          <DeleteButton onClick={() => deleteUser(data.id)}>
-            Delete
-          </DeleteButton>
+          <DeleteButton onClick={() => deleteUser(data)}>Delete</DeleteButton>
+        );
+      },
+    },
+    {
+      title: "Password",
+      render: (data) => {
+        return (
+          <Button
+            style={{ border: "none" }}
+            onClick={() => handleChangePasswordModalView(data.id)}
+          >
+            <EditOutlined />
+          </Button>
         );
       },
     },
@@ -420,7 +449,7 @@ function MO() {
                       }
                       onChange={(e) => handleWardSelect(e)}
                     >
-                      {areaList.map((data) => (
+                      {wardList.map((data) => (
                         <Option key={data.id} value={data.id}>
                           {data.wardName}
                         </Option>
@@ -450,28 +479,29 @@ function MO() {
                     </Select>
                   </FormItem>
                 </Col>
-                {/* <FormItem label="Section">
-                  <Select
-                    showSearch
-                    style={{ width: "350px" }}
-                    value={section}
-                    filterOption={(inputValue, option) =>
-                      option.children
-                        ? option.children
-                            .toLowerCase()
-                            .includes(inputValue.toLowerCase())
-                        : false
-                    }
-                    onChange={(e) => setSection(e)}
-                  >
-                    {sectionList.map((data) => (
-                      <Option key={data.id} value={data.id}>
-                        {data.sectionName}
-                      </Option>
-                    ))}
-                  </Select>
-                </FormItem> */}
               </Row>
+            </Form>
+          </Modal>
+          <Modal
+            open={changePasswordModal}
+            onCancel={handleChangePasswordModalClose}
+            footer={
+              <>
+                <Button onClick={handleChangePasswordModalClose}>Cancel</Button>
+                <PasswordUpdateButton onClick={handlePasswordUpdate}>
+                  Update
+                </PasswordUpdateButton>
+              </>
+            }
+          >
+            <Form layout="vertical">
+              <FormItem label="New Password">
+                <Input.Password
+                  style={{ width: "350px" }}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                ></Input.Password>
+              </FormItem>
             </Form>
           </Modal>
         </Content>

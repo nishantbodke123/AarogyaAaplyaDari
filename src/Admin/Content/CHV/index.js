@@ -24,13 +24,16 @@ import {
   DeleteButton,
   EditButton,
   InputBox,
+  PasswordUpdateButton,
   SearchButton,
   SubmitButton,
 } from "./style";
 import FormItem from "antd/es/form/FormItem";
 import { Option } from "antd/es/mentions";
+import { EditOutlined } from "@ant-design/icons";
 
 function CHV() {
+  const [refresh, setRefresh] = useState(1);
   useEffect(() => {
     setLoader(true);
     axios
@@ -49,7 +52,7 @@ function CHV() {
           }, 1000);
         }
       });
-  }, []);
+  }, [refresh]);
 
   //generic State
   const [areaList, setAreaList] = useState([]);
@@ -58,8 +61,12 @@ function CHV() {
   const [sectionList, setSectionList] = useState([]);
   const [loader, setLoader] = useState(false);
   const [addCHVModal, setAddCHVModal] = useState(false);
+  const [changePasswordModal, setChangePasswordModal] = useState(false);
   const [searchValue, setSearchValue] = useState();
-  const [searchedCHVData, setSearchedCHVData] = useState([]);
+  const [MOid, setMOid] = useState();
+
+  // password update modal
+  const [newPassword, setNewPassword] = useState();
 
   //Add User State
   const [name, setName] = useState();
@@ -91,7 +98,7 @@ function CHV() {
   const handleSearch = () => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/healthworker`, {
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA`, {
         params: {
           search: searchValue,
         },
@@ -181,14 +188,13 @@ function CHV() {
     setSection();
     setAddCHVModal(false);
   };
-
+  let axiosConfig = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    },
+  };
   const handleAddUser = () => {
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Token ${sessionStorage.getItem("Token")}`,
-      },
-    };
     let formData = new FormData();
     formData.append("name", name);
     formData.append("username", userName);
@@ -205,6 +211,7 @@ function CHV() {
         .then((res) => {
           console.log(res.data.message);
           message.success(res.data.message);
+          setRefresh(refresh + 1);
           handleCHVModalClose();
         })
         .catch((err) => {
@@ -213,7 +220,58 @@ function CHV() {
         });
     }
   };
-
+  const deleteUser = (data) => {
+    Modal.confirm({
+      title: `Do you want to Remove user ${data.name}`,
+      okText: "Confirm",
+      onOk: () => {
+        axios
+          .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${data.id}`, {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem("Token")}`,
+            },
+          })
+          .then((res) => {
+            console.log(res);
+            message.success(res.data.message);
+            setRefresh(refresh + 1);
+          })
+          .catch((err) => {
+            console.log(err);
+            message.warning(err.response.data.message);
+          });
+      },
+    });
+  };
+  const handleChangePasswordModalView = (id) => {
+    setMOid(id);
+    setChangePasswordModal(true);
+  };
+  const handleChangePasswordModalClose = () => {
+    setNewPassword();
+    setMOid();
+    setChangePasswordModal(false);
+  };
+  const handlePasswordUpdate = () => {
+    console.log(newPassword, MOid);
+    axios
+      .patch(
+        `${BASE_URL}/adminportal/api/AdminChangePasswordView/${MOid}`,
+        {
+          newpassword: newPassword,
+        },
+        axiosConfig
+      )
+      .then((res) => {
+        console.log(res);
+        message.success(res.data.message);
+        handleChangePasswordModalClose();
+      })
+      .catch((err) => {
+        console.log(err);
+        message.warning(err.response.data.message);
+      });
+  };
   const column = [
     {
       title: "Name",
@@ -256,8 +314,23 @@ function CHV() {
     },
     {
       title: "Delete",
-      render: () => {
-        return <DeleteButton>Delete</DeleteButton>;
+      render: (data) => {
+        return (
+          <DeleteButton onClick={() => deleteUser(data)}>Delete</DeleteButton>
+        );
+      },
+    },
+    {
+      title: "Password",
+      render: (data) => {
+        return (
+          <Button
+            style={{ border: "none" }}
+            onClick={() => handleChangePasswordModalView(data.id)}
+          >
+            <EditOutlined />
+          </Button>
+        );
       },
     },
   ];
@@ -453,6 +526,28 @@ function CHV() {
                   </Select>
                 </FormItem>
               </Row>
+            </Form>
+          </Modal>
+          <Modal
+            open={changePasswordModal}
+            onCancel={handleChangePasswordModalClose}
+            footer={
+              <>
+                <Button onClick={handleChangePasswordModalClose}>Cancel</Button>
+                <PasswordUpdateButton onClick={handlePasswordUpdate}>
+                  Update
+                </PasswordUpdateButton>
+              </>
+            }
+          >
+            <Form layout="vertical">
+              <FormItem label="New Password">
+                <Input.Password
+                  style={{ width: "350px" }}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                ></Input.Password>
+              </FormItem>
             </Form>
           </Modal>
         </Content>
