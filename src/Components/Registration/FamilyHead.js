@@ -77,6 +77,7 @@ function FamilyHead(props) {
   const { state } = useLocation();
   // state for progress bar
   const [progress, setProgress] = useState(0);
+  const [CBACRequired ,setCBACRequired] = useState(false);
 
   //1 st public key
   var encrypt = new JSEncrypt();
@@ -155,11 +156,29 @@ function FamilyHead(props) {
           message.warning(error.response.status);
         }
       });
-  }, []);
+
+    axios
+      .get(
+        `${BASE_URL}/allauth/api/GetCHV_ASHA_list/${sessionStorage.getItem(
+          "section_id"
+        )}`
+      )
+      .then((res) => {
+        console.log(res.data.data);
+        setCHVList(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [CBACRequired]);
 
   const handleSectionSelect = (value) => {
     console.log(value);
     setSection(value);
+  };
+  const handleCHVSelect = (value) => {
+    console.log(value);
+    setSelectedCHV(value);
   };
 
   const [loading, setLoading] = useState(false);
@@ -168,6 +187,8 @@ function FamilyHead(props) {
   const [wardList, setWardList] = useState([]);
   const [healthPostAreas, setHealthPostAreasList] = useState([]);
   const [section, setSection] = useState("");
+  const [CHVList, setCHVList] = useState([]);
+  const [selectedCHV, setSelectedCHV] = useState("");
 
   //  modal of area selection
   const handleShowModalClose = () => {
@@ -175,8 +196,10 @@ function FamilyHead(props) {
   };
 
   const handleWardSelectionModal = () => {
-    if (section == "") {
+    if (selectedCHV == "") {
       message.warning("Please select area");
+    } else if(section == ""){
+      message.warning("Please Select CHV")
     } else {
       handleShowModalClose();
     }
@@ -219,7 +242,9 @@ function FamilyHead(props) {
         Authorization: `Token ${sessionStorage.getItem("Token")}`,
       },
     };
-    if (section == "") {
+    if(selectedCHV == ""){
+       message.warning("Please Select CHV")
+    }else if (section == "") {
       message.warning("Please Select Area");
     } else if (familyHeadName == "") {
       message.warning("Please Enter First Name");
@@ -803,6 +828,7 @@ function FamilyHead(props) {
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
   const [cbacScore, setCbacScore] = useState("");
+
   const [demandLetter, setDemandLetter] = useState("");
 
   const handleNameChange = (e) => {
@@ -901,6 +927,9 @@ function FamilyHead(props) {
   //     </Form>
   //   </>
   // );
+  const handleCBACRequired=()=>{
+    setCBACRequired(!CBACRequired);
+  }
 
   const handlePulseChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
@@ -1412,6 +1441,7 @@ function FamilyHead(props) {
       plotNo: plotNumber,
       address: addressLine1,
       pincode: pincode,
+      ASHA_CHV: selectedCHV,
       totalFamilyMembers: totalFamilyMembers,
       partialSubmit: partialSubmit,
       familyMembers_details: familyMembersArray,
@@ -1660,6 +1690,7 @@ function FamilyHead(props) {
     mobileNo: phone,
     aadharAndAbhaConsent: "true",
     aadharCard: aadharCard,
+    ASHA_CHV: selectedCHV,
     abhaId: abhaId,
     pulse: pulse,
     bloodPressure: bloodPressure,
@@ -2332,6 +2363,26 @@ function FamilyHead(props) {
             <ModalFormItem label="Health Post / आरोग्य पोस्ट ">
               <Input value={sessionStorage.getItem("healthPostName")}></Input>
             </ModalFormItem>
+            <ModalFormItem label="Select CHV/ASHA Worker" required>
+              <Select
+              value={selectedCHV}
+                showSearch
+                filterOption={(inputValue, option) =>
+                  option.children
+                    ? option.children
+                        .toLowerCase()
+                        .includes(inputValue.toLowerCase())
+                    : false
+                }
+                onChange={(value) => handleCHVSelect(value)}
+              >
+                {CHVList.map((data) => (
+                  <Option key={data.id} value={data.id}>
+                    {data.name}
+                  </Option>
+                ))}
+              </Select>
+            </ModalFormItem>
             <ModalFormItem label="Select Area/ क्षेत्र निवडा" required>
               <Select
                 value={section}
@@ -2469,7 +2520,7 @@ function FamilyHead(props) {
                 </Tooltip>
               </Column> */}
             </Row>
-
+            
             <Row>
               <Column>
                 <FormItem label="Pulse / नाडी">
@@ -2519,10 +2570,14 @@ function FamilyHead(props) {
                 </FormItem>
               </Column>
             </Row>
+            <Row style={{display:"flex" ,justifyContent:"start" ,margin:"0.5% 2%"}}>
+              {/* <h3>Hello</h3> */}
+            <Checkbox  value={CBACRequired} onChange={handleCBACRequired}><h4>If You want to fill CBAC Form, tick the box</h4></Checkbox>
+          </Row>
           </FormContainer>
         </Container>
 
-        {age <= 30 ? (
+        {age <= 30 && !CBACRequired  ? (
           <>
             {" "}
             <div
@@ -2539,7 +2594,8 @@ function FamilyHead(props) {
         ) : (
           <></>
         )}
-        {age <= 30 ? (
+       
+        {age <= 30 && !CBACRequired ? (
           <SubmitButtonDiv>
             <SubmitButton onClick={handleFormSubmit}>
               {noOfMembersCompleted == totalFamilyMembers || partialSubmit

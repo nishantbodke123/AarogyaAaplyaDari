@@ -35,7 +35,7 @@ function Sidebar(props) {
       null,
       [
         getItem(
-          "Health Worker",
+          "ANM",
           "/admin/healthWorker",
           null,
           "/admin/healthWorker"

@@ -138,7 +138,7 @@ function MemberAdd(props) {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
-  const [cbacScore, setCbacScore] = useState("");
+  const [CBACRequired ,setCBACRequired] = useState(false);
   const [demandLetter, setDemandLetter] = useState("");
 
   const handleNameChange = (e) => {
@@ -165,6 +165,9 @@ function MemberAdd(props) {
       setPhone(e.target.value);
     }
   };
+  const handleCBACRequired=()=>{
+    setCBACRequired(!CBACRequired);
+  }
   // const handleAbhaIDChange = (e) => {
   //   const regex = /^[0-9a-zA-z]{1,12}$/;
   //   if (e.target.value === "" || regex.test(e.target.value)) {
@@ -718,6 +721,7 @@ function MemberAdd(props) {
     familyHead: state,
     aadharAndAbhaConsent: "true",
     aadharCard: aadharCard,
+    cbacRequired: age<=60 && "true",
     abhaId: abhaId,
     pulse: pulse,
     bloodPressure: bloodPressure,
@@ -757,30 +761,6 @@ function MemberAdd(props) {
         },
       ],
       part_b: [
-        // {
-        //   qkey: "B_Women_and_Men",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partB1Options,
-        //   translate: [],
-        //   selectedOptions: partB1OptionsSelected,
-        // },
-        // {
-        //   qkey: "B_Women_only",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partB2Options,
-        //   translate: [],
-        //   selectedOptions: partB2OptionSelected,
-        // },
-        // {
-        //   qkey: "BFor_Senior_Citizens__years_and_above",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partB3Options,
-        //   translate: [],
-        //   selectedOptions: partB3OptionsSelected,
-        // },
         {
           question: "Shortness_of_breath_difficulty_breathing",
           answer: question1B1,
@@ -959,33 +939,6 @@ function MemberAdd(props) {
         },
       ],
       part_c: [
-        // {
-        //   qkey: "Type_of_Fuel_used_for_cooking",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partC1Options,
-        //   translate: [
-        //     "Firewood",
-        //     "Crop_Residue",
-        //     "Cow_dung_cake",
-        //     "Coal",
-        //     "Kerosene",
-        //     "LPG",
-        //   ],
-        //   selectedOptions: partC1OptionSelect,
-        // },
-        // {
-        //   qkey: "Occupational_exposure",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partC2Options,
-        //   translate: [
-        //     "Crop_residue_burning",
-        //     "burning_of_garbage_leaves",
-        //     "working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc",
-        //   ],
-        //   selectedOptions: partC2OptionSelect,
-        // },
         {
           question: "Type_of_Fuel_used_for_cooking",
           answer: partC1OptionSelect,
@@ -996,42 +949,6 @@ function MemberAdd(props) {
         },
       ],
       part_d: [
-        // {
-        //   qkey: "Little_interest_of_pleasure_in_doing_things",
-        //   type: "CO",
-        //   score: "",
-        //   options: [
-        //     "Not at all",
-        //     "Several days",
-        //     "More than half days",
-        //     "Nearly every days",
-        //   ],
-        //   translate: [
-        //     "Not_at_all",
-        //     "Several_days",
-        //     "More_than_half_days",
-        //     "Nearly_every_days",
-        //   ],
-        //   selectedOption: [question1D],
-        // },
-        // {
-        //   qkey: "Feeling_down_depressed_or_hopeless",
-        //   type: "CO",
-        //   score: "",
-        //   options: [
-        //     "Not at all",
-        //     "Several days",
-        //     "More than half days",
-        //     "Nearly every days",
-        //   ],
-        //   translate: [
-        //     "Not_at_all",
-        //     "Several_days",
-        //     "More_than_half_days",
-        //     "Nearly_every_days",
-        //   ],
-        //   selectedOptions: [question2D],
-        // },
         {
           question: "Little_interest_of_pleasure_in_doing_things",
           answer: question1D,
@@ -1042,88 +959,6 @@ function MemberAdd(props) {
         },
       ],
       part_e: [
-        // {
-        //   qkey: "Fever",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE1Options,
-        //   translate: [
-        //     "More_than__days",
-        //     "Less_than__days",
-        //     "With_Chills",
-        //     "With_Rash",
-        //     "with_Bleeding",
-        //     "with_Altered_Sensorium",
-        //   ],
-        //   selectedOptions: partE1OptionSelect,
-        // },
-        // {
-        //   qkey: "Conjuctivitis",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE2Options,
-        //   translate: ["watery", "redness", "itching_eyes"],
-        //   selectedOptions: partE2OptionSelect,
-        // },
-        // {
-        //   qkey: "Lepto",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE3Options,
-        //   translate: [
-        //     "Waddling_in_water",
-        //     "Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent",
-        //   ],
-        //   selectedOptions: partE3OptionSelect,
-        // },
-        // {
-        //   qkey: "Loose_Motion",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE4Options,
-        //   translate: ["With_Blood", "Without_Blood", "Vomitting "],
-        //   selectedOptions: partE4OptionSelect,
-        // },
-        // {
-        //   qkey: "Hepatitis__Jaundice",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE5Option,
-        //   translate: [
-        //     "Eating_outside__uncovered_food__drinking_contaminated_water",
-        //   ],
-        //   selectedOptions: partE5OptionSelect,
-        // },
-        // {
-        //   qkey: "Animal_Bite",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: ["Animal Bite"],
-        //   translate: ["Animal_Bite"],
-        //   selectedOptions: [animalBitten],
-        // },
-        // {
-        //   qkey: "Snake_Bite",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: ["Snake Bite"],
-        //   translate: ["Snake_Bite"],
-        //   selectedOptions: [snakeBitten],
-        // },
-        // {
-        //   qkey: "Leprosy",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE8Options,
-        //   translate: [
-        //     "Numbness__Tingling_in_handsfeet",
-        //     "Loss_of_sensation_in_any_parts_of_body",
-        //     "Swelling__Nodule_on_FaceHandsFeet",
-        //     "Loss_of_eyelash_or_eyebrow",
-        //     "Thickened_earlobes",
-        //   ],
-        //   selectedOptions: partE8OptionSelect,
-        // },
         {
           question: "More_than__days",
           answer: doYouhaveFever1,
@@ -1429,6 +1264,7 @@ function MemberAdd(props) {
               </FormItem>
             </Column>
           </Row>
+         
           <Row>
             <Column>
               <FormItem label="Pulse / नाडी">

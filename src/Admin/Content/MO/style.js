@@ -26,6 +26,11 @@ export const SubmitButton = styled(Button)`
   width: 150px;
   margin: 18px 80px;
 `;
+export const UpdateButton=styled(Button)`
+background-color: #176b87;
+margin: 0% 13%;
+width:15%
+`;
 export const PasswordUpdateButton = styled(Button)`
   background-color: #176b87;
   color: white;

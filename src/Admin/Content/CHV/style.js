@@ -7,6 +7,11 @@ export const AddButton = styled(Button)`
   width: 200px;
   margin: 18px 60px;
 `;
+export const UpdateButton=styled(Button)`
+background-color: #176b87;
+margin: 0% 13%;
+width:15%
+`;
 export const SearchButton = styled(Button)`
   background-color: #176b87;
   color: white;

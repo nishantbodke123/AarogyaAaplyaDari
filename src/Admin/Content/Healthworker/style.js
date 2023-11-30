@@ -14,6 +14,11 @@ export const SearchButton = styled(Button)`
   margin-left: 30px;
 `;
 export const EditButton = styled(Button)``;
+export const UpdateButton=styled(Button)`
+background-color: #176b87;
+margin: 0% 13%;
+width:15%
+`;
 export const DeleteButton = styled(Button)`
   background-color: #de4132;
 `;

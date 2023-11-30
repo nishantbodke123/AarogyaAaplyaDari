@@ -28,9 +28,11 @@ import {
   PasswordUpdateButton,
   SearchButton,
   SubmitButton,
+  UpdateButton,
 } from "./style";
 import FormItem from "antd/es/form/FormItem";
 import { Option } from "antd/es/mentions";
+import { useTheme } from "styled-components";
 
 function Healthworker() {
   const [refresh, setRefresh] = useState(1);
@@ -61,12 +63,44 @@ function Healthworker() {
   const [sectionList, setSectionList] = useState([]);
   const [loader, setLoader] = useState(false);
   const [addHealthWorkerModal, setAddHealthWorkerModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [searchValue, setSearchValue] = useState();
   const [changePasswordModal, setChangePasswordModal] = useState(false);
-  const [MOid, setMOid] = useState();
+  const [healthworkerID, setHealthworkerID] = useState();
+
+  //Edit Modal State
+  const [u_name, setU_name] = useState("");
+  const [u_userName, setU_userName] = useState("");
+  const [u_phoneNumber, setU_phoneNumber] = useState("");
+  const [u_email, setU_email] = useState("");
+  const [u_ward, setU_ward] = useState();
+  const [u_healthPost, setU_HealthPost] = useState();
+  const [u_Section, setU_section] = useState();
+  const [u_healthPostList, setU_healthPostList] = useState([]);
+  const [u_sectionList, setU_sectionList] = useState([]);
+
+  const handleU_NameChange = (e) => {
+    const regex = /^[ a-zA-Z]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setU_name(e.target.value);
+    }
+  };
+  const handleU_UserNameChange = (e) => {
+    const regex = /^[ a-zA-Z0-9@]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setU_userName(e.target.value);
+    }
+  };
+  const handleU_MobileNumberChange = (e) => {
+    const regex = /^[0-9]{1,10}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setU_phoneNumber(e.target.value);
+    }
+  };
 
   //change password state
   const [newPassword, setNewPassword] = useState();
+  const [confirmNewPassword, setConfirmNewPassword] = useState();
 
   //Add User State
   const [name, setName] = useState();
@@ -141,6 +175,11 @@ function Healthworker() {
     setAddHealthWorkerModal(true);
   };
   const handleWardSelect = (id) => {
+    setHealthPostNameList([]);
+    setU_ward(id);
+    setSectionList([]);
+    setU_HealthPost();
+    setU_section();
     axios
       .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, {
         headers: {
@@ -160,6 +199,8 @@ function Healthworker() {
   };
   const handleHealthPostSelect = (id) => {
     console.log(id);
+    setSectionList([]);
+    setU_section();
     axios
       .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, {
         headers: {
@@ -195,6 +236,83 @@ function Healthworker() {
     },
   };
 
+  const handleEditModalShow = (data) => {
+    console.log(data.health_Post_id);
+    axios
+      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setAreaList(res.data);
+        axios
+          .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem("Token")}`,
+            },
+            params: {
+              search: data.ward_id,
+            },
+          })
+          .then((res) => {
+            setHealthPostNameList(res.data);
+            axios
+              .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, {
+                headers: {
+                  Authorization: `Token ${sessionStorage.getItem("Token")}`,
+                },
+                params: {
+                  search: data.health_Post_id,
+                },
+              })
+              .then((res) => {
+                console.log(res.data);
+                setSectionList(res.data);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+
+            setSectionList(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.status == 401) {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
+    setHealthworkerID(data.id);
+    setU_name(data.name);
+    setU_userName(data.username);
+    setU_phoneNumber(data.phoneNumber);
+    setU_email(data.emailId);
+    setU_ward(data.ward);
+    setU_HealthPost(data.health_Post);
+    setU_section(data.section_id);
+    setShowEditModal(true);
+  };
+  const handleEditModalClose = () => {
+    setU_name("");
+    setU_userName("");
+    setU_phoneNumber("");
+    setU_email("");
+    setU_ward();
+    setU_HealthPost();
+    setU_section();
+    setShowEditModal(false);
+    setAreaList([]);
+    setHealthPostNameList([]);
+    setSectionList([]);
+  };
+
   const handleAddUser = () => {
     let formData = new FormData();
     formData.append("name", name);
@@ -218,6 +336,45 @@ function Healthworker() {
         .catch((err) => {
           console.log(err);
           message.warning(err.response.data.message);
+        });
+    }
+  };
+  const handleUpdateUser = () => {
+    console.log(healthworkerID);
+
+    if (u_name === "") {
+      message.warning(" Please Enter Name");
+    } else if (u_userName === "") {
+      message.warning(" Please Enter Username");
+    } else if (u_email === "") {
+      message.warning("Please Enter Email Address");
+    } else if (u_phoneNumber === "") {
+      message.warning("Please Enter Phone Number");
+    } else if (u_Section === undefined) {
+      message.warning("Please select Section");
+    } else {
+      const formData = new FormData();
+      formData.append("name", u_name);
+      formData.append("username", u_userName);
+      formData.append("emailId", u_email);
+      formData.append("phoneNumber", u_phoneNumber);
+      formData.append("section", u_Section);
+
+      axios
+        .patch(
+          `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${healthworkerID}`,
+          formData,
+          axiosConfig
+        )
+        .then((res) => {
+          console.log(res);
+          message.success(res.data.message);
+          setRefresh(refresh + 1);
+          handleEditModalClose();
+        })
+        .catch((err) => {
+          console.log(err);
+          message.warning(err.response.data.message)
         });
     }
   };
@@ -247,34 +404,38 @@ function Healthworker() {
     });
   };
   const handleChangePasswordModalView = (id) => {
-    setMOid(id);
+    setHealthworkerID(id);
     setChangePasswordModal(true);
   };
   const handleChangePasswordModalClose = () => {
     setNewPassword();
-    setMOid();
+    setConfirmNewPassword();
+    setHealthworkerID();
     setChangePasswordModal(false);
   };
   const handlePasswordUpdate = () => {
-    console.log(newPassword, MOid);
-    axios
-      .patch(
-        `${BASE_URL}/adminportal/api/AdminChangePasswordView/${MOid}`,
-        {
-          newpassword: newPassword,
-        },
-        axiosConfig
-      )
-      .then((res) => {
-        console.log(res);
-        message.success(res.data.message);
-        setRefresh(refresh + 1);
-        handleChangePasswordModalClose();
-      })
-      .catch((err) => {
-        console.log(err);
-        message.warning(err.response.data.message);
-      });
+    if (newPassword === confirmNewPassword) {
+      axios
+        .patch(
+          `${BASE_URL}/adminportal/api/AdminChangePasswordView/${healthworkerID}`,
+          {
+            newpassword: newPassword,
+          },
+          axiosConfig
+        )
+        .then((res) => {
+          console.log(res);
+          message.success(res.data.message);
+          setRefresh(refresh + 1);
+          handleChangePasswordModalClose();
+        })
+        .catch((err) => {
+          console.log(err);
+          message.warning(err.response.data.message);
+        });
+    } else {
+      message.warning("Enter same password");
+    }
   };
 
   const column = [
@@ -317,8 +478,12 @@ function Healthworker() {
     },
     {
       title: "Update",
-      render: () => {
-        return <EditButton>Edit</EditButton>;
+      render: (data) => {
+        return (
+          <EditButton onClick={() => handleEditModalShow(data)}>
+            Edit
+          </EditButton>
+        );
       },
     },
     {
@@ -369,21 +534,28 @@ function Healthworker() {
                 color: "#176b87",
               }}
             >
-              Health Workers
+              Auxiliary Nurse and Midwife (ANM)
             </p>
             <AddButton onClick={handleAddHealthWorkerModalView}>
-              Add Health Worker
+              Add ANM
             </AddButton>
           </div>
           <div>
             <div style={{ margin: "20px 10px" }}>
-              <Input
-                type="text"
-                style={{ width: "300px" }}
-                placeholder="Enter Name / User Name / ward "
-                onChange={(e) => setSearchValue(e.target.value)}
-              ></Input>
-              <SearchButton onClick={handleSearch}>Search</SearchButton>
+              <Form>
+                <FormItem>
+                  <Input
+                    type="text"
+                    style={{ width: "300px" }}
+                    placeholder="Enter Name / User Name / ward "
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  ></Input>
+
+                  <SearchButton htmlType="submit" onClick={handleSearch}>
+                    Search
+                  </SearchButton>
+                </FormItem>
+              </Form>
             </div>
             <Table columns={column} dataSource={healthWorkersData}></Table>
           </div>
@@ -558,6 +730,140 @@ function Healthworker() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                 ></Input.Password>
+              </FormItem>
+              <FormItem label="Confirm new password">
+                <Input.Password
+                  style={{ width: "350px" }}
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                ></Input.Password>
+              </FormItem>
+            </Form>
+          </Modal>
+          <Modal
+            open={showEditModal}
+            title={<h2>Update ANM's Details</h2>}
+            width={1000}
+            onCancel={handleEditModalClose}
+            footer={
+              <>
+                <Button onClick={handleEditModalClose}>Cancel</Button>
+                <UpdateButton onClick={handleUpdateUser}>Update</UpdateButton>
+              </>
+            }
+          >
+            <Form layout="vertical">
+              <Row>
+                <Col span={12}>
+                  <FormItem label="Name">
+                    <InputBox
+                      type="text"
+                      value={u_name}
+                      onChange={(e) => handleU_NameChange(e)}
+                    ></InputBox>
+                  </FormItem>
+                </Col>
+                <Col span={12}>
+                  <FormItem label="Username">
+                    <InputBox
+                      type="text"
+                      allowClear
+                      value={u_userName}
+                      onChange={(e) => handleU_UserNameChange(e)}
+                    ></InputBox>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <FormItem label="Phone Number">
+                    <InputBox
+                      type="text"
+                      value={u_phoneNumber}
+                      onChange={(e) => handleU_MobileNumberChange(e)}
+                    ></InputBox>
+                  </FormItem>
+                </Col>
+                <Col span={12}>
+                  <FormItem label="Email ID">
+                    <InputBox
+                      type="email"
+                      value={u_email}
+                      onChange={(e) => setU_email(e.target.value)}
+                    ></InputBox>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <FormItem label="Ward">
+                    <Select
+                      showSearch
+                      style={{ width: "350px" }}
+                      filterOption={(inputValue, option) =>
+                        option.children
+                          ? option.children
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          : false
+                      }
+                      value={u_ward}
+                      onChange={(e) => handleWardSelect(e)}
+                    >
+                      {areaList.map((data) => (
+                        <Option key={data.id} value={data.id}>
+                          {data.wardName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col span={12}>
+                  {" "}
+                  <FormItem label="Health Post">
+                    <Select
+                      showSearch
+                      style={{ width: "350px" }}
+                      filterOption={(inputValue, option) =>
+                        option.children
+                          ? option.children
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          : false
+                      }
+                      value={u_healthPost}
+                      onChange={(e) => handleHealthPostSelect(e)}
+                    >
+                      {healthPostNameList.map((data) => (
+                        <Option key={data.id} value={data.id}>
+                          {data.healthPostName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </FormItem>
+                </Col>
+              </Row>
+
+              <FormItem label="Section">
+                <Select
+                  showSearch
+                  style={{ width: "350px" }}
+                  value={u_Section}
+                  filterOption={(inputValue, option) =>
+                    option.children
+                      ? option.children
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase())
+                      : false
+                  }
+                  onChange={(e) => setU_section(e)}
+                >
+                  {sectionList.map((data) => (
+                    <Option key={data.id} value={data.id}>
+                      {data.sectionName}
+                    </Option>
+                  ))}
+                </Select>
               </FormItem>
             </Form>
           </Modal>
