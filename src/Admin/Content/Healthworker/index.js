@@ -198,6 +198,7 @@ function Healthworker() {
       });
   };
   const handleHealthPostSelect = (id) => {
+    setU_HealthPost(id);
     console.log(id);
     setSectionList([]);
     setU_section();
