@@ -181,17 +181,14 @@ function Healthworker() {
     setU_HealthPost();
     setU_section();
     axios
-      .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, {
+      .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
-        params: {
-          search: id,
-        },
       })
       .then((res) => {
-        console.log(res.data);
-        setHealthPostNameList(res.data);
+        console.log(res.data.data);
+        setHealthPostNameList(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -203,17 +200,14 @@ function Healthworker() {
     setSectionList([]);
     setU_section();
     axios
-      .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, {
+      .get(`${BASE_URL}/allauth/api/GetSectionListAPI/${id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-        params: {
-          search: id,
         },
       })
       .then((res) => {
         console.log(res.data);
-        setSectionList(res.data);
+        setSectionList(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -375,7 +369,7 @@ function Healthworker() {
         })
         .catch((err) => {
           console.log(err);
-          message.warning(err.response.data.message)
+          message.warning(err.response.data.message);
         });
     }
   };

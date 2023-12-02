@@ -178,17 +178,14 @@ function CHV() {
     setU_HealthPost();
     setU_section();
     axios
-      .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, {
+      .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-        params: {
-          search: id,
-        },
+        }
       })
       .then((res) => {
         console.log(res.data);
-        setHealthPostNameList(res.data);
+        setHealthPostNameList(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -200,17 +197,14 @@ function CHV() {
     setU_section();
     console.log(id);
     axios
-      .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, {
+      .get(`${BASE_URL}/allauth/api/GetSectionListAPI/${id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-        params: {
-          search: id,
-        },
+        }
       })
       .then((res) => {
         console.log(res.data);
-        setSectionList(res.data);
+        setSectionList(res.data.data);
       })
       .catch((err) => {
         console.log(err);

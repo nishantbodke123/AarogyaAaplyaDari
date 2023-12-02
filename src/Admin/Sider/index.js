@@ -35,12 +35,12 @@ function Sidebar(props) {
       null,
       [
         getItem(
-          "ANM",
+          "ANM/Co-Ordinator",
           "/admin/healthWorker",
           null,
           "/admin/healthWorker"
         ),
-        getItem("CHV", "/admin/chv", null, "/admin/chv"),
+        getItem("CHV/ASHA", "/admin/chv", null, "/admin/chv"),
         getItem("MO", "/admin/mo", null, "/admin/mo"),
       ]
     ),
