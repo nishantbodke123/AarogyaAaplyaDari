@@ -219,8 +219,8 @@ export const SubmitButton = styled(Button)`
 `;
 
 export const BloodLogoImage = styled.img`
-  width: 30%;
-  margin: 0% 25%;
+  width: 15%;
+  margin: 0% 36%;
 `;
 export const BloodSampleText = styled.div`
   font-size: 20px;
@@ -241,7 +241,8 @@ export const BloodSampleText = styled.div`
 `;
 export const BloodSampleButtonsRow = styled(Row)``;
 export const BloodSampleButtonCol = styled(Col)`
-  width: 30%;
+  width: 50%;
+  margin-top: 2%;
 
   @media (max-width: 820px) {
     width: 100%;

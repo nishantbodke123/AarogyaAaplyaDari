@@ -31,3 +31,12 @@ export function AdminProtected({ children }) {
     return null;
   }
 }
+export function WardAdminProtected({children}){
+  const navigate =useNavigate();
+  if(loginToken !== "" && userGroup ==="MOH") {
+    return children;
+  } else {
+    navigate("/");
+    return null;
+  }
+}

@@ -12,18 +12,17 @@ export const Container = styled.div`
 `;
 export const SubContainer = styled.div`
   display: flex;
-  justify-content: space-around;
-  margin-top: 70px;
+  margin: 2% 5%;
 `;
 export const Box = styled.div`
-  width: 220px;
-  margin-top: 15px;
+  width: 240px;
+  margin: 10px 20px;
   height: 110px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  border-radius: 5px 5px;
+  border-radius: 15px 5px 5px 5px;
   &:hover {
-    width: 220px;
-    height: 130px;
+    width: 240px;
+    height: 110px;
     box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
   }
   @media (max-width: 1200px) {
@@ -63,8 +62,7 @@ export const BoxContainer = styled.div`
   }
 `;
 export const CountIcon = styled(FontAwesomeIcon)`
-  margin-top: 22px;
-  margin-right: 7px;
+  margin: 15px 2px 0px 2px;
   @media (max-width: 1200px) {
     margin: 22px 5px;
   }
@@ -81,7 +79,7 @@ export const TableContainer = styled.div`
 `;
 export const TableHeading = styled.p`
   font-size: 22px;
-  font-family: sans-serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: 650;
   @media (max-width: 820px) {
     font-size: 18px;
@@ -232,7 +230,8 @@ export const AddButton = styled(Button)`
 `;
 export const ColorStrip = styled.div`
   background-color: #ff8551;
-  height: 20%;
+  border-radius: 15px 0px;
+  height: 15%;
 `;
 export const ToDayCitizenCountModal = styled(Modal)``;
 export const ToDayFamilyCountModal = styled(Modal)``;
@@ -240,10 +239,10 @@ export const TotalCountModal = styled(Modal)``;
 export const TotalFamilyCount = styled(Modal)``;
 export const PartialSurveyCountModal = styled(Modal)``;
 export const CardHeader = styled.p`
-  font-weight: 750;
+  font-weight: 700;
   font-family: Arial;
-  margin-top: 20px;
-  font-size: 15px;
+  margin-top: 15px;
+  font-size: 13px;
 
   @media (max-width: 1200) {
     font-size: 15px;
@@ -251,14 +250,14 @@ export const CardHeader = styled.p`
   }
 `;
 export const CardCount = styled.p`
-  font-size: 28px;
+  font-size: 25px;
   font-weight: 570;
   font-family: -moz-initial;
   margin: -5px 20px;
 `;
 export const DesktopContainer = styled.div`
   margin: 5px;
-  height: 150px;
+  height: 300px;
   @media (max-width: 1200px) {
   }
   @media (max-width: 1100px) {
@@ -281,4 +280,30 @@ export const MobileCardColumn = styled(Col)`
   @media (max-width: 650px) {
     width: 50%;
   }
+`;
+export const OuterCard = styled.div`
+  background-color: #ffe5ad;
+  width: 95%;
+  height: 82%;
+  margin: 31px 0px;
+  border-radius: 10px;
+  position: relative;
+`;
+export const InnerCard1 = styled.div`
+  width: 45%;
+  height: 35%;
+  background-color: white;
+  position: absolute;
+  top: 7%;
+  left: 2%;
+  border-radius: 10px;
+`;
+export const InnerCard2 = styled.div`
+  width: 45%;
+  height: 35%;
+  background-color: white;
+  position: absolute;
+  top: 7%;
+  left: 52%;
+  border-radius: 10px;
 `;

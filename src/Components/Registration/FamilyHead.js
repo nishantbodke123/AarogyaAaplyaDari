@@ -20,6 +20,7 @@ import {
   Spin,
   Tooltip,
   Popover,
+  Divider,
 } from "antd";
 
 import {
@@ -77,7 +78,10 @@ function FamilyHead(props) {
   const { state } = useLocation();
   // state for progress bar
   const [progress, setProgress] = useState(0);
-  const [CBACRequired ,setCBACRequired] = useState(false);
+  const [CBACRequired, setCBACRequired] = useState(false);
+  const [adharAbhaRequired, setAadharAbhaRequired] = useState(false);
+  const [physicalDetailsRequired, setPhysicalDetailedRequired] =
+    useState(false);
 
   //1 st public key
   var encrypt = new JSEncrypt();
@@ -170,7 +174,7 @@ function FamilyHead(props) {
       .catch((err) => {
         console.log(err);
       });
-  }, [CBACRequired]);
+  }, [CBACRequired, adharAbhaRequired, physicalDetailsRequired]);
 
   const handleSectionSelect = (value) => {
     console.log(value);
@@ -198,8 +202,8 @@ function FamilyHead(props) {
   const handleWardSelectionModal = () => {
     if (selectedCHV == "") {
       message.warning("Please select area");
-    } else if(section == ""){
-      message.warning("Please Select CHV")
+    } else if (section == "") {
+      message.warning("Please Select CHV");
     } else {
       handleShowModalClose();
     }
@@ -242,9 +246,9 @@ function FamilyHead(props) {
         Authorization: `Token ${sessionStorage.getItem("Token")}`,
       },
     };
-    if(selectedCHV == ""){
-       message.warning("Please Select CHV")
-    }else if (section == "") {
+    if (selectedCHV == "") {
+      message.warning("Please Select CHV");
+    } else if (section == "") {
       message.warning("Please Select Area");
     } else if (familyHeadName == "") {
       message.warning("Please Enter First Name");
@@ -790,9 +794,31 @@ function FamilyHead(props) {
   const [bloodSampleHome, setBloodSampleHome] = useState(false);
   const [bloodSampleCenter, setBloodSampleCenter] = useState(false);
   const [bloodSampleDenied, setBloodSampleDenied] = useState(false);
+  const [notRequired, setNotRequired] = useState(false);
+  const [refarralList, setReferralList] = useState([]);
+  const [selectedReferalList, setSelectReferralList] = useState([]);
+
+  const handleReferralList = (option) => {
+    if (selectedReferalList.includes(option)) {
+      setSelectReferralList(
+        selectedReferalList.filter((item) => item !== option)
+      );
+    } else {
+      setSelectReferralList([...selectedReferalList, option]);
+    }
+  };
 
   const handleConsentModalShow = () => {
-    setConsentModalShow(true);
+    axios
+      .get(`${BASE_URL}/healthworker/api/getReferelOptionList`, axiosConfig)
+      .then((res) => {
+        console.log(res.data);
+        setReferralList(res.data);
+        setConsentModalShow(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   const handleConsentModalClose = () => {
     setConsentModalShow(false);
@@ -802,16 +828,25 @@ function FamilyHead(props) {
     setBloodSampleHome(!bloodSampleHome);
     setBloodSampleCenter(false);
     setBloodSampleDenied(false);
+    setNotRequired(false);
   };
   const handleBloodSampleCenterSelect = () => {
     setBloodSampleHome(false);
     setBloodSampleCenter(!bloodSampleCenter);
     setBloodSampleDenied(false);
+    setNotRequired(false);
   };
   const handleBloodSampleDesiedSelect = () => {
     setBloodSampleHome(false);
     setBloodSampleCenter(false);
+    setNotRequired(false);
     setBloodSampleDenied(!bloodSampleDenied);
+  };
+  const handleNotRequiredSelect = () => {
+    setBloodSampleHome(false);
+    setBloodSampleCenter(false);
+    setNotRequired(!notRequired);
+    setBloodSampleDenied(false);
   };
 
   //Family Member field
@@ -927,10 +962,15 @@ function FamilyHead(props) {
   //     </Form>
   //   </>
   // );
-  const handleCBACRequired=()=>{
+  const handleCBACRequired = () => {
     setCBACRequired(!CBACRequired);
-  }
-
+  };
+  const handleAadharAbhaRequired = () => {
+    setAadharAbhaRequired(!adharAbhaRequired);
+  };
+  const handlePhysicalDetailsRequired = () => {
+    setPhysicalDetailedRequired(!physicalDetailsRequired);
+  };
   const handlePulseChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
     if (e.target.value === "" || regex.test(e.target.value)) {
@@ -980,44 +1020,70 @@ function FamilyHead(props) {
   const handleFormSubmit = async () => {
     if (name === "") {
       message.warning("Please Enter Name");
-    } else if (aadharCard === "") {
-      message.warning("Please Enter Aadhar Card Number");
     } else if (gender === "") {
       message.warning("Please Mention Gender");
     } else if (age === "") {
       message.warning("Please Enter Age");
-    } else if (abhaId === "") {
-      message.warning("Please Enter Abha ID");
-    } else {
-      try {
-        const [aadharResponse, abhaResponse] = await Promise.all([
-          axios.get(
-            `${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`,
-            axiosConfig
-          ),
-          axios.get(
-            `${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`,
-            axiosConfig
-          ),
-        ]);
-
-        const adharNoStatus = aadharResponse.status;
-        const abhaNoStatus = abhaResponse.status;
-
-        console.log(adharNoStatus, "+", abhaNoStatus, "+", age);
-        if (adharNoStatus === 401 && abhaNoStatus === 401) {
-          LogOut();
-        } else if (adharNoStatus === 200 && abhaNoStatus === 200 && age >= 60) {
-          handleConsentModalShow();
-        } else if (adharNoStatus === 200 && abhaNoStatus === 200) {
-          handleSubmitAndNext();
+    } else if (aadharCard !=="" || adharAbhaRequired){
+      axios.get(`${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`, axiosConfig).then((res)=>{
+        if(res.status === 401){
+          LogOut()
+        } else if( res.status === 200){
+          handleConsentModalShow()
         } else {
-          message.warning("Not Submitted");
+          message.warning("Enter valid aadhar number")
         }
-      } catch (error) {
-        message.warning(error.response.data.message);
-      }
+      }).catch((error)=>{
+        console.log(error);
+        message.warning(error.response.message);
+      })
+    } else if(abhaId !=="" || adharAbhaRequired){
+      axios.get(`${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`,axiosConfig).then((res)=>{
+        if(res.status === 401){
+          LogOut();
+        } else if( res.status === 200){
+          handleConsentModalShow();
+        } else {
+          message.warning("Enter Valid abha Number")
+        }
+      }).catch((error)=>{
+        console.log(error);
+        message.warning(error.response.message);
+      })
+    } else {
+      handleConsentModalShow();
     }
+    // {
+    //   try {
+    //     const [aadharResponse, abhaResponse] = await Promise.all([
+    //       axios.get(
+    //         `${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`,
+    //         axiosConfig
+    //       ),
+    //       axios.get(
+    //         `${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`,
+    //         axiosConfig
+    //       ),
+    //     ]);
+
+    //     const adharNoStatus = aadharResponse.status;
+    //     const abhaNoStatus = abhaResponse.status;
+
+    //     console.log(adharNoStatus, "+", abhaNoStatus, "+", age);
+    //     if (adharNoStatus === 401 && abhaNoStatus === 401) {
+    //       LogOut();
+    //     } else if (adharNoStatus === 200 && abhaNoStatus === 200) {
+    //       handleConsentModalShow();
+    //     } else {
+    //       message.warning("Not Submitted");
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //     message.warning(error.response.message);
+    //   }
+    // } else {
+    //   handleConsentModalShow();
+    // }
   };
 
   // Part A question's state
@@ -1384,32 +1450,24 @@ function FamilyHead(props) {
 
   const handleSubmitAndNext = () => {
     if (age >= 60) {
-      if (bloodSampleHome && demandLetter === "") {
-        message.warning("Demand letter required");
+      if (partialSubmit) {
+        familyMembersArray.push(memberData);
+        handleSubmit();
+      } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
+        familyMembersArray.push(memberData);
+        handleClearPartA();
+        handleClearPartB();
+        handleClearPartC();
+        handleClearPartD();
+        handleClearPartE();
+        onKeyChange("1");
+        handleClearGeneralPart();
+        setNoOfMembersComplted(noOfMembersCompleted + 1);
       } else {
-        if (bloodConsent || bloodSampleDenied) {
-          if (partialSubmit) {
-            familyMembersArray.push(memberData);
-            handleSubmit();
-          } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
-            familyMembersArray.push(memberData);
-            handleClearPartA();
-            handleClearPartB();
-            handleClearPartC();
-            handleClearPartD();
-            handleClearPartE();
-            onKeyChange("1");
-            handleClearGeneralPart();
-            setNoOfMembersComplted(noOfMembersCompleted + 1);
-          } else {
-            familyMembersArray.push(memberData);
-            handleSubmit();
-          }
-          handleConsentModalClose();
-        } else {
-          message.warning("Blood Sample Collection Consent Required");
-        }
+        familyMembersArray.push(memberData);
+        handleSubmit();
       }
+      handleConsentModalClose();
     } else {
       if (partialSubmit) {
         familyMembersArray.push(memberData);
@@ -1428,6 +1486,7 @@ function FamilyHead(props) {
         familyMembersArray.push(memberData);
         handleSubmit();
       }
+      handleConsentModalClose();
     }
   };
 
@@ -1688,7 +1747,6 @@ function FamilyHead(props) {
     gender: gender,
     age: age,
     mobileNo: phone,
-    aadharAndAbhaConsent: "true",
     aadharCard: aadharCard,
     ASHA_CHV: selectedCHV,
     abhaId: abhaId,
@@ -1697,6 +1755,7 @@ function FamilyHead(props) {
     weight: weight,
     height: height,
     BMI: BMI,
+    referels: selectedReferalList,
     Questionnaire: {
       part_a: [
         {
@@ -2187,7 +2246,7 @@ function FamilyHead(props) {
         },
       ],
     },
-    bloodConsent: bloodConsent,
+
     bloodCollectionLocation:
       age > 60
         ? bloodSampleHome
@@ -2196,9 +2255,10 @@ function FamilyHead(props) {
           ? "Center"
           : bloodSampleDenied
           ? "Denied"
+          : notRequired
+          ? "Not Required"
           : ""
         : "",
-    demandLetter: demandLetter,
   };
 
   return familyHeadRegister == "no" ? (
@@ -2365,7 +2425,7 @@ function FamilyHead(props) {
             </ModalFormItem>
             <ModalFormItem label="Select CHV/ASHA Worker" required>
               <Select
-              value={selectedCHV}
+                value={selectedCHV}
                 showSearch
                 filterOption={(inputValue, option) =>
                   option.children
@@ -2439,13 +2499,21 @@ function FamilyHead(props) {
               </Column>
               <Column>
                 {/* rules={[{required:true ,message:"aadhar number required / आधार क्रमांक आवश्यक आहे"},{pattern:/^[0-9]*$/ ,message:"Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे"}]} */}
-                <FormItem label="Aadhar Card Number/ आधार क्रमांक">
+                <FormItem
+                  label="Mobile Number / मोबाईल नंबर"
+                  rules={[
+                    {
+                      pattern: /^[0-9+]*$/,
+                      message:
+                        "Mobile number must be numeric / मोबाईल क्रमांक अंकीय असणे आवश्यक आहे",
+                    },
+                  ]}
+                >
                   <Input
                     type="text"
-                    value={aadharCard}
-                    maxLength={12}
-                    allowClear
-                    onChange={(e) => handleAadharCardChange(e)}
+                    value={phone}
+                    maxLength={10}
+                    onChange={(e) => handleMobileNumberChange(e)}
                   ></Input>
                 </FormItem>
               </Column>
@@ -2473,114 +2541,181 @@ function FamilyHead(props) {
                   ></Input>
                 </FormItem>
               </Column>
-              <Column span={8}>
-                <FormItem
-                  label="Mobile Number / मोबाईल नंबर"
-                  rules={[
-                    {
-                      pattern: /^[0-9+]*$/,
-                      message:
-                        "Mobile number must be numeric / मोबाईल क्रमांक अंकीय असणे आवश्यक आहे",
-                    },
-                  ]}
+            </Row>
+            {age === "" || age <= 18 ? (
+              <Row
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  margin: "0.5% 0%",
+                  backgroundColor: "#dde6ed",
+                }}
+              >
+                {/* <h3>Hello</h3> */}
+                <Checkbox
+                  style={{ margin: "0% 2%" }}
+                  value={adharAbhaRequired}
+                  onChange={handleAadharAbhaRequired}
                 >
-                  <Input
-                    type="text"
-                    value={phone}
-                    maxLength={10}
-                    onChange={(e) => handleMobileNumberChange(e)}
-                  ></Input>
-                </FormItem>
-              </Column>
-              <Column span={8}>
-                <FormItem label="Abha ID / आभा आयडी">
-                  <Input
-                    type="text"
-                    value={abhaId}
-                    maxLength={17}
-                    onChange={(e) => handleAbhaIDChange(e)}
-                  ></Input>
-                </FormItem>
-                <p style={{ margin: "-20px 50px 15px", fontSize: "14px" }}>
-                  If you don't have ABHA ID?
-                  <a onClick={() => handleShowAadharOtpLinkedModal()}>
-                    Click here
-                  </a>
-                </p>
-              </Column>
-              {/* <Column span={1}>
-                <Tooltip title="ABHA Card Download">
-                  <Popover
-                    content={ABHACARDDownloadInputContent}
-                    trigger="click"
-                    placement="left"
-                  >
-                    <ABHACardDownLoad icon={faFileArrowDown} />
-                  </Popover>
-                </Tooltip>
-              </Column> */}
-            </Row>
-            
-            <Row>
-              <Column>
-                <FormItem label="Pulse / नाडी">
-                  <Input
-                    type="text"
-                    value={pulse}
-                    onChange={(e) => handlePulseChange(e)}
-                  ></Input>
-                </FormItem>
-              </Column>
-              <Column>
-                <FormItem label="Blood Pressure / रक्तदाब">
-                  <Input
-                    type="text"
-                    value={bloodPressure}
-                    onChange={(e) => handleBloodPressureChange(e)}
-                  ></Input>
-                </FormItem>
-              </Column>
-              <Column>
-                <FormItem label="Weight / वजन">
-                  <Input
-                    type="text"
-                    value={weight}
-                    onChange={(e) => handleWeightChange(e)}
-                  ></Input>
-                </FormItem>
-              </Column>
-            </Row>
-            <Row>
-              <Column>
-                <FormItem label="Height / उंची">
-                  <Input
-                    type="text"
-                    value={height}
-                    onChange={(e) => handleHeightChange(e)}
-                  ></Input>
-                </FormItem>
-              </Column>
-              <Column>
-                <FormItem label="BMI">
-                  <Input
-                    type="text"
-                    value={BMI}
-                    onChange={(e) => handleBMIChange(e)}
-                  ></Input>
-                </FormItem>
-              </Column>
-            </Row>
-            {
-              age === "" || age<=30 ?(  <Row style={{display:"flex" ,justifyContent:"start" ,margin:"0.5% 2%"}}>
-              {/* <h3>Hello</h3> */}
-            <Checkbox  value={CBACRequired} onChange={handleCBACRequired}><h4>If You want to fill CBAC Form, tick the box</h4></Checkbox>
-          </Row>):(<></>)
-            }
-          
+                  <h4>
+                    If You want to fill Adhar Number and ABHA Number, tick the
+                    box
+                  </h4>
+                </Checkbox>
+              </Row>
+            ) : (
+              <><Divider/></>
+            )}
+            {age <= 18 && !adharAbhaRequired ? (
+              <></>
+            ) : (
+              <>
+                {" "}
+                <Row>
+                  <Column span={8}>
+                    <FormItem label="Aadhar Card Number/ आधार क्रमांक">
+                      <Input
+                        type="text"
+                        value={aadharCard}
+                        maxLength={12}
+                        allowClear
+                        onChange={(e) => handleAadharCardChange(e)}
+                      ></Input>
+                    </FormItem>
+                  </Column>
+                  <Column span={8}>
+                    <FormItem label="Abha ID / आभा आयडी">
+                      <Input
+                        type="text"
+                        value={abhaId}
+                        maxLength={17}
+                        onChange={(e) => handleAbhaIDChange(e)}
+                      ></Input>
+                    </FormItem>
+                    {/* <p style={{ margin: "-20px 50px 15px", fontSize: "14px" }}>
+                    If you don't have ABHA ID?
+                    <a onClick={() => handleShowAadharOtpLinkedModal()}>
+                      Click here
+                    </a>
+                  </p> */}
+                  </Column>
+                  {/* <Column span={1}>
+                  <Tooltip title="ABHA Card Download">
+                    <Popover
+                      content={ABHACARDDownloadInputContent}
+                      trigger="click"
+                      placement="left"
+                    >
+                      <ABHACardDownLoad icon={faFileArrowDown} />
+                    </Popover>
+                  </Tooltip>
+                </Column> */}
+                </Row>
+              </>
+            )}
+            {age === "" || age <= 18 ? (
+              <Row
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  margin: "0.5% 0%",
+                  backgroundColor: "#dde6ed",
+                }}
+              >
+                {/* <h3>Hello</h3> */}
+                <Checkbox
+                  style={{ margin: "0% 2%" }}
+                  value={physicalDetailsRequired}
+                  onChange={handlePhysicalDetailsRequired}
+                >
+                  <h4>If You want to fill physical details, tick the box</h4>
+                </Checkbox>
+              </Row>
+            ) : (
+              <><Divider/></>
+            )}
+
+            {age <= 18 && !physicalDetailsRequired ? (
+              <></>
+            ) : (
+              <>
+                <Row>
+                  <Column>
+                    <FormItem label="Pulse / नाडी">
+                      <Input
+                        type="text"
+                        value={pulse}
+                        onChange={(e) => handlePulseChange(e)}
+                      ></Input>
+                    </FormItem>
+                  </Column>
+
+                  <Column>
+                    <FormItem label="Blood Pressure / रक्तदाब">
+                      <Input
+                        type="text"
+                        value={bloodPressure}
+                        onChange={(e) => handleBloodPressureChange(e)}
+                      ></Input>
+                    </FormItem>
+                  </Column>
+                  <Column>
+                    <FormItem label="Weight / वजन">
+                      <Input
+                        type="text"
+                        value={weight}
+                        onChange={(e) => handleWeightChange(e)}
+                      ></Input>
+                    </FormItem>
+                  </Column>
+                  <Column>
+                    <FormItem label="Height / उंची">
+                      <Input
+                        type="text"
+                        value={height}
+                        onChange={(e) => handleHeightChange(e)}
+                      ></Input>
+                    </FormItem>
+                  </Column>
+                  <Column>
+                    <FormItem label="BMI">
+                      <Input
+                        type="text"
+                        value={BMI}
+                        onChange={(e) => handleBMIChange(e)}
+                      ></Input>
+                    </FormItem>
+                  </Column>
+                </Row>
+              </>
+            )}
+
+            <Row></Row>
+            {age === "" || age <= 30 ? (
+              <Row
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  margin: "0.5% 0%",
+                  backgroundColor: "#dde6ed",
+                }}
+              >
+                {/* <h3>Hello</h3> */}
+                <Checkbox
+                  style={{ margin: "0% 2%" }}
+                  value={CBACRequired}
+                  onChange={handleCBACRequired}
+                >
+                  <h4>If You want to fill CBAC Form, tick the box</h4>
+                </Checkbox>
+              </Row>
+            ) : (
+              <></>
+            )}
           </FormContainer>
         </Container>
 
-        {age <= 30 && !CBACRequired  ? (
+        {/* {age <= 30 && !CBACRequired ? (
           <>
             {" "}
             <div
@@ -2596,15 +2731,11 @@ function FamilyHead(props) {
           </>
         ) : (
           <></>
-        )}
-       
+        )} */}
+
         {age <= 30 && !CBACRequired ? (
           <SubmitButtonDiv>
-            <SubmitButton onClick={handleFormSubmit}>
-              {noOfMembersCompleted == totalFamilyMembers || partialSubmit
-                ? "Submit"
-                : "Submit & Next"}
-            </SubmitButton>
+            <SubmitButton onClick={handleFormSubmit}>Next</SubmitButton>
           </SubmitButtonDiv>
         ) : (
           <DocsTab
@@ -4130,7 +4261,7 @@ function FamilyHead(props) {
                   </Radio.Group>
                 </AnswerSubCol>
               </QuestionSubRow>
-              {age < 60 ? (
+              {/* {age < 60 ? (
                 <>
                   {" "}
                   <div
@@ -4148,17 +4279,11 @@ function FamilyHead(props) {
                 </>
               ) : (
                 <></>
-              )}
+              )} */}
 
               <SubmitButtonDiv>
                 <Button onClick={() => onKeyChange("4")}>Back</Button>
-                <SubmitButton onClick={handleFormSubmit}>
-                  {noOfMembersCompleted == totalFamilyMembers || partialSubmit
-                    ? age > 60
-                      ? "Next"
-                      : "Submit"
-                    : "Submit & next"}
-                </SubmitButton>
+                <SubmitButton onClick={handleFormSubmit}>Next</SubmitButton>
               </SubmitButtonDiv>
             </Tabs.TabPane>
           </DocsTab>
@@ -4168,7 +4293,6 @@ function FamilyHead(props) {
         <Modal
           open={consentModalShow}
           onCancel={handleConsentModalClose}
-          title="Blood Sample / रक्त नमुना"
           footer={
             <SubmitButton onClick={() => handleSubmitAndNext()}>
               {noOfMembersCompleted == totalFamilyMembers || partialSubmit
@@ -4177,60 +4301,111 @@ function FamilyHead(props) {
             </SubmitButton>
           }
         >
-          <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
+          <div>
+            <p>
+              Would you like to mark the citizen as vulnerable citizen?
+              <span>
+                <Checkbox style={{ margin: "0% 5%" }}></Checkbox>
+              </span>
+            </p>
+            <div>
+              <h4>REFERRAL OPTIONS :</h4>
+            </div>
+            {refarralList.map((data) => (
+              <li>
+                <Checkbox
+                  key={data.id}
+                  value={data.id}
+                  onChange={(e) => {
+                    handleReferralList(e.target.value);
+                  }}
+                >
+                  {data.choice}
+                </Checkbox>
+              </li>
+            ))}
+            {/* <Checkbox>Referral for further management (Known case)</Checkbox>
+            <Checkbox style={{ margin: "0% 0.3%" }}>
+              Referral for further Diagnosis
+            </Checkbox>
+            <Checkbox>Referral in case of suspect symptoms</Checkbox>
+            <Checkbox>
+              Referral in case of multiple co-morbid investigation
+            </Checkbox>
+            <Checkbox>Referral for blood collection</Checkbox> */}
+          </div>
+          {age >= 60 ? (
+            <>
+              <BloodSampleText>BLOOD COLLECTION / रक्त संकलन :</BloodSampleText>
+              <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
+              <BloodSampleButtonsRow>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      bloodSampleHome
+                        ? { backgroundColor: "#E9B384", width: "200px" }
+                        : { backgroundColor: "white", width: "200px" }
+                    }
+                    onClick={handleBloodSampleHomeSelct}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faHouse} />
+                    </span>
+                    Home / घर
+                  </Button>
+                </BloodSampleButtonCol>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      bloodSampleCenter
+                        ? { backgroundColor: "#E9B384", width: "200px" }
+                        : { backgroundColor: "white", width: "200px" }
+                    }
+                    onClick={handleBloodSampleCenterSelect}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </span>
+                    Center / केंद्र
+                  </Button>
+                </BloodSampleButtonCol>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      bloodSampleDenied
+                        ? { backgroundColor: "#E9B384", width: "200px" }
+                        : { backgroundColor: "white", width: "200px" }
+                    }
+                    onClick={handleBloodSampleDesiedSelect}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faXmark} />
+                    </span>
+                    Denied / नाकारले
+                  </Button>
+                </BloodSampleButtonCol>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      notRequired
+                        ? { backgroundColor: "#E9B384", width: "210px" }
+                        : { backgroundColor: "white", width: "210px" }
+                    }
+                    onClick={handleNotRequiredSelect}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faXmark} />
+                    </span>
+                    Not required / आवश्यक नाही
+                  </Button>
+                </BloodSampleButtonCol>
+              </BloodSampleButtonsRow>
+            </>
+          ) : (
+            <></>
+          )}
 
-          <BloodSampleText>
-            Citizen will give his blood sample at / येथे नागरिक आपल्या रक्ताचा
-            नमुना देईल :
-          </BloodSampleText>
-          <BloodSampleButtonsRow>
-            <BloodSampleButtonCol>
-              <Button
-                style={
-                  bloodSampleHome
-                    ? { backgroundColor: "#E9B384" }
-                    : { backgroundColor: "white" }
-                }
-                onClick={handleBloodSampleHomeSelct}
-              >
-                <span style={{ marginRight: "10px" }}>
-                  <FontAwesomeIcon icon={faHouse} />
-                </span>
-                Home / घर
-              </Button>
-            </BloodSampleButtonCol>
-            <BloodSampleButtonCol>
-              <Button
-                style={
-                  bloodSampleCenter
-                    ? { backgroundColor: "#E9B384" }
-                    : { backgroundColor: "white" }
-                }
-                onClick={handleBloodSampleCenterSelect}
-              >
-                <span style={{ marginRight: "10px" }}>
-                  <FontAwesomeIcon icon={faPlus} />
-                </span>
-                Center / केंद्र
-              </Button>
-            </BloodSampleButtonCol>
-            <BloodSampleButtonCol>
-              <Button
-                style={
-                  bloodSampleDenied
-                    ? { backgroundColor: "#E9B384" }
-                    : { backgroundColor: "white" }
-                }
-                onClick={handleBloodSampleDesiedSelect}
-              >
-                <span style={{ marginRight: "10px" }}>
-                  <FontAwesomeIcon icon={faXmark} />
-                </span>
-                Denied / नाकारले
-              </Button>
-            </BloodSampleButtonCol>
-          </BloodSampleButtonsRow>
-          {bloodSampleHome ? (
+          {/* {bloodSampleHome ? (
             <>
               <Form layout="vertical">
                 <Form.Item
@@ -4263,7 +4438,7 @@ function FamilyHead(props) {
                 </p>
               </div>
             </>
-          )}
+          )} */}
 
           <div
             style={{

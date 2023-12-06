@@ -30,9 +30,13 @@ import {
   FormContainer,
   FormHeader,
   FormItem,
+  InnerCard,
+  InnerCard1,
+  InnerCard2,
   MobileCardColumn,
   MobileContainer,
   ModalFormItem,
+  OuterCard,
   PartialSurveyCountModal,
   StyledTabs,
   SubContainer,
@@ -567,83 +571,177 @@ const Dashboard = () => {
                   </BoxContainer>
                 </Box>
               </MobileCardColumn>
+              <MobileCardColumn>
+                <Box>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Number of CBAC Filled </CardHeader>
+                      </Col>
+                    </Row>
+                    <CardCount>{dashboardCounts.total_cbac_count}</CardCount>
+                  </BoxContainer>
+                </Box>
+              </MobileCardColumn>
+              <MobileCardColumn>
+                <Box>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col></Col>
+                      <Col>
+                        <CardHeader>Citizens more than of 30 years </CardHeader>
+                      </Col>
+                    </Row>
+                    <CardCount>{dashboardCounts.citizen_above_30}</CardCount>
+                  </BoxContainer>
+                </Box>
+              </MobileCardColumn>
+              <MobileCardColumn>
+                <Box>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col></Col>
+                      <Col>
+                        <CardHeader>Citizens more than of 60 years </CardHeader>
+                      </Col>
+                    </Row>
+                    <CardCount>{dashboardCounts.citizen_above_60}</CardCount>
+                  </BoxContainer>
+                </Box>
+              </MobileCardColumn>
             </Row>
           </SubContainer>
         </MobileContainer>
         <DesktopContainer>
-          <SubContainer>
-            <Box onClick={() => handleShowToDayCitizenCountModal()}>
-              <ColorStrip />
-              <BoxContainer>
-                <Row>
-                  <Col>
-                    <CountIcon icon={faBars} />
-                  </Col>
-                  <Col>
-                    <CardHeader>Today's Citizen Count</CardHeader>
-                  </Col>
-                </Row>
-                <CardCount>{dashboardCounts.todays_count}</CardCount>
-              </BoxContainer>
-            </Box>
-            <Box onClick={() => handleShowTodayFamilyCountModal()}>
-              <ColorStrip />
-              <BoxContainer>
-                <Row>
-                  <Col>
-                    <CountIcon icon={faBars} />
-                  </Col>
-                  <Col>
-                    <CardHeader>Today's Family Count </CardHeader>
-                  </Col>
-                </Row>
-                <CardCount>{dashboardCounts.today_family_count}</CardCount>
-              </BoxContainer>
-            </Box>
-            <Box onClick={() => handleShowTotalCountModal()}>
-              <ColorStrip />
-              <BoxContainer>
-                <Row>
-                  <Col>
-                    <CountIcon icon={faBars} />
-                  </Col>
-                  <Col>
-                    <CardHeader>Total Citizen Count</CardHeader>
-                  </Col>
-                </Row>
-                <CardCount>{dashboardCounts.total_count}</CardCount>
-              </BoxContainer>
-            </Box>
-
-            <Box onClick={() => handleShowTotalFamilyCountModal()}>
-              <ColorStrip />
-              <BoxContainer>
-                <Row>
-                  <Col>
-                    <CountIcon icon={faBars} />
-                  </Col>
-                  <Col>
-                    <CardHeader>Total Family Count</CardHeader>
-                  </Col>
-                </Row>
-                <CardCount>{dashboardCounts.total_family_count}</CardCount>
-              </BoxContainer>
-            </Box>
-            <Box onClick={() => handleShowPartialCountModal()}>
-              <ColorStrip />
-              <BoxContainer>
-                <Row>
-                  <Col>
-                    <CountIcon icon={faBars} />
-                  </Col>
-                  <Col>
-                    <CardHeader>Partial Survey </CardHeader>
-                  </Col>
-                </Row>
-                <CardCount>{dashboardCounts.partial_survey_count}</CardCount>
-              </BoxContainer>
-            </Box>
-          </SubContainer>
+          <Row>
+            <Col span={14}>
+              <SubContainer>
+                <Box onClick={() => handleShowToDayCitizenCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Today's Citizens Enrolled</CardHeader>
+                      </Col>
+                    </Row>
+                    <CardCount>{dashboardCounts.todays_count}</CardCount>
+                  </BoxContainer>
+                </Box>
+                <Box onClick={() => handleShowTodayFamilyCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Today's Family Enrolled </CardHeader>
+                      </Col>
+                    </Row>
+                    <CardCount>{dashboardCounts.today_family_count}</CardCount>
+                  </BoxContainer>
+                </Box>
+                <Box onClick={() => handleShowTotalCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Total Citizens Enrolled</CardHeader>
+                      </Col>
+                    </Row>
+                    <CardCount>{dashboardCounts.total_count}</CardCount>
+                  </BoxContainer>
+                </Box>
+              </SubContainer>
+              <SubContainer>
+                <Box onClick={() => handleShowTotalFamilyCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Total Family Enrolled</CardHeader>
+                      </Col>
+                    </Row>
+                    <CardCount>{dashboardCounts.total_family_count}</CardCount>
+                  </BoxContainer>
+                </Box>
+                <Box onClick={() => handleShowPartialCountModal()}>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Partial Survey </CardHeader>
+                      </Col>
+                    </Row>
+                    <CardCount>
+                      {dashboardCounts.partial_survey_count}
+                    </CardCount>
+                  </BoxContainer>
+                </Box>
+                <Box>
+                  <ColorStrip />
+                  <BoxContainer>
+                    <Row>
+                      <Col>
+                        <CountIcon icon={faBars} />
+                      </Col>
+                      <Col>
+                        <CardHeader>Number of CBAC Filled </CardHeader>
+                      </Col>
+                    </Row>
+                    <CardCount>{dashboardCounts.total_cbac_count}</CardCount>
+                  </BoxContainer>
+                </Box>
+              </SubContainer>
+            </Col>
+            <Col span={9}>
+              <OuterCard>
+                <InnerCard1>
+                  <Row>
+                    <Col>
+                      <CountIcon icon={faBars} />
+                    </Col>
+                    <Col>
+                      <CardHeader>Citizens more than of 30 years </CardHeader>
+                    </Col>
+                  </Row>
+                  <CardCount>{dashboardCounts.citizen_above_30
+}</CardCount>
+                </InnerCard1>
+                <InnerCard2>
+                  {" "}
+                  <Row>
+                    <Col>
+                      <CountIcon icon={faBars} />
+                    </Col>
+                    <Col>
+                      <CardHeader>Citizens more than of 60 years </CardHeader>
+                    </Col>
+                  </Row>
+                  <CardCount>{dashboardCounts.citizen_above_60
+}</CardCount>
+                </InnerCard2>
+              </OuterCard>
+            </Col>
+          </Row>
         </DesktopContainer>
 
         <TableContainer>

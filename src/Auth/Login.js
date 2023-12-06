@@ -68,6 +68,8 @@ function Login() {
             window.location.replace("/dashboard");
           } else if (response.data.Group == "admin") {
             window.location.replace("/admin/adminDashboard");
+          } else if (response.data.Group == "MOH") {
+            window.location.replace("/wardadmin/wardadminDashboard");
           } else {
             window.location.replace("/phlebo");
           }

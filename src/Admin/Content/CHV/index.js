@@ -75,6 +75,7 @@ function CHV() {
   const [u_ward, setU_ward] = useState();
   const [u_healthPost, setU_HealthPost] = useState();
   const [u_Section, setU_section] = useState();
+  const [u_is_ActiveStatus, setU_Is_ActiveStatus] = useState();
 
   const handleU_NameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -181,7 +182,7 @@ function CHV() {
       .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        }
+        },
       })
       .then((res) => {
         console.log(res.data);
@@ -200,7 +201,7 @@ function CHV() {
       .get(`${BASE_URL}/allauth/api/GetSectionListAPI/${id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        }
+        },
       })
       .then((res) => {
         console.log(res.data);
@@ -233,56 +234,55 @@ function CHV() {
   const handleEditModalShow = (data) => {
     console.log(data);
     axios
-    .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
-      headers: {
-        Authorization: `Token ${sessionStorage.getItem("Token")}`,
-      },
-    })
-    .then((res) => {
-      console.log(res.data);
-      setAreaList(res.data);
-      axios
-        .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, {
-          headers: {
-            Authorization: `Token ${sessionStorage.getItem("Token")}`,
-          },
-          params: {
-            search: data.ward_id,
-          },
-        })
-        .then((res) => {
-          setHealthPostNameList(res.data);
-          axios
-            .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, {
+      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setAreaList(res.data);
+        axios
+          .get(
+            `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`,
+            {
               headers: {
                 Authorization: `Token ${sessionStorage.getItem("Token")}`,
               },
-              params: {
-                search: data.health_Post_id,
-              },
-            })
-            .then((res) => {
-              console.log(res.data);
-              setSectionList(res.data);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-
-          setSectionList(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      if (err.status == 401) {
-        setTimeout(() => {
-          LogOut();
-        }, 1000);
-      }
-    });
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            setHealthPostNameList(res.data.data);
+            axios
+              .get(
+                `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
+                {
+                  headers: {
+                    Authorization: `Token ${sessionStorage.getItem("Token")}`,
+                  },
+                }
+              )
+              .then((res) => {
+                console.log(res);
+                setSectionList(res.data.data);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.status == 401) {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
     setCHVId(data.id);
     // setU_name(data.name);
     // setU_userName(data.username);
@@ -298,6 +298,7 @@ function CHV() {
     setU_phoneNumber(data.phoneNumber);
     setU_email(data.emailId);
     setU_ward(data.ward);
+    setU_Is_ActiveStatus(data.is_active);
     setU_HealthPost(data.health_Post);
     setU_section(data.section_id);
     setShowEditModal(true);
@@ -310,6 +311,7 @@ function CHV() {
     setU_ward();
     setU_HealthPost();
     setU_section();
+    setU_Is_ActiveStatus();
     setShowEditModal(false);
     setAreaList([]);
     setHealthPostNameList([]);
@@ -353,30 +355,33 @@ function CHV() {
       message.warning("Please Enter Phone Number");
     } else if (u_Section === undefined) {
       message.warning("Please select Section");
+    } else if (u_is_ActiveStatus === undefined) {
+      message.warning("Please select active status");
     } else {
-    const formData = new FormData();
-    formData.append("name", u_name);
-    formData.append("username", u_userName);
-    formData.append("emailId", u_email);
-    formData.append("phoneNumber", u_phoneNumber);
-    formData.append("section", u_Section);
+      const formData = new FormData();
+      formData.append("name", u_name);
+      formData.append("username", u_userName);
+      formData.append("emailId", u_email);
+      formData.append("phoneNumber", u_phoneNumber);
+      formData.append("section", u_Section);
+      formData.append("is_active", u_is_ActiveStatus);
 
-    axios
-      .patch(
-        `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${CHVId}`,
-        formData,
-        axiosConfig
-      )
-      .then((res) => {
-        console.log(res);
-        message.success(res.data.message);
-        setRefresh(refresh + 1);
-        handleEditModalClose();
-      })
-      .catch((err) => {
-        console.log(err);
-        message.warning(err.response.data.message)
-      });
+      axios
+        .patch(
+          `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${CHVId}`,
+          formData,
+          axiosConfig
+        )
+        .then((res) => {
+          console.log(res);
+          message.success(res.data.message);
+          setRefresh(refresh + 1);
+          handleEditModalClose();
+        })
+        .catch((err) => {
+          console.log(err);
+          message.warning(err.response.data.message);
+        });
     }
   };
   const deleteUser = (data) => {
@@ -439,6 +444,18 @@ function CHV() {
   };
   const column = [
     {
+      title: "Ward",
+      dataIndex: "ward",
+    },
+    {
+      title: "Health Post",
+      dataIndex: "health_Post",
+    },
+    {
+      title: "Section",
+      dataIndex: "section",
+    },
+    {
       title: "Name",
       dataIndex: "name",
       key: "name",
@@ -456,18 +473,9 @@ function CHV() {
       title: "Phone Number",
       dataIndex: "phoneNumber",
     },
-    {
-      title: "Section",
-      dataIndex: "section",
-    },
-    {
-      title: "Ward",
-      dataIndex: "ward",
-    },
-    {
-      title:"Health Post",
-      dataIndex:"health_Post"
-    },
+    
+  
+   
     {
       title: "Date & Time Of Joining",
       dataIndex: "date_joined",
@@ -485,12 +493,19 @@ function CHV() {
         );
       },
     },
+    // {
+    //   title: "Delete",
+    //   render: (data) => {
+    //     return (
+    //       <DeleteButton onClick={() => deleteUser(data)}>Delete</DeleteButton>
+    //     );
+    //   },
+    // },
     {
-      title: "Delete",
+      title: "Status",
+      dataIndex: "is_active",
       render: (data) => {
-        return (
-          <DeleteButton onClick={() => deleteUser(data)}>Delete</DeleteButton>
-        );
+        return data ? "Active" : "InActive";
       },
     },
     {
@@ -841,27 +856,45 @@ function CHV() {
                 </Col>
               </Row>
 
-              <FormItem label="Section">
-                <Select
-                  showSearch
-                  style={{ width: "350px" }}
-                  value={u_Section}
-                  filterOption={(inputValue, option) =>
-                    option.children
-                      ? option.children
-                          .toLowerCase()
-                          .includes(inputValue.toLowerCase())
-                      : false
-                  }
-                  onChange={(e) => setU_section(e)}
-                >
-                  {sectionList.map((data) => (
-                    <Option key={data.id} value={data.id}>
-                      {data.sectionName}
-                    </Option>
-                  ))}
-                </Select>
-              </FormItem>
+              <Row>
+                <Col>
+                  <FormItem label="Section">
+                    <Select
+                      showSearch
+                      style={{ width: "350px" }}
+                      value={u_Section}
+                      filterOption={(inputValue, option) =>
+                        option.children
+                          ? option.children
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          : false
+                      }
+                      onChange={(e) => setU_section(e)}
+                    >
+                      {sectionList.map((data) => (
+                        <Option key={data.id} value={data.id}>
+                          {data.sectionName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col>
+                  {" "}
+                  <FormItem
+                    label="Is Active"
+                    style={{ width: "350px", margin: "0% 36%" }}
+                  >
+                    <Select
+                      onChange={(value) => setU_Is_ActiveStatus(value)}
+                    >
+                      <Option value="true">Active</Option>
+                      <Option value="false">InActive</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+              </Row>
             </Form>
           </Modal>
         </Content>

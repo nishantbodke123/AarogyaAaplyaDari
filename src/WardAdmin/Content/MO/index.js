@@ -33,7 +33,7 @@ import {
 import FormItem from "antd/es/form/FormItem";
 import { Option } from "antd/es/mentions";
 
-function MO() {
+function WardMO() {
   const [refresh, setRefresh] = useState(1);
   useEffect(() => {
     setLoader(true);
@@ -419,7 +419,7 @@ function MO() {
       title: "Phone Number",
       dataIndex: "phoneNumber",
     },
-   
+
     {
       title: "Date & Time Of Joining",
       dataIndex: "date_joined",
@@ -788,4 +788,4 @@ function MO() {
     </Spin>
   );
 }
-export default MO;
+export default WardMO;

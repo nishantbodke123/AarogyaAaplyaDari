@@ -6,6 +6,7 @@ import {
   AdminProtected,
   HealthworkerProtected,
   PhleboProtected,
+  WardAdminProtected,
 } from "./Auth/Protected";
 import Error from "./Auth/error";
 import Dashboard from "./Components/Dashboard/Dashboard";
@@ -18,6 +19,10 @@ import AdminDashboard from "./Admin/Content/Dashboard";
 import Healthworker from "./Admin/Content/Healthworker";
 import CHV from "./Admin/Content/CHV";
 import MO from "./Admin/Content/MO";
+import WardAdmin from "./WardAdmin/Admin/WardAdmin";
+import WardHealthworker from "./WardAdmin/Content/Healthworker";
+import WardAdminDashboard from "./WardAdmin/Content/Dashboard";
+import WardCHV from "./WardAdmin/Content/WardCHV";
 
 function App() {
   let Token = sessionStorage.getItem("Token");
@@ -141,6 +146,40 @@ function App() {
                 </AdminProtected>
               }
             ></Route>
+          </Route>
+          <Route
+            path="/wardadmin"
+            element={
+              <WardAdminProtected>
+                <WardAdmin />
+              </WardAdminProtected>
+            }
+          >
+            <Route
+              path="/wardadmin/wardadminDashboard"
+              element={
+                <WardAdminProtected>
+                  <WardAdminDashboard />
+                </WardAdminProtected>
+              }
+            ></Route>
+            <Route
+              path="/wardadmin/wardhealthWorker"
+              element={
+                <WardAdminProtected>
+                  <WardHealthworker />
+                </WardAdminProtected>
+              }
+            ></Route>
+            <Route
+              path="/wardadmin/wardchv"
+              element={
+                <WardAdminProtected>
+                  <WardCHV />
+                </WardAdminProtected>
+              }
+            ></Route>
+          
           </Route>
 
           <Route path="/*" element={<Error />}></Route>

@@ -78,6 +78,7 @@ function Healthworker() {
   const [u_Section, setU_section] = useState();
   const [u_healthPostList, setU_healthPostList] = useState([]);
   const [u_sectionList, setU_sectionList] = useState([]);
+  const [u_is_ActiveStatus, setU_Is_ActiveStatus] = useState();
 
   const handleU_NameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -232,7 +233,7 @@ function Healthworker() {
   };
 
   const handleEditModalShow = (data) => {
-    console.log(data.health_Post_id);
+    console.log(data.is_active);
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -243,34 +244,32 @@ function Healthworker() {
         console.log(res.data);
         setAreaList(res.data);
         axios
-          .get(`${BASE_URL}/allauth/api/GethealthPostNameList`, {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem("Token")}`,
-            },
-            params: {
-              search: data.ward_id,
-            },
-          })
+          .get(
+            `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`,
+            {
+              headers: {
+                Authorization: `Token ${sessionStorage.getItem("Token")}`,
+              },
+            }
+          )
           .then((res) => {
-            setHealthPostNameList(res.data);
+            setHealthPostNameList(res.data.data);
             axios
-              .get(`${BASE_URL}/allauth/api/GetSectionListAPI`, {
-                headers: {
-                  Authorization: `Token ${sessionStorage.getItem("Token")}`,
-                },
-                params: {
-                  search: data.health_Post_id,
-                },
-              })
+              .get(
+                `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
+                {
+                  headers: {
+                    Authorization: `Token ${sessionStorage.getItem("Token")}`,
+                  },
+                }
+              )
               .then((res) => {
                 console.log(res.data);
-                setSectionList(res.data);
+                setSectionList(res.data.data);
               })
               .catch((err) => {
                 console.log(err);
               });
-
-            setSectionList(res.data);
           })
           .catch((err) => {
             console.log(err);
@@ -292,6 +291,7 @@ function Healthworker() {
     setU_ward(data.ward);
     setU_HealthPost(data.health_Post);
     setU_section(data.section_id);
+    setU_Is_ActiveStatus(data.is_active);
     setShowEditModal(true);
   };
   const handleEditModalClose = () => {
@@ -302,6 +302,7 @@ function Healthworker() {
     setU_ward();
     setU_HealthPost();
     setU_section();
+    setU_Is_ActiveStatus();
     setShowEditModal(false);
     setAreaList([]);
     setHealthPostNameList([]);
@@ -336,7 +337,7 @@ function Healthworker() {
   };
   const handleUpdateUser = () => {
     console.log(healthworkerID);
-
+    console.log(u_is_ActiveStatus);
     if (u_name === "") {
       message.warning(" Please Enter Name");
     } else if (u_userName === "") {
@@ -347,6 +348,8 @@ function Healthworker() {
       message.warning("Please Enter Phone Number");
     } else if (u_Section === undefined) {
       message.warning("Please select Section");
+    } else if (u_is_ActiveStatus === undefined) {
+      message.warning("Select Active Status");
     } else {
       const formData = new FormData();
       formData.append("name", u_name);
@@ -354,7 +357,7 @@ function Healthworker() {
       formData.append("emailId", u_email);
       formData.append("phoneNumber", u_phoneNumber);
       formData.append("section", u_Section);
-
+      formData.append("is_active", u_is_ActiveStatus);
       axios
         .patch(
           `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${healthworkerID}`,
@@ -435,6 +438,18 @@ function Healthworker() {
 
   const column = [
     {
+      title: "Ward",
+      dataIndex: "ward",
+    },
+    {
+      title: "Health Post",
+      dataIndex: "health_Post",
+    },
+    {
+      title: "Section",
+      dataIndex: "section",
+    },
+    {
       title: "Name",
       dataIndex: "name",
       key: "name",
@@ -452,18 +467,7 @@ function Healthworker() {
       title: "Phone Number",
       dataIndex: "phoneNumber",
     },
-    {
-      title: "Section",
-      dataIndex: "section",
-    },
-    {
-      title: "Ward",
-      dataIndex: "ward",
-    },
-    {
-      title: "Health Post",
-      dataIndex: "health_Post",
-    },
+
     {
       title: "Date & Time Of Joining",
       dataIndex: "date_joined",
@@ -482,13 +486,20 @@ function Healthworker() {
       },
     },
     {
-      title: "Delete",
+      title: "Status",
+      dataIndex: "is_active",
       render: (data) => {
-        return (
-          <DeleteButton onClick={() => deleteUser(data)}>Delete</DeleteButton>
-        );
+        return data ? "Active" : "InActive";
       },
     },
+    // {
+    //   title: "Delete",
+    //   render: (data) => {
+    //     return (
+    //       <DeleteButton onClick={() => deleteUser(data)}>Delete</DeleteButton>
+    //     );
+    //   },
+    // },
     {
       title: "Password",
       render: (data) => {
@@ -838,28 +849,43 @@ function Healthworker() {
                   </FormItem>
                 </Col>
               </Row>
-
-              <FormItem label="Section">
-                <Select
-                  showSearch
-                  style={{ width: "350px" }}
-                  value={u_Section}
-                  filterOption={(inputValue, option) =>
-                    option.children
-                      ? option.children
-                          .toLowerCase()
-                          .includes(inputValue.toLowerCase())
-                      : false
-                  }
-                  onChange={(e) => setU_section(e)}
-                >
-                  {sectionList.map((data) => (
-                    <Option key={data.id} value={data.id}>
-                      {data.sectionName}
-                    </Option>
-                  ))}
-                </Select>
-              </FormItem>
+              <Row>
+                <Col>
+                  {" "}
+                  <FormItem label="Section">
+                    <Select
+                      showSearch
+                      style={{ width: "350px" }}
+                      value={u_Section}
+                      filterOption={(inputValue, option) =>
+                        option.children
+                          ? option.children
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          : false
+                      }
+                      onChange={(e) => setU_section(e)}
+                    >
+                      {sectionList.map((data) => (
+                        <Option key={data.id} value={data.id}>
+                          {data.sectionName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col>
+                  <FormItem
+                    label="Is Active"
+                    style={{ width: "350px", margin: "0% 36%" }}
+                  >
+                    <Select onChange={(value) => setU_Is_ActiveStatus(value)}>
+                      <Option value="true">Active</Option>
+                      <Option value="false">InActive</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+              </Row>
             </Form>
           </Modal>
         </Content>

@@ -18,7 +18,6 @@ import { BASE_URL } from "../../../Utils/BaseURL";
 import { useState } from "react";
 import { LogOut } from "../../../Auth/Logout";
 import moment from "moment/moment";
-import { EditOutlined } from "@ant-design/icons";
 import {
   AddButton,
   CancelButton,
@@ -32,17 +31,18 @@ import {
 } from "./style";
 import FormItem from "antd/es/form/FormItem";
 import { Option } from "antd/es/mentions";
+import { EditOutlined } from "@ant-design/icons";
 
-function MO() {
+function WardCHV() {
   const [refresh, setRefresh] = useState(1);
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/mo`)
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA`)
       .then((res) => {
         setLoader(false);
         console.log(res.data.data);
-        setMOData(res.data.data);
+        setCHVData(res.data.data);
       })
       .catch((error) => {
         setLoader(false);
@@ -54,26 +54,18 @@ function MO() {
         }
       });
   }, [refresh]);
+
   //generic State
-  const [wardList, setWardList] = useState([]);
-  const [MOData, setMOData] = useState([]);
-  const [List, setHealthPostNameList] = useState([]);
-  const [dispensaryList, setDispensaryList] = useState([]);
+  const [areaList, setAreaList] = useState([]);
+  const [CHVData, setCHVData] = useState([]);
+  const [healthPostNameList, setHealthPostNameList] = useState([]);
+  const [sectionList, setSectionList] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [addMOModal, setAddMOModal] = useState(false);
+  const [addCHVModal, setAddCHVModal] = useState(false);
   const [changePasswordModal, setChangePasswordModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [searchValue, setSearchValue] = useState();
-
-  //Add User State
-  const [name, setName] = useState();
-  const [userName, setUserName] = useState();
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
-  const [phoneNumber, setPhoneNumber] = useState();
-  const [email, setEmail] = useState();
-  const [dispensary, setDispensary] = useState();
-  const [MOid, setMOid] = useState();
+  const [CHVId, setCHVId] = useState();
 
   //Edit Modal State
   const [u_name, setU_name] = useState();
@@ -82,7 +74,7 @@ function MO() {
   const [u_email, setU_email] = useState();
   const [u_ward, setU_ward] = useState();
   const [u_healthPost, setU_HealthPost] = useState();
-  const [u_Dispensary, setU_Dispensary] = useState();
+  const [u_Section, setU_section] = useState();
   const [u_is_ActiveStatus, setU_Is_ActiveStatus] = useState();
 
   const handleU_NameChange = (e) => {
@@ -104,9 +96,18 @@ function MO() {
     }
   };
 
-  //change password state
+  // password update modal
   const [newPassword, setNewPassword] = useState();
   const [confirmNewPassword, setConfirmNewPassword] = useState();
+
+  //Add User State
+  const [name, setName] = useState();
+  const [userName, setUserName] = useState();
+  const [password, setPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState();
+  const [phoneNumber, setPhoneNumber] = useState();
+  const [email, setEmail] = useState();
+  const [section, setSection] = useState();
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -129,7 +130,7 @@ function MO() {
   const handleSearch = () => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/mo`, {
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA`, {
         params: {
           search: searchValue,
         },
@@ -137,7 +138,7 @@ function MO() {
       .then((res) => {
         setLoader(false);
         console.log(res.data.data);
-        setMOData(res.data.data);
+        setCHVData(res.data.data);
       })
       .catch((error) => {
         setLoader(false);
@@ -150,7 +151,7 @@ function MO() {
       });
   };
 
-  const handleMOModalView = () => {
+  const handleaddCHVModalView = () => {
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -159,7 +160,7 @@ function MO() {
       })
       .then((res) => {
         console.log(res.data);
-        setWardList(res.data);
+        setAreaList(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -169,36 +170,59 @@ function MO() {
           }, 1000);
         }
       });
-    setAddMOModal(true);
+    setAddCHVModal(true);
   };
   const handleWardSelect = (id) => {
     setU_ward(id);
-    setDispensaryList([]);
-    setU_Dispensary();
+    setHealthPostNameList([]);
+    setSectionList([]);
+    setU_HealthPost();
+    setU_section();
     axios
-      .get(`${BASE_URL}/allauth/api/GetDispensaryListAPI/${id}`, {
+      .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
       })
       .then((res) => {
         console.log(res.data);
-        setDispensaryList(res.data);
+        setHealthPostNameList(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleHealthPostSelect = (id) => {
+    setU_HealthPost(id);
+    setSectionList([]);
+    setU_section();
+    console.log(id);
+    axios
+      .get(`${BASE_URL}/allauth/api/GetSectionListAPI/${id}`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setSectionList(res.data.data);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const handleMOModalClose = () => {
+  const handleCHVModalClose = () => {
     setName();
     setUserName();
     setEmail();
     setPassword();
     setConfirmPassword();
     setPhoneNumber();
-    setDispensary();
-    setAddMOModal(false);
+    setSection();
+    setHealthPostNameList([]);
+    setSectionList([]);
+    setAddCHVModal(false);
   };
   let axiosConfig = {
     headers: {
@@ -217,16 +241,35 @@ function MO() {
       })
       .then((res) => {
         console.log(res.data);
-        setWardList(res.data);
+        setAreaList(res.data);
         axios
-          .get(`${BASE_URL}/allauth/api/GetDispensaryListAPI/${data.ward_id}`, {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem("Token")}`,
-            },
-          })
+          .get(
+            `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`,
+            {
+              headers: {
+                Authorization: `Token ${sessionStorage.getItem("Token")}`,
+              },
+            }
+          )
           .then((res) => {
-            console.log(res.data);
-            setDispensaryList(res.data);
+            console.log(res);
+            setHealthPostNameList(res.data.data);
+            axios
+              .get(
+                `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
+                {
+                  headers: {
+                    Authorization: `Token ${sessionStorage.getItem("Token")}`,
+                  },
+                }
+              )
+              .then((res) => {
+                console.log(res);
+                setSectionList(res.data.data);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           })
           .catch((err) => {
             console.log(err);
@@ -240,31 +283,40 @@ function MO() {
           }, 1000);
         }
       });
-    setMOid(data.id);
+    setCHVId(data.id);
+    // setU_name(data.name);
+    // setU_userName(data.username);
+    // setU_phoneNumber(data.phoneNumber);
+    // setU_email(data.emailId);
+    // setU_ward(data.ward_id);
+    // // handleWardSelect(data.ward_id);
+    // setU_HealthPost(data.health_Post_id);
+    // // handleHealthPostSelect(data.health_Post_id);
+    // setU_section(data.section_id);
     setU_name(data.name);
     setU_userName(data.username);
     setU_phoneNumber(data.phoneNumber);
     setU_email(data.emailId);
-    setU_ward(data.ward_id);
+    setU_ward(data.ward);
     setU_Is_ActiveStatus(data.is_active);
-    // handleWardSelect(data.ward_id);
-    setU_HealthPost(data.health_Post_id);
-    // handleHealthPostSelect(data.health_Post_id);
-    setU_Dispensary(data.dispensary_id);
+    setU_HealthPost(data.health_Post);
+    setU_section(data.section_id);
     setShowEditModal(true);
   };
   const handleEditModalClose = () => {
-    setU_name();
-    setU_userName();
-    setU_phoneNumber();
-    setU_email();
+    setU_name("");
+    setU_userName("");
+    setU_phoneNumber("");
+    setU_email("");
     setU_ward();
-    setU_Is_ActiveStatus();
     setU_HealthPost();
-    setU_Dispensary();
+    setU_section();
+    setU_Is_ActiveStatus();
     setShowEditModal(false);
+    setAreaList([]);
+    setHealthPostNameList([]);
+    setSectionList([]);
   };
-
   const handleAddUser = () => {
     let formData = new FormData();
     formData.append("name", name);
@@ -272,8 +324,8 @@ function MO() {
     formData.append("password", password);
     formData.append("phoneNumber", phoneNumber);
     formData.append("emailId", email);
-    formData.append("dispensary", dispensary);
-    formData.append("group", "mo");
+    formData.append("section", section);
+    formData.append("group", "CHV/ASHA");
     if (password !== confirmPassword) {
       message.warning("The passwords doesn't match");
     } else {
@@ -283,7 +335,7 @@ function MO() {
           console.log(res.data.message);
           message.success(res.data.message);
           setRefresh(refresh + 1);
-          handleMOModalClose();
+          handleCHVModalClose();
         })
         .catch((err) => {
           console.log(err);
@@ -292,7 +344,7 @@ function MO() {
     }
   };
   const handleUpdateUser = () => {
-    console.log(MOid);
+    console.log(CHVId);
     if (u_name === "") {
       message.warning(" Please Enter Name");
     } else if (u_userName === "") {
@@ -301,22 +353,22 @@ function MO() {
       message.warning("Please Enter Email Address");
     } else if (u_phoneNumber === "") {
       message.warning("Please Enter Phone Number");
-    } else if (u_Dispensary === undefined) {
-      message.warning("Please select Dispensary");
+    } else if (u_Section === undefined) {
+      message.warning("Please select Section");
     } else if (u_is_ActiveStatus === undefined) {
-      message.warning("Select Active Status");
+      message.warning("Please select active status");
     } else {
       const formData = new FormData();
       formData.append("name", u_name);
       formData.append("username", u_userName);
       formData.append("emailId", u_email);
       formData.append("phoneNumber", u_phoneNumber);
-      formData.append("dispensary", u_Dispensary);
+      formData.append("section", u_Section);
       formData.append("is_active", u_is_ActiveStatus);
 
       axios
         .patch(
-          `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${MOid}`,
+          `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${CHVId}`,
           formData,
           axiosConfig
         )
@@ -355,23 +407,22 @@ function MO() {
       },
     });
   };
-
   const handleChangePasswordModalView = (id) => {
-    setMOid(id);
+    setCHVId(id);
     setChangePasswordModal(true);
   };
   const handleChangePasswordModalClose = () => {
     setNewPassword();
     setConfirmNewPassword();
-    setMOid();
+    setCHVId();
     setChangePasswordModal(false);
   };
   const handlePasswordUpdate = () => {
-    console.log(newPassword, MOid);
+    console.log(newPassword, CHVId);
     if (newPassword === confirmNewPassword) {
       axios
         .patch(
-          `${BASE_URL}/adminportal/api/AdminChangePasswordView/${MOid}`,
+          `${BASE_URL}/adminportal/api/AdminChangePasswordView/${CHVId}`,
           {
             newpassword: newPassword,
           },
@@ -388,18 +439,21 @@ function MO() {
           message.warning(err.response.data.message);
         });
     } else {
-      message.warning("Enter same password");
+      message.warning("Enter Same Password");
     }
   };
-
   const column = [
     {
       title: "Ward",
       dataIndex: "ward",
     },
     {
-      title: "Dispensary",
-      dataIndex: "dispensary",
+      title: "Health Post",
+      dataIndex: "health_Post",
+    },
+    {
+      title: "Section",
+      dataIndex: "section",
     },
     {
       title: "Name",
@@ -419,7 +473,7 @@ function MO() {
       title: "Phone Number",
       dataIndex: "phoneNumber",
     },
-   
+
     {
       title: "Date & Time Of Joining",
       dataIndex: "date_joined",
@@ -492,9 +546,9 @@ function MO() {
                 color: "#176b87",
               }}
             >
-              Medical Officers (MO)
+              Community Health Volunteers (CHV)
             </p>
-            <AddButton onClick={handleMOModalView}>Add MO</AddButton>
+            <AddButton onClick={handleaddCHVModalView}>Add CHV</AddButton>
           </div>
           <div>
             <div style={{ margin: "20px 10px" }}>
@@ -513,20 +567,22 @@ function MO() {
                 </FormItem>
               </Form>
             </div>
-            <Table columns={column} dataSource={MOData}></Table>
+            <Table columns={column} dataSource={CHVData}></Table>
           </div>
           <Modal
-            open={addMOModal}
+            open={addCHVModal}
             width={900}
-            onCancel={handleMOModalClose}
+            onCancel={handleCHVModalClose}
             title={
               <div>
-                <h3>Medical Officer details</h3>
+                <h3>Community Health Volunteers (CHV) Details</h3>
               </div>
             }
             footer={
               <>
-                <CancelButton onClick={handleMOModalClose}>Cancel</CancelButton>
+                <CancelButton onClick={handleCHVModalClose}>
+                  Cancel
+                </CancelButton>
                 <SubmitButton onClick={handleAddUser}>Submit</SubmitButton>
               </>
             }
@@ -611,7 +667,7 @@ function MO() {
                       }
                       onChange={(e) => handleWardSelect(e)}
                     >
-                      {wardList.map((data) => (
+                      {areaList.map((data) => (
                         <Option key={data.id} value={data.id}>
                           {data.wardName}
                         </Option>
@@ -620,7 +676,7 @@ function MO() {
                   </FormItem>
                 </Col>
                 <Col>
-                  <FormItem label="Dispensary">
+                  <FormItem label="Health Post">
                     <Select
                       showSearch
                       style={{ width: "350px" }}
@@ -631,16 +687,37 @@ function MO() {
                               .includes(inputValue.toLowerCase())
                           : false
                       }
-                      onChange={(e) => setDispensary(e)}
+                      onChange={(e) => handleHealthPostSelect(e)}
                     >
-                      {dispensaryList.map((data) => (
+                      {healthPostNameList.map((data) => (
                         <Option key={data.id} value={data.id}>
-                          {data.dispensaryName}
+                          {data.healthPostName}
                         </Option>
                       ))}
                     </Select>
                   </FormItem>
                 </Col>
+                <FormItem label="Section">
+                  <Select
+                    showSearch
+                    style={{ width: "350px" }}
+                    value={section}
+                    filterOption={(inputValue, option) =>
+                      option.children
+                        ? option.children
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                        : false
+                    }
+                    onChange={(e) => setSection(e)}
+                  >
+                    {sectionList.map((data) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.sectionName}
+                      </Option>
+                    ))}
+                  </Select>
+                </FormItem>
               </Row>
             </Form>
           </Modal>
@@ -664,7 +741,7 @@ function MO() {
                   onChange={(e) => setNewPassword(e.target.value)}
                 ></Input.Password>
               </FormItem>
-              <FormItem label="confirm new Password">
+              <FormItem label="Confirm New Password">
                 <Input.Password
                   style={{ width: "350px" }}
                   value={confirmNewPassword}
@@ -675,7 +752,7 @@ function MO() {
           </Modal>
           <Modal
             open={showEditModal}
-            title={<h2>Update MO's Details</h2>}
+            title={<h2>Update CHV's Details</h2>}
             width={1000}
             onCancel={handleEditModalClose}
             footer={
@@ -743,7 +820,7 @@ function MO() {
                       value={u_ward}
                       onChange={(e) => handleWardSelect(e)}
                     >
-                      {wardList.map((data) => (
+                      {areaList.map((data) => (
                         <Option key={data.id} value={data.id}>
                           {data.wardName}
                         </Option>
@@ -752,7 +829,8 @@ function MO() {
                   </FormItem>
                 </Col>
                 <Col span={12}>
-                  <FormItem label="Dispensary">
+                  {" "}
+                  <FormItem label="Health Post">
                     <Select
                       showSearch
                       style={{ width: "350px" }}
@@ -763,24 +841,56 @@ function MO() {
                               .includes(inputValue.toLowerCase())
                           : false
                       }
-                      value={u_Dispensary}
-                      onChange={(e) => setU_Dispensary(e)}
+                      value={u_healthPost}
+                      onChange={(e) => handleHealthPostSelect(e)}
                     >
-                      {dispensaryList.map((data) => (
+                      {healthPostNameList.map((data) => (
                         <Option key={data.id} value={data.id}>
-                          {data.dispensaryName}
+                          {data.healthPostName}
                         </Option>
                       ))}
                     </Select>
                   </FormItem>
                 </Col>
               </Row>
-              <FormItem label="Is Active" style={{ width: "350px" }}>
-                <Select onChange={(value) => setU_Is_ActiveStatus(value)}>
-                  <Option value="true">Active</Option>
-                  <Option value="false">InActive</Option>
-                </Select>
-              </FormItem>
+
+              <Row>
+                <Col>
+                  <FormItem label="Section">
+                    <Select
+                      showSearch
+                      style={{ width: "350px" }}
+                      value={u_Section}
+                      filterOption={(inputValue, option) =>
+                        option.children
+                          ? option.children
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          : false
+                      }
+                      onChange={(e) => setU_section(e)}
+                    >
+                      {sectionList.map((data) => (
+                        <Option key={data.id} value={data.id}>
+                          {data.sectionName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col>
+                  {" "}
+                  <FormItem
+                    label="Is Active"
+                    style={{ width: "350px", margin: "0% 36%" }}
+                  >
+                    <Select onChange={(value) => setU_Is_ActiveStatus(value)}>
+                      <Option value="true">Active</Option>
+                      <Option value="false">InActive</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+              </Row>
             </Form>
           </Modal>
         </Content>
@@ -788,4 +898,4 @@ function MO() {
     </Spin>
   );
 }
-export default MO;
+export default WardCHV;
