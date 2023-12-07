@@ -35,10 +35,11 @@ import { EditOutlined } from "@ant-design/icons";
 
 function CHV() {
   const [refresh, setRefresh] = useState(1);
+  const [wardSelect, setWardSelect] = useState("A");
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA`)
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA/${wardSelect}`)
       .then((res) => {
         setLoader(false);
         console.log(res.data.data);
@@ -53,7 +54,25 @@ function CHV() {
           }, 1000);
         }
       });
-  }, [refresh]);
+    axios
+      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setAreaList(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
+  }, [refresh, wardSelect]);
 
   //generic State
   const [areaList, setAreaList] = useState([]);
@@ -473,9 +492,7 @@ function CHV() {
       title: "Phone Number",
       dataIndex: "phoneNumber",
     },
-    
-  
-   
+
     {
       title: "Date & Time Of Joining",
       dataIndex: "date_joined",
@@ -554,20 +571,44 @@ function CHV() {
           </div>
           <div>
             <div style={{ margin: "20px 10px" }}>
-              <Form>
-                <FormItem>
-                  <Input
-                    type="text"
-                    style={{ width: "300px" }}
-                    placeholder="Enter Name / User Name / ward "
-                    onChange={(e) => setSearchValue(e.target.value)}
-                  ></Input>
+              <Row>
+                <Col>
+                  <Form>
+                    <FormItem>
+                      <Input
+                        type="text"
+                        style={{ width: "300px" }}
+                        placeholder="Enter Name / User Name / ward "
+                        onChange={(e) => setSearchValue(e.target.value)}
+                      ></Input>
 
-                  <SearchButton htmlType="submit" onClick={handleSearch}>
-                    Search
-                  </SearchButton>
-                </FormItem>
-              </Form>
+                      <SearchButton htmlType="submit" onClick={handleSearch}>
+                        Search
+                      </SearchButton>
+                    </FormItem>
+                  </Form>
+                </Col>
+                <Col>
+                  <Form layout="vertical">
+                    <FormItem
+                      label="Select ward"
+                      style={{ width: "250px", margin: "-25px 0px 5px 300px" }}
+                    >
+                      <Select
+                        value={wardSelect}
+                        showSearch
+                        onChange={(value) => setWardSelect(value)}
+                      >
+                        {areaList.map((data) => (
+                          <Option key={data.id} value={data.wardName}>
+                            {data.wardName}
+                          </Option>
+                        ))}
+                      </Select>
+                    </FormItem>
+                  </Form>
+                </Col>
+              </Row>
             </div>
             <Table columns={column} dataSource={CHVData}></Table>
           </div>
@@ -886,9 +927,7 @@ function CHV() {
                     label="Is Active"
                     style={{ width: "350px", margin: "0% 36%" }}
                   >
-                    <Select
-                      onChange={(value) => setU_Is_ActiveStatus(value)}
-                    >
+                    <Select onChange={(value) => setU_Is_ActiveStatus(value)}>
                       <Option value="true">Active</Option>
                       <Option value="false">InActive</Option>
                     </Select>

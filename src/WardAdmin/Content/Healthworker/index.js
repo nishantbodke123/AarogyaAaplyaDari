@@ -36,10 +36,19 @@ import { useTheme } from "styled-components";
 
 function WardHealthworker() {
   const [refresh, setRefresh] = useState(1);
+  let axiosConfig = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    },
+  };
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/healthworker`)
+      .get(
+        `${BASE_URL}/adminportal/api/GetWardWiseSUerList/healthworker`,
+        axiosConfig
+      )
       .then((res) => {
         setLoader(false);
         console.log(res.data.data);
@@ -225,27 +234,22 @@ function WardHealthworker() {
     setSection();
     setAddHealthWorkerModal(false);
   };
-  let axiosConfig = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    },
-  };
 
   const handleEditModalShow = (data) => {
     console.log(data.is_active);
+
     axios
-      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+      .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
       })
       .then((res) => {
-        console.log(res.data);
-        setAreaList(res.data);
+        console.log(res);
+        setHealthPostNameList(res.data.data);
         axios
           .get(
-            `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`,
+            `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
             {
               headers: {
                 Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -253,23 +257,8 @@ function WardHealthworker() {
             }
           )
           .then((res) => {
-            setHealthPostNameList(res.data.data);
-            axios
-              .get(
-                `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
-                {
-                  headers: {
-                    Authorization: `Token ${sessionStorage.getItem("Token")}`,
-                  },
-                }
-              )
-              .then((res) => {
-                console.log(res.data);
-                setSectionList(res.data.data);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+            console.log(res);
+            setSectionList(res.data.data);
           })
           .catch((err) => {
             console.log(err);
@@ -283,6 +272,55 @@ function WardHealthworker() {
           }, 1000);
         }
       });
+    // axios
+    //   .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+    //     headers: {
+    //       Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     setAreaList(res.data);
+    //     axios
+    //       .get(
+    //         `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`,
+    //         {
+    //           headers: {
+    //             Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //           },
+    //         }
+    //       )
+    //       .then((res) => {
+    //         setHealthPostNameList(res.data.data);
+    //         axios
+    //           .get(
+    //             `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
+    //             {
+    //               headers: {
+    //                 Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //               },
+    //             }
+    //           )
+    //           .then((res) => {
+    //             console.log(res.data);
+    //             setSectionList(res.data.data);
+    //           })
+    //           .catch((err) => {
+    //             console.log(err);
+    //           });
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     if (err.status == 401) {
+    //       setTimeout(() => {
+    //         LogOut();
+    //       }, 1000);
+    //     }
+    //   });
     setHealthworkerID(data.id);
     setU_name(data.name);
     setU_userName(data.username);
@@ -489,7 +527,11 @@ function WardHealthworker() {
       title: "Status",
       dataIndex: "is_active",
       render: (data) => {
-        return data ? "Active" : "InActive";
+        return data ? (
+          <p style={{ color: "#176b87" }}>Active</p>
+        ) : (
+          <p style={{ color: "red" }}>InActive</p>
+        );
       },
     },
     // {
@@ -813,6 +855,7 @@ function WardHealthworker() {
                               .includes(inputValue.toLowerCase())
                           : false
                       }
+                      disabled
                       value={u_ward}
                       onChange={(e) => handleWardSelect(e)}
                     >

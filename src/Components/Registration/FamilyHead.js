@@ -201,9 +201,9 @@ function FamilyHead(props) {
 
   const handleWardSelectionModal = () => {
     if (selectedCHV == "") {
-      message.warning("Please select area");
+      message.warning("Please select CHV");
     } else if (section == "") {
-      message.warning("Please Select CHV");
+      message.warning("Please Select Area");
     } else {
       handleShowModalClose();
     }
@@ -269,7 +269,11 @@ function FamilyHead(props) {
         .then((response) => {
           console.log(response.status);
           if (response.status == 200) {
-            setFamilyHeadRegister("yes");
+            Modal.confirm({
+              title: `Once you click "Next," you cannot revisit the previous page.`,
+              okText: "Confirm",
+              onOk: () => setFamilyHeadRegister("yes"),
+            });
           }
         })
         .catch((error) => {
@@ -1024,32 +1028,43 @@ function FamilyHead(props) {
       message.warning("Please Mention Gender");
     } else if (age === "") {
       message.warning("Please Enter Age");
-    } else if (aadharCard !=="" || adharAbhaRequired){
-      axios.get(`${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`, axiosConfig).then((res)=>{
-        if(res.status === 401){
-          LogOut()
-        } else if( res.status === 200){
-          handleConsentModalShow()
-        } else {
-          message.warning("Enter valid aadhar number")
-        }
-      }).catch((error)=>{
-        console.log(error);
-        message.warning(error.response.message);
-      })
-    } else if(abhaId !=="" || adharAbhaRequired){
-      axios.get(`${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`,axiosConfig).then((res)=>{
-        if(res.status === 401){
-          LogOut();
-        } else if( res.status === 200){
-          handleConsentModalShow();
-        } else {
-          message.warning("Enter Valid abha Number")
-        }
-      }).catch((error)=>{
-        console.log(error);
-        message.warning(error.response.message);
-      })
+    } else if (aadharCard !== "") {
+      //|| adharAbhaRequired
+      axios
+        .get(
+          `${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`,
+          axiosConfig
+        )
+        .then((res) => {
+          if (res.status === 401) {
+            LogOut();
+          } else if (res.status === 200) {
+            handleConsentModalShow();
+          } else {
+            message.warning("Enter valid aadhar number");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          message.warning(error.response.data.message);
+        });
+    } else if (abhaId !== "") {
+      // || adharAbhaRequired
+      axios
+        .get(`${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`, axiosConfig)
+        .then((res) => {
+          if (res.status === 401) {
+            LogOut();
+          } else if (res.status === 200) {
+            handleConsentModalShow();
+          } else {
+            message.warning("Enter Valid abha Number");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          message.warning(error.response.message);
+        });
     } else {
       handleConsentModalShow();
     }
@@ -1449,45 +1464,63 @@ function FamilyHead(props) {
   };
 
   const handleSubmitAndNext = () => {
-    if (age >= 60) {
-      if (partialSubmit) {
-        familyMembersArray.push(memberData);
-        handleSubmit();
-      } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
-        familyMembersArray.push(memberData);
-        handleClearPartA();
-        handleClearPartB();
-        handleClearPartC();
-        handleClearPartD();
-        handleClearPartE();
-        onKeyChange("1");
-        handleClearGeneralPart();
-        setNoOfMembersComplted(noOfMembersCompleted + 1);
-      } else {
-        familyMembersArray.push(memberData);
-        handleSubmit();
-      }
-      handleConsentModalClose();
+    if (partialSubmit) {
+      familyMembersArray.push(memberData);
+      handleSubmit();
+    } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
+      familyMembersArray.push(memberData);
+      handleClearPartA();
+      handleClearPartB();
+      handleClearPartC();
+      handleClearPartD();
+      handleClearPartE();
+      onKeyChange("1");
+      handleClearGeneralPart();
+      setNoOfMembersComplted(noOfMembersCompleted + 1);
     } else {
-      if (partialSubmit) {
-        familyMembersArray.push(memberData);
-        handleSubmit();
-      } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
-        familyMembersArray.push(memberData);
-        handleClearPartA();
-        handleClearPartB();
-        handleClearPartC();
-        handleClearPartD();
-        handleClearPartE();
-        onKeyChange("1");
-        handleClearGeneralPart();
-        setNoOfMembersComplted(noOfMembersCompleted + 1);
-      } else {
-        familyMembersArray.push(memberData);
-        handleSubmit();
-      }
-      handleConsentModalClose();
+      familyMembersArray.push(memberData);
+      handleSubmit();
     }
+    handleConsentModalClose();
+    // if (age >= 60) {
+    //   if (partialSubmit) {
+    //     familyMembersArray.push(memberData);
+    //     handleSubmit();
+    //   } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
+    //     familyMembersArray.push(memberData);
+    //     handleClearPartA();
+    //     handleClearPartB();
+    //     handleClearPartC();
+    //     handleClearPartD();
+    //     handleClearPartE();
+    //     onKeyChange("1");
+    //     handleClearGeneralPart();
+    //     setNoOfMembersComplted(noOfMembersCompleted + 1);
+    //   } else {
+    //     familyMembersArray.push(memberData);
+    //     handleSubmit();
+    //   }
+    //   handleConsentModalClose();
+    // } else {
+    //   if (partialSubmit) {
+    //     familyMembersArray.push(memberData);
+    //     handleSubmit();
+    //   } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
+    //     familyMembersArray.push(memberData);
+    //     handleClearPartA();
+    //     handleClearPartB();
+    //     handleClearPartC();
+    //     handleClearPartD();
+    //     handleClearPartE();
+    //     onKeyChange("1");
+    //     handleClearGeneralPart();
+    //     setNoOfMembersComplted(noOfMembersCompleted + 1);
+    //   } else {
+    //     familyMembersArray.push(memberData);
+    //     handleSubmit();
+    //   }
+    //   handleConsentModalClose();
+    // }
   };
 
   const handleSubmit = () => {
@@ -2247,18 +2280,15 @@ function FamilyHead(props) {
       ],
     },
 
-    bloodCollectionLocation:
-      age > 60
-        ? bloodSampleHome
-          ? "Home"
-          : bloodSampleCenter
-          ? "Center"
-          : bloodSampleDenied
-          ? "Denied"
-          : notRequired
-          ? "Not Required"
-          : ""
-        : "",
+    bloodCollectionLocation: bloodSampleHome
+      ? "Home"
+      : bloodSampleCenter
+      ? "Center"
+      : bloodSampleDenied
+      ? "Denied"
+      : notRequired
+      ? "Not Required"
+      : "",
   };
 
   return familyHeadRegister == "no" ? (
@@ -2564,7 +2594,9 @@ function FamilyHead(props) {
                 </Checkbox>
               </Row>
             ) : (
-              <><Divider/></>
+              <>
+                <Divider />
+              </>
             )}
             {age <= 18 && !adharAbhaRequired ? (
               <></>
@@ -2632,7 +2664,9 @@ function FamilyHead(props) {
                 </Checkbox>
               </Row>
             ) : (
-              <><Divider/></>
+              <>
+                <Divider />
+              </>
             )}
 
             {age <= 18 && !physicalDetailsRequired ? (
@@ -4334,76 +4368,73 @@ function FamilyHead(props) {
             </Checkbox>
             <Checkbox>Referral for blood collection</Checkbox> */}
           </div>
-          {age >= 60 ? (
-            <>
-              <BloodSampleText>BLOOD COLLECTION / रक्त संकलन :</BloodSampleText>
-              <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
-              <BloodSampleButtonsRow>
-                <BloodSampleButtonCol>
-                  <Button
-                    style={
-                      bloodSampleHome
-                        ? { backgroundColor: "#E9B384", width: "200px" }
-                        : { backgroundColor: "white", width: "200px" }
-                    }
-                    onClick={handleBloodSampleHomeSelct}
-                  >
-                    <span style={{ marginRight: "10px" }}>
-                      <FontAwesomeIcon icon={faHouse} />
-                    </span>
-                    Home / घर
-                  </Button>
-                </BloodSampleButtonCol>
-                <BloodSampleButtonCol>
-                  <Button
-                    style={
-                      bloodSampleCenter
-                        ? { backgroundColor: "#E9B384", width: "200px" }
-                        : { backgroundColor: "white", width: "200px" }
-                    }
-                    onClick={handleBloodSampleCenterSelect}
-                  >
-                    <span style={{ marginRight: "10px" }}>
-                      <FontAwesomeIcon icon={faPlus} />
-                    </span>
-                    Center / केंद्र
-                  </Button>
-                </BloodSampleButtonCol>
-                <BloodSampleButtonCol>
-                  <Button
-                    style={
-                      bloodSampleDenied
-                        ? { backgroundColor: "#E9B384", width: "200px" }
-                        : { backgroundColor: "white", width: "200px" }
-                    }
-                    onClick={handleBloodSampleDesiedSelect}
-                  >
-                    <span style={{ marginRight: "10px" }}>
-                      <FontAwesomeIcon icon={faXmark} />
-                    </span>
-                    Denied / नाकारले
-                  </Button>
-                </BloodSampleButtonCol>
-                <BloodSampleButtonCol>
-                  <Button
-                    style={
-                      notRequired
-                        ? { backgroundColor: "#E9B384", width: "210px" }
-                        : { backgroundColor: "white", width: "210px" }
-                    }
-                    onClick={handleNotRequiredSelect}
-                  >
-                    <span style={{ marginRight: "10px" }}>
-                      <FontAwesomeIcon icon={faXmark} />
-                    </span>
-                    Not required / आवश्यक नाही
-                  </Button>
-                </BloodSampleButtonCol>
-              </BloodSampleButtonsRow>
-            </>
-          ) : (
-            <></>
-          )}
+
+          <>
+            <BloodSampleText>BLOOD COLLECTION / रक्त संकलन :</BloodSampleText>
+            <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
+            <BloodSampleButtonsRow>
+              <BloodSampleButtonCol>
+                <Button
+                  style={
+                    bloodSampleHome
+                      ? { backgroundColor: "#E9B384", width: "200px" }
+                      : { backgroundColor: "white", width: "200px" }
+                  }
+                  onClick={handleBloodSampleHomeSelct}
+                >
+                  <span style={{ marginRight: "10px" }}>
+                    <FontAwesomeIcon icon={faHouse} />
+                  </span>
+                  Home / घर
+                </Button>
+              </BloodSampleButtonCol>
+              <BloodSampleButtonCol>
+                <Button
+                  style={
+                    bloodSampleCenter
+                      ? { backgroundColor: "#E9B384", width: "200px" }
+                      : { backgroundColor: "white", width: "200px" }
+                  }
+                  onClick={handleBloodSampleCenterSelect}
+                >
+                  <span style={{ marginRight: "10px" }}>
+                    <FontAwesomeIcon icon={faPlus} />
+                  </span>
+                  Center / केंद्र
+                </Button>
+              </BloodSampleButtonCol>
+              <BloodSampleButtonCol>
+                <Button
+                  style={
+                    bloodSampleDenied
+                      ? { backgroundColor: "#E9B384", width: "200px" }
+                      : { backgroundColor: "white", width: "200px" }
+                  }
+                  onClick={handleBloodSampleDesiedSelect}
+                >
+                  <span style={{ marginRight: "10px" }}>
+                    <FontAwesomeIcon icon={faXmark} />
+                  </span>
+                  Denied / नाकारले
+                </Button>
+              </BloodSampleButtonCol>
+              <BloodSampleButtonCol>
+                <Button
+                  style={
+                    notRequired
+                      ? { backgroundColor: "#E9B384", width: "210px" }
+                      : { backgroundColor: "white", width: "210px" }
+                  }
+                  onClick={handleNotRequiredSelect}
+                >
+                  <span style={{ marginRight: "10px" }}>
+                    <FontAwesomeIcon icon={faXmark} />
+                  </span>
+                  Not required / आवश्यक नाही
+                </Button>
+              </BloodSampleButtonCol>
+            </BloodSampleButtonsRow>
+          </>
 
           {/* {bloodSampleHome ? (
             <>

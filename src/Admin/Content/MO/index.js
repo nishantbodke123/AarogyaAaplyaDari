@@ -35,13 +35,14 @@ import { Option } from "antd/es/mentions";
 
 function MO() {
   const [refresh, setRefresh] = useState(1);
+  const [wardSelect, setWardSelect] = useState("A");
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/mo`)
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/mo/${wardSelect}`)
       .then((res) => {
         setLoader(false);
-        console.log(res.data.data);
+        console.log(res.data);
         setMOData(res.data.data);
       })
       .catch((error) => {
@@ -53,7 +54,25 @@ function MO() {
           }, 1000);
         }
       });
-  }, [refresh]);
+    axios
+      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setWardList(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
+  }, [refresh, wardSelect]);
   //generic State
   const [wardList, setWardList] = useState([]);
   const [MOData, setMOData] = useState([]);
@@ -210,14 +229,14 @@ function MO() {
   const handleEditModalShow = (data) => {
     console.log(data);
     axios
-      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+      .get(`${BASE_URL}/adminportal/api/GetWardWiseSUerList/mo`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
       })
       .then((res) => {
         console.log(res.data);
-        setWardList(res.data);
+        setWardList(res.data.data);
         axios
           .get(`${BASE_URL}/allauth/api/GetDispensaryListAPI/${data.ward_id}`, {
             headers: {
@@ -419,7 +438,7 @@ function MO() {
       title: "Phone Number",
       dataIndex: "phoneNumber",
     },
-   
+
     {
       title: "Date & Time Of Joining",
       dataIndex: "date_joined",
@@ -498,20 +517,44 @@ function MO() {
           </div>
           <div>
             <div style={{ margin: "20px 10px" }}>
-              <Form>
-                <FormItem>
-                  <Input
-                    type="text"
-                    style={{ width: "300px" }}
-                    placeholder="Enter Name / User Name / ward "
-                    onChange={(e) => setSearchValue(e.target.value)}
-                  ></Input>
+              <Row>
+                <Col>
+                  <Form>
+                    <FormItem>
+                      <Input
+                        type="text"
+                        style={{ width: "300px" }}
+                        placeholder="Enter Name / User Name / ward "
+                        onChange={(e) => setSearchValue(e.target.value)}
+                      ></Input>
 
-                  <SearchButton htmlType="submit" onClick={handleSearch}>
-                    Search
-                  </SearchButton>
-                </FormItem>
-              </Form>
+                      <SearchButton htmlType="submit" onClick={handleSearch}>
+                        Search
+                      </SearchButton>
+                    </FormItem>
+                  </Form>
+                </Col>
+                <Col>
+                  <Form layout="vertical">
+                    <FormItem
+                      label="Select ward"
+                      style={{ width: "250px", margin: "-25px 0px 5px 300px" }}
+                    >
+                      <Select
+                        value={wardSelect}
+                        showSearch
+                        onChange={(value) => setWardSelect(value)}
+                      >
+                        {wardList.map((data) => (
+                          <Option key={data.id} value={data.wardName}>
+                            {data.wardName}
+                          </Option>
+                        ))}
+                      </Select>
+                    </FormItem>
+                  </Form>
+                </Col>
+              </Row>
             </div>
             <Table columns={column} dataSource={MOData}></Table>
           </div>

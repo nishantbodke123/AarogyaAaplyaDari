@@ -35,10 +35,19 @@ import { EditOutlined } from "@ant-design/icons";
 
 function WardCHV() {
   const [refresh, setRefresh] = useState(1);
+  let axiosConfig = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    },
+  };
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA`)
+      .get(
+        `${BASE_URL}/adminportal/api/GetWardWiseSUerList/CHV/ASHA`,
+        axiosConfig
+      )
       .then((res) => {
         setLoader(false);
         console.log(res.data.data);
@@ -224,27 +233,28 @@ function WardCHV() {
     setSectionList([]);
     setAddCHVModal(false);
   };
-  let axiosConfig = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    },
-  };
+  // let axiosConfig = {
+  //   headers: {
+  //     "Content-Type": "multipart/form-data",
+  //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
+  //   },
+  // };
 
   const handleEditModalShow = (data) => {
     console.log(data);
+
     axios
-      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+      .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
       })
       .then((res) => {
-        console.log(res.data);
-        setAreaList(res.data);
+        console.log(res);
+        setHealthPostNameList(res.data.data);
         axios
           .get(
-            `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`,
+            `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
             {
               headers: {
                 Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -253,23 +263,7 @@ function WardCHV() {
           )
           .then((res) => {
             console.log(res);
-            setHealthPostNameList(res.data.data);
-            axios
-              .get(
-                `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
-                {
-                  headers: {
-                    Authorization: `Token ${sessionStorage.getItem("Token")}`,
-                  },
-                }
-              )
-              .then((res) => {
-                console.log(res);
-                setSectionList(res.data.data);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+            setSectionList(res.data.data);
           })
           .catch((err) => {
             console.log(err);
@@ -283,6 +277,57 @@ function WardCHV() {
           }, 1000);
         }
       });
+
+    // axios
+    //   .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+    //     headers: {
+    //       Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     setAreaList(res.data);
+    //     axios
+    //       .get(
+    //         `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`,
+    //         {
+    //           headers: {
+    //             Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //           },
+    //         }
+    //       )
+    //       .then((res) => {
+    //         console.log(res);
+    //         setHealthPostNameList(res.data.data);
+    //         axios
+    //           .get(
+    //             `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
+    //             {
+    //               headers: {
+    //                 Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //               },
+    //             }
+    //           )
+    //           .then((res) => {
+    //             console.log(res);
+    //             setSectionList(res.data.data);
+    //           })
+    //           .catch((err) => {
+    //             console.log(err);
+    //           });
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     if (err.status == 401) {
+    //       setTimeout(() => {
+    //         LogOut();
+    //       }, 1000);
+    //     }
+    //   });
     setCHVId(data.id);
     // setU_name(data.name);
     // setU_userName(data.username);
@@ -818,6 +863,7 @@ function WardCHV() {
                           : false
                       }
                       value={u_ward}
+                      disabled
                       onChange={(e) => handleWardSelect(e)}
                     >
                       {areaList.map((data) => (

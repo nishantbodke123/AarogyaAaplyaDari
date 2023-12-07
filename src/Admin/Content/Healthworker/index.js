@@ -36,10 +36,13 @@ import { useTheme } from "styled-components";
 
 function Healthworker() {
   const [refresh, setRefresh] = useState(1);
+  const [wardSelect, setWardSelect] = useState("A");
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/healthworker`)
+      .get(
+        `${BASE_URL}/adminportal/api/GetuserListAPI/healthworker/${wardSelect}`
+      )
       .then((res) => {
         setLoader(false);
         console.log(res.data.data);
@@ -54,7 +57,25 @@ function Healthworker() {
           }, 1000);
         }
       });
-  }, [refresh]);
+    axios
+      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setAreaList(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
+  }, [refresh, wardSelect]);
 
   //generic State
   const [areaList, setAreaList] = useState([]);
@@ -304,7 +325,6 @@ function Healthworker() {
     setU_section();
     setU_Is_ActiveStatus();
     setShowEditModal(false);
-    setAreaList([]);
     setHealthPostNameList([]);
     setSectionList([]);
   };
@@ -546,23 +566,51 @@ function Healthworker() {
               Add ANM
             </AddButton>
           </div>
-          <div>
-            <div style={{ margin: "20px 10px" }}>
-              <Form>
-                <FormItem>
-                  <Input
-                    type="text"
-                    style={{ width: "300px" }}
-                    placeholder="Enter Name / User Name / ward "
-                    onChange={(e) => setSearchValue(e.target.value)}
-                  ></Input>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <Row>
+              <Col>
+                <Form>
+                  <FormItem>
+                    <Input
+                      type="text"
+                      style={{ width: "300px" }}
+                      placeholder="Enter Name / User Name  "
+                      onChange={(e) => setSearchValue(e.target.value)}
+                    ></Input>
 
-                  <SearchButton htmlType="submit" onClick={handleSearch}>
-                    Search
-                  </SearchButton>
-                </FormItem>
-              </Form>
-            </div>
+                    <SearchButton htmlType="submit" onClick={handleSearch}>
+                      Search
+                    </SearchButton>
+                  </FormItem>
+                </Form>
+              </Col>
+              <Col>
+                <Form layout="vertical">
+                  <FormItem
+                    label="Select ward"
+                    style={{ width: "250px", margin: "-25px 0px 5px 300px" }}
+                  >
+                    <Select
+                      value={wardSelect}
+                      showSearch
+                      onChange={(value) => setWardSelect(value)}
+                    >
+                      {areaList.map((data) => (
+                        <Option key={data.id} value={data.wardName}>
+                          {data.wardName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </FormItem>
+                </Form>
+              </Col>
+            </Row>
             <Table columns={column} dataSource={healthWorkersData}></Table>
           </div>
           <Modal

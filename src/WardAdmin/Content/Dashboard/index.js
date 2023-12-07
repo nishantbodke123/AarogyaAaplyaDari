@@ -46,7 +46,7 @@ function WardAdminDashboard() {
               </Row>
             </div>
           </DashboardCard>
-          <DashboardCard>
+          {/* <DashboardCard>
             <div style={{ margin: "20px 20px" }}>
               <Row>
                 <Col span={4}>
@@ -74,7 +74,7 @@ function WardAdminDashboard() {
                 </Col>
               </Row>
             </div>
-          </DashboardCard>
+          </DashboardCard> */}
           <DashboardCard>
             <div style={{ margin: "20px 20px" }}>
               <Row>
