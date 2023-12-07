@@ -154,11 +154,14 @@ function Healthworker() {
   const handleSearch = () => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/healthworker/${wardSelect}`, {
-        params: {
-          search: searchValue,
-        },
-      })
+      .get(
+        `${BASE_URL}/adminportal/api/GetuserListAPI/healthworker/${wardSelect}`,
+        {
+          params: {
+            search: searchValue,
+          },
+        }
+      )
       .then((res) => {
         setLoader(false);
         console.log(res.data.data);
@@ -342,7 +345,7 @@ function Healthworker() {
       message.warning("The passwords doesn't match");
     } else {
       axios
-        .post(`${BASE_URL}/adminportal/api/InsertUsers`, formData, axiosConfig)
+        .post(`${BASE_URL}/adminportal/api/InsertUsersByadmin`, formData, axiosConfig)
         .then((res) => {
           console.log(res.data.message);
           message.success(res.data.message);

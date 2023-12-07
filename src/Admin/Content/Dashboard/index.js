@@ -12,7 +12,7 @@ function AdminDashboard() {
           margin: "24px 16px",
           padding: 24,
           minHeight: "81.9Vh",
-          maxHeight:"81.9Vh",
+          maxHeight: "81.9Vh",
           background: "white",
         }}
       >
@@ -105,6 +105,11 @@ function AdminDashboard() {
             </div>
           </DashboardCard>
         </DashboardCardDiv>
+        <div>
+          <div style={{ width: "10%", height: "20%", backgroundColor: "gray" }}>
+            hello
+          </div>
+        </div>
       </Content>
     </>
   );
