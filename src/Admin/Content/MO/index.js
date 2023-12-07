@@ -148,7 +148,7 @@ function MO() {
   const handleSearch = () => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/mo`, {
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/mo/${wardSelect}`, {
         params: {
           search: searchValue,
         },

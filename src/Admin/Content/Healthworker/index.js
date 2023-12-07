@@ -154,7 +154,7 @@ function Healthworker() {
   const handleSearch = () => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/healthworker`, {
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/healthworker/${wardSelect}`, {
         params: {
           search: searchValue,
         },

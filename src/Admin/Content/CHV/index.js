@@ -149,7 +149,7 @@ function CHV() {
   const handleSearch = () => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA`, {
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA/${wardSelect}`, {
         params: {
           search: searchValue,
         },
