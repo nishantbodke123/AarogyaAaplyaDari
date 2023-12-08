@@ -1,10 +1,22 @@
 import { Col, Row, theme } from "antd";
 import { Content } from "antd/es/layout/layout";
-import React from "react";
+import React, { useEffect } from "react";
 import { DashboardCard, DashboardCardDiv } from "./style";
 import { AlignRightOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { BASE_URL } from "../../../Utils/BaseURL";
 
 function WardAdminDashboard() {
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/adminportal/api/AdminDashboard`)
+      .then((response) => {
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <>
       <Content
@@ -12,7 +24,7 @@ function WardAdminDashboard() {
           margin: "24px 16px",
           padding: 24,
           minHeight: "81.9Vh",
-          maxHeight:"81.9Vh",
+          maxHeight: "81.9Vh",
           background: "white",
         }}
       >

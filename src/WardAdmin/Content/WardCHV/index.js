@@ -375,7 +375,11 @@ function WardCHV() {
       message.warning("The passwords doesn't match");
     } else {
       axios
-        .post(`${BASE_URL}/adminportal/api/InsertUsers`, formData, axiosConfig)
+        .post(
+          `${BASE_URL}/adminportal/api/InsertUsersByMOH`,
+          formData,
+          axiosConfig
+        )
         .then((res) => {
           console.log(res.data.message);
           message.success(res.data.message);

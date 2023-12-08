@@ -297,7 +297,11 @@ function MO() {
       message.warning("The passwords doesn't match");
     } else {
       axios
-        .post(`${BASE_URL}/adminportal/api/InsertUsersByadmin`, formData, axiosConfig)
+        .post(
+          `${BASE_URL}/adminportal/api/InsertUsersByadmin`,
+          formData,
+          axiosConfig
+        )
         .then((res) => {
           console.log(res.data.message);
           message.success(res.data.message);
@@ -488,345 +492,354 @@ function MO() {
   return (
     <Spin spinning={loader}>
       <>
-        <Content
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: "81.9Vh",
-            background: "white",
-          }}
-        >
-          <div
+        <div style={{ overflowY: "auto", maxHeight: "88.5vh" }}>
+          <Content
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              margin: "20px 0px",
+              margin: "24px 16px",
+              padding: 24,
+              minHeight: "81.9Vh",
+              background: "white",
             }}
           >
-            <p
+            <div
               style={{
-                fontSize: "25px",
-                fontWeight: 750,
-                fontFamily: "sans-serif",
-                color: "#176b87",
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "20px 0px",
               }}
             >
-              Medical Officers (MO)
-            </p>
-            <AddButton onClick={handleMOModalView}>Add MO</AddButton>
-          </div>
-          <div>
-            <div style={{ margin: "20px 10px" }}>
-              <Row>
-                <Col>
-                  <Form>
-                    <FormItem>
-                      <Input
-                        type="text"
-                        style={{ width: "300px" }}
-                        placeholder="Enter Name / User Name / ward "
-                        onChange={(e) => setSearchValue(e.target.value)}
-                      ></Input>
+              <p
+                style={{
+                  fontSize: "25px",
+                  fontWeight: 750,
+                  fontFamily: "sans-serif",
+                  color: "#176b87",
+                }}
+              >
+                Medical Officers (MO)
+              </p>
+              <AddButton onClick={handleMOModalView}>Add MO</AddButton>
+            </div>
+            <div>
+              <div style={{ margin: "20px 10px" }}>
+                <Row>
+                  <Col>
+                    <Form>
+                      <FormItem>
+                        <Input
+                          type="text"
+                          style={{ width: "300px" }}
+                          placeholder="Enter Name / User Name / ward "
+                          onChange={(e) => setSearchValue(e.target.value)}
+                        ></Input>
 
-                      <SearchButton htmlType="submit" onClick={handleSearch}>
-                        Search
-                      </SearchButton>
+                        <SearchButton htmlType="submit" onClick={handleSearch}>
+                          Search
+                        </SearchButton>
+                      </FormItem>
+                    </Form>
+                  </Col>
+                  <Col>
+                    <Form layout="vertical">
+                      <FormItem
+                        label="Select ward"
+                        style={{
+                          width: "250px",
+                          margin: "-25px 0px 5px 300px",
+                        }}
+                      >
+                        <Select
+                          value={wardSelect}
+                          showSearch
+                          onChange={(value) => setWardSelect(value)}
+                        >
+                          {wardList.map((data) => (
+                            <Option key={data.id} value={data.wardName}>
+                              {data.wardName}
+                            </Option>
+                          ))}
+                        </Select>
+                      </FormItem>
+                    </Form>
+                  </Col>
+                </Row>
+              </div>
+              <Table columns={column} dataSource={MOData}></Table>
+            </div>
+            <Modal
+              open={addMOModal}
+              width={900}
+              onCancel={handleMOModalClose}
+              title={
+                <div>
+                  <h3>Medical Officer details</h3>
+                </div>
+              }
+              footer={
+                <>
+                  <CancelButton onClick={handleMOModalClose}>
+                    Cancel
+                  </CancelButton>
+                  <SubmitButton onClick={handleAddUser}>Submit</SubmitButton>
+                </>
+              }
+            >
+              <Form layout="vertical">
+                <Row>
+                  <Col span={12}>
+                    <FormItem label="Name">
+                      <InputBox
+                        type="text"
+                        value={name}
+                        onChange={(e) => handleNameChange(e)}
+                      ></InputBox>
                     </FormItem>
-                  </Form>
-                </Col>
-                <Col>
-                  <Form layout="vertical">
-                    <FormItem
-                      label="Select ward"
-                      style={{ width: "250px", margin: "-25px 0px 5px 300px" }}
-                    >
+                  </Col>
+                  <Col span={12}>
+                    <FormItem label="Username">
+                      <InputBox
+                        type="text"
+                        allowClear
+                        value={userName}
+                        onChange={(e) => handleUserNameChange(e)}
+                      ></InputBox>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <FormItem label="Enter Password">
+                      <Input.Password
+                        type="text"
+                        value={password}
+                        style={{ width: "350px" }}
+                        onChange={(e) => setPassword(e.target.value)}
+                      ></Input.Password>
+                    </FormItem>
+                  </Col>
+                  <Col span={12}>
+                    <FormItem label="Confirm Password">
+                      <Input.Password
+                        type="text"
+                        value={confirmPassword}
+                        style={{ width: "350px" }}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      ></Input.Password>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <FormItem label="Phone Number">
+                      <InputBox
+                        type="text"
+                        value={phoneNumber}
+                        onChange={(e) => handleMobileNumberChange(e)}
+                      ></InputBox>
+                    </FormItem>
+                  </Col>
+                  <Col span={12}>
+                    <FormItem label="Email ID">
+                      <InputBox
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      ></InputBox>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    {" "}
+                    <FormItem label="Ward">
                       <Select
-                        value={wardSelect}
                         showSearch
-                        onChange={(value) => setWardSelect(value)}
+                        style={{ width: "350px" }}
+                        filterOption={(inputValue, option) =>
+                          option.children
+                            ? option.children
+                                .toLowerCase()
+                                .includes(inputValue.toLowerCase())
+                            : false
+                        }
+                        onChange={(e) => handleWardSelect(e)}
                       >
                         {wardList.map((data) => (
-                          <Option key={data.id} value={data.wardName}>
+                          <Option key={data.id} value={data.id}>
                             {data.wardName}
                           </Option>
                         ))}
                       </Select>
                     </FormItem>
-                  </Form>
-                </Col>
-              </Row>
-            </div>
-            <Table columns={column} dataSource={MOData}></Table>
-          </div>
-          <Modal
-            open={addMOModal}
-            width={900}
-            onCancel={handleMOModalClose}
-            title={
-              <div>
-                <h3>Medical Officer details</h3>
-              </div>
-            }
-            footer={
-              <>
-                <CancelButton onClick={handleMOModalClose}>Cancel</CancelButton>
-                <SubmitButton onClick={handleAddUser}>Submit</SubmitButton>
-              </>
-            }
-          >
-            <Form layout="vertical">
-              <Row>
-                <Col span={12}>
-                  <FormItem label="Name">
-                    <InputBox
-                      type="text"
-                      value={name}
-                      onChange={(e) => handleNameChange(e)}
-                    ></InputBox>
-                  </FormItem>
-                </Col>
-                <Col span={12}>
-                  <FormItem label="Username">
-                    <InputBox
-                      type="text"
-                      allowClear
-                      value={userName}
-                      onChange={(e) => handleUserNameChange(e)}
-                    ></InputBox>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <FormItem label="Enter Password">
-                    <Input.Password
-                      type="text"
-                      value={password}
-                      style={{ width: "350px" }}
-                      onChange={(e) => setPassword(e.target.value)}
-                    ></Input.Password>
-                  </FormItem>
-                </Col>
-                <Col span={12}>
-                  <FormItem label="Confirm Password">
-                    <Input.Password
-                      type="text"
-                      value={confirmPassword}
-                      style={{ width: "350px" }}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                    ></Input.Password>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <FormItem label="Phone Number">
-                    <InputBox
-                      type="text"
-                      value={phoneNumber}
-                      onChange={(e) => handleMobileNumberChange(e)}
-                    ></InputBox>
-                  </FormItem>
-                </Col>
-                <Col span={12}>
-                  <FormItem label="Email ID">
-                    <InputBox
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    ></InputBox>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  {" "}
-                  <FormItem label="Ward">
-                    <Select
-                      showSearch
-                      style={{ width: "350px" }}
-                      filterOption={(inputValue, option) =>
-                        option.children
-                          ? option.children
-                              .toLowerCase()
-                              .includes(inputValue.toLowerCase())
-                          : false
-                      }
-                      onChange={(e) => handleWardSelect(e)}
-                    >
-                      {wardList.map((data) => (
-                        <Option key={data.id} value={data.id}>
-                          {data.wardName}
-                        </Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                </Col>
-                <Col>
-                  <FormItem label="Dispensary">
-                    <Select
-                      showSearch
-                      style={{ width: "350px" }}
-                      filterOption={(inputValue, option) =>
-                        option.children
-                          ? option.children
-                              .toLowerCase()
-                              .includes(inputValue.toLowerCase())
-                          : false
-                      }
-                      onChange={(e) => setDispensary(e)}
-                    >
-                      {dispensaryList.map((data) => (
-                        <Option key={data.id} value={data.id}>
-                          {data.dispensaryName}
-                        </Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                </Col>
-              </Row>
-            </Form>
-          </Modal>
-          <Modal
-            open={changePasswordModal}
-            onCancel={handleChangePasswordModalClose}
-            footer={
-              <>
-                <Button onClick={handleChangePasswordModalClose}>Cancel</Button>
-                <PasswordUpdateButton onClick={handlePasswordUpdate}>
-                  Update
-                </PasswordUpdateButton>
-              </>
-            }
-          >
-            <Form layout="vertical">
-              <FormItem label="New Password">
-                <Input.Password
-                  style={{ width: "350px" }}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                ></Input.Password>
-              </FormItem>
-              <FormItem label="confirm new Password">
-                <Input.Password
-                  style={{ width: "350px" }}
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
-                ></Input.Password>
-              </FormItem>
-            </Form>
-          </Modal>
-          <Modal
-            open={showEditModal}
-            title={<h2>Update MO's Details</h2>}
-            width={1000}
-            onCancel={handleEditModalClose}
-            footer={
-              <>
-                <Button onClick={handleEditModalClose}>Cancel</Button>
-                <UpdateButton onClick={handleUpdateUser}>Update</UpdateButton>
-              </>
-            }
-          >
-            <Form layout="vertical">
-              <Row>
-                <Col span={12}>
-                  <FormItem label="Name">
-                    <InputBox
-                      type="text"
-                      value={u_name}
-                      onChange={(e) => handleU_NameChange(e)}
-                    ></InputBox>
-                  </FormItem>
-                </Col>
-                <Col span={12}>
-                  <FormItem label="Username">
-                    <InputBox
-                      type="text"
-                      allowClear
-                      value={u_userName}
-                      onChange={(e) => handleU_UserNameChange(e)}
-                    ></InputBox>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <FormItem label="Phone Number">
-                    <InputBox
-                      type="text"
-                      value={u_phoneNumber}
-                      onChange={(e) => handleU_MobileNumberChange(e)}
-                    ></InputBox>
-                  </FormItem>
-                </Col>
-                <Col span={12}>
-                  <FormItem label="Email ID">
-                    <InputBox
-                      type="email"
-                      value={u_email}
-                      onChange={(e) => setU_email(e.target.value)}
-                    ></InputBox>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <FormItem label="Ward">
-                    <Select
-                      showSearch
-                      style={{ width: "350px" }}
-                      filterOption={(inputValue, option) =>
-                        option.children
-                          ? option.children
-                              .toLowerCase()
-                              .includes(inputValue.toLowerCase())
-                          : false
-                      }
-                      value={u_ward}
-                      onChange={(e) => handleWardSelect(e)}
-                    >
-                      {wardList.map((data) => (
-                        <Option key={data.id} value={data.id}>
-                          {data.wardName}
-                        </Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                </Col>
-                <Col span={12}>
-                  <FormItem label="Dispensary">
-                    <Select
-                      showSearch
-                      style={{ width: "350px" }}
-                      filterOption={(inputValue, option) =>
-                        option.children
-                          ? option.children
-                              .toLowerCase()
-                              .includes(inputValue.toLowerCase())
-                          : false
-                      }
-                      value={u_Dispensary}
-                      onChange={(e) => setU_Dispensary(e)}
-                    >
-                      {dispensaryList.map((data) => (
-                        <Option key={data.id} value={data.id}>
-                          {data.dispensaryName}
-                        </Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                </Col>
-              </Row>
-              <FormItem label="Is Active" style={{ width: "350px" }}>
-                <Select onChange={(value) => setU_Is_ActiveStatus(value)}>
-                  <Option value="true">Active</Option>
-                  <Option value="false">InActive</Option>
-                </Select>
-              </FormItem>
-            </Form>
-          </Modal>
-        </Content>
+                  </Col>
+                  <Col>
+                    <FormItem label="Dispensary">
+                      <Select
+                        showSearch
+                        style={{ width: "350px" }}
+                        filterOption={(inputValue, option) =>
+                          option.children
+                            ? option.children
+                                .toLowerCase()
+                                .includes(inputValue.toLowerCase())
+                            : false
+                        }
+                        onChange={(e) => setDispensary(e)}
+                      >
+                        {dispensaryList.map((data) => (
+                          <Option key={data.id} value={data.id}>
+                            {data.dispensaryName}
+                          </Option>
+                        ))}
+                      </Select>
+                    </FormItem>
+                  </Col>
+                </Row>
+              </Form>
+            </Modal>
+            <Modal
+              open={changePasswordModal}
+              onCancel={handleChangePasswordModalClose}
+              footer={
+                <>
+                  <Button onClick={handleChangePasswordModalClose}>
+                    Cancel
+                  </Button>
+                  <PasswordUpdateButton onClick={handlePasswordUpdate}>
+                    Update
+                  </PasswordUpdateButton>
+                </>
+              }
+            >
+              <Form layout="vertical">
+                <FormItem label="New Password">
+                  <Input.Password
+                    style={{ width: "350px" }}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  ></Input.Password>
+                </FormItem>
+                <FormItem label="confirm new Password">
+                  <Input.Password
+                    style={{ width: "350px" }}
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  ></Input.Password>
+                </FormItem>
+              </Form>
+            </Modal>
+            <Modal
+              open={showEditModal}
+              title={<h2>Update MO's Details</h2>}
+              width={1000}
+              onCancel={handleEditModalClose}
+              footer={
+                <>
+                  <Button onClick={handleEditModalClose}>Cancel</Button>
+                  <UpdateButton onClick={handleUpdateUser}>Update</UpdateButton>
+                </>
+              }
+            >
+              <Form layout="vertical">
+                <Row>
+                  <Col span={12}>
+                    <FormItem label="Name">
+                      <InputBox
+                        type="text"
+                        value={u_name}
+                        onChange={(e) => handleU_NameChange(e)}
+                      ></InputBox>
+                    </FormItem>
+                  </Col>
+                  <Col span={12}>
+                    <FormItem label="Username">
+                      <InputBox
+                        type="text"
+                        allowClear
+                        value={u_userName}
+                        onChange={(e) => handleU_UserNameChange(e)}
+                      ></InputBox>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <FormItem label="Phone Number">
+                      <InputBox
+                        type="text"
+                        value={u_phoneNumber}
+                        onChange={(e) => handleU_MobileNumberChange(e)}
+                      ></InputBox>
+                    </FormItem>
+                  </Col>
+                  <Col span={12}>
+                    <FormItem label="Email ID">
+                      <InputBox
+                        type="email"
+                        value={u_email}
+                        onChange={(e) => setU_email(e.target.value)}
+                      ></InputBox>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <FormItem label="Ward">
+                      <Select
+                        showSearch
+                        style={{ width: "350px" }}
+                        filterOption={(inputValue, option) =>
+                          option.children
+                            ? option.children
+                                .toLowerCase()
+                                .includes(inputValue.toLowerCase())
+                            : false
+                        }
+                        value={u_ward}
+                        onChange={(e) => handleWardSelect(e)}
+                      >
+                        {wardList.map((data) => (
+                          <Option key={data.id} value={data.id}>
+                            {data.wardName}
+                          </Option>
+                        ))}
+                      </Select>
+                    </FormItem>
+                  </Col>
+                  <Col span={12}>
+                    <FormItem label="Dispensary">
+                      <Select
+                        showSearch
+                        style={{ width: "350px" }}
+                        filterOption={(inputValue, option) =>
+                          option.children
+                            ? option.children
+                                .toLowerCase()
+                                .includes(inputValue.toLowerCase())
+                            : false
+                        }
+                        value={u_Dispensary}
+                        onChange={(e) => setU_Dispensary(e)}
+                      >
+                        {dispensaryList.map((data) => (
+                          <Option key={data.id} value={data.id}>
+                            {data.dispensaryName}
+                          </Option>
+                        ))}
+                      </Select>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <FormItem label="Is Active" style={{ width: "350px" }}>
+                  <Select onChange={(value) => setU_Is_ActiveStatus(value)}>
+                    <Option value="true">Active</Option>
+                    <Option value="false">InActive</Option>
+                  </Select>
+                </FormItem>
+              </Form>
+            </Modal>
+          </Content>
+        </div>
       </>
     </Spin>
   );

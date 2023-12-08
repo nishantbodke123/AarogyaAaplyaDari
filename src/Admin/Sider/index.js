@@ -51,7 +51,7 @@ function Sidebar(props) {
         trigger={null}
         collapsible
         collapsed={props.collapsed}
-        style={{ background: "#222C38", maxHeight: "100%" }}
+        style={{ background: "#222C38", height: "100vh" }}
         className="adminMenu"
         width={230}
       >

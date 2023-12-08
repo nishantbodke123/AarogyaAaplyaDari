@@ -142,7 +142,7 @@ function WardHealthworker() {
   const handleSearch = () => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/healthworker`, {
+      .get(`${BASE_URL}/adminportal/api/GetWardWiseSUerList/healthworker`, {
         params: {
           search: searchValue,
         },
