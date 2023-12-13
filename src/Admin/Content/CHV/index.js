@@ -39,10 +39,10 @@ function CHV() {
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA/${wardSelect}`)
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/CHV-ASHA`)
       .then((res) => {
         setLoader(false);
-        console.log(res.data.data);
+        console.log(res.data.data , "chv/ASHA");
         setCHVData(res.data.data);
       })
       .catch((error) => {
@@ -150,7 +150,7 @@ function CHV() {
     setLoader(true);
     axios
       .get(
-        `${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA/${wardSelect}`,
+        `${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/CHV-ASHA`,
         {
           params: {
             search: searchValue,
@@ -329,7 +329,7 @@ function CHV() {
     setU_name("");
     setU_userName("");
     setU_phoneNumber("");
-    setU_email("");
+    setU_email();
     setU_ward();
     setU_HealthPost();
     setU_section();
@@ -347,7 +347,7 @@ function CHV() {
     formData.append("phoneNumber", phoneNumber);
     formData.append("emailId", email);
     formData.append("section", section);
-    formData.append("group", "CHV/ASHA");
+    formData.append("group", "CHV-ASHA");
     if (password !== confirmPassword) {
       message.warning("The passwords doesn't match");
     } else {

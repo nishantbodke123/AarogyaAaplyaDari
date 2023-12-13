@@ -15,9 +15,9 @@ import { EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
-import { BASE_URL } from "../../../Utils/BaseURL";
+import { BASE_URL } from "../../../../Utils/BaseURL";
 import { useState } from "react";
-import { LogOut } from "../../../Auth/Logout";
+import { LogOut } from "../../../../Auth/Logout";
 import moment from "moment/moment";
 import {
   AddButton,
@@ -34,18 +34,23 @@ import FormItem from "antd/es/form/FormItem";
 import { Option } from "antd/es/mentions";
 import { useTheme } from "styled-components";
 
-function Healthworker() {
+function HealthworkerApproval() {
   const [refresh, setRefresh] = useState(1);
   const [wardSelect, setWardSelect] = useState("A");
   useEffect(() => {
     setLoader(true);
     axios
       .get(
-        `${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/healthworker`
+        `${BASE_URL}/adminportal/api/GetDeactivatedUserList/${wardSelect}/healthworker`,
+        {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          },
+        }
       )
       .then((res) => {
         setLoader(false);
-        console.log(res.data.data, "userlist Data");
+        console.log(res.data.data, "HealthworkerApproval data");
         setHealthWorkersData(res.data.data);
       })
       .catch((error) => {
@@ -130,7 +135,7 @@ function Healthworker() {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState(null);
   const [section, setSection] = useState();
 
   const handleNameChange = (e) => {
@@ -155,7 +160,7 @@ function Healthworker() {
     setLoader(true);
     axios
       .get(
-        `${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/healthworker`,
+        `${BASE_URL}/adminportal/api/GetuserListAPI/healthworker/${wardSelect}`,
         {
           params: {
             search: searchValue,
@@ -242,7 +247,7 @@ function Healthworker() {
   const handleHealthWorkerModalClose = () => {
     setName();
     setUserName();
-    setEmail();
+    setEmail(null);
     setPassword();
     setConfirmPassword();
     setPhoneNumber();
@@ -322,7 +327,7 @@ function Healthworker() {
     setU_name("");
     setU_userName("");
     setU_phoneNumber("");
-    setU_email();
+    setU_email(null);
     setU_ward();
     setU_HealthPost();
     setU_section();
@@ -362,72 +367,53 @@ function Healthworker() {
         });
     }
   };
-  const handleUpdateUser = () => {
-    console.log(healthworkerID);
+  const handleApproveUser = (status, data) => {
+    console.log(status, data.id);
     console.log(u_is_ActiveStatus);
-    if (u_name === "") {
-      message.warning(" Please Enter Name");
-    } else if (u_userName === "") {
-      message.warning(" Please Enter Username");
-    } else if (u_email === "") {
-      message.warning("Please Enter Email Address");
-    } else if (u_phoneNumber === "") {
-      message.warning("Please Enter Phone Number");
-    } else if (u_Section === undefined) {
-      message.warning("Please select Section");
-    } else if (u_is_ActiveStatus === undefined) {
-      message.warning("Select Active Status");
-    } else {
-      const formData = new FormData();
-      formData.append("name", u_name);
-      formData.append("username", u_userName);
-      formData.append("emailId", u_email);
-      formData.append("phoneNumber", u_phoneNumber);
-      formData.append("section", u_Section);
-      formData.append("is_active", u_is_ActiveStatus);
-      axios
-        .patch(
-          `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${healthworkerID}`,
-          formData,
-          axiosConfig
-        )
-        .then((res) => {
-          console.log(res);
-          message.success(res.data.message);
-          setRefresh(refresh + 1);
-          handleEditModalClose();
-        })
-        .catch((err) => {
-          console.log(err);
-          message.warning(err.response.data.message);
-        });
-    }
+
+    const formData = new FormData();
+    formData.append("is_active", true);
+    axios
+      .patch(
+        `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${data.id}`,
+        formData,
+        axiosConfig
+      )
+      .then((res) => {
+        console.log(res);
+        message.success(res.data.message);
+        setRefresh(refresh + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+        message.warning(err.response.data.message);
+      });
   };
 
-  const deleteUser = (data) => {
-    Modal.confirm({
-      title: `Do you want to Remove user ${data.name}`,
-      okText: "Confirm",
-      cancelText: "Cancel",
-      onOk: () => {
-        axios
-          .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${data.id}`, {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem("Token")}`,
-            },
-          })
-          .then((res) => {
-            console.log(res);
-            message.success(res.data.message);
-            setRefresh(refresh + 1);
-          })
-          .catch((err) => {
-            console.log(err);
-            message.warning(err.response.data.message);
-          });
-      },
-    });
-  };
+  // const deleteUser = (data) => {
+  //   Modal.confirm({
+  //     title: `Do you want to Remove user ${data.name}`,
+  //     okText: "Confirm",
+  //     cancelText: "Cancel",
+  //     onOk: () => {
+  //       axios
+  //         .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${data.id}`, {
+  //           headers: {
+  //             Authorization: `Token ${sessionStorage.getItem("Token")}`,
+  //           },
+  //         })
+  //         .then((res) => {
+  //           console.log(res);
+  //           message.success(res.data.message);
+  //           setRefresh(refresh + 1);
+  //         })
+  //         .catch((err) => {
+  //           console.log(err);
+  //           message.warning(err.response.data.message);
+  //         });
+  //     },
+  //   });
+  // };
   const handleChangePasswordModalView = (id) => {
     setHealthworkerID(id);
     setChangePasswordModal(true);
@@ -494,29 +480,49 @@ function Healthworker() {
       title: "Phone Number",
       dataIndex: "phoneNumber",
     },
+    {
+      title:"Added By",
+      dataIndex:"created_by"
+    },
 
+    // {
+    //   title: "Date & Time Of Joining",
+    //   dataIndex: "date_joined",
+    //   render: (date) => {
+    //     return moment(date).format("DD/MM/YYYY h:mm:ss a");
+    //   },
+    // },
+    // {
+    //   title: "Update",
+    //   render: (data) => {
+    //     return (
+    //       <EditButton onClick={() => handleEditModalShow(data)}>
+    //         Edit
+    //       </EditButton>
+    //     );
+    //   },
+    // },
+    // {
+    //   title: "Status",
+    //   dataIndex: "is_active",
+    //   render: (data) => {
+    //     return data ? "Active" : "InActive";
+    //   },
+    // },
     {
-      title: "Date & Time Of Joining",
-      dataIndex: "date_joined",
-      render: (date) => {
-        return moment(date).format("DD/MM/YYYY h:mm:ss a");
-      },
-    },
-    {
-      title: "Update",
-      render: (data) => {
-        return (
-          <EditButton onClick={() => handleEditModalShow(data)}>
-            Edit
-          </EditButton>
-        );
-      },
-    },
-    {
-      title: "Status",
+      title: "Approve",
       dataIndex: "is_active",
-      render: (data) => {
-        return data ? "Active" : "InActive";
+      render: (status, data) => {
+        return status ? (
+          ""
+        ) : (
+          <Button
+            style={{ backgroundColor: "#176B87" }}
+            onClick={() => handleApproveUser(status, data)}
+          >
+            Approve
+          </Button>
+        );
       },
     },
     // {
@@ -527,19 +533,19 @@ function Healthworker() {
     //     );
     //   },
     // },
-    {
-      title: "Password",
-      render: (data) => {
-        return (
-          <Button
-            style={{ border: "none" }}
-            onClick={() => handleChangePasswordModalView(data.id)}
-          >
-            <EditOutlined />
-          </Button>
-        );
-      },
-    },
+    // {
+    //   title: "Password",
+    //   render: (data) => {
+    //     return (
+    //       <Button
+    //         style={{ border: "none" }}
+    //         onClick={() => handleChangePasswordModalView(data.id)}
+    //       >
+    //         <EditOutlined />
+    //       </Button>
+    //     );
+    //   },
+    // },
   ];
   return (
     <Spin spinning={loader}>
@@ -812,7 +818,9 @@ function Healthworker() {
               footer={
                 <>
                   <Button onClick={handleEditModalClose}>Cancel</Button>
-                  <UpdateButton onClick={handleUpdateUser}>Update</UpdateButton>
+                  <UpdateButton onClick={handleApproveUser}>
+                    Update
+                  </UpdateButton>
                 </>
               }
             >
@@ -952,4 +960,4 @@ function Healthworker() {
     </Spin>
   );
 }
-export default Healthworker;
+export default HealthworkerApproval;

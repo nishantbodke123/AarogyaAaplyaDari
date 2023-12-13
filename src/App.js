@@ -23,6 +23,9 @@ import WardAdmin from "./WardAdmin/Admin/WardAdmin";
 import WardHealthworker from "./WardAdmin/Content/Healthworker";
 import WardAdminDashboard from "./WardAdmin/Content/Dashboard";
 import WardCHV from "./WardAdmin/Content/WardCHV";
+import HealthworkerApproval from "./Admin/AdminApproval/Content/Healthworker";
+import CHVApproval from "./Admin/AdminApproval/Content/CHV";
+
 
 function App() {
   let Token = sessionStorage.getItem("Token");
@@ -146,6 +149,22 @@ function App() {
                 </AdminProtected>
               }
             ></Route>
+            <Route
+              path="/admin/healthWorkerApproval"
+              element={
+                <AdminProtected>
+                  <HealthworkerApproval />
+                </AdminProtected>
+              }
+            ></Route>
+            <Route
+              path="/admin/chvApproval"
+              element={
+                <AdminProtected>
+                  <CHVApproval />
+                </AdminProtected>
+              }
+            ></Route>
           </Route>
           <Route
             path="/wardadmin"
@@ -179,7 +198,6 @@ function App() {
                 </WardAdminProtected>
               }
             ></Route>
-          
           </Route>
 
           <Route path="/*" element={<Error />}></Route>

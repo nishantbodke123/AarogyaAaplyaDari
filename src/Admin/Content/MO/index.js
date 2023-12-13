@@ -39,7 +39,7 @@ function MO() {
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/mo/${wardSelect}`)
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/mo`)
       .then((res) => {
         setLoader(false);
         console.log(res.data);
@@ -148,7 +148,7 @@ function MO() {
   const handleSearch = () => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/mo/${wardSelect}`, {
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/mo`, {
         params: {
           search: searchValue,
         },

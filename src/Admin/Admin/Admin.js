@@ -7,6 +7,9 @@ import Healthworker from "../Content/Healthworker";
 import CHV from "../Content/CHV";
 import MO from "../Content/MO";
 import { useLocation } from "react-router-dom";
+import HealthworkerApproval from "../AdminApproval/Content/Healthworker";
+import CHVApproval from "../AdminApproval/Content/CHV";
+
 
 const { Content } = Layout;
 
@@ -17,8 +20,6 @@ function Admin() {
   const handleCollapse = () => {
     setCollapsed(!collapsed);
   };
-
-
 
   return (
     <>
@@ -33,6 +34,11 @@ function Admin() {
             {location.pathname === "/admin/healthWorker" && <Healthworker />}
             {location.pathname === "/admin/chv" && <CHV />}
             {location.pathname === "/admin/mo" && <MO />}
+            {location.pathname === "/admin/healthWorkerApproval" && (
+              <HealthworkerApproval />
+            )}
+            {location.pathname === "/admin/chvApproval" && <CHVApproval />}
+           
           </Content>
         </Layout>
       </Layout>

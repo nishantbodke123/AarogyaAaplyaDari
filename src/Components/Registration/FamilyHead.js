@@ -160,7 +160,7 @@ function FamilyHead(props) {
           message.warning(error.response.status);
         }
       });
-
+ console.log(sessionStorage.getItem("section_id","section id"))
     axios
       .get(
         `${BASE_URL}/allauth/api/GetCHV_ASHA_list/${sessionStorage.getItem(
@@ -168,7 +168,7 @@ function FamilyHead(props) {
         )}`
       )
       .then((res) => {
-        console.log(res.data.data);
+        console.log(res.data.data, "chvlist");
         setCHVList(res.data.data);
       })
       .catch((err) => {
@@ -1207,9 +1207,11 @@ function FamilyHead(props) {
   const handlePartAQuestion1 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "50 and 50 below" ||
-      selectedValue === "50 to 79 Years" ||
-      selectedValue === "80 and 80 above"
+      selectedValue === "0_29_year" ||
+      selectedValue === "30_39_year" ||
+      selectedValue === "40_49_year" ||
+      selectedValue === "50_59_year" ||
+      selectedValue === "60 years and above"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -1219,6 +1221,7 @@ function FamilyHead(props) {
   const handlePartAQuestion2 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
+      selectedValue === "Never" ||
       selectedValue === "Used to consume in the past/ Sometimes now" ||
       selectedValue === "Daily"
     ) {
@@ -1238,8 +1241,8 @@ function FamilyHead(props) {
   const handlePartAQuestion4 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "80 cm or less" ||
-      selectedValue === "80-100 cm" ||
+      selectedValue === "90 cm or less" ||
+      selectedValue === "91-100 cm" ||
       selectedValue === "More than 100 cm"
     ) {
       setQuestionFunction([selectedValue]);
@@ -1530,7 +1533,6 @@ function FamilyHead(props) {
       area: section,
       name: familyHeadName,
       mobileNo: mobileNo,
-      plotNo: plotNumber,
       address: addressLine1,
       pincode: pincode,
       ASHA_CHV: selectedCHV,
@@ -2360,7 +2362,7 @@ function FamilyHead(props) {
               ></Input>
             </FormItem>
           </Column>
-          <Column>
+          {/* <Column>
             <FormItem label="Plot Number / Flat Number / प्लॉट क्रमांक / फ्लॅट क्रमांक ">
               <Input
                 type="text"
@@ -2368,10 +2370,7 @@ function FamilyHead(props) {
                 onChange={(e) => setPlotNumber(e.target.value)}
               ></Input>
             </FormItem>
-          </Column>
-        </Row>
-
-        <Row>
+          </Column> */}
           <Column>
             <FormItem
               label="Address / पत्ता"
@@ -2385,6 +2384,9 @@ function FamilyHead(props) {
               ></TextArea>
             </FormItem>
           </Column>
+        </Row>
+
+        <Row>
           <Column>
             <FormItem
               label="Pin Code / पिन कोड"
@@ -2791,16 +2793,20 @@ function FamilyHead(props) {
                     onChange={(e) => handlePartAQuestion1(1, e.target.value)}
                     value={question1A[0]}
                   >
-                    <Radio value="50 and 50 below">
-                      50 and 50 below / 50 आणि 50 खाली
+                    <Radio value="0_29_year">0-29 years / 0-29 वर्षे</Radio>
+                    <br />
+                    <Radio value="30_39_year">30-39 Years / 30-39 वर्षे</Radio>
+                    <br />
+                    <Radio value="40_49_year">
+                      40 and 49 years / 40 आणि 49 वर्षे
                     </Radio>
                     <br />
-                    <Radio value="50 to 79 Years">
-                      50 to 79 Years / 50 ते 79 वर्षे
+                    <Radio value="50_59_year">
+                      50 and 59 years /50 आणि 59 वर्षे
                     </Radio>
                     <br />
-                    <Radio value="80 and 80 above">
-                      80 and 80 above / 80 आणि 80 वर
+                    <Radio value="60 years and above">
+                      60 years and above /60 वर्षे आणि त्यावरील
                     </Radio>
                   </Radio.Group>
                 </AnswerCol>
@@ -2816,7 +2822,7 @@ function FamilyHead(props) {
                     onChange={(e) => handlePartAQuestion2(2, e.target.value)}
                     value={question2A[0]}
                   >
-                    <Radio value="never">Never / कधीच नाही</Radio>
+                    <Radio value="Never">Never / कधीच नाही</Radio>
                     <br />
                     <Radio value="Used to consume in the past/ Sometimes now">
                       Used to consume in the past/ Sometimes now /<br /> पूर्वी
@@ -2853,11 +2859,11 @@ function FamilyHead(props) {
                     onChange={(e) => handlePartAQuestion4(4, e.target.value)}
                     value={question4A[0]}
                   >
-                    <Radio value="80 cm or less">
-                      80 cm or less/80 सेमी किंवा कमी
+                    <Radio value="90 cm or less">
+                      90 cm or less/90 सेमी किंवा कमी
                     </Radio>
                     <br />
-                    <Radio value="80-100 cm">80-100 cm/80-100 सेमी</Radio>
+                    <Radio value="91-100 cm">91-100 cm/91-100 सेमी</Radio>
                     <br />
                     <Radio value="More than 100 cm">
                       More than 100 cm / 100 सेमी पेक्षा जास्त
@@ -2881,7 +2887,7 @@ function FamilyHead(props) {
                       एका आठवड्यात किमान 150 मिनिटे
                     </Radio>
                     <br />
-                    <Radio value="Less than 150 minutes in a week ">
+                    <Radio value="Less than 150 minutes in a week">
                       Less than 150 minutes in a week /<br /> एका आठवड्यात 150
                       मिनिटांपेक्षा कमी
                     </Radio>
@@ -2970,7 +2976,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  २. २ आठवडयांपेक्षा जास्त खोकला / Cough for more than 2 weeks
+                  २. २ आठवडयांपेक्षा जास्त खोकला / Cough lasting more than 2 weeks
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3009,7 +3015,7 @@ function FamilyHead(props) {
                 </AnswerCol>
               </QuestionRow>
               <QuestionRow>
-                <QuestionCol>५. वजन कमी होणे/ Weight loss</QuestionCol>
+                <QuestionCol>५. वजन कमी होणे/ Loss of weight</QuestionCol>
                 <AnswerCol>
                   <Radio.Group
                     onChange={(e) => handleQuestionOfB1Part(5, e.target.value)}
@@ -3022,7 +3028,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ६. रात्री खूप घाम येणे/ Excessive night sweats
+                  ६. रात्री खूप घाम येणे/ Night sweats
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3037,7 +3043,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   ७. आपण सध्या टीबीच्या उपचारासाठी औषधे घेत आहात ? / Are you
-                  currently taking medicines to treat TB?
+                  currently taking Anti TB Drugs?
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3052,7 +3058,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   ८. सध्या कुटुंबातील कोणत्याही सदस्याला टीबीचा आजार आहे का ? /
-                  Is any family member currently suffering from TB disease?
+                  Anyone in family currently suffering from TB?
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3081,7 +3087,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   १०. हात आणि पायाच्या तळव्यांना वारंवार जखमा होणे / 10.
-                  Frequent bruising of hands and soles of feet
+                  Recurrent ulceration on palms or sole
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3095,8 +3101,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ११. हात आणि पायावर तळव्यांना वारंवार मुंग्या येणे / Frequent
-                  tingling in palms of hands and feet
+                  ११. हात आणि पायावर तळव्यांना वारंवार मुंग्या येणे / Recurrent Tingling on palms or sole
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3110,7 +3115,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १२. धुसर आणि अंधूक दृष्टी / Blurred and blurred vision
+                  १२. धुसर आणि अंधूक दृष्टी / Cloudy or blurred vision
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3139,7 +3144,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   १४. एक आठवडयापेक्षा जास्त डोळयामधील वेदना बरी न होणे /
-                  Non-relief of eye pain for more than a week
+                  Pain in eyes lasting for more than a week
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3153,8 +3158,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १५. एक आठवडयापेक्षा जास्त डोळे लालसरपणा असणे / Eye redness for
-                  more than a week
+                  १५. एक आठवडयापेक्षा जास्त डोळे लालसरपणा असणे / Redness in eyes lasting for more than a week
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3168,7 +3172,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १६. आपल्याला ऐकण्यास त्रास होणे / You have trouble hearing
+                  १६. आपल्याला ऐकण्यास त्रास होणे / Difficulty in hearing
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3182,7 +3186,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १७. फीटक्याचा इतिहास / History of Featka
+                  १७. फीटक्याचा इतिहास / History of convulsions - fits
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3196,7 +3200,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १८. तोंड उघडण्यास त्रास होणे / Difficulty opening the mouth
+                  १८. तोंड उघडण्यास त्रास होणे / Difficulty in opening mouth
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3211,7 +3215,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   १९. दोन आठवडयांपेक्षा जास्त तोंडातील जखम बरी न होणे /
-                  Non-healing of mouth sores for more than two weeks
+                 Any ulcer in mouth that has not healed in 2 weeks
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3226,7 +3230,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   २०. दोन आठवडयांपेक्षा जास्त तोंडात असलेली वाढ बरी न होणे /
-                  Non-healing growth in mouth for more than two weeks
+                  Any growth / mass in mouth that has not healed in 2 weeks
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3241,8 +3245,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   २१. दोन आठवडयांपेक्षा जास्त तोंडामध्ये पांढरे किंवा लाल घट्टे
-                  बरे न होणे / Non-healing white or red sores in the mouth for
-                  more than two weeks
+                  बरे न होणे / Any white or red patch in mouth that has not healed in 2 weeks
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3269,7 +3272,7 @@ function FamilyHead(props) {
                 </AnswerCol>
               </QuestionRow>
               <QuestionRow>
-                <QuestionCol>२३. आवाजात बदल होणे/ Changes in voice</QuestionCol>
+                <QuestionCol>२३. आवाजात बदल होणे/ Any change in tone of your voice</QuestionCol>
                 <AnswerCol>
                   <Radio.Group
                     onChange={(e) => handleQuestionOfB1Part(23, e.target.value)}
@@ -3283,8 +3286,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   २४. तोंडामध्ये हलक्या रंगाचे चट्टे किंवा वर्ण होणे ज्यास
-                  संवेदना नसणे/ Light colored patches or spots in the mouth with
-                  no sensation
+                  संवेदना नसणे/ Any hypopigmented patch in oral cavity or discolored lesions with loss of sensation
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3313,8 +3315,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  २६. शरीराच्या कोणत्याही भागात त्वेचवर गाठी होणे/ Tumors in any
-                  part of the body
+                  २६. शरीराच्या कोणत्याही भागात त्वेचवर गाठी होणे/ Any nodules on skin
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3328,8 +3329,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  २७. हात आणि पायावर तळव्यांना वारंवार सुन्न होणे/ Frequent
-                  numbness of palms on hands and feet
+                  २७. हात आणि पायावर तळव्यांना वारंवार सुन्न होणे/ Recurrent numbness on palms or sole
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3343,8 +3343,7 @@ function FamilyHead(props) {
               </QuestionRow>{" "}
               <QuestionRow>
                 <QuestionCol>
-                  २८. हाताची आणि पायाची बोटे वाकडी होणे/ Crooked fingers and
-                  toes
+                  २८. हाताची आणि पायाची बोटे वाकडी होणे/ Clawing of fingers of hands and feet
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3359,7 +3358,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   २९. हातांना आणि पायांना मुंग्या येणे आणि बधिर होणे/ Tingling
-                  in hands and feet and deafness
+                  and numbness in hands and feet
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3373,8 +3372,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ३०. डोळयांच्या पापण्या पूर्ण बंद न होणे/ Incomplete closure of
-                  eyelids
+                  ३०. डोळयांच्या पापण्या पूर्ण बंद न होणे/ Inability to close eyelids completely
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3389,7 +3387,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   ३१. हातांच्या पंजांमध्ये वस्तू व्यवस्थित पकडण्यास त्रास होणे/
-                  Difficulty grasping objects properly in the claws of the hands
+                  Difficulty in holding objects in hands
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group

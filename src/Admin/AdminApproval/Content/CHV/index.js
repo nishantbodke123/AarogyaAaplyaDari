@@ -11,13 +11,12 @@ import {
   message,
 } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
-import { BASE_URL } from "../../../Utils/BaseURL";
+import { BASE_URL } from "../../../../Utils/BaseURL";
 import { useState } from "react";
-import { LogOut } from "../../../Auth/Logout";
+import { LogOut } from "../../../../Auth/Logout";
 import moment from "moment/moment";
 import {
   AddButton,
@@ -32,21 +31,26 @@ import {
 } from "./style";
 import FormItem from "antd/es/form/FormItem";
 import { Option } from "antd/es/mentions";
-import { useTheme } from "styled-components";
+import { EditOutlined } from "@ant-design/icons";
 
-function Healthworker() {
+function CHVApproval() {
   const [refresh, setRefresh] = useState(1);
   const [wardSelect, setWardSelect] = useState("A");
   useEffect(() => {
     setLoader(true);
     axios
       .get(
-        `${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/healthworker`
+        `${BASE_URL}/adminportal/api/GetDeactivatedUserList/${wardSelect}/CHV-ASHA`,
+        {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          },
+        }
       )
       .then((res) => {
         setLoader(false);
-        console.log(res.data.data, "userlist Data");
-        setHealthWorkersData(res.data.data);
+        console.log(res.data.data, "CHVApproval Data");
+        setCHVData(res.data.data);
       })
       .catch((error) => {
         setLoader(false);
@@ -79,26 +83,24 @@ function Healthworker() {
 
   //generic State
   const [areaList, setAreaList] = useState([]);
-  const [healthWorkersData, setHealthWorkersData] = useState([]);
+  const [CHVData, setCHVData] = useState([]);
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [sectionList, setSectionList] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [addHealthWorkerModal, setAddHealthWorkerModal] = useState(false);
+  const [addCHVModal, setAddCHVModal] = useState(false);
+  const [changePasswordModal, setChangePasswordModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [searchValue, setSearchValue] = useState();
-  const [changePasswordModal, setChangePasswordModal] = useState(false);
-  const [healthworkerID, setHealthworkerID] = useState();
+  const [CHVId, setCHVId] = useState();
 
   //Edit Modal State
-  const [u_name, setU_name] = useState("");
-  const [u_userName, setU_userName] = useState("");
-  const [u_phoneNumber, setU_phoneNumber] = useState("");
-  const [u_email, setU_email] = useState("");
+  const [u_name, setU_name] = useState();
+  const [u_userName, setU_userName] = useState();
+  const [u_phoneNumber, setU_phoneNumber] = useState();
+  const [u_email, setU_email] = useState();
   const [u_ward, setU_ward] = useState();
   const [u_healthPost, setU_HealthPost] = useState();
   const [u_Section, setU_section] = useState();
-  const [u_healthPostList, setU_healthPostList] = useState([]);
-  const [u_sectionList, setU_sectionList] = useState([]);
   const [u_is_ActiveStatus, setU_Is_ActiveStatus] = useState();
 
   const handleU_NameChange = (e) => {
@@ -120,7 +122,7 @@ function Healthworker() {
     }
   };
 
-  //change password state
+  // password update modal
   const [newPassword, setNewPassword] = useState();
   const [confirmNewPassword, setConfirmNewPassword] = useState();
 
@@ -130,7 +132,7 @@ function Healthworker() {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState(null);
   const [section, setSection] = useState();
 
   const handleNameChange = (e) => {
@@ -155,7 +157,7 @@ function Healthworker() {
     setLoader(true);
     axios
       .get(
-        `${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/healthworker`,
+        `${BASE_URL}/adminportal/api/GetuserListAPI/CHV/ASHA/${wardSelect}`,
         {
           params: {
             search: searchValue,
@@ -165,7 +167,7 @@ function Healthworker() {
       .then((res) => {
         setLoader(false);
         console.log(res.data.data);
-        setHealthWorkersData(res.data.data);
+        setCHVData(res.data.data);
       })
       .catch((error) => {
         setLoader(false);
@@ -178,7 +180,7 @@ function Healthworker() {
       });
   };
 
-  const handleAddHealthWorkerModalView = () => {
+  const handleaddCHVModalView = () => {
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -197,11 +199,11 @@ function Healthworker() {
           }, 1000);
         }
       });
-    setAddHealthWorkerModal(true);
+    setAddCHVModal(true);
   };
   const handleWardSelect = (id) => {
-    setHealthPostNameList([]);
     setU_ward(id);
+    setHealthPostNameList([]);
     setSectionList([]);
     setU_HealthPost();
     setU_section();
@@ -212,7 +214,7 @@ function Healthworker() {
         },
       })
       .then((res) => {
-        console.log(res.data.data);
+        console.log(res.data);
         setHealthPostNameList(res.data.data);
       })
       .catch((err) => {
@@ -221,9 +223,9 @@ function Healthworker() {
   };
   const handleHealthPostSelect = (id) => {
     setU_HealthPost(id);
-    console.log(id);
     setSectionList([]);
     setU_section();
+    console.log(id);
     axios
       .get(`${BASE_URL}/allauth/api/GetSectionListAPI/${id}`, {
         headers: {
@@ -239,7 +241,7 @@ function Healthworker() {
       });
   };
 
-  const handleHealthWorkerModalClose = () => {
+  const handleCHVModalClose = () => {
     setName();
     setUserName();
     setEmail();
@@ -247,7 +249,9 @@ function Healthworker() {
     setConfirmPassword();
     setPhoneNumber();
     setSection();
-    setAddHealthWorkerModal(false);
+    setHealthPostNameList([]);
+    setSectionList([]);
+    setAddCHVModal(false);
   };
   let axiosConfig = {
     headers: {
@@ -257,7 +261,7 @@ function Healthworker() {
   };
 
   const handleEditModalShow = (data) => {
-    console.log(data.is_active);
+    console.log(data);
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -277,6 +281,7 @@ function Healthworker() {
             }
           )
           .then((res) => {
+            console.log(res);
             setHealthPostNameList(res.data.data);
             axios
               .get(
@@ -288,7 +293,7 @@ function Healthworker() {
                 }
               )
               .then((res) => {
-                console.log(res.data);
+                console.log(res);
                 setSectionList(res.data.data);
               })
               .catch((err) => {
@@ -307,15 +312,24 @@ function Healthworker() {
           }, 1000);
         }
       });
-    setHealthworkerID(data.id);
+    setCHVId(data.id);
+    // setU_name(data.name);
+    // setU_userName(data.username);
+    // setU_phoneNumber(data.phoneNumber);
+    // setU_email(data.emailId);
+    // setU_ward(data.ward_id);
+    // // handleWardSelect(data.ward_id);
+    // setU_HealthPost(data.health_Post_id);
+    // // handleHealthPostSelect(data.health_Post_id);
+    // setU_section(data.section_id);
     setU_name(data.name);
     setU_userName(data.username);
     setU_phoneNumber(data.phoneNumber);
     setU_email(data.emailId);
     setU_ward(data.ward);
+    setU_Is_ActiveStatus(data.is_active);
     setU_HealthPost(data.health_Post);
     setU_section(data.section_id);
-    setU_Is_ActiveStatus(data.is_active);
     setShowEditModal(true);
   };
   const handleEditModalClose = () => {
@@ -328,10 +342,10 @@ function Healthworker() {
     setU_section();
     setU_Is_ActiveStatus();
     setShowEditModal(false);
+    setAreaList([]);
     setHealthPostNameList([]);
     setSectionList([]);
   };
-
   const handleAddUser = () => {
     let formData = new FormData();
     formData.append("name", name);
@@ -340,7 +354,7 @@ function Healthworker() {
     formData.append("phoneNumber", phoneNumber);
     formData.append("emailId", email);
     formData.append("section", section);
-    formData.append("group", "healthworker");
+    formData.append("group", "CHV-ASHA");
     if (password !== confirmPassword) {
       message.warning("The passwords doesn't match");
     } else {
@@ -354,7 +368,7 @@ function Healthworker() {
           console.log(res.data.message);
           message.success(res.data.message);
           setRefresh(refresh + 1);
-          handleHealthWorkerModalClose();
+          handleCHVModalClose();
         })
         .catch((err) => {
           console.log(err);
@@ -362,53 +376,32 @@ function Healthworker() {
         });
     }
   };
-  const handleUpdateUser = () => {
-    console.log(healthworkerID);
+  const handleApproveUser = (status, data) => {
+    console.log(status, data.id);
     console.log(u_is_ActiveStatus);
-    if (u_name === "") {
-      message.warning(" Please Enter Name");
-    } else if (u_userName === "") {
-      message.warning(" Please Enter Username");
-    } else if (u_email === "") {
-      message.warning("Please Enter Email Address");
-    } else if (u_phoneNumber === "") {
-      message.warning("Please Enter Phone Number");
-    } else if (u_Section === undefined) {
-      message.warning("Please select Section");
-    } else if (u_is_ActiveStatus === undefined) {
-      message.warning("Select Active Status");
-    } else {
-      const formData = new FormData();
-      formData.append("name", u_name);
-      formData.append("username", u_userName);
-      formData.append("emailId", u_email);
-      formData.append("phoneNumber", u_phoneNumber);
-      formData.append("section", u_Section);
-      formData.append("is_active", u_is_ActiveStatus);
-      axios
-        .patch(
-          `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${healthworkerID}`,
-          formData,
-          axiosConfig
-        )
-        .then((res) => {
-          console.log(res);
-          message.success(res.data.message);
-          setRefresh(refresh + 1);
-          handleEditModalClose();
-        })
-        .catch((err) => {
-          console.log(err);
-          message.warning(err.response.data.message);
-        });
-    }
-  };
 
+    const formData = new FormData();
+    formData.append("is_active", true);
+    axios
+      .patch(
+        `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${data.id}`,
+        formData,
+        axiosConfig
+      )
+      .then((res) => {
+        console.log(res);
+        message.success(res.data.message);
+        setRefresh(refresh + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+        message.warning(err.response.data.message);
+      });
+  };
   const deleteUser = (data) => {
     Modal.confirm({
       title: `Do you want to Remove user ${data.name}`,
       okText: "Confirm",
-      cancelText: "Cancel",
       onOk: () => {
         axios
           .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${data.id}`, {
@@ -429,20 +422,21 @@ function Healthworker() {
     });
   };
   const handleChangePasswordModalView = (id) => {
-    setHealthworkerID(id);
+    setCHVId(id);
     setChangePasswordModal(true);
   };
   const handleChangePasswordModalClose = () => {
     setNewPassword();
     setConfirmNewPassword();
-    setHealthworkerID();
+    setCHVId();
     setChangePasswordModal(false);
   };
   const handlePasswordUpdate = () => {
+    console.log(newPassword, CHVId);
     if (newPassword === confirmNewPassword) {
       axios
         .patch(
-          `${BASE_URL}/adminportal/api/AdminChangePasswordView/${healthworkerID}`,
+          `${BASE_URL}/adminportal/api/AdminChangePasswordView/${CHVId}`,
           {
             newpassword: newPassword,
           },
@@ -459,10 +453,9 @@ function Healthworker() {
           message.warning(err.response.data.message);
         });
     } else {
-      message.warning("Enter same password");
+      message.warning("Enter Same Password");
     }
   };
-
   const column = [
     {
       title: "Ward",
@@ -494,31 +487,44 @@ function Healthworker() {
       title: "Phone Number",
       dataIndex: "phoneNumber",
     },
-
     {
-      title: "Date & Time Of Joining",
-      dataIndex: "date_joined",
-      render: (date) => {
-        return moment(date).format("DD/MM/YYYY h:mm:ss a");
-      },
+      title: "Added By",
+      dataIndex: "created_by",
     },
     {
-      title: "Update",
-      render: (data) => {
-        return (
-          <EditButton onClick={() => handleEditModalShow(data)}>
-            Edit
-          </EditButton>
+      title: "Approve",
+      dataIndex: "is_active",
+      render: (status, data) => {
+        return status ? (
+          ""
+        ) : (
+          <Button
+            style={{ backgroundColor: "#176B87" }}
+            onClick={() => handleApproveUser(status, data)}
+          >
+            Approve
+          </Button>
         );
       },
     },
-    {
-      title: "Status",
-      dataIndex: "is_active",
-      render: (data) => {
-        return data ? "Active" : "InActive";
-      },
-    },
+
+    // {
+    //   title: "Date & Time Of Joining",
+    //   dataIndex: "date_joined",
+    //   render: (date) => {
+    //     return moment(date).format("DD/MM/YYYY h:mm:ss a");
+    //   },
+    // },
+    // {
+    //   title: "Update",
+    //   render: (data) => {
+    //     return (
+    //       <EditButton onClick={() => handleEditModalShow(data)}>
+    //         Edit
+    //       </EditButton>
+    //     );
+    //   },
+    // },
     // {
     //   title: "Delete",
     //   render: (data) => {
@@ -527,19 +533,26 @@ function Healthworker() {
     //     );
     //   },
     // },
-    {
-      title: "Password",
-      render: (data) => {
-        return (
-          <Button
-            style={{ border: "none" }}
-            onClick={() => handleChangePasswordModalView(data.id)}
-          >
-            <EditOutlined />
-          </Button>
-        );
-      },
-    },
+    // {
+    //   title: "Status",
+    //   dataIndex: "is_active",
+    //   render: (data) => {
+    //     return data ? "Active" : "InActive";
+    //   },
+    // },
+    // {
+    //   title: "Password",
+    //   render: (data) => {
+    //     return (
+    //       <Button
+    //         style={{ border: "none" }}
+    //         onClick={() => handleChangePasswordModalView(data.id)}
+    //       >
+    //         <EditOutlined />
+    //       </Button>
+    //     );
+    //   },
+    // },
   ];
   return (
     <Spin spinning={loader}>
@@ -568,71 +581,68 @@ function Healthworker() {
                   color: "#176b87",
                 }}
               >
-                Auxiliary Nurse and Midwife (ANM)
+                Community Health Volunteers (CHV)
               </p>
-              <AddButton onClick={handleAddHealthWorkerModalView}>
-                Add ANM
-              </AddButton>
+              <AddButton onClick={handleaddCHVModalView}>Add CHV</AddButton>
             </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
-              <Row>
-                <Col>
-                  <Form>
-                    <FormItem>
-                      <Input
-                        type="text"
-                        style={{ width: "300px" }}
-                        placeholder="Enter Name / User Name  "
-                        onChange={(e) => setSearchValue(e.target.value)}
-                      ></Input>
+            <div>
+              <div style={{ margin: "20px 10px" }}>
+                <Row>
+                  <Col>
+                    <Form>
+                      <FormItem>
+                        <Input
+                          type="text"
+                          style={{ width: "300px" }}
+                          placeholder="Enter Name / User Name / ward "
+                          onChange={(e) => setSearchValue(e.target.value)}
+                        ></Input>
 
-                      <SearchButton htmlType="submit" onClick={handleSearch}>
-                        Search
-                      </SearchButton>
-                    </FormItem>
-                  </Form>
-                </Col>
-                <Col>
-                  <Form layout="vertical">
-                    <FormItem
-                      label="Select ward"
-                      style={{ width: "250px", margin: "-25px 0px 5px 300px" }}
-                    >
-                      <Select
-                        value={wardSelect}
-                        showSearch
-                        onChange={(value) => setWardSelect(value)}
+                        <SearchButton htmlType="submit" onClick={handleSearch}>
+                          Search
+                        </SearchButton>
+                      </FormItem>
+                    </Form>
+                  </Col>
+                  <Col>
+                    <Form layout="vertical">
+                      <FormItem
+                        label="Select ward"
+                        style={{
+                          width: "250px",
+                          margin: "-25px 0px 5px 300px",
+                        }}
                       >
-                        {areaList.map((data) => (
-                          <Option key={data.id} value={data.wardName}>
-                            {data.wardName}
-                          </Option>
-                        ))}
-                      </Select>
-                    </FormItem>
-                  </Form>
-                </Col>
-              </Row>
-              <Table columns={column} dataSource={healthWorkersData}></Table>
+                        <Select
+                          value={wardSelect}
+                          showSearch
+                          onChange={(value) => setWardSelect(value)}
+                        >
+                          {areaList.map((data) => (
+                            <Option key={data.id} value={data.wardName}>
+                              {data.wardName}
+                            </Option>
+                          ))}
+                        </Select>
+                      </FormItem>
+                    </Form>
+                  </Col>
+                </Row>
+              </div>
+              <Table columns={column} dataSource={CHVData}></Table>
             </div>
             <Modal
-              open={addHealthWorkerModal}
+              open={addCHVModal}
               width={900}
-              onCancel={handleHealthWorkerModalClose}
+              onCancel={handleCHVModalClose}
               title={
                 <div>
-                  <h3>Health Worker details</h3>
+                  <h3>Community Health Volunteers (CHV) Details</h3>
                 </div>
               }
               footer={
                 <>
-                  <CancelButton onClick={handleHealthWorkerModalClose}>
+                  <CancelButton onClick={handleCHVModalClose}>
                     Cancel
                   </CancelButton>
                   <SubmitButton onClick={handleAddUser}>Submit</SubmitButton>
@@ -795,7 +805,7 @@ function Healthworker() {
                     onChange={(e) => setNewPassword(e.target.value)}
                   ></Input.Password>
                 </FormItem>
-                <FormItem label="Confirm new password">
+                <FormItem label="Confirm New Password">
                   <Input.Password
                     style={{ width: "350px" }}
                     value={confirmNewPassword}
@@ -806,13 +816,15 @@ function Healthworker() {
             </Modal>
             <Modal
               open={showEditModal}
-              title={<h2>Update ANM's Details</h2>}
+              title={<h2>Update CHV's Details</h2>}
               width={1000}
               onCancel={handleEditModalClose}
               footer={
                 <>
                   <Button onClick={handleEditModalClose}>Cancel</Button>
-                  <UpdateButton onClick={handleUpdateUser}>Update</UpdateButton>
+                  <UpdateButton onClick={handleApproveUser}>
+                    Update
+                  </UpdateButton>
                 </>
               }
             >
@@ -907,9 +919,9 @@ function Healthworker() {
                     </FormItem>
                   </Col>
                 </Row>
+
                 <Row>
                   <Col>
-                    {" "}
                     <FormItem label="Section">
                       <Select
                         showSearch
@@ -933,6 +945,7 @@ function Healthworker() {
                     </FormItem>
                   </Col>
                   <Col>
+                    {" "}
                     <FormItem
                       label="Is Active"
                       style={{ width: "350px", margin: "0% 36%" }}
@@ -952,4 +965,4 @@ function Healthworker() {
     </Spin>
   );
 }
-export default Healthworker;
+export default CHVApproval;

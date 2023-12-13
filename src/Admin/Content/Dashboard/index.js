@@ -408,7 +408,7 @@ function AdminDashboard() {
                             margin: "11px 10px",
                           }}
                         >
-                          {AdminDashboardData.NoOfPersonMoreThan60}
+                          Citizens of age > 60
                         </p>
                         <p
                           style={{
@@ -417,7 +417,7 @@ function AdminDashboard() {
                             margin: "0px 30px",
                           }}
                         >
-                          12
+                         {AdminDashboardData.NoOfPersonMoreThan60}
                         </p>
                       </div>
                     </Col>

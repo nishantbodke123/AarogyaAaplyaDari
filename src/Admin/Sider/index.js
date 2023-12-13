@@ -44,6 +44,22 @@ function Sidebar(props) {
         getItem("MO", "/admin/mo", null, "/admin/mo"),
       ]
     ),
+    getItem(
+      <p style={{ color: "white" }}>Approval List</p>,
+      null,
+      <UserOutlined />,
+      null,
+      [
+        getItem(
+          "ANM/Co-Ordinator",
+          "/admin/healthWorkerApproval",
+          null,
+          "/admin/healthWorkerApproval"
+        ),
+        getItem("CHV/ASHA", "/admin/chvApproval", null, "/admin/chvApproval"),
+        
+      ]
+    ),
   ];
   return (
     <>

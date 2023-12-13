@@ -146,6 +146,9 @@ function WardHealthworker() {
         params: {
           search: searchValue,
         },
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
       })
       .then((res) => {
         setLoader(false);
@@ -360,7 +363,11 @@ function WardHealthworker() {
       message.warning("The passwords doesn't match");
     } else {
       axios
-        .post(`${BASE_URL}/adminportal/api/InsertUsers`, formData, axiosConfig)
+        .post(
+          `${BASE_URL}/adminportal/api/InsertUsersByMOH`,
+          formData,
+          axiosConfig
+        )
         .then((res) => {
           console.log(res.data.message);
           message.success(res.data.message);
@@ -595,7 +602,7 @@ function WardHealthworker() {
                   <Input
                     type="text"
                     style={{ width: "300px" }}
-                    placeholder="Enter Name / User Name / ward "
+                    placeholder="Enter Name / User Name "
                     onChange={(e) => setSearchValue(e.target.value)}
                   ></Input>
 

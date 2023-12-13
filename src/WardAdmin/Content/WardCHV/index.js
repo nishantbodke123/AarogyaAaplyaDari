@@ -45,7 +45,7 @@ function WardCHV() {
     setLoader(true);
     axios
       .get(
-        `${BASE_URL}/adminportal/api/GetWardWiseSUerList/CHV/ASHA`,
+        `${BASE_URL}/adminportal/api/GetWardWiseSUerList/CHV-ASHA`,
         axiosConfig
       )
       .then((res) => {
@@ -370,7 +370,7 @@ function WardCHV() {
     formData.append("phoneNumber", phoneNumber);
     formData.append("emailId", email);
     formData.append("section", section);
-    formData.append("group", "CHV/ASHA");
+    formData.append("group", "CHV-ASHA");
     if (password !== confirmPassword) {
       message.warning("The passwords doesn't match");
     } else {
