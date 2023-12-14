@@ -16,6 +16,7 @@ import {
   Select,
   Col,
   message,
+  Divider,
 } from "antd";
 
 import {
@@ -56,6 +57,12 @@ function MemberAdd(props) {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const { state } = useLocation();
+  // state for progress bar
+  const [progress, setProgress] = useState(0);
+  const [CBACRequired, setCBACRequired] = useState(false);
+  const [adharAbhaRequired, setAadharAbhaRequired] = useState(false);
+  const [physicalDetailsRequired, setPhysicalDetailedRequired] =
+    useState(false);
   let axiosConfig = {
     headers: {
       "Content-Type": "application/json",
@@ -64,7 +71,7 @@ function MemberAdd(props) {
   };
   useEffect(() => {
     i18n.changeLanguage("mr");
-  }, []);
+  }, [CBACRequired, adharAbhaRequired, physicalDetailsRequired]);
 
   //Family Head Form States
 
@@ -102,9 +109,58 @@ function MemberAdd(props) {
   const [bloodSampleHome, setBloodSampleHome] = useState(false);
   const [bloodSampleCenter, setBloodSampleCenter] = useState(false);
   const [bloodSampleDenied, setBloodSampleDenied] = useState(false);
+  const [notRequired, setNotRequired] = useState(false);
+  const [vulnerableList, setVulnerableList] = useState([]);
+  const [selectVulnerableList, setSelectVulnerableList] = useState([]);
+  const [vulnerable, setVulnerable] = useState(false);
+  const [refarralList, setReferralList] = useState([]);
+  const [selectedReferalList, setSelectReferralList] = useState([]);
+  const handleVulnerableClick = () => {
+    setVulnerable(!vulnerable);
+    if (!vulnerable) {
+      axios
+        .get(`${BASE_URL}/healthworker/api/getvulnerableOptionList`)
+        .then((res) => {
+          console.log(res.data);
+          setVulnerableList(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  const handleVulnerableList = (option) => {
+    if (selectVulnerableList.includes(option)) {
+      setSelectVulnerableList(
+        selectVulnerableList.filter((item) => item !== option)
+      );
+    } else {
+      setSelectVulnerableList([...selectVulnerableList, option]);
+    }
+    console.log(selectVulnerableList);
+  };
+
+  const handleReferralList = (option) => {
+    if (selectedReferalList.includes(option)) {
+      setSelectReferralList(
+        selectedReferalList.filter((item) => item !== option)
+      );
+    } else {
+      setSelectReferralList([...selectedReferalList, option]);
+    }
+  };
 
   const handleConsentModalShow = () => {
-    setConsentModalShow(true);
+    axios
+      .get(`${BASE_URL}/healthworker/api/getReferelOptionList`, axiosConfig)
+      .then((res) => {
+        console.log(res.data);
+        setReferralList(res.data);
+        setConsentModalShow(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   const handleConsentModalClose = () => {
     setConsentModalShow(false);
@@ -114,16 +170,25 @@ function MemberAdd(props) {
     setBloodSampleHome(!bloodSampleHome);
     setBloodSampleCenter(false);
     setBloodSampleDenied(false);
+    setNotRequired(false);
   };
   const handleBloodSampleCenterSelect = () => {
     setBloodSampleHome(false);
     setBloodSampleCenter(!bloodSampleCenter);
     setBloodSampleDenied(false);
+    setNotRequired(false);
   };
   const handleBloodSampleDesiedSelect = () => {
     setBloodSampleHome(false);
     setBloodSampleCenter(false);
+    setNotRequired(false);
     setBloodSampleDenied(!bloodSampleDenied);
+  };
+  const handleNotRequiredSelect = () => {
+    setBloodSampleHome(false);
+    setBloodSampleCenter(false);
+    setNotRequired(!notRequired);
+    setBloodSampleDenied(false);
   };
 
   //Family Member field
@@ -138,7 +203,6 @@ function MemberAdd(props) {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
-  const [CBACRequired ,setCBACRequired] = useState(false);
   const [demandLetter, setDemandLetter] = useState("");
 
   const handleNameChange = (e) => {
@@ -165,9 +229,7 @@ function MemberAdd(props) {
       setPhone(e.target.value);
     }
   };
-  const handleCBACRequired=()=>{
-    setCBACRequired(!CBACRequired);
-  }
+
   // const handleAbhaIDChange = (e) => {
   //   const regex = /^[0-9a-zA-z]{1,12}$/;
   //   if (e.target.value === "" || regex.test(e.target.value)) {
@@ -191,6 +253,15 @@ function MemberAdd(props) {
     }
 
     setAbhaId(formattedText);
+  };
+  const handleCBACRequired = () => {
+    setCBACRequired(!CBACRequired);
+  };
+  const handleAadharAbhaRequired = () => {
+    setAadharAbhaRequired(!adharAbhaRequired);
+  };
+  const handlePhysicalDetailsRequired = () => {
+    setPhysicalDetailedRequired(!physicalDetailsRequired);
   };
   const handlePulseChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
@@ -345,9 +416,11 @@ function MemberAdd(props) {
   const handlePartAQuestion1 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "50 and 50 below" ||
-      selectedValue === "50 to 79 Years" ||
-      selectedValue === "80 and 80 above"
+      selectedValue === "0_29_year" ||
+      selectedValue === "30_39_year" ||
+      selectedValue === "40_49_year" ||
+      selectedValue === "50_59_year" ||
+      selectedValue === "60 years and above"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -357,6 +430,7 @@ function MemberAdd(props) {
   const handlePartAQuestion2 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
+      selectedValue === "Never" ||
       selectedValue === "Used to consume in the past/ Sometimes now" ||
       selectedValue === "Daily"
     ) {
@@ -376,8 +450,8 @@ function MemberAdd(props) {
   const handlePartAQuestion4 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "80 cm or less" ||
-      selectedValue === "80-100 cm" ||
+      selectedValue === "90 cm or less" ||
+      selectedValue === "91-100 cm" ||
       selectedValue === "More than 100 cm"
     ) {
       setQuestionFunction([selectedValue]);
@@ -714,22 +788,21 @@ function MemberAdd(props) {
   };
 
   const memberData = {
+    // area: section,
     name: name,
     gender: gender,
     age: age,
     mobileNo: phone,
     familyHead: state,
-    aadharAndAbhaConsent: "true",
     aadharCard: aadharCard,
-    cbacRequired: age<=60 && "true",
+    // ASHA_CHV: selectedCHV,
     abhaId: abhaId,
     pulse: pulse,
     bloodPressure: bloodPressure,
     weight: weight,
     height: height,
     BMI: BMI,
-    questionsConsent: true,
-    cbacScore: "4",
+    referels: selectedReferalList,
     Questionnaire: {
       part_a: [
         {
@@ -1051,135 +1124,122 @@ function MemberAdd(props) {
         },
       ],
     },
-    bloodConsent: bloodConsent,
-    bloodCollectionLocation:
-      age > 60
-        ? bloodSampleHome
-          ? "Home"
-          : bloodSampleCenter
-          ? "Center"
-          : bloodSampleDenied
-          ? "Denied"
-          : ""
-        : "",
+    bloodCollectionLocation: bloodSampleHome
+      ? "Home"
+      : bloodSampleCenter
+      ? "Center"
+      : bloodSampleDenied
+      ? "Denied"
+      : notRequired
+      ? "Not Required"
+      : "",
   };
 
   const handleFormSubmit = async () => {
     if (name === "") {
       message.warning("Please Enter Name");
-    } else if (aadharCard === "") {
-      message.warning("Please Enter Aadhar Card Number");
     } else if (gender === "") {
       message.warning("Please Mention Gender");
     } else if (age === "") {
       message.warning("Please Enter Age");
-    } else if (abhaId === "") {
-      message.warning("Please Enter Abha ID");
+    } else if (aadharCard !== "") {
+      //|| adharAbhaRequired
+      axios
+        .get(
+          `${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`,
+          axiosConfig
+        )
+        .then((res) => {
+          if (res.status === 401) {
+            LogOut();
+          } else if (res.status === 200) {
+            handleConsentModalShow();
+          } else {
+            message.warning("Enter valid aadhar number");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          message.warning(error.response.data.message);
+        });
+    } else if (abhaId !== "") {
+      // || adharAbhaRequired
+      axios
+        .get(`${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`, axiosConfig)
+        .then((res) => {
+          if (res.status === 401) {
+            LogOut();
+          } else if (res.status === 200) {
+            handleConsentModalShow();
+          } else {
+            message.warning("Enter Valid abha Number");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          message.warning(error.response.message);
+        });
     } else {
-      try {
-        let axiosConfig = {
-          headers: {
-            Authorization: `Token ${sessionStorage.getItem("Token")}`,
-          },
-        };
-        const [aadharResponse, abhaResponse] = await Promise.all([
-          axios.get(
-            `${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`,
-            axiosConfig
-          ),
-          axios.get(
-            `${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`,
-            axiosConfig
-          ),
-        ]);
-
-        const adharNoStatus = aadharResponse.status;
-        const abhaNoStatus = abhaResponse.status;
-
-        console.log(adharNoStatus, "+", abhaNoStatus, "+", age);
-
-        if (adharNoStatus === 200 && abhaNoStatus === 200 && age >= 60) {
-          handleConsentModalShow();
-        } else if (adharNoStatus === 200 && abhaNoStatus === 200) {
-          handleAdd();
-        } else {
-          message.warning("Not Submitted");
-        }
-      } catch (error) {
-        console.log(error);
-        message.warning(error.response.data.message);
-        // if (error.response.status == 401) {
-        //   message.warning("system is logged out");
-        //   setTimeout(() => {
-        //     LogOut();
-        //   }, 1000);
-        // } else {
-        //   message.warning(error.response.data.message);
-        // }
-      }
+      handleConsentModalShow();
     }
+    // {
+    //   try {
+    //     const [aadharResponse, abhaResponse] = await Promise.all([
+    //       axios.get(
+    //         `${BASE_URL}/healthworker/api/veirfyaadharCard/${aadharCard}`,
+    //         axiosConfig
+    //       ),
+    //       axios.get(
+    //         `${BASE_URL}/healthworker/api/verifyabhaId/${abhaId}`,
+    //         axiosConfig
+    //       ),
+    //     ]);
+
+    //     const adharNoStatus = aadharResponse.status;
+    //     const abhaNoStatus = abhaResponse.status;
+
+    //     console.log(adharNoStatus, "+", abhaNoStatus, "+", age);
+    //     if (adharNoStatus === 401 && abhaNoStatus === 401) {
+    //       LogOut();
+    //     } else if (adharNoStatus === 200 && abhaNoStatus === 200) {
+    //       handleConsentModalShow();
+    //     } else {
+    //       message.warning("Not Submitted");
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //     message.warning(error.response.message);
+    //   }
+    // } else {
+    //   handleConsentModalShow();
+    // }
   };
 
   const handleAdd = () => {
-    if (age >= 60) {
-      if (bloodSampleHome && demandLetter === "") {
-        message.warning("Demand letter required");
-      } else {
-        if (bloodConsent || bloodSampleDenied) {
-          axios
-            .post(
-              `${BASE_URL}/healthworker/api/PostFamilyDetails`,
-              memberData,
-              axiosConfig
-            )
-            .then((response) => {
-              console.log(response.data.message);
-              message.success(response.data.message);
-              setTimeout(() => {
-                window.location.replace("/dashboard");
-              }, 1000);
-            })
-            .catch((error) => {
-              console.log(error.response.data.message);
-              if (error.response.status == 401) {
-                message.warning("system is logged out");
-                setTimeout(() => {
-                  LogOut();
-                }, 1000);
-              } else {
-                message.warning(error.response.data.message);
-              }
-            });
-        } else {
-          message.warning("Blood Sample Collection Consent Required");
-        }
-      }
-    } else {
-      axios
-        .post(
-          `${BASE_URL}/healthworker/api/PostFamilyDetails`,
-          memberData,
-          axiosConfig
-        )
-        .then((response) => {
-          console.log(response.data.message);
-          message.success(response.data.message);
+    axios
+      .post(
+        `${BASE_URL}/healthworker/api/PostFamilyDetails`,
+        memberData,
+        axiosConfig
+      )
+      .then((response) => {
+        console.log(response.data.message);
+        message.success(response.data.message);
+        setTimeout(() => {
+          window.location.replace("/dashboard");
+        }, 1000);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+        if (error.response.status == 401) {
+          message.warning("system is logged out");
           setTimeout(() => {
-            window.location.replace("/dashboard");
+            LogOut();
           }, 1000);
-        })
-        .catch((error) => {
-          console.log(error.response.data.message);
-          if (error.response.status == 401) {
-            message.warning("system is logged out");
-            setTimeout(() => {
-              LogOut();
-            }, 1000);
-          } else {
-            message.warning(error.response.data.message);
-          }
-        });
-    }
+        } else {
+          message.warning(error.response.data.message);
+        }
+      });
   };
 
   return (
@@ -1196,44 +1256,13 @@ function MemberAdd(props) {
                   type="text"
                   value={name}
                   onChange={(e) => handleNameChange(e)}
+                  pattern="[a-zA-Z]+"
+                  allowClear
                 ></Input>
               </FormItem>
             </Column>
             <Column>
               {/* rules={[{required:true ,message:"aadhar number required / आधार क्रमांक आवश्यक आहे"},{pattern:/^[0-9]*$/ ,message:"Only numerics value allowed / केवळ अंकीय मूल्याला अनुमती आहे"}]} */}
-              <FormItem label="Aadhar Card Number/ आधार क्रमांक">
-                <Input
-                  type="text"
-                  value={aadharCard}
-                  maxLength={12}
-                  allowClear
-                  onChange={(e) => handleAadharCardChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              {/* rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]} */}
-              <FormItem label="Gender / लिंग" required>
-                <Select onChange={(value) => setGender(value)} value={gender}>
-                  <Option value="male">Male / पुरुष</Option>
-                  <Option value="female">Female / स्त्री</Option>
-                </Select>
-              </FormItem>
-            </Column>
-          </Row>
-
-          <Row>
-            <Column>
-              {/*  rules={[{required:true ,message:"Age mention required / वय नमूद करणे आवश्यक आहे"}]} */}
-              <FormItem label="Age / वय" required>
-                <Input
-                  type="number"
-                  value={age}
-                  onChange={(e) => handleAgeChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
               <FormItem
                 label="Mobile Number / मोबाईल नंबर"
                 rules={[
@@ -1253,237 +1282,380 @@ function MemberAdd(props) {
               </FormItem>
             </Column>
             <Column>
-              <FormItem label="Abha ID / आभा आयडी">
-                <Input
-                  type="text"
-                  value={abhaId}
-                  maxLength={17}
-                  required
-                  onChange={(e) => handleAbhaIDChange(e)}
-                ></Input>
+              {/* rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]} */}
+              <FormItem label="Gender / लिंग" required>
+                <Select onChange={(value) => setGender(value)} value={gender}>
+                  <Option value="male">Male / पुरुष</Option>
+                  <Option value="female">Female / स्त्री</Option>
+                  <Option value="transgender">Transgender/समलैंगिक</Option>
+                </Select>
               </FormItem>
             </Column>
           </Row>
-         
+
           <Row>
-            <Column>
-              <FormItem label="Pulse / नाडी">
+            <Column span={8}>
+              {/*  rules={[{required:true ,message:"Age mention required / वय नमूद करणे आवश्यक आहे"}]} */}
+              <FormItem label="Age / वय" required>
                 <Input
-                  type="text"
-                  value={pulse}
-                  onChange={(e) => handlePulseChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              <FormItem label="Blood Pressure / रक्तदाब">
-                <Input
-                  type="text"
-                  value={bloodPressure}
-                  onChange={(e) => handleBloodPressureChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              <FormItem label="Weight / वजन">
-                <Input
-                  type="text"
-                  value={weight}
-                  onChange={(e) => handleWeightChange(e)}
+                  type="number"
+                  value={age}
+                  allowClear
+                  onChange={(e) => handleAgeChange(e)}
                 ></Input>
               </FormItem>
             </Column>
           </Row>
-          <Row>
-            <Column>
-              <FormItem label="Height / उंची">
-                <Input
-                  type="text"
-                  value={height}
-                  onChange={(e) => handleHeightChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            <Column>
-              <FormItem label="BMI">
-                <Input
-                  type="text"
-                  value={BMI}
-                  onChange={(e) => handleBMIChange(e)}
-                ></Input>
-              </FormItem>
-            </Column>
-            {/* <Column>
-              <FormItem label="Cbac Score ">
-                <Input
-                  type="text"
-                  value={cbacScore}
-                  onChange={(e) => setCbacScore(e.target.value)}
-                ></Input>
-              </FormItem>
-            </Column> */}
-          </Row>
+          {age === "" || age <= 18 ? (
+            <Row
+              style={{
+                display: "flex",
+                justifyContent: "start",
+                margin: "0.5% 0%",
+                backgroundColor: "#dde6ed",
+              }}
+            >
+              {/* <h3>Hello</h3> */}
+              <Checkbox
+                style={{ margin: "0% 2%" }}
+                value={adharAbhaRequired}
+                onChange={handleAadharAbhaRequired}
+              >
+                <h4>
+                  If You want to fill Adhar Number and ABHA Number, tick the box
+                </h4>
+              </Checkbox>
+            </Row>
+          ) : (
+            <>
+              <Divider />
+            </>
+          )}
+          {age <= 18 && !adharAbhaRequired ? (
+            <></>
+          ) : (
+            <>
+              {" "}
+              <Row>
+                <Column span={8}>
+                  <FormItem label="Aadhar Card Number/ आधार क्रमांक">
+                    <Input
+                      type="text"
+                      value={aadharCard}
+                      maxLength={12}
+                      allowClear
+                      onChange={(e) => handleAadharCardChange(e)}
+                    ></Input>
+                  </FormItem>
+                </Column>
+                <Column span={8}>
+                  <FormItem label="Abha ID / आभा आयडी">
+                    <Input
+                      type="text"
+                      value={abhaId}
+                      maxLength={17}
+                      onChange={(e) => handleAbhaIDChange(e)}
+                    ></Input>
+                  </FormItem>
+                  {/* <p style={{ margin: "-20px 50px 15px", fontSize: "14px" }}>
+                    If you don't have ABHA ID?
+                    <a onClick={() => handleShowAadharOtpLinkedModal()}>
+                      Click here
+                    </a>
+                  </p> */}
+                </Column>
+                {/* <Column span={1}>
+                  <Tooltip title="ABHA Card Download">
+                    <Popover
+                      content={ABHACARDDownloadInputContent}
+                      trigger="click"
+                      placement="left"
+                    >
+                      <ABHACardDownLoad icon={faFileArrowDown} />
+                    </Popover>
+                  </Tooltip>
+                </Column> */}
+              </Row>
+            </>
+          )}
+          {age === "" || age <= 18 ? (
+            <Row
+              style={{
+                display: "flex",
+                justifyContent: "start",
+                margin: "0.5% 0%",
+                backgroundColor: "#dde6ed",
+              }}
+            >
+              {/* <h3>Hello</h3> */}
+              <Checkbox
+                style={{ margin: "0% 2%" }}
+                value={physicalDetailsRequired}
+                onChange={handlePhysicalDetailsRequired}
+              >
+                <h4>If You want to fill physical details, tick the box</h4>
+              </Checkbox>
+            </Row>
+          ) : (
+            <>
+              <Divider />
+            </>
+          )}
+
+          {age <= 18 && !physicalDetailsRequired ? (
+            <></>
+          ) : (
+            <>
+              <Row>
+                <Column>
+                  <FormItem label="Pulse / नाडी">
+                    <Input
+                      type="text"
+                      value={pulse}
+                      onChange={(e) => handlePulseChange(e)}
+                    ></Input>
+                  </FormItem>
+                </Column>
+
+                <Column>
+                  <FormItem label="Blood Pressure / रक्तदाब">
+                    <Input
+                      type="text"
+                      value={bloodPressure}
+                      onChange={(e) => handleBloodPressureChange(e)}
+                    ></Input>
+                  </FormItem>
+                </Column>
+                <Column>
+                  <FormItem label="Weight / वजन">
+                    <Input
+                      type="text"
+                      value={weight}
+                      onChange={(e) => handleWeightChange(e)}
+                    ></Input>
+                  </FormItem>
+                </Column>
+                <Column>
+                  <FormItem label="Height / उंची">
+                    <Input
+                      type="text"
+                      value={height}
+                      onChange={(e) => handleHeightChange(e)}
+                    ></Input>
+                  </FormItem>
+                </Column>
+                <Column>
+                  <FormItem label="BMI">
+                    <Input
+                      type="text"
+                      value={BMI}
+                      onChange={(e) => handleBMIChange(e)}
+                    ></Input>
+                  </FormItem>
+                </Column>
+              </Row>
+            </>
+          )}
+
+          <Row></Row>
+          {age === "" || age <= 30 ? (
+            <Row
+              style={{
+                display: "flex",
+                justifyContent: "start",
+                margin: "0.5% 0%",
+                backgroundColor: "#dde6ed",
+              }}
+            >
+              {/* <h3>Hello</h3> */}
+              <Checkbox
+                style={{ margin: "0% 2%" }}
+                value={CBACRequired}
+                onChange={handleCBACRequired}
+              >
+                <h4>If You want to fill CBAC Form, tick the box</h4>
+              </Checkbox>
+            </Row>
+          ) : (
+            <></>
+          )}
         </FormContainer>
       </Container>
-      {age <= 30 ? (
-        <>
-          <SubmitButtonDiv>
-            <SubmitButton onClick={() => handleAdd()}>Submit</SubmitButton>
-          </SubmitButtonDiv>
-        </>
-      ) : (
-        <>
-          <DocsTab
-            centered
-            defaultActiveKey="1"
-            activeKey={activeTab}
-            onChange={onKeyChange}
-          >
-            <Tabs.TabPane tab="1) Part A /भाग अ" key="1">
-              <FormHeader> A. Risk assessment/जोखमीचे मुल्यांकन</FormHeader>
 
-              <QuestionRow>
-                <QuestionCol>
-                  १. आपले वय काय आहे ? (पूर्ण वर्षात) / what is your age (in
-                  full year)
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handlePartAQuestion1(1, e.target.value)}
-                    value={question1A[0]}
-                  >
-                    <Radio value="50 and 50 below">
-                      50 and 50 below / 50 आणि 50 खाली
-                    </Radio>
-                    <br />
-                    <Radio value="50 to 79 Years">
-                      50 to 79 Years / 50 ते 79 वर्षे
-                    </Radio>
-                    <br />
-                    <Radio value="80 and 80 above">
-                      80 and 80 above / 80 आणि 80 वर
-                    </Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २. तुम्ही धूम्रपान किंवा धूर रहित उत्पादने जसे गुटखा व
-                  खैनीसारख्या वापर करता ? / Do you smoke or smokeless products
-                  like gutkha and Use like Khaini?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handlePartAQuestion2(2, e.target.value)}
-                    value={question2A[0]}
-                  >
-                    <Radio value="never">Never / कधीच नाही</Radio>
-                    <br />
-                    <Radio value="Used to consume in the past/ Sometimes now">
-                      Used to consume in the past/ Sometimes now /<br /> पूर्वी
-                      करायचो/ कधी कधी आता
-                    </Radio>
-                    <br />
-                    <Radio value="Daily">Daily / दररोज</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ३. तुम्ही दररोज मद्यपान करता ? / Do you drink alcohol every
-                  day?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) =>
-                      handlePartAQuestion3And6(3, e.target.value)
-                    }
-                    value={question3A[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ४. कंबरेचा घेर (सेमी मध्ये) / Waist circumference (in cm)
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handlePartAQuestion4(4, e.target.value)}
-                    value={question4A[0]}
-                  >
-                    <Radio value="80 cm or less">
-                      80 cm or less/80 सेमी किंवा कमी
-                    </Radio>
-                    <br />
-                    <Radio value="80-100 cm">80-100 cm/80-100 सेमी</Radio>
-                    <br />
-                    <Radio value="More than 100 cm">
-                      More than 100 cm / 100 सेमी पेक्षा जास्त
-                    </Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ५. तुम्ही आठवड्यातून किमान 150 मिनिटे कोणतीही शारीरिक क्रिया
-                  करता का? / Do you undertake any physical activities for
-                  minimum of 150 minutes in a week?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handlePartAQuestion5(5, e.target.value)}
-                    value={question5A[0]}
-                  >
-                    <Radio value="At least 150 minutes in a week">
-                      At least 150 minutes in a weak / <br />
-                      एका आठवड्यात किमान 150 मिनिटे
-                    </Radio>
-                    <br />
-                    <Radio value="Less than 150 minutes in a week ">
-                      Less than 150 minutes in a week /<br /> एका आठवड्यात 150
-                      मिनिटांपेक्षा कमी
-                    </Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ६. आपल्याकडे कौटुंबिक इतिहास आहे का ? (आपले पालक किंवा भावंडां
-                  पैकी) उच्च रक्तदाब, मधुमेह आणि हृदयरोग आहे का ? / 6. Do you
-                  have a family history? Have high blood pressure, diabetes and
-                  heart disease (from your parents or siblings)?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) =>
-                      handlePartAQuestion3And6(6, e.target.value)
-                    }
-                    value={question6A[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <SubmitButtonDiv>
-                <SubmitButton onClick={() => onKeyChange("2")}>
-                  Next
-                </SubmitButton>
-              </SubmitButtonDiv>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="2) Part B/भाग ब" key="2">
-              <FormHeader>
-                B: Early Screening: Ask the patient if they have any of these
-                symptoms / लवकर तपासणी : रुग्णाला यापैकी काही लक्षणे आहेत का ते
-                विचारा
-              </FormHeader>
-              <FormHeader>
-                B1 : Female and male / बी १ : महिला आणि पुरुष
-              </FormHeader>
-              {/* {partB1Options.map((item, key) => (
+      {/* {age <= 30 && !CBACRequired ? (
+          <>
+            {" "}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                marginRight: "10%",
+              }}
+            >
+              <Checkbox onChange={(e) => handlePartialSelect(e)}></Checkbox>
+              <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
+            </div>
+          </>
+        ) : (
+          <></>
+        )} */}
+
+      {age <= 30 && !CBACRequired ? (
+        <SubmitButtonDiv>
+          <SubmitButton onClick={handleFormSubmit}>Next</SubmitButton>
+        </SubmitButtonDiv>
+      ) : (
+        <DocsTab
+          centered
+          defaultActiveKey="1"
+          activeKey={activeTab}
+          onChange={onKeyChange}
+        >
+          <Tabs.TabPane tab="1) Part A /भाग अ" key="1">
+            <FormHeader> A. Risk assessment/जोखमीचे मुल्यांकन</FormHeader>
+
+            <QuestionRow>
+              <QuestionCol>
+                १. आपले वय काय आहे ? (पूर्ण वर्षात) / what is your age (in full
+                year)
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handlePartAQuestion1(1, e.target.value)}
+                  value={question1A[0]}
+                >
+                  <Radio value="0_29_year">0-29 years / 0-29 वर्षे</Radio>
+                  <br />
+                  <Radio value="30_39_year">30-39 Years / 30-39 वर्षे</Radio>
+                  <br />
+                  <Radio value="40_49_year">
+                    40 and 49 years / 40 आणि 49 वर्षे
+                  </Radio>
+                  <br />
+                  <Radio value="50_59_year">
+                    50 and 59 years /50 आणि 59 वर्षे
+                  </Radio>
+                  <br />
+                  <Radio value="60 years and above">
+                    60 years and above /60 वर्षे आणि त्यावरील
+                  </Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २. तुम्ही धूम्रपान किंवा धूर रहित उत्पादने जसे गुटखा व
+                खैनीसारख्या वापर करता ? / Do you smoke or smokeless products
+                like gutkha and Use like Khaini?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handlePartAQuestion2(2, e.target.value)}
+                  value={question2A[0]}
+                >
+                  <Radio value="Never">Never / कधीच नाही</Radio>
+                  <br />
+                  <Radio value="Used to consume in the past/ Sometimes now">
+                    Used to consume in the past/ Sometimes now /<br /> पूर्वी
+                    करायचो/ कधी कधी आता
+                  </Radio>
+                  <br />
+                  <Radio value="Daily">Daily / दररोज</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ३. तुम्ही दररोज मद्यपान करता ? / Do you drink alcohol every day?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handlePartAQuestion3And6(3, e.target.value)}
+                  value={question3A[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ४. कंबरेचा घेर (सेमी मध्ये) / Waist circumference (in cm)
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handlePartAQuestion4(4, e.target.value)}
+                  value={question4A[0]}
+                >
+                  <Radio value="90 cm or less">
+                    90 cm or less/90 सेमी किंवा कमी
+                  </Radio>
+                  <br />
+                  <Radio value="91-100 cm">91-100 cm/91-100 सेमी</Radio>
+                  <br />
+                  <Radio value="More than 100 cm">
+                    More than 100 cm / 100 सेमी पेक्षा जास्त
+                  </Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ५. तुम्ही आठवड्यातून किमान 150 मिनिटे कोणतीही शारीरिक क्रिया
+                करता का? / Do you undertake any physical activities for minimum
+                of 150 minutes in a week?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handlePartAQuestion5(5, e.target.value)}
+                  value={question5A[0]}
+                >
+                  <Radio value="At least 150 minutes in a week">
+                    At least 150 minutes in a weak / <br />
+                    एका आठवड्यात किमान 150 मिनिटे
+                  </Radio>
+                  <br />
+                  <Radio value="Less than 150 minutes in a week">
+                    Less than 150 minutes in a week /<br /> एका आठवड्यात 150
+                    मिनिटांपेक्षा कमी
+                  </Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ६. आपल्याकडे कौटुंबिक इतिहास आहे का ? (आपले पालक किंवा भावंडां
+                पैकी) उच्च रक्तदाब, मधुमेह आणि हृदयरोग आहे का ? / 6. Do you have
+                a family history? Have high blood pressure, diabetes and heart
+                disease (from your parents or siblings)?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handlePartAQuestion3And6(6, e.target.value)}
+                  value={question6A[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <SubmitButtonDiv>
+              {/* <Button onClick={() => setFamilyHeadRegister("no")}>
+                  Back
+                </Button> */}
+              <SubmitButton onClick={() => onKeyChange("2")}>Next</SubmitButton>
+            </SubmitButtonDiv>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="2) Part B/भाग ब" key="2">
+            <FormHeader>
+              B: Early Screening: Ask the patient if they have any of these
+              symptoms / लवकर तपासणी : रुग्णाला यापैकी काही लक्षणे आहेत का ते
+              विचारा
+            </FormHeader>
+            <FormHeader>
+              B1 : Female and male / बी १ : महिला आणि पुरुष
+            </FormHeader>
+            {/* {partB1Options.map((item, key) => (
                 <QuestionRow
                   style={{
                     backgroundColor: partB1OptionsSelected.includes(item)
@@ -1511,474 +1683,474 @@ function MemberAdd(props) {
                   </AnswerCol>
                 </QuestionRow>
               ))} */}
-              <QuestionRow>
-                <QuestionCol>
-                  १. धाप लागणे (श्वास घेण्यास त्रास होणे) / Shortness of breath
-                  (difficulty breathing)
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(1, e.target.value)}
-                    value={question1B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २. २ आठवडयांपेक्षा जास्त खोकला / Cough for more than 2 weeks
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(2, e.target.value)}
-                    value={question2B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>३. थुंकीत रक्त येणे/ Blood in sputum</QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(3, e.target.value)}
-                    value={question3B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ४. २ आठवडयांपेक्षा जास्त ताप/ Fever for more than 2 weeks
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(4, e.target.value)}
-                    value={question4B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>५. वजन कमी होणे/ Weight loss</QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(5, e.target.value)}
-                    value={question5B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ६. रात्री खूप घाम येणे/ Excessive night sweats
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(6, e.target.value)}
-                    value={question6B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no"> No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ७. आपण सध्या टीबीच्या उपचारासाठी औषधे घेत आहात ? / Are you
-                  currently taking medicines to treat TB?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(7, e.target.value)}
-                    value={question7B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ८. सध्या कुटुंबातील कोणत्याही सदस्याला टीबीचा आजार आहे का ? /
-                  Is any family member currently suffering from TB disease?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(8, e.target.value)}
-                    value={question8B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ९. टीबीचा आजार असण्याचा इतिहास / History of TB disease
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(9, e.target.value)}
-                    value={question9B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  १०. हात आणि पायाच्या तळव्यांना वारंवार जखमा होणे / 10.
-                  Frequent bruising of hands and soles of feet
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(10, e.target.value)}
-                    value={question10B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ११. हात आणि पायावर तळव्यांना वारंवार मुंग्या येणे / Frequent
-                  tingling in palms of hands and feet
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(11, e.target.value)}
-                    value={question11B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  १२. धुसर आणि अंधूक दृष्टी / Blurred and blurred vision
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(12, e.target.value)}
-                    value={question12B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  १३. वाचण्यास त्रास होणे / Difficulty in reading
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(13, e.target.value)}
-                    value={question13B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  १४. एक आठवडयापेक्षा जास्त डोळयामधील वेदना बरी न होणे /
-                  Non-relief of eye pain for more than a week
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(14, e.target.value)}
-                    value={question14B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  १५. एक आठवडयापेक्षा जास्त डोळे लालसरपणा असणे / Eye redness for
-                  more than a week
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(15, e.target.value)}
-                    value={question15B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  १६. आपल्याला ऐकण्यास त्रास होणे / You have trouble hearing
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(16, e.target.value)}
-                    value={question16B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  १७. फीटक्याचा इतिहास / History of Featka
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(17, e.target.value)}
-                    value={question17B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  १८. तोंड उघडण्यास त्रास होणे / Difficulty opening the mouth
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(18, e.target.value)}
-                    value={question18B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  १९. दोन आठवडयांपेक्षा जास्त तोंडातील जखम बरी न होणे /
-                  Non-healing of mouth sores for more than two weeks
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(19, e.target.value)}
-                    value={question19B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २०. दोन आठवडयांपेक्षा जास्त तोंडात असलेली वाढ बरी न होणे /
-                  Non-healing growth in mouth for more than two weeks
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(20, e.target.value)}
-                    value={question20B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २१. दोन आठवडयांपेक्षा जास्त तोंडामध्ये पांढरे किंवा लाल घट्टे
-                  बरे न होणे / Non-healing white or red sores in the mouth for
-                  more than two weeks
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(21, e.target.value)}
-                    value={question21B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २२. चघळताना वेदना होणे / Pain while chewing
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(22, e.target.value)}
-                    value={question22B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>२३. आवाजात बदल होणे/ Changes in voice</QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(23, e.target.value)}
-                    value={question23B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २४. तोंडामध्ये हलक्या रंगाचे चट्टे किंवा वर्ण होणे ज्यास
-                  संवेदना नसणे/ Light colored patches or spots in the mouth with
-                  no sensation
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(24, e.target.value)}
-                    value={question24B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २५. शरीराच्या कोणत्याही भागात त्वचा जाड होणे/ Thickening of
-                  the skin in any part of the body
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(25, e.target.value)}
-                    value={question25B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २६. शरीराच्या कोणत्याही भागात त्वेचवर गाठी होणे/ Tumors in any
-                  part of the body
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(26, e.target.value)}
-                    value={question26B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २७. हात आणि पायावर तळव्यांना वारंवार सुन्न होणे/ Frequent
-                  numbness of palms on hands and feet
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(27, e.target.value)}
-                    value={question27B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>{" "}
-              <QuestionRow>
-                <QuestionCol>
-                  २८. हाताची आणि पायाची बोटे वाकडी होणे/ Crooked fingers and
-                  toes
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(28, e.target.value)}
-                    value={question28B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २९. हातांना आणि पायांना मुंग्या येणे आणि बधिर होणे/ Tingling
-                  in hands and feet and deafness
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(29, e.target.value)}
-                    value={question29B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ३०. डोळयांच्या पापण्या पूर्ण बंद न होणे/ Incomplete closure of
-                  eyelids
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(30, e.target.value)}
-                    value={question30B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ३१. हातांच्या पंजांमध्ये वस्तू व्यवस्थित पकडण्यास त्रास होणे/
-                  Difficulty grasping objects properly in the claws of the hands
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(31, e.target.value)}
-                    value={question31B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ३२. पायातील दुबळेपणामुळे चालण्यास त्रास होणे/ Difficulty
-                  walking due to weakness in legs
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB1Part(32, e.target.value)}
-                    value={question32B1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              {gender == "female" ? (
-                <>
-                  {" "}
-                  <FormHeader>B2 : Women only / बी २ : केवळ महिला</FormHeader>
-                  {/* {partB2Options.map((item, key) => (
+            <QuestionRow>
+              <QuestionCol>
+                १. धाप लागणे (श्वास घेण्यास त्रास होणे) / Shortness of breath
+                (difficulty breathing)
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(1, e.target.value)}
+                  value={question1B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २. २ आठवडयांपेक्षा जास्त खोकला / Cough lasting more than 2 weeks
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(2, e.target.value)}
+                  value={question2B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>३. थुंकीत रक्त येणे/ Blood in sputum</QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(3, e.target.value)}
+                  value={question3B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ४. २ आठवडयांपेक्षा जास्त ताप/ Fever for more than 2 weeks
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(4, e.target.value)}
+                  value={question4B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>५. वजन कमी होणे/ Loss of weight</QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(5, e.target.value)}
+                  value={question5B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>६. रात्री खूप घाम येणे/ Night sweats</QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(6, e.target.value)}
+                  value={question6B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no"> No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ७. आपण सध्या टीबीच्या उपचारासाठी औषधे घेत आहात ? / Are you
+                currently taking Anti TB Drugs?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(7, e.target.value)}
+                  value={question7B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ८. सध्या कुटुंबातील कोणत्याही सदस्याला टीबीचा आजार आहे का ? /
+                Anyone in family currently suffering from TB?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(8, e.target.value)}
+                  value={question8B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ९. टीबीचा आजार असण्याचा इतिहास / History of TB disease
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(9, e.target.value)}
+                  value={question9B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                १०. हात आणि पायाच्या तळव्यांना वारंवार जखमा होणे / 10. Recurrent
+                ulceration on palms or sole
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(10, e.target.value)}
+                  value={question10B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ११. हात आणि पायावर तळव्यांना वारंवार मुंग्या येणे / Recurrent
+                Tingling on palms or sole
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(11, e.target.value)}
+                  value={question11B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                १२. धुसर आणि अंधूक दृष्टी / Cloudy or blurred vision
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(12, e.target.value)}
+                  value={question12B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                १३. वाचण्यास त्रास होणे / Difficulty in reading
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(13, e.target.value)}
+                  value={question13B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                १४. एक आठवडयापेक्षा जास्त डोळयामधील वेदना बरी न होणे / Pain in
+                eyes lasting for more than a week
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(14, e.target.value)}
+                  value={question14B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                १५. एक आठवडयापेक्षा जास्त डोळे लालसरपणा असणे / Redness in eyes
+                lasting for more than a week
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(15, e.target.value)}
+                  value={question15B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                १६. आपल्याला ऐकण्यास त्रास होणे / Difficulty in hearing
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(16, e.target.value)}
+                  value={question16B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                १७. फीटक्याचा इतिहास / History of convulsions - fits
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(17, e.target.value)}
+                  value={question17B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                १८. तोंड उघडण्यास त्रास होणे / Difficulty in opening mouth
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(18, e.target.value)}
+                  value={question18B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                १९. दोन आठवडयांपेक्षा जास्त तोंडातील जखम बरी न होणे / Any ulcer
+                in mouth that has not healed in 2 weeks
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(19, e.target.value)}
+                  value={question19B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २०. दोन आठवडयांपेक्षा जास्त तोंडात असलेली वाढ बरी न होणे / Any
+                growth / mass in mouth that has not healed in 2 weeks
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(20, e.target.value)}
+                  value={question20B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २१. दोन आठवडयांपेक्षा जास्त तोंडामध्ये पांढरे किंवा लाल घट्टे
+                बरे न होणे / Any white or red patch in mouth that has not healed
+                in 2 weeks
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(21, e.target.value)}
+                  value={question21B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २२. चघळताना वेदना होणे / Pain while chewing
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(22, e.target.value)}
+                  value={question22B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २३. आवाजात बदल होणे/ Any change in tone of your voice
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(23, e.target.value)}
+                  value={question23B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २४. तोंडामध्ये हलक्या रंगाचे चट्टे किंवा वर्ण होणे ज्यास संवेदना
+                नसणे/ Any hypopigmented patch in oral cavity or discolored
+                lesions with loss of sensation
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(24, e.target.value)}
+                  value={question24B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २५. शरीराच्या कोणत्याही भागात त्वचा जाड होणे/ Thickening of the
+                skin in any part of the body
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(25, e.target.value)}
+                  value={question25B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २६. शरीराच्या कोणत्याही भागात त्वेचवर गाठी होणे/ Any nodules on
+                skin
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(26, e.target.value)}
+                  value={question26B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २७. हात आणि पायावर तळव्यांना वारंवार सुन्न होणे/ Recurrent
+                numbness on palms or sole
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(27, e.target.value)}
+                  value={question27B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>{" "}
+            <QuestionRow>
+              <QuestionCol>
+                २८. हाताची आणि पायाची बोटे वाकडी होणे/ Clawing of fingers of
+                hands and feet
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(28, e.target.value)}
+                  value={question28B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २९. हातांना आणि पायांना मुंग्या येणे आणि बधिर होणे/ Tingling and
+                numbness in hands and feet
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(29, e.target.value)}
+                  value={question29B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ३०. डोळयांच्या पापण्या पूर्ण बंद न होणे/ Inability to close
+                eyelids completely
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(30, e.target.value)}
+                  value={question30B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ३१. हातांच्या पंजांमध्ये वस्तू व्यवस्थित पकडण्यास त्रास होणे/
+                Difficulty in holding objects in hands
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(31, e.target.value)}
+                  value={question31B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ३२. पायातील दुबळेपणामुळे चालण्यास त्रास होणे/ Difficulty walking
+                due to weakness in legs
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB1Part(32, e.target.value)}
+                  value={question32B1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            {gender == "female" ? (
+              <>
+                {" "}
+                <FormHeader>B2 : Women only / बी २ : केवळ महिला</FormHeader>
+                {/* {partB2Options.map((item, key) => (
                     <QuestionRow
                       style={{
                         backgroundColor: partB2OptionSelected.includes(item)
@@ -2006,131 +2178,131 @@ function MemberAdd(props) {
                       </AnswerCol>
                     </QuestionRow>
                   ))} */}
-                  <QuestionRow>
-                    <QuestionCol>
-                      १. स्तनामध्ये गाठ असणे/ Having a lump in the breast
-                    </QuestionCol>
-                    <AnswerCol>
-                      <Radio.Group
-                        onChange={(e) =>
-                          handleQuestionOfB2Part(1, e.target.value)
-                        }
-                        value={question1B2[0]}
-                      >
-                        <Radio value="yes">Yes / होय</Radio>
-                        <Radio value="no">No / नाही</Radio>
-                      </Radio.Group>
-                    </AnswerCol>
-                  </QuestionRow>
-                  <QuestionRow>
-                    <QuestionCol>
-                      २. स्तनाग्रातून रक्त मिश्रीत स्त्राव होणे/ Bloody
-                      discharge from the nipple
-                    </QuestionCol>
-                    <AnswerCol>
-                      <Radio.Group
-                        onChange={(e) =>
-                          handleQuestionOfB2Part(2, e.target.value)
-                        }
-                        value={question2B2[0]}
-                      >
-                        <Radio value="yes">Yes / होय</Radio>
-                        <Radio value="no">No / नाही</Radio>
-                      </Radio.Group>
-                    </AnswerCol>
-                  </QuestionRow>
-                  <QuestionRow>
-                    <QuestionCol>
-                      ३. स्तनाच्या आकारात बदल होणे/ Changes in breast size
-                    </QuestionCol>
-                    <AnswerCol>
-                      <Radio.Group
-                        onChange={(e) =>
-                          handleQuestionOfB2Part(3, e.target.value)
-                        }
-                        value={question3B2[0]}
-                      >
-                        <Radio value="yes">Yes / होय</Radio>
-                        <Radio value="no">No / नाही</Radio>
-                      </Radio.Group>
-                    </AnswerCol>
-                  </QuestionRow>
-                  <QuestionRow>
-                    <QuestionCol>
-                      ४. दोन मासिक पाळीच्या मध्ये रक्त स्त्राव होणे/ Bleeding
-                      between two periods
-                    </QuestionCol>
-                    <AnswerCol>
-                      <Radio.Group
-                        onChange={(e) =>
-                          handleQuestionOfB2Part(4, e.target.value)
-                        }
-                        value={question4B2[0]}
-                      >
-                        <Radio value="yes">Yes / होय</Radio>
-                        <Radio value="no">No / नाही</Radio>
-                      </Radio.Group>
-                    </AnswerCol>
-                  </QuestionRow>
-                  <QuestionRow>
-                    <QuestionCol>
-                      ५. मासिक पाळी बंद झाल्यानंतर रक्तस्त्राव होणे/ Bleeding
-                      after cessation of menstruation
-                    </QuestionCol>
-                    <AnswerCol>
-                      <Radio.Group
-                        onChange={(e) =>
-                          handleQuestionOfB2Part(5, e.target.value)
-                        }
-                        value={question5B2[0]}
-                      >
-                        <Radio value="yes">Yes / होय</Radio>
-                        <Radio value="no">No / नाही</Radio>
-                      </Radio.Group>
-                    </AnswerCol>
-                  </QuestionRow>
-                  <QuestionRow>
-                    <QuestionCol>
-                      ६. संभोगानंतर रक्तस्त्राव/ Bleeding after intercourse
-                    </QuestionCol>
-                    <AnswerCol>
-                      <Radio.Group
-                        onChange={(e) =>
-                          handleQuestionOfB2Part(6, e.target.value)
-                        }
-                        value={question6B2[0]}
-                      >
-                        <Radio value="yes">Yes / होय</Radio>
-                        <Radio value="no">No / नाही</Radio>
-                      </Radio.Group>
-                    </AnswerCol>
-                  </QuestionRow>
-                  <QuestionRow>
-                    <QuestionCol>
-                      ७. योनीमधून दुर्गंधीयुक्त स्त्राव/ Foul smelling vaginal
-                      discharge
-                    </QuestionCol>
-                    <AnswerCol>
-                      <Radio.Group
-                        onChange={(e) =>
-                          handleQuestionOfB2Part(7, e.target.value)
-                        }
-                        value={question7B2[0]}
-                      >
-                        <Radio value="yes">Yes / होय</Radio>
-                        <Radio value="no">No / नाही</Radio>
-                      </Radio.Group>
-                    </AnswerCol>
-                  </QuestionRow>
-                </>
-              ) : (
-                <></>
-              )}
-              <FormHeader>
-                B3 : For Senior Citizens (60 years and above)/बी ३ :
-                वयोवृध्दांसाठी (६० वर्ष व त्यापेक्षा अधिक)
-              </FormHeader>
-              {/* {partB3Options.map((item, key) => (
+                <QuestionRow>
+                  <QuestionCol>
+                    १. स्तनामध्ये गाठ असणे/ Having a lump in the breast
+                  </QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) =>
+                        handleQuestionOfB2Part(1, e.target.value)
+                      }
+                      value={question1B2[0]}
+                    >
+                      <Radio value="yes">Yes / होय</Radio>
+                      <Radio value="no">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
+                <QuestionRow>
+                  <QuestionCol>
+                    २. स्तनाग्रातून रक्त मिश्रीत स्त्राव होणे/ Blood stained
+                    discharge from the nipple
+                  </QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) =>
+                        handleQuestionOfB2Part(2, e.target.value)
+                      }
+                      value={question2B2[0]}
+                    >
+                      <Radio value="yes">Yes / होय</Radio>
+                      <Radio value="no">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
+                <QuestionRow>
+                  <QuestionCol>
+                    ३. स्तनाच्या आकारात बदल होणे/ Changes in breast size
+                  </QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) =>
+                        handleQuestionOfB2Part(3, e.target.value)
+                      }
+                      value={question3B2[0]}
+                    >
+                      <Radio value="yes">Yes / होय</Radio>
+                      <Radio value="no">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
+                <QuestionRow>
+                  <QuestionCol>
+                    ४. दोन मासिक पाळीच्या मध्ये रक्त स्त्राव होणे/ Bleeding
+                    between periods
+                  </QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) =>
+                        handleQuestionOfB2Part(4, e.target.value)
+                      }
+                      value={question4B2[0]}
+                    >
+                      <Radio value="yes">Yes / होय</Radio>
+                      <Radio value="no">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
+                <QuestionRow>
+                  <QuestionCol>
+                    ५. मासिक पाळी बंद झाल्यानंतर रक्तस्त्राव होणे/ Bleeding
+                    after cessation of menstruation
+                  </QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) =>
+                        handleQuestionOfB2Part(5, e.target.value)
+                      }
+                      value={question5B2[0]}
+                    >
+                      <Radio value="yes">Yes / होय</Radio>
+                      <Radio value="no">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
+                <QuestionRow>
+                  <QuestionCol>
+                    ६. संभोगानंतर रक्तस्त्राव/ Bleeding after intercourse
+                  </QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) =>
+                        handleQuestionOfB2Part(6, e.target.value)
+                      }
+                      value={question6B2[0]}
+                    >
+                      <Radio value="yes">Yes / होय</Radio>
+                      <Radio value="no">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
+                <QuestionRow>
+                  <QuestionCol>
+                    ७. योनीमधून दुर्गंधीयुक्त स्त्राव/ Foul smelling vaginal
+                    discharge
+                  </QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) =>
+                        handleQuestionOfB2Part(7, e.target.value)
+                      }
+                      value={question7B2[0]}
+                    >
+                      <Radio value="yes">Yes / होय</Radio>
+                      <Radio value="no">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
+              </>
+            ) : (
+              <></>
+            )}
+            <FormHeader>
+              B3 : For Senior Citizens (60 years and above)/बी ३ :
+              वयोवृध्दांसाठी (६० वर्ष व त्यापेक्षा अधिक)
+            </FormHeader>
+            {/* {partB3Options.map((item, key) => (
                 <QuestionRow
                   style={{
                     backgroundColor: partB3OptionsSelected.includes(item)
@@ -2158,219 +2330,174 @@ function MemberAdd(props) {
                   </AnswerCol>
                 </QuestionRow>
               ))} */}
-              <QuestionRow>
-                <QuestionCol>
-                  १. उभे असताना किंवा चालताना तुम्हाला अस्थिरपणा वाटतो का ?/ Do
-                  you feel unsteady while standing or walking?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB3Part(1, e.target.value)}
-                    value={question1B3[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  २. शारीरिक अपंगत्वाने ग्रस्त असल्यास हालचाली करण्यास अडथळा
-                  येणे/ Impairment of movement if suffering from physical
-                  disability
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB3Part(2, e.target.value)}
-                    value={question2B3[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ३. खाणे, कपडे घालणे, परिधान करणे, आंघोळ करणे, चालणे किंवा
-                  शौचालय वापरणे यासारख्या दैनंदिन क्रिया करण्यासाठी आपल्याला
-                  इतरांच्या मदतीची आवश्यकता आहे का ?/ Do you need help from
-                  others to perform daily activities such as eating, dressing,
-                  dressing, bathing, walking or using the toilet?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB3Part(3, e.target.value)}
-                    value={question3B3[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  ४. आपल्या घरचा पत्ता किंवा घरातील व्यक्तीची नावे विसरणे ?/ 4.
-                  Forgetting your home address or household names?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleQuestionOfB3Part(4, e.target.value)}
-                    value={question4B3[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <SubmitButtonDiv>
-                <Button onClick={() => onKeyChange("1")}>Back</Button>
-                <SubmitButton onClick={() => onKeyChange("3")}>
-                  Next
-                </SubmitButton>
-              </SubmitButtonDiv>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="3) Part C / भाग क" key="3">
-              <FormHeader>
-                C: Risk factors for COPD / भाग सी : सीओपीडीसाठी जोखीम घटक
-              </FormHeader>
-              <QuestionRow>
-                <QuestionCol>
-                  १.स्वयंपाक करण्यासाठी वापरल्या जाणा-या इंधनाचा प्रकार ? / Type
-                  of fuel used for cooking?
-                </QuestionCol>
-              </QuestionRow>
-              {partC1Options.map((item, index) => (
+            <QuestionRow>
+              <QuestionCol>
+                १. उभे असताना किंवा चालताना तुम्हाला अस्थिरपणा वाटतो का ?/ Do
+                you feel unsteady while standing or walking?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB3Part(1, e.target.value)}
+                  value={question1B3[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                २. शारीरिक अपंगत्वाने ग्रस्त असल्यास हालचाली करण्यास अडथळा येणे/
+                Impairment of movement if suffering from physical disability
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB3Part(2, e.target.value)}
+                  value={question2B3[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ३. खाणे, कपडे घालणे, परिधान करणे, आंघोळ करणे, चालणे किंवा शौचालय
+                वापरणे यासारख्या दैनंदिन क्रिया करण्यासाठी आपल्याला इतरांच्या
+                मदतीची आवश्यकता आहे का ?/ Do you need help from others to
+                perform daily activities such as eating, dressing, dressing,
+                bathing, walking or using the toilet?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB3Part(3, e.target.value)}
+                  value={question3B3[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                ४. आपल्या घरचा पत्ता किंवा घरातील व्यक्तीची नावे विसरणे ?/ 4.
+                Forgetting your home address or household names?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleQuestionOfB3Part(4, e.target.value)}
+                  value={question4B3[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <SubmitButtonDiv>
+              <Button onClick={() => onKeyChange("1")}>Back</Button>
+              <SubmitButton onClick={() => onKeyChange("3")}>Next</SubmitButton>
+            </SubmitButtonDiv>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="3) Part C / भाग क" key="3">
+            <FormHeader>
+              C: Risk factors for COPD / भाग सी : सीओपीडीसाठी जोखीम घटक
+            </FormHeader>
+            <QuestionRow>
+              <QuestionCol>
+                १.स्वयंपाक करण्यासाठी वापरल्या जाणा-या इंधनाचा प्रकार ? / Type
+                of fuel used for cooking?
+              </QuestionCol>
+            </QuestionRow>
+            {partC1Options.map((item, index) => (
+              <QuestionSubRow key={index}>
+                <QuestionSubCol>
+                  {t(item)} / {item}
+                </QuestionSubCol>
+                <AnswerSubCol>
+                  <Checkbox
+                    value={partC1OptionSelect.includes(item)}
+                    onChange={() => handlePartC1Select(item)}
+                  ></Checkbox>
+                </AnswerSubCol>
+              </QuestionSubRow>
+            ))}
+
+            <QuestionRow>
+              <QuestionCol>
+                2.व्यावसायिक प्रदर्शन / occupational exposure
+              </QuestionCol>
+            </QuestionRow>
+            {partC2Options.map((item, index) => (
+              <>
                 <QuestionSubRow key={index}>
                   <QuestionSubCol>
-                    {t(item)} / {item}
+                    {t(item)}/{item}
                   </QuestionSubCol>
                   <AnswerSubCol>
                     <Checkbox
-                      checked={partC1OptionSelect.includes(item)}
-                      onChange={() => handlePartC1Select(item)}
+                      value={partC2OptionSelect.includes(item)}
+                      onChange={() => handlePartC2Select(item)}
                     ></Checkbox>
                   </AnswerSubCol>
                 </QuestionSubRow>
-              ))}
+              </>
+            ))}
 
-              <QuestionRow>
-                <QuestionCol>
-                  2.व्यावसायिक प्रदर्शन / occupational exposure
-                </QuestionCol>
-              </QuestionRow>
-              {partC2Options.map((item, index) => (
-                <>
-                  <QuestionSubRow key={index}>
-                    <QuestionSubCol>
-                      {t(item)}/{item}
-                    </QuestionSubCol>
-                    <AnswerSubCol>
-                      <Checkbox
-                        checked={partC2OptionSelect.includes(item)}
-                        onChange={() => handlePartC2Select(item)}
-                      ></Checkbox>
-                    </AnswerSubCol>
-                  </QuestionSubRow>
-                </>
-              ))}
+            <SubmitButtonDiv>
+              <Button onClick={() => onKeyChange("2")}>Back</Button>
+              <SubmitButton onClick={() => onKeyChange("4")}>Next</SubmitButton>
+            </SubmitButtonDiv>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="4) Part D / भाग डी" key="4">
+            <FormHeader>D : PHQ 2 / डी : पीएचक्यू २</FormHeader>
+            <FormHeader>
+              · गेल्या २ आठवडयांत, आपण खालील समस्यांद्वारे किती वेळा त्रास दिला
+              आहे- / In the past 2 weeks, how often have you been bothered by
+              the following problems? is-
+            </FormHeader>
+            <QuestionRow>
+              <QuestionCol style={{ width: "100%" }}>
+                १. गोष्टी करण्यात थोडीशी आवड किंवा आनंद असणे ? / Having little
+                interest or pleasure in doing things?
+              </QuestionCol>
 
-              <SubmitButtonDiv>
-                <Button onClick={() => onKeyChange("2")}>Back</Button>
-                <SubmitButton onClick={() => onKeyChange("4")}>
-                  Next
-                </SubmitButton>
-              </SubmitButtonDiv>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="4) Part D / भाग डी" key="4">
-              <FormHeader>D : PHQ 2 / डी : पीएचक्यू २</FormHeader>
-              {/* <FormHeader>
-                · गेल्या २ आठवडयांत, आपण खालील समस्यांद्वारे किती वेळा त्रास
-                दिला आहे- / In the past 2 weeks, how often have you been
-                bothered by the following problems? is-
-              </FormHeader>
-              <QuestionRow>
-                <QuestionCol style={{ width: "100%" }}>
-                  १. गोष्टी करण्यात थोडीशी आवड किंवा आनंद असणे ? / Having little
-                  interest or pleasure in doing things?
-                </QuestionCol>
+              <Radio.Group
+                style={{ margin: "1% 7%" }}
+                onChange={(e) => handlePartDQuestions(1, e.target.value)}
+                value={question1D[0]}
+              >
+                <Radio value="Not at all">Not at all</Radio>
+                <Radio value="Several days">Several days</Radio>
+                <Radio value="More than half days">More than half days</Radio>
+                <Radio value="Nearly every days">Nearly every days</Radio>
+              </Radio.Group>
+            </QuestionRow>
 
-                <Radio.Group
-                  style={{ margin: "1% 7%" }}
-                  onChange={(e) => setQuestion1D(e.target.value)}
-                  value={question1D}
-                >
-                  <Radio value="Not at all">Not at all</Radio>
-                  <Radio value="Several days">Several days</Radio>
-                  <Radio value="More than half days">More than half days</Radio>
-                  <Radio value="Nearly every days">Nearly every days</Radio>
-                </Radio.Group>
-              </QuestionRow>
-
-              <QuestionRow>
-                <QuestionCol style={{ width: "100%" }}>
-                  २. निराश किंवा उदासीन असणे ? Being depressed ?
-                </QuestionCol>
-                <Radio.Group
-                  style={{ margin: "1% 7%" }}
-                  onChange={(e) => setQuestion2D(e.target.value)}
-                  value={question2D}
-                >
-                  <Radio value="Not at all">Not at all</Radio>
-                  <Radio value="Several days">Several days</Radio>
-                  <Radio value="More than half days">More than half days</Radio>
-                  <Radio value="Nearly every days">Nearly every days</Radio>
-                </Radio.Group>
-              </QuestionRow> */}
-              <FormHeader>
-                · गेल्या २ आठवडयांत, आपण खालील समस्यांद्वारे किती वेळा त्रास
-                दिला आहे- / In the past 2 weeks, how often have you been
-                bothered by the following problems? is-
-              </FormHeader>
-              <QuestionRow>
-                <QuestionCol style={{ width: "100%" }}>
-                  १. गोष्टी करण्यात थोडीशी आवड किंवा आनंद असणे ? / Having little
-                  interest or pleasure in doing things?
-                </QuestionCol>
-
-                <Radio.Group
-                  style={{ margin: "1% 7%" }}
-                  onChange={(e) => handlePartDQuestions(1, e.target.value)}
-                  value={question1D[0]}
-                >
-                  <Radio value="Not at all">Not at all</Radio>
-                  <Radio value="Several days">Several days</Radio>
-                  <Radio value="More than half days">More than half days</Radio>
-                  <Radio value="Nearly every days">Nearly every days</Radio>
-                </Radio.Group>
-              </QuestionRow>
-
-              <QuestionRow>
-                <QuestionCol style={{ width: "100%" }}>
-                  २. निराश किंवा उदासीन असणे ? Being depressed ?
-                </QuestionCol>
-                <Radio.Group
-                  style={{ margin: "1% 7%" }}
-                  onChange={(e) => handlePartDQuestions(2, e.target.value)}
-                  value={question2D[0]}
-                >
-                  <Radio value="Not at all">Not at all</Radio>
-                  <Radio value="Several days">Several days</Radio>
-                  <Radio value="More than half days">More than half days</Radio>
-                  <Radio value="Nearly every days">Nearly every days</Radio>
-                </Radio.Group>
-              </QuestionRow>
-              <SubmitButtonDiv>
-                <Button onClick={() => onKeyChange("3")}>Back</Button>
-                <SubmitButton onClick={() => onKeyChange("5")}>
-                  Next
-                </SubmitButton>
-              </SubmitButtonDiv>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="5) Part E / भाग ई" key="5">
-              <QuestionRow>
-                <QuestionCol>1. ताप ? / Fever?</QuestionCol>
-              </QuestionRow>
-              {/* {partE1Options.map((item, index) => (
+            <QuestionRow>
+              <QuestionCol style={{ width: "100%" }}>
+                २. निराश किंवा उदासीन असणे ? Being depressed ?
+              </QuestionCol>
+              <Radio.Group
+                style={{ margin: "1% 7%" }}
+                onChange={(e) => handlePartDQuestions(2, e.target.value)}
+                value={question2D[0]}
+              >
+                <Radio value="Not at all">Not at all</Radio>
+                <Radio value="Several days">Several days</Radio>
+                <Radio value="More than half days">More than half days</Radio>
+                <Radio value="Nearly every days">Nearly every days</Radio>
+              </Radio.Group>
+            </QuestionRow>
+            <SubmitButtonDiv>
+              <Button onClick={() => onKeyChange("3")}>Back</Button>
+              <SubmitButton onClick={() => onKeyChange("5")}>Next</SubmitButton>
+            </SubmitButtonDiv>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="5) Part E / भाग ई" key="5">
+            <QuestionRow>
+              <QuestionCol>1. ताप ? / Fever?</QuestionCol>
+            </QuestionRow>
+            {/* {partE1Options.map((item, index) => (
                 <QuestionSubRow key={index}>
                   <QuestionSubCol>
                     {t(item)}/{item}
@@ -2383,151 +2510,126 @@ function MemberAdd(props) {
                   </AnswerSubCol>
                 </QuestionSubRow>
               ))} */}
-              <QuestionSubRow>
-                <QuestionSubCol>
-                  A. 7 दिवसांपेक्षा जास्त काळ / More than 7 days
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  {/* <Checkbox
+            <QuestionSubRow>
+              <QuestionSubCol>
+                A. 7 दिवसांपेक्षा जास्त काळ / More than 7 days
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setDoYouHaveFever1(e.target.checked)}
                     value={doYouhaveFever1}
                   ></Checkbox> */}
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(1, e.target.value)}
-                    value={doYouhaveFever1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerSubCol>
-              </QuestionSubRow>
-              <QuestionSubRow>
-                <QuestionSubCol>
-                  {" "}
-                  B. 7 दिवसांपेक्षा कमी / Less than 7 days
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  {/* <Checkbox
+                <Radio.Group
+                  onChange={(e) => handleDoYouHaveFever(1, e.target.value)}
+                  value={doYouhaveFever1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                B. 7 दिवसांपेक्षा कमी / Less than 7 days
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setDoYouHaveFever2(e.target.checked)}
                     value={doYouhaveFever2}
                   ></Checkbox> */}
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(2, e.target.value)}
-                    value={doYouhaveFever2[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerSubCol>
-              </QuestionSubRow>
-              <QuestionSubRow>
-                <QuestionSubCol>
-                  {" "}
-                  C. थंडी वाजून येणे सह / With Chills
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  {/* <Checkbox
+                <Radio.Group
+                  onChange={(e) => handleDoYouHaveFever(2, e.target.value)}
+                  value={doYouhaveFever2[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                C. थंडी वाजून येणे सह / With Chills
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setDoYouHaveFever3(e.target.checked)}
                     value={doYouhaveFever3}
                   ></Checkbox> */}
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(3, e.target.value)}
-                    value={doYouhaveFever3[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerSubCol>
-              </QuestionSubRow>
-              <QuestionSubRow>
-                <QuestionSubCol>D. रॅश सह / With Rash</QuestionSubCol>
-                <AnswerSubCol>
-                  {/* <Checkbox
+                <Radio.Group
+                  onChange={(e) => handleDoYouHaveFever(3, e.target.value)}
+                  value={doYouhaveFever3[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>D. रॅश सह / With Rash</QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setDoYouHaveFever4(e.target.checked)}
                     value={doYouhaveFever4}
                   ></Checkbox> */}
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(4, e.target.value)}
-                    value={doYouhaveFever4[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerSubCol>
-              </QuestionSubRow>
-              <QuestionSubRow>
-                <QuestionSubCol>
-                  {" "}
-                  E. रक्तस्त्राव सह / with Bleeding
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  {/* <Checkbox
+                <Radio.Group
+                  onChange={(e) => handleDoYouHaveFever(4, e.target.value)}
+                  value={doYouhaveFever4[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                E. रक्तस्त्राव सह / with Bleeding
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setDoYouHaveFever5(e.target.checked)}
                     value={doYouhaveFever5}
                   ></Checkbox> */}
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(5, e.target.value)}
-                    value={doYouhaveFever5[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerSubCol>
-              </QuestionSubRow>
-              <QuestionSubRow>
-                <QuestionSubCol>
-                  {" "}
-                  E. संवेदना सह / with Altered Sensorium
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  {/* <Checkbox
+                <Radio.Group
+                  onChange={(e) => handleDoYouHaveFever(5, e.target.value)}
+                  value={doYouhaveFever5[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                F. संवेदना सह / with Altered Sensorium
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setDoYouHaveFever6(e.target.checked)}
                     value={doYouhaveFever6}
                   ></Checkbox> */}
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(6, e.target.value)}
-                    value={doYouhaveFever6[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerSubCol>
-              </QuestionSubRow>
+                <Radio.Group
+                  onChange={(e) => handleDoYouHaveFever(6, e.target.value)}
+                  value={doYouhaveFever6[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
 
-              {/* <>
-                {partE1Options.map((item, index) => (
-                  <QuestionSubRow key={index}>
-                    <QuestionSubCol>
-                      {t(item)}/{item}
-                    </QuestionSubCol>
-                    <AnswerSubCol>
-                      <Checkbox
-                        checked={partE1OptionSelect.includes(item)}
-                        onChange={() => handlePartE1Select(item)}
-                      ></Checkbox>
-                    </AnswerSubCol>
-                  </QuestionSubRow>
-                ))}
-              </> */}
+            <QuestionRow>
+              <QuestionCol>
+                2. डोळ्यांच्या बुबुळाच्या पुढील भागाचा होणारा दाह (डोळा येणे) ?
+                Conjuctivitis ?
+              </QuestionCol>
+            </QuestionRow>
 
-              <QuestionRow>
-                <QuestionCol>
-                  2. डोळ्यांच्या बुबुळाच्या पुढील भागाचा होणारा दाह (डोळा येणे)
-                  ? Conjuctivitis ?
-                </QuestionCol>
-                {/* <AnswerCol>
-              <Radio.Group
-                onChange={(e) => setConjuctivitis(e.target.value)}
-                value={conjuctivitis}
-              >
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
-              </Radio.Group>
-            </AnswerCol> */}
-              </QuestionRow>
-
-              {/* <>
-                {partE2Options.map((item, index) => (
+            <>
+              {/* {partE2Options.map((item, index) => (
                   <QuestionSubRow>
                     <QuestionSubCol>
                       {t(item)}/{item}
@@ -2539,8 +2641,7 @@ function MemberAdd(props) {
                       ></Checkbox>
                     </AnswerSubCol>
                   </QuestionSubRow>
-                ))}
-              </> */}
+                ))} */}
               <QuestionSubRow>
                 <QuestionSubCol> A. पाणचट / Watery</QuestionSubCol>
                 <AnswerSubCol>
@@ -2592,39 +2693,28 @@ function MemberAdd(props) {
                   </Radio.Group>
                 </AnswerSubCol>
               </QuestionSubRow>
+            </>
 
-              <QuestionRow>
-                <QuestionCol>
-                  3. तुम्हाला लेप्टोस्पायरोसिस आहे का? Do you have
-                  leptospirosis? ?
-                </QuestionCol>
-                {/* <AnswerCol>
-              <Radio.Group
-                onChange={(e) => setLeptospirosis(e.target.value)}
-                value={leptospirosis}
-              >
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
-              </Radio.Group>
-            </AnswerCol> */}
-              </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>3. लेप्टोस्पायरोसिस ? leptospirosis? ?</QuestionCol>
+            </QuestionRow>
 
+            <>
               {/* {partE3Options.map((item, index) => (
-                <>
-                  <QuestionSubRow key={index}>
-                    <QuestionSubCol>
-                      {t(item)}/{item}
-                    </QuestionSubCol>
-                    <AnswerSubCol>
-                      <Checkbox
-                        checked={partE3OptionSelect.includes(item)}
-                        onChange={() => handlePartE3Select(item)}
-                      ></Checkbox>
-                    </AnswerSubCol>
-                  </QuestionSubRow>
-                </>
-              ))} */}
-
+                  <>
+                    <QuestionSubRow key={index}>
+                      <QuestionSubCol>
+                        {t(item)}/{item}
+                      </QuestionSubCol>
+                      <AnswerSubCol>
+                        <Checkbox
+                          checked={partE3OptionSelect.includes(item)}
+                          onChange={() => handlePartE3Select(item)}
+                        ></Checkbox>
+                      </AnswerSubCol>
+                    </QuestionSubRow>
+                  </>
+                ))} */}
               <QuestionSubRow>
                 <QuestionSubCol>
                   A.तुम्ही अनेकदा पाण्यात वावरता का? / Do you Waddling in water
@@ -2664,22 +2754,14 @@ function MemberAdd(props) {
                   </Radio.Group>
                 </AnswerSubCol>
               </QuestionSubRow>
+            </>
 
-              <QuestionRow>
-                <QuestionCol>4. जुलाब? loose motion ?</QuestionCol>
-                {/* <AnswerCol>
-              <Radio.Group
-                onChange={(e) => setLooseMotion(e.target.value)}
-                value={looseMotion}
-              >
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
-              </Radio.Group>
-            </AnswerCol> */}
-              </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>4. जुलाब ? loose motion ?</QuestionCol>
+            </QuestionRow>
 
-              {/* <>
-                {partE4Options.map((item, index) => (
+            <>
+              {/* {partE4Options.map((item, index) => (
                   <>
                     <QuestionSubRow key={index}>
                       <QuestionSubCol>
@@ -2693,8 +2775,7 @@ function MemberAdd(props) {
                       </AnswerSubCol>
                     </QuestionSubRow>
                   </>
-                ))}
-              </> */}
+                ))} */}
               <QuestionSubRow>
                 <QuestionSubCol> A. रक्तासह / With Blood</QuestionSubCol>
                 <AnswerSubCol>
@@ -2743,324 +2824,415 @@ function MemberAdd(props) {
                   </Radio.Group>
                 </AnswerSubCol>
               </QuestionSubRow>
+            </>
 
-              <QuestionRow>
-                <QuestionCol>
-                  5. लिव्हरला सूज / कावीळ ? Hepatitis / Jaundice ?
-                </QuestionCol>
-                {/* <AnswerCol>
-              <Radio.Group
-                onChange={(e) => setHepatitis(e.target.value)}
-                value={hepatitis}
-              >
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
-              </Radio.Group>
-            </AnswerCol> */}
-              </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                5. लिव्हरला सूज / कावीळ ? Hepatitis / Jaundice ?
+              </QuestionCol>
+            </QuestionRow>
 
-              {/* <>
-                {partE5Option.map((item, index) => (
-                  <>
-                    <QuestionSubRow key={index}>
-                      <QuestionSubCol>
-                        {t(item)}/{item}
-                      </QuestionSubCol>
-                      <AnswerSubCol>
-                        <Checkbox
-                          onChange={() => handlePartE5Select(item)}
-                          value={partE5OptionSelect.includes(item)}
-                        ></Checkbox>
-                      </AnswerSubCol>
-                    </QuestionSubRow>
-                  </>
-                ))}
-              </> */}
-              <QuestionSubRow>
-                <QuestionSubCol>
-                  {" "}
-                  A. तुम्ही बाहेरचे/ उघडे अन्न खाता/ दूषित पाणी पिता का? /Do you
-                  eating outside / uncovered food / drinking contaminated water
-                  ?
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  {/* <Checkbox
-                    onChange={(e) => setHepatitis1(e.target.checked)}
-                    value={hepatitis1}
-                  ></Checkbox> */}
-                  <Radio.Group
-                    onChange={(e) => handleHepatitis(1, e.target.value)}
-                    value={hepatitis1[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerSubCol>
-              </QuestionSubRow>
-
-              <QuestionRow>
-                <QuestionCol>
-                  6. तुम्हाला प्राण्यांनी चावले आहे का ? did animals have Bitten
-                  you ?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleAnimalBitten(e.target.value)}
-                    value={animalBitten[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  7. तुम्हाला साप चावला आहे का ? did Snake have Bitten you ?
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleSnakeBitten(e.target.value)}
-                    value={snakeBitten[0]}
-                  >
-                    <Radio value="yes">Yes / होय</Radio>
-                    <Radio value="no">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>8. कुष्ठरोग ? Leprosy ?</QuestionCol>
-                {/* <AnswerCol>
-              <Radio.Group
-                onChange={(e) => setLeprosy(e.target.value)}
-                value={leprosy}
-              >
-                <Radio value="yes">Yes / होय</Radio>
-                <Radio value="no">No / नाही</Radio>
-              </Radio.Group>
-            </AnswerCol> */}
-              </QuestionRow>
-
-              <>
-                {/* {partE8Options.map((item, index) => (
+            {/* {partE5Option.map((item, index) => (
+                <>
                   <QuestionSubRow key={index}>
                     <QuestionSubCol>
                       {t(item)}/{item}
                     </QuestionSubCol>
                     <AnswerSubCol>
                       <Checkbox
-                        checked={partE8OptionSelect.includes(item)}
-                        onChange={() => handlePartE8Select(item)}
+                        onChange={() => handlePartE5Select(item)}
+                        value={partE5OptionSelect.includes(item)}
                       ></Checkbox>
                     </AnswerSubCol>
                   </QuestionSubRow>
-                ))} */}
-                <QuestionSubRow>
+                </>
+              ))} */}
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                A. तुम्ही बाहेरचे/ उघडे अन्न खाता/ दूषित पाणी पिता का? /Do you
+                eating outside / uncovered food / drinking contaminated water ?
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
+                    onChange={(e) => setHepatitis1(e.target.checked)}
+                    value={hepatitis1}
+                  ></Checkbox> */}
+                <Radio.Group
+                  onChange={(e) => handleHepatitis(1, e.target.value)}
+                  value={hepatitis1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+
+            <QuestionRow>
+              <QuestionCol>
+                6. तुम्हाला प्राण्यांनी चावले आहे का ? did animals have Bitten
+                you ?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleAnimalBitten(e.target.value)}
+                  value={animalBitten[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                7. तुम्हाला साप चावला आहे का ? did Snake have Bitten you ?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  onChange={(e) => handleSnakeBitten(e.target.value)}
+                  value={snakeBitten[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>8. कुष्ठरोग ? Leprosy ?</QuestionCol>
+            </QuestionRow>
+            {/* 
+             {partE8Options.map((item, index) => (
+                <QuestionSubRow key={index}>
                   <QuestionSubCol>
-                    {" "}
-                    A. बधीरपणा / हात/पायांमध्ये मुंग्या येणे ? / Numbness /
-                    Tingling in hands/feet ?
+                    {t(item)}/{item}
                   </QuestionSubCol>
                   <AnswerSubCol>
-                    {/* <Checkbox
+                    <Checkbox
+                      checked={partE8OptionSelect.includes(item)}
+                      onChange={() => handlePartE8Select(item)}
+                    ></Checkbox>
+                  </AnswerSubCol>
+                </QuestionSubRow>
+              ))} */}
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                A. बधीरपणा / हात/पायांमध्ये मुंग्या येणे ? / Numbness / Tingling
+                in hands/feet ?
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setLeprosy1(e.target.checked)}
                     value={leprosy1}
                   ></Checkbox> */}
-                    <Radio.Group
-                      onChange={(e) => handleLeprosy(1, e.target.value)}
-                      value={leprosy1[0]}
-                    >
-                      <Radio value="yes">Yes / होय</Radio>
-                      <Radio value="no">No / नाही</Radio>
-                    </Radio.Group>
-                  </AnswerSubCol>
-                </QuestionSubRow>
-                <QuestionSubRow>
-                  <QuestionSubCol>
-                    {" "}
-                    B. शरीराच्या कोणत्याही भागात संवेदना कमी होणे ? / Loss of
-                    sensation in any parts of body ?
-                  </QuestionSubCol>
-                  <AnswerSubCol>
-                    {/* <Checkbox
+                <Radio.Group
+                  onChange={(e) => handleLeprosy(1, e.target.value)}
+                  value={leprosy1[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                B. शरीराच्या कोणत्याही भागात संवेदना कमी होणे ? / Loss of
+                sensation in any parts of body ?
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setLeprosy2(e.target.checked)}
                     value={leprosy2}
                   ></Checkbox> */}
-                    <Radio.Group
-                      onChange={(e) => handleLeprosy(2, e.target.value)}
-                      value={leprosy2[0]}
-                    >
-                      <Radio value="yes">Yes / होय</Radio>
-                      <Radio value="no">No / नाही</Radio>
-                    </Radio.Group>
-                  </AnswerSubCol>
-                </QuestionSubRow>
-                <QuestionSubRow>
-                  <QuestionSubCol>
-                    {" "}
-                    C. चेहरा/हात/पायांवर सूज ? /Swelling / Nodule on
-                    Face/Hands/Feet ?
-                  </QuestionSubCol>
-                  <AnswerSubCol>
-                    {/* <Checkbox
+                <Radio.Group
+                  onChange={(e) => handleLeprosy(2, e.target.value)}
+                  value={leprosy2[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                C. चेहरा/हात/पायांवर सूज ? /Swelling / Nodule on Face/Hands/Feet
+                ?
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setLeprosy3(e.target.checked)}
                     value={leprosy3}
                   ></Checkbox> */}
-                    <Radio.Group
-                      onChange={(e) => handleLeprosy(3, e.target.value)}
-                      value={leprosy3[0]}
-                    >
-                      <Radio value="yes">Yes / होय</Radio>
-                      <Radio value="no">No / नाही</Radio>
-                    </Radio.Group>
-                  </AnswerSubCol>
-                </QuestionSubRow>
-                <QuestionSubRow>
-                  <QuestionSubCol>
-                    {" "}
-                    D. पापणी किंवा भुवया गळणे ? / Loss of eyelash or eyebrow ?
-                  </QuestionSubCol>
-                  <AnswerSubCol>
-                    {/* <Checkbox
+                <Radio.Group
+                  onChange={(e) => handleLeprosy(3, e.target.value)}
+                  value={leprosy3[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                D. पापणी किंवा भुवया गळणे ? / Loss of eyelash or eyebrow ?
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setLeprosy4(e.target.checked)}
                     value={leprosy4}
                   ></Checkbox> */}
-                    <Radio.Group
-                      onChange={(e) => handleLeprosy(4, e.target.value)}
-                      value={leprosy4[0]}
-                    >
-                      <Radio value="yes">Yes / होय</Radio>
-                      <Radio value="no">No / नाही</Radio>
-                    </Radio.Group>
-                  </AnswerSubCol>
-                </QuestionSubRow>
-                <QuestionSubRow>
-                  <QuestionSubCol>
-                    {" "}
-                    E. कानातले दाट ? / Thickened earlobes ?
-                  </QuestionSubCol>
-                  <AnswerSubCol>
-                    {/* <Checkbox
+                <Radio.Group
+                  onChange={(e) => handleLeprosy(4, e.target.value)}
+                  value={leprosy4[0]}
+                >
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            <QuestionSubRow>
+              <QuestionSubCol>
+                {" "}
+                E. कानातले दाट ? / Thickened earlobes ?
+              </QuestionSubCol>
+              <AnswerSubCol>
+                {/* <Checkbox
                     onChange={(e) => setLeprosy5(e.target.checked)}
                     value={leprosy5}
                   ></Checkbox> */}
-                    <Radio.Group
-                      onChange={(e) => handleLeprosy(5, e.target.value)}
-                      value={leprosy5[0]}
-                    >
-                      <Radio value="yes">Yes / होय</Radio>
-                      <Radio value="no">No / नाही</Radio>
-                    </Radio.Group>
-                  </AnswerSubCol>
-                </QuestionSubRow>
-                <SubmitButtonDiv>
-                  <Button onClick={() => onKeyChange("4")}>Back</Button>
-                  <SubmitButton onClick={() => handleFormSubmit()}>
-                    {age > 60 ? "Next" : "Submit"}
-                  </SubmitButton>
-                </SubmitButtonDiv>
-              </>
-            </Tabs.TabPane>
-          </DocsTab>
-          <Modal
-            open={consentModalShow}
-            onCancel={handleConsentModalClose}
-            title="Blood Sample / रक्त नमुना"
-            footer={
-              <SubmitButton onClick={() => handleAdd()}>Submit</SubmitButton>
-            }
-          >
-            <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
-
-            <BloodSampleText>
-              Citizen will give his blood sample at / येथे नागरिक आपल्या रक्ताचा
-              नमुना देईल :
-            </BloodSampleText>
-            <BloodSampleButtonsRow>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    bloodSampleHome
-                      ? { backgroundColor: "#E9B384" }
-                      : { backgroundColor: "white" }
-                  }
-                  onClick={handleBloodSampleHomeSelct}
+                <Radio.Group
+                  onChange={(e) => handleLeprosy(5, e.target.value)}
+                  value={leprosy5[0]}
                 >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faHouse} />
-                  </span>
-                  Home / घर
-                </Button>
-              </BloodSampleButtonCol>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    bloodSampleCenter
-                      ? { backgroundColor: "#E9B384" }
-                      : { backgroundColor: "white" }
-                  }
-                  onClick={handleBloodSampleCenterSelect}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faPlus} />
-                  </span>
-                  Center / केंद्र
-                </Button>
-              </BloodSampleButtonCol>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    bloodSampleDenied
-                      ? { backgroundColor: "#E9B384" }
-                      : { backgroundColor: "white" }
-                  }
-                  onClick={handleBloodSampleDesiedSelect}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faXmark} />
-                  </span>
-                  Denied / नाकारले
-                </Button>
-              </BloodSampleButtonCol>
-            </BloodSampleButtonsRow>
-            {bloodSampleHome ? (
-              <>
-                <Form layout="vertical">
-                  <Form.Item
-                    label="Demand letter"
-                    style={{ margin: "20px 5px", width: "200px" }}
+                  <Radio value="yes">Yes / होय</Radio>
+                  <Radio value="no">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerSubCol>
+            </QuestionSubRow>
+            {/* {age < 60 ? (
+                <>
+                  {" "}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "end",
+                      marginRight: "10%",
+                    }}
                   >
-                    <Input
-                      type="file"
-                      onChange={(e) => handleDemandLetter(e.target.files[0])}
-                    ></Input>
-                  </Form.Item>
-                </Form>
-              </>
-            ) : (
-              <></>
-            )}
-            {bloodSampleDenied ? (
-              <></>
-            ) : (
-              <>
-                {" "}
-                <div>
-                  <p>
                     <Checkbox
-                      style={{ marginRight: "10px" }}
-                      checked={bloodConsent}
-                      onChange={(e) => setBloodConsent(e.target.checked)}
+                      onChange={(e) => handlePartialSelect(e)}
                     ></Checkbox>
-                    I have been explained about the consent as stated above and
-                    hereby provide my consent for blood sample collection and
-                    any more procedures for the aforementioned purposes.
-                  </p>
-                </div>
-              </>
-            )}
-          </Modal>
-        </>
+                    <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )} */}
+
+            <SubmitButtonDiv>
+              <Button onClick={() => onKeyChange("4")}>Back</Button>
+              <SubmitButton onClick={handleFormSubmit}>Next</SubmitButton>
+            </SubmitButtonDiv>
+          </Tabs.TabPane>
+        </DocsTab>
       )}
+      {/* Blood Consent Modal */}
+      <Modal
+        open={consentModalShow}
+        onCancel={handleConsentModalClose}
+        footer={<SubmitButton onClick={() => handleAdd()}>Submit</SubmitButton>}
+      >
+        <div>
+          <p>
+            Would you like to mark the citizen as vulnerable citizen?
+            <span>
+              <Checkbox
+                style={{ margin: "0% 5%" }}
+                onClick={handleVulnerableClick}
+              ></Checkbox>
+            </span>
+          </p>
+          {vulnerable ? (
+            <div>
+              {vulnerableList.map((data) => (
+                <li>
+                  <Checkbox
+                    key={data.id}
+                    value={data.choice}
+                    onChange={(e) => handleVulnerableList(e.target.value)}
+                  >
+                    {data.choice}
+                  </Checkbox>
+                </li>
+              ))}
+            </div>
+          ) : (
+            <></>
+          )}
+          {selectVulnerableList.includes("Any other reason") ? (
+            <TextArea
+              placeholder="Enter other reason here"
+              style={{ width: "80%" }}
+              rows={2}
+            />
+          ) : (
+            <></>
+          )}
+
+          <div>
+            <h4>REFERRAL OPTIONS :</h4>
+          </div>
+          {refarralList.map((data) => (
+            <li>
+              <Checkbox
+                key={data.id}
+                value={data.id}
+                onChange={(e) => {
+                  handleReferralList(e.target.value);
+                }}
+              >
+                {data.choice}
+              </Checkbox>
+            </li>
+          ))}
+          {/* <Checkbox>Referral for further management (Known case)</Checkbox>
+            <Checkbox style={{ margin: "0% 0.3%" }}>
+              Referral for further Diagnosis
+            </Checkbox>
+            <Checkbox>Referral in case of suspect symptoms</Checkbox>
+            <Checkbox>
+              Referral in case of multiple co-morbid investigation
+            </Checkbox>
+            <Checkbox>Referral for blood collection</Checkbox> */}
+        </div>
+
+        <>
+          <BloodSampleText>BLOOD COLLECTION / रक्त संकलन :</BloodSampleText>
+          <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
+          <BloodSampleButtonsRow>
+            <BloodSampleButtonCol>
+              <Button
+                style={
+                  bloodSampleHome
+                    ? { backgroundColor: "#E9B384", width: "200px" }
+                    : { backgroundColor: "white", width: "200px" }
+                }
+                onClick={handleBloodSampleHomeSelct}
+              >
+                <span style={{ marginRight: "10px" }}>
+                  <FontAwesomeIcon icon={faHouse} />
+                </span>
+                Home / घर
+              </Button>
+            </BloodSampleButtonCol>
+            <BloodSampleButtonCol>
+              <Button
+                style={
+                  bloodSampleCenter
+                    ? { backgroundColor: "#E9B384", width: "200px" }
+                    : { backgroundColor: "white", width: "200px" }
+                }
+                onClick={handleBloodSampleCenterSelect}
+              >
+                <span style={{ marginRight: "10px" }}>
+                  <FontAwesomeIcon icon={faPlus} />
+                </span>
+                Center / केंद्र
+              </Button>
+            </BloodSampleButtonCol>
+            <BloodSampleButtonCol>
+              <Button
+                style={
+                  bloodSampleDenied
+                    ? { backgroundColor: "#E9B384", width: "200px" }
+                    : { backgroundColor: "white", width: "200px" }
+                }
+                onClick={handleBloodSampleDesiedSelect}
+              >
+                <span style={{ marginRight: "10px" }}>
+                  <FontAwesomeIcon icon={faXmark} />
+                </span>
+                Denied / नाकारले
+              </Button>
+              {bloodSampleDenied ? (
+                <div style={{ margin: "10px 25px" }}>
+                  <Radio.Group>
+                    <Radio value="byindividual">By Individual</Radio>
+                    <br />
+                    <Radio value="byamo">By AMO</Radio>
+                  </Radio.Group>
+                </div>
+              ) : (
+                <></>
+              )}
+            </BloodSampleButtonCol>
+            <BloodSampleButtonCol>
+              <Button
+                style={
+                  notRequired
+                    ? { backgroundColor: "#E9B384", width: "210px" }
+                    : { backgroundColor: "white", width: "210px" }
+                }
+                onClick={handleNotRequiredSelect}
+              >
+                <span style={{ marginRight: "10px" }}>
+                  <FontAwesomeIcon icon={faXmark} />
+                </span>
+                Not required / आवश्यक नाही
+              </Button>
+            </BloodSampleButtonCol>
+          </BloodSampleButtonsRow>
+        </>
+
+        {/* {bloodSampleHome ? (
+            <>
+              <Form layout="vertical">
+                <Form.Item
+                  label="Demand letter"
+                  style={{ margin: "20px 5px", width: "200px" }}
+                >
+                  <Input
+                    type="file"
+                    onChange={(e) => handleDemandLetter(e.target.files[0])}
+                  ></Input>
+                </Form.Item>
+              </Form>
+            </>
+          ) : (
+            <></>
+          )}
+          {bloodSampleDenied ? (
+            <></>
+          ) : (
+            <>
+              <div>
+                <p>
+                  <Checkbox
+                    style={{ marginRight: "10px" }}
+                    onChange={(e) => setBloodConsent(e.target.checked)}
+                  ></Checkbox>
+                  I have been explained about the consent as stated above and
+                  hereby provide my consent for blood sample collection and any
+                  more procedures for the aforementioned purposes.
+                </p>
+              </div>
+            </>
+          )} */}
+
+        {/* <div
+            style={{
+              display: "flex",
+              justifyContent: "end",
+              marginRight: "10%",
+            }}
+          >
+            <Checkbox onChange={(e) => handlePartialSelect(e)}></Checkbox>
+            <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
+          </div> */}
+      </Modal>
     </>
   );
 }

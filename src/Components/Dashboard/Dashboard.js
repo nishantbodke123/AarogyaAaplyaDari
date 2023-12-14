@@ -33,6 +33,8 @@ import {
   InnerCard,
   InnerCard1,
   InnerCard2,
+  InnerCard3,
+  InnerCard4,
   MobileCardColumn,
   MobileContainer,
   ModalFormItem,
@@ -723,8 +725,7 @@ const Dashboard = () => {
                       <CardHeader>Citizens more than of 30 years </CardHeader>
                     </Col>
                   </Row>
-                  <CardCount>{dashboardCounts.citizen_above_30
-}</CardCount>
+                  <CardCount>{dashboardCounts.citizen_above_30}</CardCount>
                 </InnerCard1>
                 <InnerCard2>
                   {" "}
@@ -736,9 +737,32 @@ const Dashboard = () => {
                       <CardHeader>Citizens more than of 60 years </CardHeader>
                     </Col>
                   </Row>
-                  <CardCount>{dashboardCounts.citizen_above_60
-}</CardCount>
+                  <CardCount>{dashboardCounts.citizen_above_60}</CardCount>
                 </InnerCard2>
+                <InnerCard3>
+                  {" "}
+                  <Row>
+                    <Col>
+                      <CountIcon icon={faBars} />
+                    </Col>
+                    <Col>
+                      <CardHeader>Blood Collected At Home </CardHeader>
+                    </Col>
+                  </Row>
+                  <CardCount>{dashboardCounts.blood_collected_home}</CardCount>
+                </InnerCard3>
+                <InnerCard4>
+                  {" "}
+                  <Row>
+                    <Col>
+                      <CountIcon icon={faBars} />
+                    </Col>
+                    <Col>
+                      <CardHeader>Blood Collected At Center </CardHeader>
+                    </Col>
+                  </Row>
+                  <CardCount>{dashboardCounts.blood_collected_center}</CardCount>
+                </InnerCard4>
               </OuterCard>
             </Col>
           </Row>

@@ -7,11 +7,8 @@ import { Divider } from "antd";
 function Register() {
   return (
     <>
-    
-        <Header></Header>
-   
-        <FamilyHead></FamilyHead>
-     
+      <Header></Header>
+      <FamilyHead></FamilyHead>
     </>
   );
 }

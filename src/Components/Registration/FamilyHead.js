@@ -71,6 +71,7 @@ import { LogOut } from "../../Auth/Logout";
 import { type } from "@testing-library/user-event/dist/type";
 import OtpInput from "react-otp-input";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { Group } from "antd/es/radio";
 
 function FamilyHead(props) {
   const { t } = useTranslation();
@@ -160,7 +161,7 @@ function FamilyHead(props) {
           message.warning(error.response.status);
         }
       });
- console.log(sessionStorage.getItem("section_id","section id"))
+    console.log(sessionStorage.getItem("section_id", "section id"));
     axios
       .get(
         `${BASE_URL}/allauth/api/GetCHV_ASHA_list/${sessionStorage.getItem(
@@ -278,7 +279,14 @@ function FamilyHead(props) {
         })
         .catch((error) => {
           console.log(error.response.data.message);
-          message.warning(error.response.data.message);
+          if (error.response.status == 401) {
+            message.warning("System is LogedOut");
+            setTimeout(() => {
+              LogOut();
+            }, 1000);
+          } else {
+            message.warning(error.response.data.message);
+          }
         });
     }
   };
@@ -372,8 +380,15 @@ function FamilyHead(props) {
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error.response.data.message);
-        message.warning(error.response.data.message);
+        if (error.response.status == 401) {
+          message.warning("System is LogedOut");
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        } else {
+          message.warning(error.response.data.message);
+        }
+        console.log(error);
       });
   };
 
@@ -799,8 +814,36 @@ function FamilyHead(props) {
   const [bloodSampleCenter, setBloodSampleCenter] = useState(false);
   const [bloodSampleDenied, setBloodSampleDenied] = useState(false);
   const [notRequired, setNotRequired] = useState(false);
+  const [vulnerableList, setVulnerableList] = useState([]);
+  const [selectVulnerableList, setSelectVulnerableList] = useState([]);
+  const [vulnerable, setVulnerable] = useState(false);
   const [refarralList, setReferralList] = useState([]);
   const [selectedReferalList, setSelectReferralList] = useState([]);
+
+  const handleVulnerableClick = () => {
+    setVulnerable(!vulnerable);
+    if (!vulnerable) {
+      axios
+        .get(`${BASE_URL}/healthworker/api/getvulnerableOptionList`)
+        .then((res) => {
+          console.log(res.data);
+          setVulnerableList(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  const handleVulnerableList = (option) => {
+    if (selectVulnerableList.includes(option)) {
+      setSelectVulnerableList(
+        selectVulnerableList.filter((item) => item !== option)
+      );
+    } else {
+      setSelectVulnerableList([...selectVulnerableList, option]);
+    }
+    console.log(selectVulnerableList);
+  };
 
   const handleReferralList = (option) => {
     if (selectedReferalList.includes(option)) {
@@ -858,7 +901,7 @@ function FamilyHead(props) {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [phone, setPhone] = useState("");
-  const [aadharCard, setAadharCard] = useState("");
+  const [aadharCard, setAadharCard] = useState(null);
   const [abhaId, setAbhaId] = useState();
   const [abhaNumber, setAbhaNumber] = useState();
   const [pulse, setPulse] = useState("");
@@ -1028,7 +1071,7 @@ function FamilyHead(props) {
       message.warning("Please Mention Gender");
     } else if (age === "") {
       message.warning("Please Enter Age");
-    } else if (aadharCard !== "") {
+    } else if (aadharCard !== null) {
       //|| adharAbhaRequired
       axios
         .get(
@@ -1384,7 +1427,7 @@ function FamilyHead(props) {
     setGender("");
     setAge("");
     setPhone("");
-    setAadharCard("");
+    setAadharCard(null);
     setAbhaId("");
     setPulse("");
     setBloodPressure("");
@@ -1822,30 +1865,6 @@ function FamilyHead(props) {
         },
       ],
       part_b: [
-        // {
-        //   qkey: "B_Women_and_Men",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partB1Options,
-        //   translate: [],
-        //   selectedOptions: partB1OptionsSelected,
-        // },
-        // {
-        //   qkey: "B_Women_only",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partB2Options,
-        //   translate: [],
-        //   selectedOptions: partB2OptionSelected,
-        // },
-        // {
-        //   qkey: "BFor_Senior_Citizens__years_and_above",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partB3Options,
-        //   translate: [],
-        //   selectedOptions: partB3OptionsSelected,
-        // },
         {
           question: "Shortness_of_breath_difficulty_breathing",
           answer: question1B1,
@@ -2024,33 +2043,6 @@ function FamilyHead(props) {
         },
       ],
       part_c: [
-        // {
-        //   qkey: "Type_of_Fuel_used_for_cooking",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partC1Options,
-        //   translate: [
-        //     "Firewood",
-        //     "Crop_Residue",
-        //     "Cow_dung_cake",
-        //     "Coal",
-        //     "Kerosene",
-        //     "LPG",
-        //   ],
-        //   selectedOptions: partC1OptionSelect,
-        // },
-        // {
-        //   qkey: "Occupational_exposure",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partC2Options,
-        //   translate: [
-        //     "Crop_residue_burning",
-        //     "burning_of_garbage_leaves",
-        //     "working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc",
-        //   ],
-        //   selectedOptions: partC2OptionSelect,
-        // },
         {
           question: "Type_of_Fuel_used_for_cooking",
           answer: partC1OptionSelect,
@@ -2061,42 +2053,6 @@ function FamilyHead(props) {
         },
       ],
       part_d: [
-        // {
-        //   qkey: "Little_interest_of_pleasure_in_doing_things",
-        //   type: "CO",
-        //   score: "",
-        //   options: [
-        //     "Not at all",
-        //     "Several days",
-        //     "More than half days",
-        //     "Nearly every days",
-        //   ],
-        //   translate: [
-        //     "Not_at_all",
-        //     "Several_days",
-        //     "More_than_half_days",
-        //     "Nearly_every_days",
-        //   ],
-        //   selectedOption: [question1D],
-        // },
-        // {
-        //   qkey: "Feeling_down_depressed_or_hopeless",
-        //   type: "CO",
-        //   score: "",
-        //   options: [
-        //     "Not at all",
-        //     "Several days",
-        //     "More than half days",
-        //     "Nearly every days",
-        //   ],
-        //   translate: [
-        //     "Not_at_all",
-        //     "Several_days",
-        //     "More_than_half_days",
-        //     "Nearly_every_days",
-        //   ],
-        //   selectedOptions: [question2D],
-        // },
         {
           question: "Little_interest_of_pleasure_in_doing_things",
           answer: question1D,
@@ -2107,88 +2063,6 @@ function FamilyHead(props) {
         },
       ],
       part_e: [
-        // {
-        //   qkey: "Fever",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE1Options,
-        //   translate: [
-        //     "More_than__days",
-        //     "Less_than__days",
-        //     "With_Chills",
-        //     "With_Rash",
-        //     "with_Bleeding",
-        //     "with_Altered_Sensorium",
-        //   ],
-        //   selectedOptions: partE1OptionSelect,
-        // },
-        // {
-        //   qkey: "Conjuctivitis",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE2Options,
-        //   translate: ["watery", "redness", "itching_eyes"],
-        //   selectedOptions: partE2OptionSelect,
-        // },
-        // {
-        //   qkey: "Lepto",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE3Options,
-        //   translate: [
-        //     "Waddling_in_water",
-        //     "Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent",
-        //   ],
-        //   selectedOptions: partE3OptionSelect,
-        // },
-        // {
-        //   qkey: "Loose_Motion",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE4Options,
-        //   translate: ["With_Blood", "Without_Blood", "Vomitting "],
-        //   selectedOptions: partE4OptionSelect,
-        // },
-        // {
-        //   qkey: "Hepatitis__Jaundice",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE5Option,
-        //   translate: [
-        //     "Eating_outside__uncovered_food__drinking_contaminated_water",
-        //   ],
-        //   selectedOptions: partE5OptionSelect,
-        // },
-        // {
-        //   qkey: "Animal_Bite",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: ["Animal Bite"],
-        //   translate: ["Animal_Bite"],
-        //   selectedOptions: [animalBitten],
-        // },
-        // {
-        //   qkey: "Snake_Bite",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: ["Snake Bite"],
-        //   translate: ["Snake_Bite"],
-        //   selectedOptions: [snakeBitten],
-        // },
-        // {
-        //   qkey: "Leprosy",
-        //   type: "MCQ",
-        //   score: "",
-        //   options: partE8Options,
-        //   translate: [
-        //     "Numbness__Tingling_in_handsfeet",
-        //     "Loss_of_sensation_in_any_parts_of_body",
-        //     "Swelling__Nodule_on_FaceHandsFeet",
-        //     "Loss_of_eyelash_or_eyebrow",
-        //     "Thickened_earlobes",
-        //   ],
-        //   selectedOptions: partE8OptionSelect,
-        // },
         {
           question: "More_than__days",
           answer: doYouhaveFever1,
@@ -2805,7 +2679,7 @@ function FamilyHead(props) {
                       50 and 59 years /50 आणि 59 वर्षे
                     </Radio>
                     <br />
-                    <Radio value="60 years and above">
+                    <Radio value="60_year">
                       60 years and above /60 वर्षे आणि त्यावरील
                     </Radio>
                   </Radio.Group>
@@ -2976,7 +2850,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  २. २ आठवडयांपेक्षा जास्त खोकला / Cough lasting more than 2 weeks
+                  २. २ आठवडयांपेक्षा जास्त खोकला / Cough lasting more than 2
+                  weeks
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3027,9 +2902,7 @@ function FamilyHead(props) {
                 </AnswerCol>
               </QuestionRow>
               <QuestionRow>
-                <QuestionCol>
-                  ६. रात्री खूप घाम येणे/ Night sweats
-                </QuestionCol>
+                <QuestionCol>६. रात्री खूप घाम येणे/ Night sweats</QuestionCol>
                 <AnswerCol>
                   <Radio.Group
                     onChange={(e) => handleQuestionOfB1Part(6, e.target.value)}
@@ -3101,7 +2974,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ११. हात आणि पायावर तळव्यांना वारंवार मुंग्या येणे / Recurrent Tingling on palms or sole
+                  ११. हात आणि पायावर तळव्यांना वारंवार मुंग्या येणे / Recurrent
+                  Tingling on palms or sole
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3143,8 +3017,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १४. एक आठवडयापेक्षा जास्त डोळयामधील वेदना बरी न होणे /
-                  Pain in eyes lasting for more than a week
+                  १४. एक आठवडयापेक्षा जास्त डोळयामधील वेदना बरी न होणे / Pain in
+                  eyes lasting for more than a week
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3158,7 +3032,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १५. एक आठवडयापेक्षा जास्त डोळे लालसरपणा असणे / Redness in eyes lasting for more than a week
+                  १५. एक आठवडयापेक्षा जास्त डोळे लालसरपणा असणे / Redness in eyes
+                  lasting for more than a week
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3214,8 +3089,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १९. दोन आठवडयांपेक्षा जास्त तोंडातील जखम बरी न होणे /
-                 Any ulcer in mouth that has not healed in 2 weeks
+                  १९. दोन आठवडयांपेक्षा जास्त तोंडातील जखम बरी न होणे / Any
+                  ulcer in mouth that has not healed in 2 weeks
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3229,8 +3104,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  २०. दोन आठवडयांपेक्षा जास्त तोंडात असलेली वाढ बरी न होणे /
-                  Any growth / mass in mouth that has not healed in 2 weeks
+                  २०. दोन आठवडयांपेक्षा जास्त तोंडात असलेली वाढ बरी न होणे / Any
+                  growth / mass in mouth that has not healed in 2 weeks
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3245,7 +3120,8 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   २१. दोन आठवडयांपेक्षा जास्त तोंडामध्ये पांढरे किंवा लाल घट्टे
-                  बरे न होणे / Any white or red patch in mouth that has not healed in 2 weeks
+                  बरे न होणे / Any white or red patch in mouth that has not
+                  healed in 2 weeks
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3272,7 +3148,9 @@ function FamilyHead(props) {
                 </AnswerCol>
               </QuestionRow>
               <QuestionRow>
-                <QuestionCol>२३. आवाजात बदल होणे/ Any change in tone of your voice</QuestionCol>
+                <QuestionCol>
+                  २३. आवाजात बदल होणे/ Any change in tone of your voice
+                </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
                     onChange={(e) => handleQuestionOfB1Part(23, e.target.value)}
@@ -3286,7 +3164,8 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   २४. तोंडामध्ये हलक्या रंगाचे चट्टे किंवा वर्ण होणे ज्यास
-                  संवेदना नसणे/ Any hypopigmented patch in oral cavity or discolored lesions with loss of sensation
+                  संवेदना नसणे/ Any hypopigmented patch in oral cavity or
+                  discolored lesions with loss of sensation
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3315,7 +3194,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  २६. शरीराच्या कोणत्याही भागात त्वेचवर गाठी होणे/ Any nodules on skin
+                  २६. शरीराच्या कोणत्याही भागात त्वेचवर गाठी होणे/ Any nodules
+                  on skin
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3329,7 +3209,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  २७. हात आणि पायावर तळव्यांना वारंवार सुन्न होणे/ Recurrent numbness on palms or sole
+                  २७. हात आणि पायावर तळव्यांना वारंवार सुन्न होणे/ Recurrent
+                  numbness on palms or sole
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3343,7 +3224,8 @@ function FamilyHead(props) {
               </QuestionRow>{" "}
               <QuestionRow>
                 <QuestionCol>
-                  २८. हाताची आणि पायाची बोटे वाकडी होणे/ Clawing of fingers of hands and feet
+                  २८. हाताची आणि पायाची बोटे वाकडी होणे/ Clawing of fingers of
+                  hands and feet
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3372,7 +3254,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ३०. डोळयांच्या पापण्या पूर्ण बंद न होणे/ Inability to close eyelids completely
+                  ३०. डोळयांच्या पापण्या पूर्ण बंद न होणे/ Inability to close
+                  eyelids completely
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3464,7 +3347,7 @@ function FamilyHead(props) {
                   </QuestionRow>
                   <QuestionRow>
                     <QuestionCol>
-                      २. स्तनाग्रातून रक्त मिश्रीत स्त्राव होणे/ Bloody
+                      २. स्तनाग्रातून रक्त मिश्रीत स्त्राव होणे/ Blood stained
                       discharge from the nipple
                     </QuestionCol>
                     <AnswerCol>
@@ -3498,7 +3381,7 @@ function FamilyHead(props) {
                   <QuestionRow>
                     <QuestionCol>
                       ४. दोन मासिक पाळीच्या मध्ये रक्त स्त्राव होणे/ Bleeding
-                      between two periods
+                      between periods
                     </QuestionCol>
                     <AnswerCol>
                       <Radio.Group
@@ -4337,9 +4220,39 @@ function FamilyHead(props) {
             <p>
               Would you like to mark the citizen as vulnerable citizen?
               <span>
-                <Checkbox style={{ margin: "0% 5%" }}></Checkbox>
+                <Checkbox
+                  style={{ margin: "0% 5%" }}
+                  onClick={handleVulnerableClick}
+                ></Checkbox>
               </span>
             </p>
+            {vulnerable ? (
+              <div>
+                {vulnerableList.map((data) => (
+                  <li>
+                    <Checkbox
+                      key={data.id}
+                      value={data.choice}
+                      onChange={(e) => handleVulnerableList(e.target.value)}
+                    >
+                      {data.choice}
+                    </Checkbox>
+                  </li>
+                ))}
+              </div>
+            ) : (
+              <></>
+            )}
+            {selectVulnerableList.includes("Any other reason") ? (
+              <TextArea
+                placeholder="Enter other reason here"
+                style={{ width: "80%" }}
+                rows={2}
+              />
+            ) : (
+              <></>
+            )}
+
             <div>
               <h4>REFERRAL OPTIONS :</h4>
             </div>
@@ -4415,6 +4328,17 @@ function FamilyHead(props) {
                   </span>
                   Denied / नाकारले
                 </Button>
+                {bloodSampleDenied ? (
+                  <div style={{ margin: "10px 25px" }}>
+                    <Radio.Group>
+                      <Radio value="byindividual">By Individual</Radio>
+                      <br />
+                      <Radio value="byamo">By AMO</Radio>
+                    </Radio.Group>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </BloodSampleButtonCol>
               <BloodSampleButtonCol>
                 <Button
@@ -4468,17 +4392,20 @@ function FamilyHead(props) {
               </div>
             </>
           )} */}
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "end",
-              marginRight: "10%",
-            }}
-          >
-            <Checkbox onChange={(e) => handlePartialSelect(e)}></Checkbox>
-            <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
-          </div>
+          {noOfMembersCompleted == totalFamilyMembers ? (
+            <></>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                marginRight: "10%",
+              }}
+            >
+              <Checkbox onChange={(e) => handlePartialSelect(e)}></Checkbox>
+              <h4 style={{ marginLeft: "10px" }}>Partial Submit</h4>
+            </div>
+          )}
         </Modal>
         <AadharOtpLinkedModal
           open={showAadharOtpLinkedModal}

@@ -307,3 +307,21 @@ export const InnerCard2 = styled.div`
   left: 52%;
   border-radius: 10px;
 `;
+export const InnerCard3 =styled.div`
+width: 45%;
+  height: 35%;
+  background-color: white;
+  position: absolute;
+  top: 55%;
+  left: 2%;
+  border-radius: 10px;
+`
+export const InnerCard4 =styled.div`
+width: 45%;
+  height: 35%;
+  background-color: white;
+  position: absolute;
+  top: 55%;
+  left: 52%;
+  border-radius: 10px;
+`

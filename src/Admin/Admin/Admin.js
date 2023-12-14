@@ -10,7 +10,6 @@ import { useLocation } from "react-router-dom";
 import HealthworkerApproval from "../AdminApproval/Content/Healthworker";
 import CHVApproval from "../AdminApproval/Content/CHV";
 
-
 const { Content } = Layout;
 
 function Admin() {
@@ -38,7 +37,6 @@ function Admin() {
               <HealthworkerApproval />
             )}
             {location.pathname === "/admin/chvApproval" && <CHVApproval />}
-           
           </Content>
         </Layout>
       </Layout>

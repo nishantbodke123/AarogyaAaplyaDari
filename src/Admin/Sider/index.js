@@ -57,7 +57,6 @@ function Sidebar(props) {
           "/admin/healthWorkerApproval"
         ),
         getItem("CHV/ASHA", "/admin/chvApproval", null, "/admin/chvApproval"),
-        
       ]
     ),
   ];

@@ -21,7 +21,7 @@ function AdminDashboard() {
   }, []);
   return (
     <>
-      <div style={{ overflowY: "auto", maxHeight: "100vh" }}>
+      <div style={{ overflowY: "auto", maxHeight: "80vh" }}>
         <Content
           style={{
             margin: "24px 16px",
@@ -123,9 +123,12 @@ function AdminDashboard() {
           <div
             style={{
               height: "95vh",
-              backgroundColor: "#427D9D",
+              backgroundColor: "white",
             }}
           >
+             <div style={{marginBottom:"-4%" ,marginTop:"5%" ,marginLeft:"40px"}}>
+              <p style={{fontSize:"18px" ,fontFamily:"revert" ,fontWeight:"600"}}>Citizen Details</p>
+            </div>
             <Row>
               <Col span={12}>
                 <div
@@ -141,7 +144,7 @@ function AdminDashboard() {
                       borderRadius: "5px",
                       backgroundColor: "white",
                       margin: "5vh 0vw 0vh 1vw",
-                      boxShadow: "-8px 7px 33px 1px rgba(0,0,0,0.75)",
+                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <p
@@ -173,7 +176,7 @@ function AdminDashboard() {
                       borderRadius: "5px",
                       backgroundColor: "white",
                       margin: "5vh 0vw 0vh 0vw",
-                      boxShadow: "-8px 7px 33px 1px rgba(0,0,0,0.75)",
+                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <p
@@ -209,7 +212,7 @@ function AdminDashboard() {
                       borderRadius: "5px",
                       backgroundColor: "white",
                       margin: "5vh 0vw 0vh 1vw",
-                      boxShadow: "-8px 7px 33px 1px rgba(0,0,0,0.75)",
+                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <p
@@ -241,7 +244,7 @@ function AdminDashboard() {
                       borderRadius: "5px",
                       backgroundColor: "white",
                       margin: "5vh 0vw 0vh 0vw",
-                      boxShadow: "-8px 7px 33px 1px rgba(0,0,0,0.75)",
+                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <p
@@ -275,7 +278,7 @@ function AdminDashboard() {
                     height: "90%",
                     margin: "5% 12%",
                     borderRadius: "5px",
-                    backgroundColor: "#04364A",
+                    backgroundColor: "#9BBEC8",
 
                     position: "relative",
                   }}
@@ -417,7 +420,7 @@ function AdminDashboard() {
                             margin: "0px 30px",
                           }}
                         >
-                         {AdminDashboardData.NoOfPersonMoreThan60}
+                          {AdminDashboardData.NoOfPersonMoreThan60}
                         </p>
                       </div>
                     </Col>
@@ -425,6 +428,9 @@ function AdminDashboard() {
                 </div>
               </Col>
             </Row>
+            <div style={{marginBottom:"-4%" ,marginTop:"5%" ,marginLeft:"40px"}}>
+              <p style={{fontSize:"18px" ,fontFamily:"revert" ,fontWeight:"600"}}>Blood Collection Details</p>
+            </div>
             <Row>
               <Col span={12}>
                 <div style={{ position: "relative" }}>
@@ -437,6 +443,7 @@ function AdminDashboard() {
                       margin: "0% 15% 0% 7%",
                       width: "34vw",
                       height: "10vh",
+                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <Row>
@@ -477,6 +484,7 @@ function AdminDashboard() {
                       margin: "0% 15% 0% 7%",
                       width: "34vw",
                       height: "10vh",
+                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <Row>
@@ -517,6 +525,7 @@ function AdminDashboard() {
                       margin: "0% 15% 0% 7%",
                       width: "34vw",
                       height: "10vh",
+                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <Row>
@@ -561,6 +570,7 @@ function AdminDashboard() {
                       margin: "0% 15% 0% 6%",
                       width: "34vw",
                       height: "10vh",
+                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <Row>
@@ -601,6 +611,7 @@ function AdminDashboard() {
                       margin: "0% 15% 0% 6%",
                       width: "34vw",
                       height: "10vh",
+                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <Row>
@@ -641,6 +652,7 @@ function AdminDashboard() {
                       margin: "0% 15% 0% 6%",
                       width: "34vw",
                       height: "10vh",
+                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
                     }}
                   >
                     <Row>

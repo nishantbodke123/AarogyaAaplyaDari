@@ -82,7 +82,6 @@ function Header() {
         mode="horizontal"
         theme="dark"
         defaultSelectedKeys={window.location.pathname}
-        
       >
         <HeaderLogo src="logo (1).svg"></HeaderLogo>
         {menuItems.map((item) => (
