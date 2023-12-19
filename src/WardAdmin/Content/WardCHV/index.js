@@ -161,24 +161,42 @@ function WardCHV() {
   };
 
   const handleaddCHVModalView = () => {
+    // axios
+    //   .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+    //     headers: {
+    //       Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     setAreaList(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     if (err.status == 401) {
+    //       setTimeout(() => {
+    //         LogOut();
+    //       }, 1000);
+    //     }
+    //   });
     axios
-      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+    .get(
+      `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${sessionStorage.getItem(
+        "ward_id"
+      )}`,
+      {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setAreaList(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.status == 401) {
-          setTimeout(() => {
-            LogOut();
-          }, 1000);
-        }
-      });
+      }
+    )
+    .then((res) => {
+      console.log(res.data);
+      setHealthPostNameList(res.data.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
     setAddCHVModal(true);
   };
   const handleWardSelect = (id) => {
@@ -188,11 +206,16 @@ function WardCHV() {
     setU_HealthPost();
     setU_section();
     axios
-      .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${id}`, {
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-      })
+      .get(
+        `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${sessionStorage.getItem(
+          "ward_id"
+        )}`,
+        {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          },
+        }
+      )
       .then((res) => {
         console.log(res.data);
         setHealthPostNameList(res.data.data);
@@ -277,67 +300,7 @@ function WardCHV() {
           }, 1000);
         }
       });
-
-    // axios
-    //   .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
-    //     headers: {
-    //       Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     setAreaList(res.data);
-    //     axios
-    //       .get(
-    //         `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`,
-    //         {
-    //           headers: {
-    //             Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //           },
-    //         }
-    //       )
-    //       .then((res) => {
-    //         console.log(res);
-    //         setHealthPostNameList(res.data.data);
-    //         axios
-    //           .get(
-    //             `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
-    //             {
-    //               headers: {
-    //                 Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //               },
-    //             }
-    //           )
-    //           .then((res) => {
-    //             console.log(res);
-    //             setSectionList(res.data.data);
-    //           })
-    //           .catch((err) => {
-    //             console.log(err);
-    //           });
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     if (err.status == 401) {
-    //       setTimeout(() => {
-    //         LogOut();
-    //       }, 1000);
-    //     }
-    //   });
     setCHVId(data.id);
-    // setU_name(data.name);
-    // setU_userName(data.username);
-    // setU_phoneNumber(data.phoneNumber);
-    // setU_email(data.emailId);
-    // setU_ward(data.ward_id);
-    // // handleWardSelect(data.ward_id);
-    // setU_HealthPost(data.health_Post_id);
-    // // handleHealthPostSelect(data.health_Post_id);
-    // setU_section(data.section_id);
     setU_name(data.name);
     setU_userName(data.username);
     setU_phoneNumber(data.phoneNumber);
@@ -433,29 +396,29 @@ function WardCHV() {
         });
     }
   };
-  const deleteUser = (data) => {
-    Modal.confirm({
-      title: `Do you want to Remove user ${data.name}`,
-      okText: "Confirm",
-      onOk: () => {
-        axios
-          .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${data.id}`, {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem("Token")}`,
-            },
-          })
-          .then((res) => {
-            console.log(res);
-            message.success(res.data.message);
-            setRefresh(refresh + 1);
-          })
-          .catch((err) => {
-            console.log(err);
-            message.warning(err.response.data.message);
-          });
-      },
-    });
-  };
+  // const deleteUser = (data) => {
+  //   Modal.confirm({
+  //     title: `Do you want to Remove user ${data.name}`,
+  //     okText: "Confirm",
+  //     onOk: () => {
+  //       axios
+  //         .delete(`${BASE_URL}/adminportal/api/deleteUserAPI/${data.id}`, {
+  //           headers: {
+  //             Authorization: `Token ${sessionStorage.getItem("Token")}`,
+  //           },
+  //         })
+  //         .then((res) => {
+  //           console.log(res);
+  //           message.success(res.data.message);
+  //           setRefresh(refresh + 1);
+  //         })
+  //         .catch((err) => {
+  //           console.log(err);
+  //           message.warning(err.response.data.message);
+  //         });
+  //     },
+  //   });
+  // };
   const handleChangePasswordModalView = (id) => {
     setCHVId(id);
     setChangePasswordModal(true);
@@ -490,6 +453,54 @@ function WardCHV() {
     } else {
       message.warning("Enter Same Password");
     }
+  };
+  const handleGroupChange = (data) => {
+    console.log(data);
+
+    var currentdate = new Date();
+    var datetime =
+      currentdate.getDate() +
+      "/" +
+      (currentdate.getMonth() + 1) +
+      "/" +
+      currentdate.getFullYear() +
+      " " +
+      currentdate.getHours() +
+      ":" +
+      currentdate.getMinutes() +
+      ":" +
+      currentdate.getSeconds();
+    console.log(datetime);
+
+    const formData = new FormData();
+    console.log(sessionStorage.getItem("id"),"id")
+    formData.append("user", data.id);
+    formData.append("requester", sessionStorage.getItem("id"));
+    formData.append("new_group", 4);
+    formData.append("old_group", 13);
+    formData.append("request_date", datetime);
+    Modal.confirm({
+      title: `Would you like to Change the group of ${data.name} from CHV/ASHA worker to ANM/Health worker`,
+      okText: "Confirm",
+      cancelText: "Cancel",
+      onOk: () => {
+        axios
+          .post(
+            `${BASE_URL}/adminportal/api/updateGroupResquest`,
+            formData,
+            axiosConfig
+          )
+          .then((res) => {
+            console.log(res);
+            message.success(res.data.message);
+            setRefresh(refresh+1)
+          })
+          .catch((err) => {
+            console.log(err);
+            message.warning(err.response.data.message);
+          });
+      },
+    });
   };
   const column = [
     {
@@ -566,6 +577,12 @@ function WardCHV() {
             <EditOutlined />
           </Button>
         );
+      },
+    },
+    {
+      title: "Group",
+      render: (data) => {
+        return <Button onClick={() => handleGroupChange(data)}>Change</Button>;
       },
     },
   ];
@@ -714,7 +731,9 @@ function WardCHV() {
                               .includes(inputValue.toLowerCase())
                           : false
                       }
-                      onChange={(e) => handleWardSelect(e)}
+                      value={sessionStorage.getItem("wardName")}
+                      disabled
+                      // onChange={(e) => handleWardSelect(e)}
                     >
                       {areaList.map((data) => (
                         <Option key={data.id} value={data.id}>

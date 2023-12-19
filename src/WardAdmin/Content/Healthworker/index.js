@@ -167,23 +167,41 @@ function WardHealthworker() {
   };
 
   const handleAddHealthWorkerModalView = () => {
+    // axios
+    //   .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
+    //     headers: {
+    //       Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     setAreaList(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     if (err.status == 401) {
+    //       setTimeout(() => {
+    //         LogOut();
+    //       }, 1000);
+    //     }
+    //   });
     axios
-      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-      })
+      .get(
+        `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${sessionStorage.getItem(
+          "ward_id"
+        )}`,
+        {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          },
+        }
+      )
       .then((res) => {
-        console.log(res.data);
-        setAreaList(res.data);
+        console.log(res.data.data);
+        setHealthPostNameList(res.data.data);
       })
       .catch((err) => {
         console.log(err);
-        if (err.status == 401) {
-          setTimeout(() => {
-            LogOut();
-          }, 1000);
-        }
       });
     setAddHealthWorkerModal(true);
   };
@@ -275,55 +293,7 @@ function WardHealthworker() {
           }, 1000);
         }
       });
-    // axios
-    //   .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
-    //     headers: {
-    //       Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     setAreaList(res.data);
-    //     axios
-    //       .get(
-    //         `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${data.ward_id}`,
-    //         {
-    //           headers: {
-    //             Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //           },
-    //         }
-    //       )
-    //       .then((res) => {
-    //         setHealthPostNameList(res.data.data);
-    //         axios
-    //           .get(
-    //             `${BASE_URL}/allauth/api/GetSectionListAPI/${data.health_Post_id}`,
-    //             {
-    //               headers: {
-    //                 Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //               },
-    //             }
-    //           )
-    //           .then((res) => {
-    //             console.log(res.data);
-    //             setSectionList(res.data.data);
-    //           })
-    //           .catch((err) => {
-    //             console.log(err);
-    //           });
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     if (err.status == 401) {
-    //       setTimeout(() => {
-    //         LogOut();
-    //       }, 1000);
-    //     }
-    //   });
+
     setHealthworkerID(data.id);
     setU_name(data.name);
     setU_userName(data.username);
@@ -541,14 +511,6 @@ function WardHealthworker() {
         );
       },
     },
-    // {
-    //   title: "Delete",
-    //   render: (data) => {
-    //     return (
-    //       <DeleteButton onClick={() => deleteUser(data)}>Delete</DeleteButton>
-    //     );
-    //   },
-    // },
     {
       title: "Password",
       render: (data) => {
@@ -710,7 +672,9 @@ function WardHealthworker() {
                               .includes(inputValue.toLowerCase())
                           : false
                       }
-                      onChange={(e) => handleWardSelect(e)}
+                      disabled
+                      value={sessionStorage.getItem("wardName")}
+                      // onChange={(e) => handleWardSelect(e)}
                     >
                       {areaList.map((data) => (
                         <Option key={data.id} value={data.id}>

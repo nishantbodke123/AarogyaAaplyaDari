@@ -45,7 +45,7 @@ function Sidebar(props) {
       ]
     ),
     getItem(
-      <p style={{ color: "white" }}>Approval List</p>,
+      <p style={{ color: "white" }}>User Approval</p>,
       null,
       <UserOutlined />,
       null,

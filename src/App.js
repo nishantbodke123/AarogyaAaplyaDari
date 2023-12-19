@@ -26,6 +26,7 @@ import WardCHV from "./WardAdmin/Content/WardCHV";
 import HealthworkerApproval from "./Admin/AdminApproval/Content/Healthworker";
 import CHVApproval from "./Admin/AdminApproval/Content/CHV";
 
+
 function App() {
   let Token = sessionStorage.getItem("Token");
   let Group = sessionStorage.getItem("group");
@@ -152,7 +153,7 @@ function App() {
               path="/admin/healthWorkerApproval"
               element={
                 <AdminProtected>
-                  <HealthworkerApproval />
+                  <Healthworker />
                 </AdminProtected>
               }
             ></Route>

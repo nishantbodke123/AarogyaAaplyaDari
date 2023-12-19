@@ -4,7 +4,7 @@ export const DashboardCard = styled.div`
   width: 20vw;
   height: 100px;
   border-radius: 10px;
-  background-color: #427d9d;
+  background-color: white;
 `;
 
 export const DashboardCardDiv = styled.div`
@@ -14,5 +14,5 @@ export const DashboardCardDiv = styled.div`
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
-  background-color: #ddf2fd;
+  background-color: #9BBEC8;
 `;

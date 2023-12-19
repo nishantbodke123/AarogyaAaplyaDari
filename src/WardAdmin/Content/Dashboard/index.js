@@ -7,17 +7,18 @@ import axios from "axios";
 import { BASE_URL } from "../../../Utils/BaseURL";
 
 function WardAdminDashboard() {
-
   const [MOHDashboardData, setMOHDashboardData] = useState({});
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/adminportal/api/MOHDashboardView`,{headers:{
-        Authorization:`Token ${sessionStorage.getItem("Token")}`
-      }})
+      .get(`${BASE_URL}/adminportal/api/MOHDashboardView`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+      })
       .then((response) => {
         console.log(response.data);
         // setAdminDashboardData(response.data.data);
-        setMOHDashboardData(response.data)
+        setMOHDashboardData(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -79,7 +80,7 @@ function WardAdminDashboard() {
                         fontWeight: 500,
                       }}
                     >
-                     Today's Count
+                      Today's Count
                     </p>
                     <p
                       style={{
@@ -108,7 +109,7 @@ function WardAdminDashboard() {
                         fontWeight: 500,
                       }}
                     >
-                     Partial Survey Count
+                      Partial Survey Count
                     </p>
                     <p
                       style={{
@@ -124,7 +125,6 @@ function WardAdminDashboard() {
               </div>
             </DashboardCard>
           </DashboardCardDiv>
-
         </Content>
       </div>
     </>

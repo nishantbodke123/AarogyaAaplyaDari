@@ -126,8 +126,22 @@ function AdminDashboard() {
               backgroundColor: "white",
             }}
           >
-             <div style={{marginBottom:"-4%" ,marginTop:"5%" ,marginLeft:"40px"}}>
-              <p style={{fontSize:"18px" ,fontFamily:"revert" ,fontWeight:"600"}}>Citizen Details</p>
+            <div
+              style={{
+                marginBottom: "-4%",
+                marginTop: "5%",
+                marginLeft: "40px",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "18px",
+                  fontFamily: "revert",
+                  fontWeight: "600",
+                }}
+              >
+                Citizen Details
+              </p>
             </div>
             <Row>
               <Col span={12}>
@@ -186,7 +200,7 @@ function AdminDashboard() {
                         margin: "15px 10px",
                       }}
                     >
-                      <span>
+                      <span style={{ marginRight: "2%" }}>
                         <AlignRightOutlined />
                       </span>
                       Citizen Enrolled
@@ -219,10 +233,10 @@ function AdminDashboard() {
                       style={{
                         fontSize: "15px",
                         fontWeight: "600",
-                        margin: "15px 10px",
+                        margin: "15px 12px",
                       }}
                     >
-                      <span>
+                      <span style={{ marginRight: "2%" }}>
                         <AlignRightOutlined />
                       </span>
                       CBAC Filled
@@ -231,7 +245,7 @@ function AdminDashboard() {
                       style={{
                         fontSize: "26px",
                         fontWeight: "700",
-                        margin: "0px 30px",
+                        margin: "0px 32px",
                       }}
                     >
                       {AdminDashboardData.NoOfCBACFilled}
@@ -292,7 +306,7 @@ function AdminDashboard() {
                           borderRadius: "5px",
                           width: "12vw",
                           height: "13vh",
-                          margin: "5% 0% 0% 7%",
+                          margin: "5% 0% 0% 3%",
                           top: 10,
                           left: 10,
                         }}
@@ -366,7 +380,7 @@ function AdminDashboard() {
                           borderRadius: "5px",
                           width: "12vw",
                           height: "13vh",
-                          margin: "50% 7% 7% 7%",
+                          margin: "50% 7% 7% 3%",
                           top: 10,
                           left: 10,
                         }}
@@ -428,8 +442,22 @@ function AdminDashboard() {
                 </div>
               </Col>
             </Row>
-            <div style={{marginBottom:"-4%" ,marginTop:"5%" ,marginLeft:"40px"}}>
-              <p style={{fontSize:"18px" ,fontFamily:"revert" ,fontWeight:"600"}}>Blood Collection Details</p>
+            <div
+              style={{
+                marginBottom: "-4%",
+                marginTop: "5%",
+                marginLeft: "40px",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "18px",
+                  fontFamily: "revert",
+                  fontWeight: "600",
+                }}
+              >
+                Blood Collection Details
+              </p>
             </div>
             <Row>
               <Col span={12}>

@@ -115,7 +115,7 @@ export const QuestionSubCol = styled(Col)`
 `;
 
 export const AnswerCol = styled(Col)`
-  margin: 5px 150px;
+  margin: 25px 150px;
   @media (max-width: 820px) {
     width: 100%;
     margin: 20px 20px;

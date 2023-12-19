@@ -42,7 +42,7 @@ function CHV() {
       .get(`${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/CHV-ASHA`)
       .then((res) => {
         setLoader(false);
-        console.log(res.data.data , "chv/ASHA");
+        console.log(res.data.data, "chv/ASHA");
         setCHVData(res.data.data);
       })
       .catch((error) => {
@@ -90,7 +90,7 @@ function CHV() {
   const [u_name, setU_name] = useState();
   const [u_userName, setU_userName] = useState();
   const [u_phoneNumber, setU_phoneNumber] = useState();
-  const [u_email, setU_email] = useState();
+  const [u_email, setU_email] = useState(null);
   const [u_ward, setU_ward] = useState();
   const [u_healthPost, setU_HealthPost] = useState();
   const [u_Section, setU_section] = useState();
@@ -125,7 +125,7 @@ function CHV() {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState(null);
   const [section, setSection] = useState();
 
   const handleNameChange = (e) => {
@@ -237,7 +237,7 @@ function CHV() {
   const handleCHVModalClose = () => {
     setName();
     setUserName();
-    setEmail();
+    setEmail(null);
     setPassword();
     setConfirmPassword();
     setPhoneNumber();
@@ -329,7 +329,7 @@ function CHV() {
     setU_name("");
     setU_userName("");
     setU_phoneNumber("");
-    setU_email();
+    setU_email(null);
     setU_ward();
     setU_HealthPost();
     setU_section();
@@ -345,7 +345,7 @@ function CHV() {
     formData.append("username", userName);
     formData.append("password", password);
     formData.append("phoneNumber", phoneNumber);
-    formData.append("emailId", email);
+    email !== null && formData.append("emailId", email);
     formData.append("section", section);
     formData.append("group", "CHV-ASHA");
     if (password !== confirmPassword) {
@@ -375,8 +375,6 @@ function CHV() {
       message.warning(" Please Enter Name");
     } else if (u_userName === "") {
       message.warning(" Please Enter Username");
-    } else if (u_email === "") {
-      message.warning("Please Enter Email Address");
     } else if (u_phoneNumber === "") {
       message.warning("Please Enter Phone Number");
     } else if (u_Section === undefined) {
@@ -387,7 +385,7 @@ function CHV() {
       const formData = new FormData();
       formData.append("name", u_name);
       formData.append("username", u_userName);
-      formData.append("emailId", u_email);
+      u_email !== null && formData.append("emailId", u_email);
       formData.append("phoneNumber", u_phoneNumber);
       formData.append("section", u_Section);
       formData.append("is_active", u_is_ActiveStatus);
@@ -465,7 +463,7 @@ function CHV() {
           message.warning(err.response.data.message);
         });
     } else {
-      message.warning("Enter Same Password");
+      message.warning("password and confirm password should be same");
     }
   };
   const column = [
@@ -529,7 +527,7 @@ function CHV() {
       title: "Status",
       dataIndex: "is_active",
       render: (data) => {
-        return data ? "Active" : "InActive";
+        return data ? "Active" : "Deactive";
       },
     },
     {
@@ -935,14 +933,17 @@ function CHV() {
                     </FormItem>
                   </Col>
                   <Col>
-                    {" "}
+                    {console.log(u_is_ActiveStatus, "Active status")}
                     <FormItem
                       label="Is Active"
                       style={{ width: "350px", margin: "0% 36%" }}
                     >
-                      <Select onChange={(value) => setU_Is_ActiveStatus(value)}>
+                      <Select
+                        onChange={(value) => setU_Is_ActiveStatus(value)}
+                        value={u_is_ActiveStatus}
+                      >
                         <Option value="true">Active</Option>
-                        <Option value="false">InActive</Option>
+                        <Option value="false">Deactive</Option>
                       </Select>
                     </FormItem>
                   </Col>
