@@ -180,23 +180,23 @@ function WardCHV() {
     //     }
     //   });
     axios
-    .get(
-      `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${sessionStorage.getItem(
-        "ward_id"
-      )}`,
-      {
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-      }
-    )
-    .then((res) => {
-      console.log(res.data);
-      setHealthPostNameList(res.data.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .get(
+        `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${sessionStorage.getItem(
+          "ward_id"
+        )}`,
+        {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        setHealthPostNameList(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     setAddCHVModal(true);
   };
   const handleWardSelect = (id) => {
@@ -473,7 +473,7 @@ function WardCHV() {
     console.log(datetime);
 
     const formData = new FormData();
-    console.log(sessionStorage.getItem("id"),"id")
+    console.log(sessionStorage.getItem("id"), "id");
     formData.append("user", data.id);
     formData.append("requester", sessionStorage.getItem("id"));
     formData.append("new_group", 4);
@@ -493,7 +493,7 @@ function WardCHV() {
           .then((res) => {
             console.log(res);
             message.success(res.data.message);
-            setRefresh(refresh+1)
+            setRefresh(refresh + 1);
           })
           .catch((err) => {
             console.log(err);

@@ -8,7 +8,7 @@ export const DashboardCard = styled.div`
 `;
 
 export const DashboardCardDiv = styled.div`
-  height: 30vh;
+  height: 25vh;
   width: 100%;
   display: flex;
   justify-content: space-around;

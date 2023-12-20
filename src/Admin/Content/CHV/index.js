@@ -466,6 +466,54 @@ function CHV() {
       message.warning("password and confirm password should be same");
     }
   };
+  const handleGroupChange = (data) => {
+    console.log(data);
+
+    var currentdate = new Date();
+    var datetime =
+      currentdate.getDate() +
+      "/" +
+      (currentdate.getMonth() + 1) +
+      "/" +
+      currentdate.getFullYear() +
+      " " +
+      currentdate.getHours() +
+      ":" +
+      currentdate.getMinutes() +
+      ":" +
+      currentdate.getSeconds();
+    console.log(datetime);
+
+    const formData = new FormData();
+    console.log(sessionStorage.getItem("id"), "id");
+    formData.append("user", data.id);
+    formData.append("requester", sessionStorage.getItem("id"));
+    formData.append("new_group", 4);
+    formData.append("old_group", 13);
+    formData.append("request_date", datetime);
+    Modal.confirm({
+      title: `Would you like to Change the group of ${data.name} from CHV/ASHA worker to ANM/Health worker`,
+      okText: "Confirm",
+      cancelText: "Cancel",
+      onOk: () => {
+        axios
+          .post(
+            `${BASE_URL}/adminportal/api/updateGroupResquest`,
+            formData,
+            axiosConfig
+          )
+          .then((res) => {
+            console.log(res);
+            message.success(res.data.message);
+            setRefresh(refresh + 1);
+          })
+          .catch((err) => {
+            console.log(err);
+            message.warning(err.response.data.message);
+          });
+      },
+    });
+  };
   const column = [
     {
       title: "Ward",
@@ -541,6 +589,12 @@ function CHV() {
             <EditOutlined />
           </Button>
         );
+      },
+    },
+    {
+      title: "Group",
+      render: (data) => {
+        return <Button onClick={() => handleGroupChange(data)} >Change</Button>;
       },
     },
   ];

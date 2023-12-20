@@ -21,7 +21,7 @@ function AdminDashboard() {
   }, []);
   return (
     <>
-      <div style={{ overflowY: "auto", maxHeight: "80vh" }}>
+      <div style={{ overflowY: "auto", maxHeight: "83vh" }}>
         <Content
           style={{
             margin: "24px 16px",
@@ -128,9 +128,7 @@ function AdminDashboard() {
           >
             <div
               style={{
-                marginBottom: "-4%",
-                marginTop: "5%",
-                marginLeft: "40px",
+                margin: "3% 5% -2% 4%",
               }}
             >
               <p
@@ -144,7 +142,7 @@ function AdminDashboard() {
               </p>
             </div>
             <Row>
-              <Col span={12}>
+              <Col span={24}>
                 <div
                   style={{
                     display: "flex",
@@ -215,6 +213,70 @@ function AdminDashboard() {
                       {AdminDashboardData.NoOfCitizenEnrolled}
                     </p>
                   </div>
+                  <div
+                    style={{
+                      height: "15vh",
+                      width: "15vw",
+                      borderRadius: "5px",
+                      backgroundColor: "white",
+                      margin: "5vh 0vw 0vh 0vw",
+                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: "600",
+                        margin: "15px 10px",
+                      }}
+                    >
+                      <span style={{ marginRight: "2%" }}>
+                        <AlignRightOutlined />
+                      </span>
+                      Male
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "26px",
+                        fontWeight: "700",
+                        margin: "0px 30px",
+                      }}
+                    >
+                      {AdminDashboardData.NoOfMaleEnrolled}
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      height: "15vh",
+                      width: "15vw",
+                      borderRadius: "5px",
+                      backgroundColor: "white",
+                      margin: "5vh 0vw 0vh 0vw",
+                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: "600",
+                        margin: "15px 10px",
+                      }}
+                    >
+                      <span style={{ marginRight: "2%" }}>
+                        <AlignRightOutlined />
+                      </span>
+                      Female
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "26px",
+                        fontWeight: "700",
+                        margin: "0px 30px",
+                      }}
+                    >
+                      {AdminDashboardData.NoOfFemaleEnrolled}
+                    </p>
+                  </div>
                 </div>
                 <div
                   style={{ display: "flex", justifyContent: "space-around" }}
@@ -283,9 +345,73 @@ function AdminDashboard() {
                       {AdminDashboardData.NoOfAbhaIdGenerated}
                     </p>
                   </div>
+                  <div
+                    style={{
+                      height: "15vh",
+                      width: "15vw",
+                      borderRadius: "5px",
+                      backgroundColor: "white",
+                      margin: "5vh 0vw 0vh 0vw",
+                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: "600",
+                        margin: "15px 10px",
+                      }}
+                    >
+                      <span style={{ marginRight: "2%" }}>
+                        <AlignRightOutlined />
+                      </span>
+                      Citizens of age > 30
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "26px",
+                        fontWeight: "700",
+                        margin: "0px 30px",
+                      }}
+                    >
+                      {AdminDashboardData.NoOfPersonMoreThan30}
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      height: "15vh",
+                      width: "15vw",
+                      borderRadius: "5px",
+                      backgroundColor: "white",
+                      margin: "5vh 0vw 0vh 0vw",
+                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: "600",
+                        margin: "15px 10px",
+                      }}
+                    >
+                      <span style={{ marginRight: "2%" }}>
+                        <AlignRightOutlined />
+                      </span>
+                      Citizens of age > 60
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "26px",
+                        fontWeight: "700",
+                        margin: "0px 30px",
+                      }}
+                    >
+                      {AdminDashboardData.NoOfPersonMoreThan60}
+                    </p>
+                  </div>
                 </div>
               </Col>
-              <Col span={12}>
+              {/* <Col span={12}>
                 <div
                   style={{
                     width: "80%",
@@ -440,13 +566,13 @@ function AdminDashboard() {
                     </Col>
                   </Row>
                 </div>
-              </Col>
+              </Col> */}
             </Row>
             <div
               style={{
                 marginBottom: "-4%",
                 marginTop: "5%",
-                marginLeft: "40px",
+                margin: " 3% 2% 0% 4%",
               }}
             >
               <p
@@ -467,8 +593,8 @@ function AdminDashboard() {
                       backgroundColor: "white",
                       borderRadius: "5px",
                       position: "absolute",
-                      top: 45,
-                      margin: "0% 15% 0% 7%",
+                      top: 20,
+                      margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
                       boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
@@ -484,7 +610,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "15px",
                             fontWeight: "600",
-                            margin: "20px 20px",
+                            margin: "9% 0% 0% 9%",
                           }}
                         >
                           Total Lab Test Added
@@ -495,7 +621,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "26px",
                             fontWeight: "700",
-                            margin: "10px 50px",
+                            margin: "5% 0% 0% 20%",
                           }}
                         >
                           {AdminDashboardData.NoLabTestAdded}
@@ -508,8 +634,8 @@ function AdminDashboard() {
                       backgroundColor: "white",
                       borderRadius: "5px",
                       position: "absolute",
-                      top: 130,
-                      margin: "0% 15% 0% 7%",
+                      top: 120,
+                      margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
                       boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
@@ -525,7 +651,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "15px",
                             fontWeight: "600",
-                            margin: "20px 20px",
+                            margin: "9% 0% 0% 9%",
                           }}
                         >
                           Blood Collected At Home
@@ -536,7 +662,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "26px",
                             fontWeight: "700",
-                            margin: "10px 50px",
+                            margin: "5% 0% 0% 20%",
                           }}
                         >
                           {AdminDashboardData.BloodCollectedAtHome}
@@ -550,7 +676,7 @@ function AdminDashboard() {
                       borderRadius: "5px",
                       position: "absolute",
                       top: 220,
-                      margin: "0% 15% 0% 7%",
+                      margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
                       boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
@@ -566,7 +692,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "15px",
                             fontWeight: "600",
-                            margin: "20px 15px",
+                            margin: "9% 0% 0% 9%",
                           }}
                         >
                           Blood Collected At Center
@@ -577,7 +703,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "26px",
                             fontWeight: "700",
-                            margin: "10px 50px",
+                            margin: "5% 0% 0% 20%",
                           }}
                         >
                           {AdminDashboardData.BloodCollectedAtCenter}
@@ -594,8 +720,8 @@ function AdminDashboard() {
                       backgroundColor: "white",
                       borderRadius: "5px",
                       position: "absolute",
-                      top: 45,
-                      margin: "0% 15% 0% 6%",
+                      top: 20,
+                      margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
                       boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
@@ -611,7 +737,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "15px",
                             fontWeight: "600",
-                            margin: "20px 20px",
+                            margin: "9% 0% 0% 9%",
                           }}
                         >
                           Total Reports Generated
@@ -622,7 +748,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "26px",
                             fontWeight: "700",
-                            margin: "10px 50px",
+                            margin: "5% 0% 0% 20%",
                           }}
                         >
                           {AdminDashboardData.TotalReportGenerated}
@@ -635,8 +761,8 @@ function AdminDashboard() {
                       backgroundColor: "white",
                       borderRadius: "5px",
                       position: "absolute",
-                      top: 130,
-                      margin: "0% 15% 0% 6%",
+                      top: 120,
+                      margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
                       boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
@@ -652,7 +778,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "15px",
                             fontWeight: "600",
-                            margin: "15px 10px",
+                            margin: "7% 0% 0% 9%",
                           }}
                         >
                           Blood Collecttion Denied By AMO
@@ -663,7 +789,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "26px",
                             fontWeight: "700",
-                            margin: "10px 50px",
+                            margin: "5% 0% 0% 20%",
                           }}
                         >
                           {AdminDashboardData.BloodCollecttionDeniedByAmo}
@@ -677,7 +803,7 @@ function AdminDashboard() {
                       borderRadius: "5px",
                       position: "absolute",
                       top: 220,
-                      margin: "0% 15% 0% 6%",
+                      margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
                       boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
@@ -693,7 +819,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "15px",
                             fontWeight: "600",
-                            margin: "15px 10px",
+                            margin: "7% 0% 0% 9%",
                           }}
                         >
                           Blood Collection Denied By Citizen
@@ -704,7 +830,7 @@ function AdminDashboard() {
                           style={{
                             fontSize: "26px",
                             fontWeight: "700",
-                            margin: "10px 50px",
+                            margin: "5% 0% 0% 20%",
                           }}
                         >
                           {
@@ -720,6 +846,7 @@ function AdminDashboard() {
           </div>
         </Content>
       </div>
+      <div style={{display:"flex" ,justifyContent:"flex-end" ,margin:"0% 5% 0% 0%"}}><span><p>Developed and maintained by  :-</p></span><img src="\BhugolGISLogo.png" style={{width:"14%"}}></img></div>
     </>
   );
 }

@@ -1,7 +1,7 @@
 .adminMenu .ant-menu {
   font-weight: 600;
   margin-top: 5%;
-  background-color: #222c38;
+  background-color: #9BBEC8;
   color: aliceblue;
 }
 
@@ -12,7 +12,7 @@
   background-color: #000 !important;
 }
 .adminMenu .ant-menu > .ant-menu-item-selected {
-  background-color: #000 !important;
+  background-color: #9BBEC8 !important;
   border-bottom: 3px solid #e0f4ff !important;
 }
 /* .ant-menu > .ant-menu-submenu-selected {
