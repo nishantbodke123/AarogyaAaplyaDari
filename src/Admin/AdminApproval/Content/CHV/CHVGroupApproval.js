@@ -56,16 +56,16 @@ function CHVGroupApproval() {
     {
       title: "Old Group",
       dataIndex: "old_group",
-      render:(oldGroup)=>{
-        return oldGroup.name
-      }
+      render: (oldGroup) => {
+        return oldGroup.name;
+      },
     },
     {
       title: "New Group",
       dataIndex: "new_group",
-      render:(newGroup)=>{
-        return newGroup.name
-      }
+      render: (newGroup) => {
+        return newGroup.name;
+      },
     },
     {
       title: "Status",
