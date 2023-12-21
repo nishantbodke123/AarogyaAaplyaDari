@@ -366,6 +366,11 @@ function CHV() {
         .catch((err) => {
           console.log(err);
           message.warning(err.response.data.message);
+          if (err.status == "401") {
+            setTimeout(() => {
+              LogOut();
+            }, 1000);
+          }
         });
     }
   };
@@ -594,7 +599,7 @@ function CHV() {
     {
       title: "Group",
       render: (data) => {
-        return <Button onClick={() => handleGroupChange(data)} >Change</Button>;
+        return <Button onClick={() => handleGroupChange(data)}>Change</Button>;
       },
     },
   ];

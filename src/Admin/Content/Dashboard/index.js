@@ -14,6 +14,7 @@ import {
 import { AlignRightOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../../../Utils/BaseURL";
 import axios, { Axios } from "axios";
+import { LogOut } from "../../../Auth/Logout";
 
 function AdminDashboard() {
   const [AdminDashboardData, setAdminDashboardData] = useState({});
@@ -25,7 +26,12 @@ function AdminDashboard() {
         setAdminDashboardData(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.status);
+        if (error.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
       });
   }, []);
   return (

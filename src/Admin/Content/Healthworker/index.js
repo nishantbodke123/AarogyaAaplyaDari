@@ -217,6 +217,11 @@ function Healthworker() {
       })
       .catch((err) => {
         console.log(err);
+        if (err.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
       });
   };
   const handleHealthPostSelect = (id) => {
@@ -236,6 +241,11 @@ function Healthworker() {
       })
       .catch((err) => {
         console.log(err);
+        if (err.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
       });
   };
 
@@ -293,10 +303,20 @@ function Healthworker() {
               })
               .catch((err) => {
                 console.log(err);
+                if (err.status == "401") {
+                  setTimeout(() => {
+                    LogOut();
+                  }, 1000);
+                }
               });
           })
           .catch((err) => {
             console.log(err);
+            if (err.status == "401") {
+              setTimeout(() => {
+                LogOut();
+              }, 1000);
+            }
           });
       })
       .catch((err) => {

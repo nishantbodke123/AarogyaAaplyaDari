@@ -249,6 +249,11 @@ function MO() {
           })
           .catch((err) => {
             console.log(err);
+            if (err.status == "401") {
+              setTimeout(() => {
+                LogOut();
+              }, 1000);
+            }
           });
       })
       .catch((err) => {
@@ -311,6 +316,11 @@ function MO() {
         .catch((err) => {
           console.log(err);
           message.warning(err.response.data.message);
+          if (err.status == "401") {
+            setTimeout(() => {
+              LogOut();
+            }, 1000);
+          }
         });
     }
   };
@@ -350,6 +360,11 @@ function MO() {
         .catch((err) => {
           console.log(err);
           message.warning(err.response.data.message);
+          if (err.status == "401") {
+            setTimeout(() => {
+              LogOut();
+            }, 1000);
+          }
         });
     }
   };
@@ -407,6 +422,11 @@ function MO() {
         .catch((err) => {
           console.log(err);
           message.warning(err.response.data.message);
+          if (err.status == "401") {
+            setTimeout(() => {
+              LogOut();
+            }, 1000);
+          }
         });
     } else {
       message.warning("password and confirm password should be same");
