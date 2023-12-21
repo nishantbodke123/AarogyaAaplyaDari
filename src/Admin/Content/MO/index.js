@@ -229,14 +229,14 @@ function MO() {
   const handleEditModalShow = (data) => {
     console.log(data);
     axios
-      .get(`${BASE_URL}/adminportal/api/GetWardWiseSUerList/mo`, {
+      .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
       })
       .then((res) => {
         console.log(res.data);
-        setWardList(res.data.data);
+        setWardList(res.data);
         axios
           .get(`${BASE_URL}/allauth/api/GetDispensaryListAPI/${data.ward_id}`, {
             headers: {
@@ -294,7 +294,7 @@ function MO() {
     formData.append("dispensary", dispensary);
     formData.append("group", "mo");
     if (password !== confirmPassword) {
-      message.warning("The passwords doesn't match");
+      message.warning("password and confirm password should be same");
     } else {
       axios
         .post(

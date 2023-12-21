@@ -21,6 +21,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   },
   "&:hover": {
     backgroundColor: "#222C38",
+    color: "white",
   },
 }));
 

@@ -330,7 +330,7 @@ function WardHealthworker() {
     formData.append("section", section);
     formData.append("group", "healthworker");
     if (password !== confirmPassword) {
-      message.warning("The passwords doesn't match");
+      message.warning("password and confirm password should be same");
     } else {
       axios
         .post(
@@ -447,7 +447,7 @@ function WardHealthworker() {
           message.warning(err.response.data.message);
         });
     } else {
-      message.warning("Enter same password");
+      message.warning("password and confirm password should be same");
     }
   };
 

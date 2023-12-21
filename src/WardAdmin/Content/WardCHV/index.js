@@ -335,7 +335,7 @@ function WardCHV() {
     formData.append("section", section);
     formData.append("group", "CHV-ASHA");
     if (password !== confirmPassword) {
-      message.warning("The passwords doesn't match");
+      message.warning("password and confirm password should be same");
     } else {
       axios
         .post(
@@ -451,7 +451,7 @@ function WardCHV() {
           message.warning(err.response.data.message);
         });
     } else {
-      message.warning("Enter Same Password");
+      message.warning("password and confirm password should be same");
     }
   };
   const handleGroupChange = (data) => {

@@ -349,7 +349,7 @@ function CHV() {
     formData.append("section", section);
     formData.append("group", "CHV-ASHA");
     if (password !== confirmPassword) {
-      message.warning("The passwords doesn't match");
+      message.warning("password and confirm password should be same");
     } else {
       axios
         .post(

@@ -1,7 +1,16 @@
 import { Col, Row, theme } from "antd";
 import { Content } from "antd/es/layout/layout";
 import React, { useEffect, useState } from "react";
-import { DashboardCard, DashboardCardDiv } from "./style";
+import {
+  BloodCollectionCard,
+  CitizenDetailsCard,
+  CitizenDetailsCount,
+  CitizenDetailsCountLabel,
+  DashboardCard,
+  DashboardCardContent,
+  DashboardCardDiv,
+  Title,
+} from "./style";
 import { AlignRightOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../../../Utils/BaseURL";
 import axios, { Axios } from "axios";
@@ -21,7 +30,7 @@ function AdminDashboard() {
   }, []);
   return (
     <>
-      <div style={{ overflowY: "auto", maxHeight: "83vh" }}>
+      <div style={{ overflowY: "auto", maxHeight: "81.5vh" }}>
         <Content
           style={{
             margin: "24px 16px",
@@ -33,7 +42,7 @@ function AdminDashboard() {
         >
           <DashboardCardDiv>
             <DashboardCard>
-              <div style={{ margin: "20px 20px" }}>
+              <DashboardCardContent>
                 <Row>
                   <Col span={4}>
                     <AlignRightOutlined />
@@ -59,10 +68,10 @@ function AdminDashboard() {
                     </p>
                   </Col>
                 </Row>
-              </div>
+              </DashboardCardContent>
             </DashboardCard>
             <DashboardCard>
-              <div style={{ margin: "20px 20px" }}>
+              <DashboardCardContent>
                 <Row>
                   <Col span={4}>
                     <AlignRightOutlined />
@@ -88,10 +97,10 @@ function AdminDashboard() {
                     </p>
                   </Col>
                 </Row>
-              </div>
+              </DashboardCardContent>
             </DashboardCard>
             <DashboardCard>
-              <div style={{ margin: "20px 20px" }}>
+              <DashboardCardContent>
                 <Row>
                   <Col span={4}>
                     <AlignRightOutlined />
@@ -117,29 +126,21 @@ function AdminDashboard() {
                     </p>
                   </Col>
                 </Row>
-              </div>
+              </DashboardCardContent>
             </DashboardCard>
           </DashboardCardDiv>
           <div
             style={{
-              height: "95vh",
+              height: "40vh",
               backgroundColor: "white",
             }}
           >
             <div
               style={{
-                margin: "3% 5% -2% 4%",
+                margin: "1% 0% -3% 4%",
               }}
             >
-              <p
-                style={{
-                  fontSize: "18px",
-                  fontFamily: "revert",
-                  fontWeight: "600",
-                }}
-              >
-                Citizen Details
-              </p>
+              <Title>Citizen Details</Title>
             </div>
             <Row>
               <Col span={24}>
@@ -149,266 +150,98 @@ function AdminDashboard() {
                     justifyContent: "space-around",
                   }}
                 >
-                  <div
-                    style={{
-                      height: "15vh",
-                      width: "15vw",
-                      borderRadius: "5px",
-                      backgroundColor: "white",
-                      margin: "5vh 0vw 0vh 1vw",
-                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: "600",
-                        margin: "15px 10px",
-                      }}
-                    >
+                  <CitizenDetailsCard>
+                    <CitizenDetailsCountLabel>
                       <span>
                         <AlignRightOutlined />
                       </span>{" "}
                       Family Enrolled
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "26px",
-                        fontWeight: "700",
-                        margin: "0px 30px",
-                      }}
-                    >
+                    </CitizenDetailsCountLabel>
+                    <CitizenDetailsCount>
                       {AdminDashboardData.NoOfFamilyEnrolled}
-                    </p>
-                  </div>
-                  <div
-                    style={{
-                      height: "15vh",
-                      width: "15vw",
-                      borderRadius: "5px",
-                      backgroundColor: "white",
-                      margin: "5vh 0vw 0vh 0vw",
-                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: "600",
-                        margin: "15px 10px",
-                      }}
-                    >
+                    </CitizenDetailsCount>
+                  </CitizenDetailsCard>
+                  <CitizenDetailsCard>
+                    <CitizenDetailsCountLabel>
                       <span style={{ marginRight: "2%" }}>
                         <AlignRightOutlined />
                       </span>
                       Citizen Enrolled
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "26px",
-                        fontWeight: "700",
-                        margin: "0px 30px",
-                      }}
-                    >
+                    </CitizenDetailsCountLabel>
+                    <CitizenDetailsCount>
                       {AdminDashboardData.NoOfCitizenEnrolled}
-                    </p>
-                  </div>
-                  <div
-                    style={{
-                      height: "15vh",
-                      width: "15vw",
-                      borderRadius: "5px",
-                      backgroundColor: "white",
-                      margin: "5vh 0vw 0vh 0vw",
-                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: "600",
-                        margin: "15px 10px",
-                      }}
-                    >
+                    </CitizenDetailsCount>
+                  </CitizenDetailsCard>
+                  <CitizenDetailsCard>
+                    <CitizenDetailsCountLabel>
                       <span style={{ marginRight: "2%" }}>
                         <AlignRightOutlined />
                       </span>
                       Male
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "26px",
-                        fontWeight: "700",
-                        margin: "0px 30px",
-                      }}
-                    >
+                    </CitizenDetailsCountLabel>
+                    <CitizenDetailsCount>
                       {AdminDashboardData.NoOfMaleEnrolled}
-                    </p>
-                  </div>
-                  <div
-                    style={{
-                      height: "15vh",
-                      width: "15vw",
-                      borderRadius: "5px",
-                      backgroundColor: "white",
-                      margin: "5vh 0vw 0vh 0vw",
-                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: "600",
-                        margin: "15px 10px",
-                      }}
-                    >
+                    </CitizenDetailsCount>
+                  </CitizenDetailsCard>
+                  <CitizenDetailsCard>
+                    <CitizenDetailsCountLabel>
                       <span style={{ marginRight: "2%" }}>
                         <AlignRightOutlined />
                       </span>
                       Female
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "26px",
-                        fontWeight: "700",
-                        margin: "0px 30px",
-                      }}
-                    >
+                    </CitizenDetailsCountLabel>
+                    <CitizenDetailsCount>
                       {AdminDashboardData.NoOfFemaleEnrolled}
-                    </p>
-                  </div>
+                    </CitizenDetailsCount>
+                  </CitizenDetailsCard>
                 </div>
                 <div
                   style={{ display: "flex", justifyContent: "space-around" }}
                 >
-                  <div
-                    style={{
-                      height: "15vh",
-                      width: "15vw",
-                      borderRadius: "5px",
-                      backgroundColor: "white",
-                      margin: "5vh 0vw 0vh 1vw",
-                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: "600",
-                        margin: "15px 12px",
-                      }}
-                    >
+                  <CitizenDetailsCard>
+                    <CitizenDetailsCountLabel>
                       <span style={{ marginRight: "2%" }}>
                         <AlignRightOutlined />
                       </span>
                       CBAC Filled
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "26px",
-                        fontWeight: "700",
-                        margin: "0px 32px",
-                      }}
-                    >
+                    </CitizenDetailsCountLabel>
+                    <CitizenDetailsCount>
                       {AdminDashboardData.NoOfCBACFilled}
-                    </p>
-                  </div>
-                  <div
-                    style={{
-                      height: "15vh",
-                      width: "15vw",
-                      borderRadius: "5px",
-                      backgroundColor: "white",
-                      margin: "5vh 0vw 0vh 0vw",
-                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: "600",
-                        margin: "15px 10px",
-                      }}
-                    >
+                    </CitizenDetailsCount>
+                  </CitizenDetailsCard>
+                  <CitizenDetailsCard>
+                    <CitizenDetailsCountLabel>
                       <span>
                         <AlignRightOutlined />
                       </span>{" "}
                       ABHA ID Generated
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "26px",
-                        fontWeight: "700",
-                        margin: "0px 30px",
-                      }}
-                    >
+                    </CitizenDetailsCountLabel>
+                    <CitizenDetailsCount>
                       {AdminDashboardData.NoOfAbhaIdGenerated}
-                    </p>
-                  </div>
-                  <div
-                    style={{
-                      height: "15vh",
-                      width: "15vw",
-                      borderRadius: "5px",
-                      backgroundColor: "white",
-                      margin: "5vh 0vw 0vh 0vw",
-                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: "600",
-                        margin: "15px 10px",
-                      }}
-                    >
+                    </CitizenDetailsCount>
+                  </CitizenDetailsCard>
+                  <CitizenDetailsCard>
+                    <CitizenDetailsCountLabel>
                       <span style={{ marginRight: "2%" }}>
                         <AlignRightOutlined />
                       </span>
                       Citizens of age > 30
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "26px",
-                        fontWeight: "700",
-                        margin: "0px 30px",
-                      }}
-                    >
+                    </CitizenDetailsCountLabel>
+                    <CitizenDetailsCount>
                       {AdminDashboardData.NoOfPersonMoreThan30}
-                    </p>
-                  </div>
-                  <div
-                    style={{
-                      height: "15vh",
-                      width: "15vw",
-                      borderRadius: "5px",
-                      backgroundColor: "white",
-                      margin: "5vh 0vw 0vh 0vw",
-                      boxShadow: "11px 10px 5px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: "600",
-                        margin: "15px 10px",
-                      }}
-                    >
+                    </CitizenDetailsCount>
+                  </CitizenDetailsCard>
+                  <CitizenDetailsCard>
+                    <CitizenDetailsCountLabel>
                       <span style={{ marginRight: "2%" }}>
                         <AlignRightOutlined />
                       </span>
                       Citizens of age > 60
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "26px",
-                        fontWeight: "700",
-                        margin: "0px 30px",
-                      }}
-                    >
+                    </CitizenDetailsCountLabel>
+                    <CitizenDetailsCount>
                       {AdminDashboardData.NoOfPersonMoreThan60}
-                    </p>
-                  </div>
+                    </CitizenDetailsCount>
+                  </CitizenDetailsCard>
                 </div>
               </Col>
               {/* <Col span={12}>
@@ -570,36 +403,15 @@ function AdminDashboard() {
             </Row>
             <div
               style={{
-                marginBottom: "-4%",
-                marginTop: "5%",
-                margin: " 3% 2% 0% 4%",
+                margin: "1% 0% 0% 4%",
               }}
             >
-              <p
-                style={{
-                  fontSize: "18px",
-                  fontFamily: "revert",
-                  fontWeight: "600",
-                }}
-              >
-                Blood Collection Details
-              </p>
+              <Title>Blood Collection Details</Title>
             </div>
             <Row>
               <Col span={12}>
                 <div style={{ position: "relative" }}>
-                  <div
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: "5px",
-                      position: "absolute",
-                      top: 20,
-                      margin: "0% 15% 0% 8%",
-                      width: "34vw",
-                      height: "10vh",
-                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
+                  <BloodCollectionCard>
                     <Row>
                       <Col
                         span={1}
@@ -628,13 +440,13 @@ function AdminDashboard() {
                         </p>
                       </Col>
                     </Row>
-                  </div>
+                  </BloodCollectionCard>
                   <div
                     style={{
                       backgroundColor: "white",
                       borderRadius: "5px",
                       position: "absolute",
-                      top: 120,
+                      top: 90,
                       margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
@@ -675,7 +487,7 @@ function AdminDashboard() {
                       backgroundColor: "white",
                       borderRadius: "5px",
                       position: "absolute",
-                      top: 220,
+                      top: 180,
                       margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
@@ -720,7 +532,7 @@ function AdminDashboard() {
                       backgroundColor: "white",
                       borderRadius: "5px",
                       position: "absolute",
-                      top: 20,
+                      top: 0,
                       margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
@@ -761,7 +573,7 @@ function AdminDashboard() {
                       backgroundColor: "white",
                       borderRadius: "5px",
                       position: "absolute",
-                      top: 120,
+                      top: 90,
                       margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
@@ -802,7 +614,7 @@ function AdminDashboard() {
                       backgroundColor: "white",
                       borderRadius: "5px",
                       position: "absolute",
-                      top: 220,
+                      top: 180,
                       margin: "0% 15% 0% 8%",
                       width: "34vw",
                       height: "10vh",
@@ -846,7 +658,21 @@ function AdminDashboard() {
           </div>
         </Content>
       </div>
-      <div style={{display:"flex" ,justifyContent:"flex-end" ,margin:"0% 5% 0% 0%"}}><span><p>Developed and maintained by  :-</p></span><img src="\BhugolGISLogo.png" style={{width:"14%"}}></img></div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          margin: "0% 5% 0% 0%",
+        }}
+      >
+        <span>
+          <p>Developed and maintained by </p>
+        </span>
+        <img
+          src="\BhugolGISLogo.png"
+          style={{ width: "14%", height: "10%" ,margin:"1% 0% 0% 2%" }}
+        ></img>
+      </div>
     </>
   );
 }

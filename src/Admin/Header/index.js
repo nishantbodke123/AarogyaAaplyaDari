@@ -1,4 +1,4 @@
-import { Button, Select, theme } from "antd";
+import { Button, Row, Select, theme } from "antd";
 import { Header } from "antd/es/layout/layout";
 import React from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
@@ -39,6 +39,14 @@ function HeaderBar(props) {
               height: 64,
             }}
           />
+          <div style={{ margin: "-1% 50% 0% 0%" }}>
+            <div>
+              <p>
+                Welcome , <b>{sessionStorage.getItem("name")}</b>
+              </p>
+              <br />
+            </div>
+          </div>
           <div>
             <FontAwesomeIcon
               icon={faUser}
