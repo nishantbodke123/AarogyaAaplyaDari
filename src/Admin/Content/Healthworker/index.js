@@ -69,7 +69,7 @@ function Healthworker() {
       })
       .catch((error) => {
         console.log(error);
-        if (error.status == "401") {
+        if (error.response.status == "401") {
           setTimeout(() => {
             LogOut();
           }, 1000);
@@ -170,7 +170,7 @@ function Healthworker() {
       .catch((error) => {
         setLoader(false);
         console.log(error);
-        if (error.status == "401") {
+        if (error.response.status == "401") {
           setTimeout(() => {
             LogOut();
           }, 1000);
@@ -191,7 +191,7 @@ function Healthworker() {
       })
       .catch((err) => {
         console.log(err);
-        if (err.status == 401) {
+        if (err.response.status == "401") {
           setTimeout(() => {
             LogOut();
           }, 1000);
@@ -217,7 +217,7 @@ function Healthworker() {
       })
       .catch((err) => {
         console.log(err);
-        if (err.status == "401") {
+        if (err.response.status == "401") {
           setTimeout(() => {
             LogOut();
           }, 1000);
@@ -241,7 +241,7 @@ function Healthworker() {
       })
       .catch((err) => {
         console.log(err);
-        if (err.status == "401") {
+        if (err.response.status == "401") {
           setTimeout(() => {
             LogOut();
           }, 1000);
@@ -303,7 +303,7 @@ function Healthworker() {
               })
               .catch((err) => {
                 console.log(err);
-                if (err.status == "401") {
+                if (err.response.status == "401") {
                   setTimeout(() => {
                     LogOut();
                   }, 1000);
@@ -312,7 +312,7 @@ function Healthworker() {
           })
           .catch((err) => {
             console.log(err);
-            if (err.status == "401") {
+            if (err.response.status == "401") {
               setTimeout(() => {
                 LogOut();
               }, 1000);
@@ -620,7 +620,7 @@ function Healthworker() {
                   <Form layout="vertical">
                     <FormItem
                       label="Select ward"
-                      style={{ width: "250px", margin: "-25px 0px 5px 300px" }}
+                      style={{ width: "250px", margin: "-10% 0% 0% 150%" }}
                     >
                       <Select
                         value={wardSelect}

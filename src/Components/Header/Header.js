@@ -20,7 +20,8 @@ import { LogOut } from "../../Auth/Logout";
 function Header() {
   const menuItems = [
     { key: "1", title: "Dashboard", link: "/dashboard" },
-    { key: "2", title: "Survey Form", link: "/register" },
+    {key :"2" ,title:"Citizen Details", link:"/citizendetails"},
+    { key: "3", title: "Survey Form", link: "/register" },
     // Add more menu items as needed
   ];
   // const Logout = () => {

@@ -38,7 +38,6 @@ function Admin() {
             )}
             {location.pathname === "/admin/chvApproval" && <CHVApproval />}
           </Content>
-          
         </Layout>
       </Layout>
     </>

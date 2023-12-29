@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Col,
+  Divider,
   Input,
   Row,
   Select,
@@ -500,7 +501,7 @@ const Dashboard = () => {
                         <CountIcon icon={faBars} />
                       </Col>
                       <Col>
-                        <CardHeader>Today's Citizen Count</CardHeader>
+                        <CardHeader>Today's CBAC count</CardHeader>
                       </Col>
                     </Row>
                     <CardCount>{dashboardCounts.todays_count}</CardCount>
@@ -516,7 +517,7 @@ const Dashboard = () => {
                         <CountIcon icon={faBars} />
                       </Col>
                       <Col>
-                        <CardHeader>Today's Family Count </CardHeader>
+                        <CardHeader>No of citizen Enrolled </CardHeader>
                       </Col>
                     </Row>
                     <CardCount>{dashboardCounts.today_family_count}</CardCount>
@@ -532,7 +533,7 @@ const Dashboard = () => {
                         <CountIcon icon={faBars} />
                       </Col>
                       <Col>
-                        <CardHeader>Total Citizen Count</CardHeader>
+                        <CardHeader>Today's family Recorded</CardHeader>
                       </Col>
                     </Row>
                     <CardCount>{dashboardCounts.total_count}</CardCount>
@@ -548,7 +549,7 @@ const Dashboard = () => {
                         <CountIcon icon={faBars} />
                       </Col>
                       <Col>
-                        <CardHeader>Total Family Count</CardHeader>
+                        <CardHeader>No of family Enrolled</CardHeader>
                       </Col>
                     </Row>
                     <CardCount>{dashboardCounts.total_family_count}</CardCount>
@@ -621,10 +622,158 @@ const Dashboard = () => {
           </SubContainer>
         </MobileContainer>
         <DesktopContainer>
-          <Row>
-            <Col span={14}>
-              <SubContainer>
-                <Box onClick={() => handleShowToDayCitizenCountModal()}>
+          <div
+            style={{
+              margin: "2% 2% 2% 2%",
+              boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+              borderRadius: "10px",
+            }}
+          >
+            <Row>
+              <div
+                style={{
+                  margin: "0.8% -5% -1.5% 4%",
+                  fontSize: "19px",
+                  fontWeight: "600",
+
+                  width: "90%",
+                  // backgroundColor: "#C7DCA7",
+                }}
+              >
+                <p style={{ margin: "0% 1% 0% 0%" }}>CITIZEN'S DETAILS</p>
+              </div>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <SubContainer>
+                  <Box>
+                    <ColorStrip />
+                    <BoxContainer>
+                      <Row>
+                        <Col>
+                          <CountIcon icon={faBars} />
+                        </Col>
+                        <Col>
+                          <CardHeader>Today's CBAC Count</CardHeader>
+                        </Col>
+                      </Row>
+                      <CardCount>{dashboardCounts.todays_count}</CardCount>
+                    </BoxContainer>
+                  </Box>
+                  <Box>
+                    <ColorStrip />
+                    <BoxContainer>
+                      <Row>
+                        <Col>
+                          <CountIcon icon={faBars} />
+                        </Col>
+                        <Col>
+                          <CardHeader>No of Citizen Enrolled</CardHeader>
+                        </Col>
+                      </Row>
+                      <CardCount>
+                        {dashboardCounts.today_family_count}
+                      </CardCount>
+                    </BoxContainer>
+                  </Box>
+                  <Box>
+                    <ColorStrip />
+                    <BoxContainer>
+                      <Row>
+                        <Col>
+                          <CountIcon icon={faBars} />
+                        </Col>
+                        <Col>
+                          <CardHeader>Today's Family Recorded</CardHeader>
+                        </Col>
+                      </Row>
+                      <CardCount>{dashboardCounts.total_count}</CardCount>
+                    </BoxContainer>
+                  </Box>
+                  <Box>
+                    <ColorStrip />
+                    <BoxContainer>
+                      <Row>
+                        <Col>
+                          <CountIcon icon={faBars} />
+                        </Col>
+                        <Col>
+                          <CardHeader>No of family Enrolled</CardHeader>
+                        </Col>
+                      </Row>
+                      <CardCount>
+                        {dashboardCounts.total_family_count}
+                      </CardCount>
+                    </BoxContainer>
+                  </Box>
+                </SubContainer>
+                <SubContainer>
+                  <Box>
+                    <ColorStrip />
+                    <BoxContainer>
+                      <Row>
+                        <Col>
+                          <CountIcon icon={faBars} />
+                        </Col>
+                        <Col>
+                          <CardHeader>
+                            Citizens more than of 30 years{" "}
+                          </CardHeader>
+                        </Col>
+                      </Row>
+                      <CardCount>{dashboardCounts.citizen_above_30}</CardCount>
+                    </BoxContainer>
+                  </Box>
+                  <Box>
+                    <ColorStrip />
+                    <BoxContainer>
+                      <Row>
+                        <Col>
+                          <CountIcon icon={faBars} />
+                        </Col>
+                        <Col>
+                          <CardHeader>
+                            Citizens more than of 60 years{" "}
+                          </CardHeader>
+                        </Col>
+                      </Row>
+                      <CardCount>{dashboardCounts.citizen_above_60}</CardCount>
+                    </BoxContainer>
+                  </Box>
+                  <Box>
+                    <ColorStrip />
+                    <BoxContainer>
+                      <Row>
+                        <Col>
+                          <CountIcon icon={faBars} />
+                        </Col>
+                        <Col>
+                          <CardHeader>No of ABHA ID Generated </CardHeader>
+                        </Col>
+                      </Row>
+                      <CardCount>
+                        {dashboardCounts.blood_collected_home}
+                      </CardCount>
+                    </BoxContainer>
+                  </Box>
+                  <Box>
+                    <ColorStrip />
+                    <BoxContainer>
+                      <Row>
+                        <Col>
+                          <CountIcon icon={faBars} />
+                        </Col>
+                        <Col>
+                          <CardHeader>No of CBAC form filled</CardHeader>
+                        </Col>
+                      </Row>
+                      <CardCount>
+                        {dashboardCounts.blood_collected_center}
+                      </CardCount>
+                    </BoxContainer>
+                  </Box>
+
+                  {/* <Box>
                   <ColorStrip />
                   <BoxContainer>
                     <Row>
@@ -632,89 +781,16 @@ const Dashboard = () => {
                         <CountIcon icon={faBars} />
                       </Col>
                       <Col>
-                        <CardHeader>Today's Citizens Enrolled</CardHeader>
-                      </Col>
-                    </Row>
-                    <CardCount>{dashboardCounts.todays_count}</CardCount>
-                  </BoxContainer>
-                </Box>
-                <Box onClick={() => handleShowTodayFamilyCountModal()}>
-                  <ColorStrip />
-                  <BoxContainer>
-                    <Row>
-                      <Col>
-                        <CountIcon icon={faBars} />
-                      </Col>
-                      <Col>
-                        <CardHeader>Today's Family Enrolled </CardHeader>
-                      </Col>
-                    </Row>
-                    <CardCount>{dashboardCounts.today_family_count}</CardCount>
-                  </BoxContainer>
-                </Box>
-                <Box onClick={() => handleShowTotalCountModal()}>
-                  <ColorStrip />
-                  <BoxContainer>
-                    <Row>
-                      <Col>
-                        <CountIcon icon={faBars} />
-                      </Col>
-                      <Col>
-                        <CardHeader>Total Citizens Enrolled</CardHeader>
+                        <CardHeader>Denied</CardHeader>
                       </Col>
                     </Row>
                     <CardCount>{dashboardCounts.total_count}</CardCount>
                   </BoxContainer>
-                </Box>
-              </SubContainer>
-              <SubContainer>
-                <Box onClick={() => handleShowTotalFamilyCountModal()}>
-                  <ColorStrip />
-                  <BoxContainer>
-                    <Row>
-                      <Col>
-                        <CountIcon icon={faBars} />
-                      </Col>
-                      <Col>
-                        <CardHeader>Total Family Enrolled</CardHeader>
-                      </Col>
-                    </Row>
-                    <CardCount>{dashboardCounts.total_family_count}</CardCount>
-                  </BoxContainer>
-                </Box>
-                <Box onClick={() => handleShowPartialCountModal()}>
-                  <ColorStrip />
-                  <BoxContainer>
-                    <Row>
-                      <Col>
-                        <CountIcon icon={faBars} />
-                      </Col>
-                      <Col>
-                        <CardHeader>Partial Survey </CardHeader>
-                      </Col>
-                    </Row>
-                    <CardCount>
-                      {dashboardCounts.partial_survey_count}
-                    </CardCount>
-                  </BoxContainer>
-                </Box>
-                <Box>
-                  <ColorStrip />
-                  <BoxContainer>
-                    <Row>
-                      <Col>
-                        <CountIcon icon={faBars} />
-                      </Col>
-                      <Col>
-                        <CardHeader>Number of CBAC Filled </CardHeader>
-                      </Col>
-                    </Row>
-                    <CardCount>{dashboardCounts.total_cbac_count}</CardCount>
-                  </BoxContainer>
-                </Box>
-              </SubContainer>
-            </Col>
-            <Col span={9}>
+                </Box> */}
+                </SubContainer>
+              </Col>
+
+              {/* <Col span={9}>
               <OuterCard>
                 <InnerCard1>
                   <Row>
@@ -764,11 +840,203 @@ const Dashboard = () => {
                   <CardCount>{dashboardCounts.blood_collected_center}</CardCount>
                 </InnerCard4>
               </OuterCard>
-            </Col>
-          </Row>
+            </Col> */}
+            </Row>
+          </div>
+          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                margin: "0% 0% 0% 2%",
+                width: "50%",
+                height: "47vh",
+                boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                borderRadius: "15px",
+              }}
+            >
+              <Row>
+                <div
+                  style={{
+                    margin: "2% -5% -1% 5%",
+                    fontSize: "19px",
+                    fontWeight: "600",
+                    // backgroundColor: "#C7DCA7",
+                    width: "90%",
+                  }}
+                >
+                  <p style={{ margin: "0.6% 0% 0.3% 1%" }}>ALL DISEASES</p>
+                </div>
+              </Row>
+
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    width: "22%",
+                    height: "10vh",
+                    margin: "2% 5%",
+                    boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <p style={{ margin: "5% 0% 10% 5%" }}>Diabetes</p>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+                <div
+                  style={{
+                    width: "22%",
+                    height: "10vh",
+                    margin: "2% 5%",
+                    boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <p style={{ margin: "5% 0% 10% 5%" }}>Hypertension</p>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+                <div
+                  style={{
+                    width: "22%",
+                    height: "10vh",
+                    margin: "2% 5%",
+                    boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <p style={{ margin: "5% 0% 10% 5%" }}>Oral Cancer</p>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+              </div>
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    width: "22%",
+                    height: "10vh",
+                    margin: "1% 5%",
+                    boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <p style={{ margin: "5% 0% 10% 5%" }}>Cervical Cancer</p>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+                <div
+                  style={{
+                    width: "22%",
+                    height: "10vh",
+                    margin: "1% 5%",
+                    boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <p style={{ margin: "5% 0% 10% 5%" }}>Breast Cancer</p>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+                <div
+                  style={{
+                    width: "22%",
+                    height: "10vh",
+                    margin: "1% 5%",
+                    boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <p style={{ margin: "5% 0% 10% 5%" }}>COPD</p>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+              </div>
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    width: "22%",
+                    height: "10vh",
+                    margin: "1% 5%",
+                    boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <p style={{ margin: "5% 0% 10% 5%" }}>Communicable</p>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+                <div
+                  style={{
+                    width: "22%",
+                    height: "10vh",
+                    margin: "1% 5%",
+                    boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <p style={{ margin: "5% 0% 10% 5%" }}>Asthama</p>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+                <div
+                  style={{
+                    width: "22%",
+                    height: "10vh",
+                    margin: "1% 5%",
+                    boxShadow: "  0px 4px 14px -4px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <p style={{ margin: "5% 0% 10% 5%" }}>TB</p>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+              </div>
+            </div>
+            <div
+              style={{ width: "50%", height: "47vh" }}
+            >
+              <div>
+                <p
+                  style={{
+                    margin: "3% 0% 0% 3%",
+                    fontSize: "19px",
+                    fontWeight: "600",
+                  }}
+                >
+                  BLOOD COLLECTION
+                </p>
+              </div>
+            </div>
+          </div>
         </DesktopContainer>
 
-        <TableContainer>
+        {/* <TableContainer>
           <TableHeading>Family Heads Details </TableHeading>
           <StyledTabs defaultActiveKey="1" centered size="large">
             <TabPane tab="All Family Details" key="1">
@@ -787,7 +1055,7 @@ const Dashboard = () => {
               ></Table>
             </TabPane>
           </StyledTabs>
-        </TableContainer>
+        </TableContainer> */}
         <ViewModal
           footer={<></>}
           width={1200}

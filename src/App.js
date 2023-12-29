@@ -25,7 +25,7 @@ import WardAdminDashboard from "./WardAdmin/Content/Dashboard";
 import WardCHV from "./WardAdmin/Content/WardCHV";
 import HealthworkerApproval from "./Admin/AdminApproval/Content/Healthworker";
 import CHVApproval from "./Admin/AdminApproval/Content/CHV";
-
+import CitizenDetails from "./Components/CitizenDetails";
 
 function App() {
   let Token = sessionStorage.getItem("Token");
@@ -37,7 +37,8 @@ function App() {
           <Route
             path="/"
             element={
-              Token !== "" && Group == "healthworker" ? (
+              (Token !== "" && Group == "healthworker") ||
+              Group == "CHV-ASHA" ? (
                 <Navigate to="/dashboard" />
               ) : Token !== "" && Group == "phlebotomist" ? (
                 <Navigate to="/phlebo" />
@@ -51,7 +52,8 @@ function App() {
           <Route
             path="/login"
             element={
-              Token !== "" && Group == "healthworker" ? (
+              (Token !== "" && Group == "healthworker") ||
+              Group == "CHV-ASHA" ? (
                 <Navigate to="/dashboard" />
               ) : Token !== "" && Group == "phlebotomist" ? (
                 <Navigate to="/phlebo" />
@@ -66,6 +68,14 @@ function App() {
             element={
               <HealthworkerProtected>
                 <Dashboard />
+              </HealthworkerProtected>
+            }
+          ></Route>
+             <Route
+            path="/citizendetails"
+            element={
+              <HealthworkerProtected>
+                <CitizenDetails />
               </HealthworkerProtected>
             }
           ></Route>

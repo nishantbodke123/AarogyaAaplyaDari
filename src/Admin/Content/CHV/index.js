@@ -290,16 +290,25 @@ function CHV() {
                 setSectionList(res.data.data);
               })
               .catch((err) => {
-                console.log(err);
+                if (err.response.status == "401") {
+                  setTimeout(() => {
+                    LogOut();
+                  }, 1000);
+                }
               });
           })
           .catch((err) => {
             console.log(err);
+            if (err.response.status == "401") {
+              setTimeout(() => {
+                LogOut();
+              }, 1000);
+            }
           });
       })
       .catch((err) => {
         console.log(err);
-        if (err.status == 401) {
+        if (err.response.status == "401") {
           setTimeout(() => {
             LogOut();
           }, 1000);
@@ -366,7 +375,7 @@ function CHV() {
         .catch((err) => {
           console.log(err);
           message.warning(err.response.data.message);
-          if (err.status == "401") {
+          if (err.response.status == "401") {
             setTimeout(() => {
               LogOut();
             }, 1000);
@@ -659,7 +668,7 @@ function CHV() {
                         label="Select ward"
                         style={{
                           width: "250px",
-                          margin: "-25px 0px 5px 300px",
+                          margin: "-10% 0% 0% 150%",
                         }}
                       >
                         <Select
@@ -808,6 +817,7 @@ function CHV() {
                       </Select>
                     </FormItem>
                   </Col>
+                  <Col span={12}>
                   <FormItem label="Section">
                     <Select
                       showSearch
@@ -829,6 +839,20 @@ function CHV() {
                       ))}
                     </Select>
                   </FormItem>
+                  </Col>
+                  <Col>
+                  {/* <FormItem label="ANM/Healthworker">
+                  <Select showSearch style={{width:"350px"}}   filterOption={(inputValue, option) =>
+                        option.children
+                          ? option.children
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          : false
+                      }>
+                    <Option/>
+                  </Select>
+                  </FormItem> */}
+                  </Col>
                 </Row>
               </Form>
             </Modal>

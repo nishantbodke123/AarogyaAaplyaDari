@@ -609,7 +609,7 @@ import {
                           label="Select ward"
                           style={{
                             width: "250px",
-                            margin: "-25px 0px 5px 300px",
+                            margin: "-10% 0% 0% 150%"
                           }}
                         >
                           <Select

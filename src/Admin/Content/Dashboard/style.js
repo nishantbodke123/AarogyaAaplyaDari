@@ -53,3 +53,4 @@ export const BloodCollectionCard = styled.div`
   height: 10vh;
   box-shadow: 8px 8px 6px -7px rgba(0, 0, 0, 0.75);
 `;
+

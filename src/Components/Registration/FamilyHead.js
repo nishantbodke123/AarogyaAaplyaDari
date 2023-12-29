@@ -165,8 +165,9 @@ function FamilyHead(props) {
     axios
       .get(
         `${BASE_URL}/allauth/api/GetCHV_ASHA_list/${sessionStorage.getItem(
-          "section_id"
-        )}`
+          "id"
+        )}`,
+        axiosConfig
       )
       .then((res) => {
         console.log(res.data.data, "chvlist");
@@ -201,7 +202,10 @@ function FamilyHead(props) {
   };
 
   const handleWardSelectionModal = () => {
-    if (selectedCHV == "") {
+    if (
+      sessionStorage.getItem("group") === "healthworker" &&
+      selectedCHV == ""
+    ) {
       message.warning("Please select CHV");
     } else if (section == "") {
       message.warning("Please Select Area");
@@ -247,7 +251,10 @@ function FamilyHead(props) {
         Authorization: `Token ${sessionStorage.getItem("Token")}`,
       },
     };
-    if (selectedCHV == "") {
+    if (
+      sessionStorage.getItem("group") === "healthworker" &&
+      selectedCHV == ""
+    ) {
       message.warning("Please Select CHV");
     } else if (section == "") {
       message.warning("Please Select Area");
@@ -817,8 +824,8 @@ function FamilyHead(props) {
   const [vulnerableList, setVulnerableList] = useState([]);
   const [selectVulnerableList, setSelectVulnerableList] = useState([]);
   const [vulnerable, setVulnerable] = useState(false);
-  const [vulnerableReason,setVulnerableReason]=useState("");
-  const [deniedBy ,setDeniedBy]=useState();
+  const [vulnerableReason, setVulnerableReason] = useState("");
+  const [deniedBy, setDeniedBy] = useState();
   const [refarralList, setReferralList] = useState([]);
   const [selectedReferalList, setSelectReferralList] = useState([]);
 
@@ -866,7 +873,11 @@ function FamilyHead(props) {
         setConsentModalShow(true);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.status);
+        if(err.response.status == 401){
+          LogOut();
+        }
+
       });
   };
   const handleConsentModalClose = () => {
@@ -1209,13 +1220,12 @@ function FamilyHead(props) {
   //Part E question's state
   //E1
 
-  
   const [doYouhaveFever1, setDoYouHaveFever1] = useState([]);
   const [doYouhaveFever2, setDoYouHaveFever2] = useState([]);
   const [doYouhaveFever3, setDoYouHaveFever3] = useState([]);
   const [doYouhaveFever4, setDoYouHaveFever4] = useState([]);
   const [doYouhaveFever5, setDoYouHaveFever5] = useState([]);
- 
+
   // //E2
   // const [conjuctivitis, setConjuctivitis] = useState("No");
   // const [conjuctivitis1, setConjuctivitis1] = useState([]);
@@ -1349,11 +1359,16 @@ function FamilyHead(props) {
       setQuestionFunction([]);
     }
   };
-  
 
   const handleDoYouHaveFever = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setDoYouHaveFever${questionNumber}`);
-    if (selectedValue === "Yes" || selectedValue === "No" || selectedValue==="More_than__days" || selectedValue === "Less_than__days" || selectedValue === "No") {
+    if (
+      selectedValue === "Yes" ||
+      selectedValue === "No" ||
+      selectedValue === "More_than__days" ||
+      selectedValue === "Less_than__days" ||
+      selectedValue === "No"
+    ) {
       setQuestionFunction([selectedValue]);
     } else {
       setQuestionFunction([]);
@@ -1846,7 +1861,7 @@ function FamilyHead(props) {
     weight: weight,
     height: height,
     BMI: BMI,
-    cbacRequired:CBACRequired,
+    cbacRequired: CBACRequired,
     referels: selectedReferalList,
     Questionnaire: {
       part_a: [
@@ -2097,7 +2112,7 @@ function FamilyHead(props) {
           question: "with_Altered_Sensorium",
           answer: doYouhaveFever5,
         },
-   
+
         {
           question: "Waddling_in_water",
           answer: leptospirosis1,
@@ -2132,7 +2147,6 @@ function FamilyHead(props) {
           question: "Snake_Bite",
           answer: snakeBitten,
         },
-        
       ],
     },
 
@@ -2145,10 +2159,10 @@ function FamilyHead(props) {
       : notRequired
       ? "Not Required"
       : "",
-      deniedBy:deniedBy,
-      vulnerable:vulnerable,
-      vulnerable_reason:vulnerableReason,
-      vulnerable_choices:selectVulnerableList
+    deniedBy: deniedBy,
+    vulnerable: vulnerable,
+    vulnerable_reason: vulnerableReason,
+    vulnerable_choices: selectVulnerableList,
   };
 
   return familyHeadRegister == "No" ? (
@@ -2313,26 +2327,34 @@ function FamilyHead(props) {
             <ModalFormItem label="Health Post / आरोग्य पोस्ट ">
               <Input value={sessionStorage.getItem("healthPostName")}></Input>
             </ModalFormItem>
-            <ModalFormItem label="Select CHV/ASHA Worker" required>
-              <Select
-                value={selectedCHV}
-                showSearch
-                filterOption={(inputValue, option) =>
-                  option.children
-                    ? option.children
-                        .toLowerCase()
-                        .includes(inputValue.toLowerCase())
-                    : false
-                }
-                onChange={(value) => handleCHVSelect(value)}
-              >
-                {CHVList.map((data) => (
-                  <Option key={data.id} value={data.id}>
-                    {data.name}
-                  </Option>
-                ))}
-              </Select>
-            </ModalFormItem>
+
+            {sessionStorage.getItem("group") == "healthworker" ? (
+              <>
+                {" "}
+                <ModalFormItem label="Select CHV/ASHA Worker" required>
+                  <Select
+                    value={selectedCHV}
+                    showSearch
+                    filterOption={(inputValue, option) =>
+                      option.children
+                        ? option.children
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                        : false
+                    }
+                    onChange={(value) => handleCHVSelect(value)}
+                  >
+                    {CHVList.map((data) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </ModalFormItem>
+              </>
+            ) : (
+              <></>
+            )}
             <ModalFormItem label="Select Area/ क्षेत्र निवडा" required>
               <Select
                 value={section}
@@ -3627,8 +3649,12 @@ function FamilyHead(props) {
                 >
                   <Radio value="Not_at_all">Not at all/अजिबात नाही</Radio>
                   <Radio value="Several_days">Several days/अनेक दिवस</Radio>
-                  <Radio value="More_than_half_days">More than half days/अर्ध्याहून अधिक दिवस</Radio>
-                  <Radio value="Nearly_every_days">Nearly every days / जवळजवळ प्रत्येक दिवस</Radio>
+                  <Radio value="More_than_half_days">
+                    More than half days/अर्ध्याहून अधिक दिवस
+                  </Radio>
+                  <Radio value="Nearly_every_days">
+                    Nearly every days / जवळजवळ प्रत्येक दिवस
+                  </Radio>
                 </Radio.Group>
               </QuestionRow>
 
@@ -3643,8 +3669,12 @@ function FamilyHead(props) {
                 >
                   <Radio value="Not_at_all">Not at all/अजिबात नाही</Radio>
                   <Radio value="Several_days">Several days/अनेक दिवस</Radio>
-                  <Radio value="More_than_half_days">More than half days/अर्ध्याहून अधिक दिवस</Radio>
-                  <Radio value="Nearly_every_days">Nearly every days/जवळजवळ प्रत्येक दिवस</Radio>
+                  <Radio value="More_than_half_days">
+                    More than half days/अर्ध्याहून अधिक दिवस
+                  </Radio>
+                  <Radio value="Nearly_every_days">
+                    Nearly every days/जवळजवळ प्रत्येक दिवस
+                  </Radio>
                 </Radio.Group>
               </QuestionRow>
               <SubmitButtonDiv>
@@ -3655,29 +3685,27 @@ function FamilyHead(props) {
               </SubmitButtonDiv>
             </Tabs.TabPane>
             <Tabs.TabPane tab="5) Part E / भाग ई" key="5">
-           
               <QuestionRow>
-                <QuestionCol>
-                1. ताप / 
-                  Fever ?
-                </QuestionCol>
+                <QuestionCol>1. ताप / Fever ?</QuestionCol>
                 <AnswerCol>
                   <Radio.Group
                     onChange={(e) => handleDoYouHaveFever(1, e.target.value)}
                     value={doYouhaveFever1[0]}
                   >
-                    <Radio value="More_than__days">7 दिवसांपेक्षा जास्त काळ / More than 7 days</Radio>
-                    <Radio value="Less_than__days">7 दिवसांपेक्षा कमी / Less than 7 days</Radio>
+                    <Radio value="More_than__days">
+                      7 दिवसांपेक्षा जास्त काळ / More than 7 days
+                    </Radio>
+                    <Radio value="Less_than__days">
+                      7 दिवसांपेक्षा कमी / Less than 7 days
+                    </Radio>
                     <Radio value="No">नाही / No</Radio>
                   </Radio.Group>
                 </AnswerCol>
               </QuestionRow>
               <QuestionRow>
-                <QuestionCol>
-                2.थंडी वाजून येणे सह / With Chills
-                </QuestionCol>
+                <QuestionCol>2.थंडी वाजून येणे सह / With Chills</QuestionCol>
                 <AnswerCol>
-                <Radio.Group
+                  <Radio.Group
                     onChange={(e) => handleDoYouHaveFever(2, e.target.value)}
                     value={doYouhaveFever2[0]}
                   >
@@ -3687,11 +3715,9 @@ function FamilyHead(props) {
                 </AnswerCol>
               </QuestionRow>
               <QuestionRow>
-                <QuestionCol>
-                3. रॅश सह / With Rash
-                </QuestionCol>
+                <QuestionCol>3. रॅश सह / With Rash</QuestionCol>
                 <AnswerCol>
-                <Radio.Group
+                  <Radio.Group
                     onChange={(e) => handleDoYouHaveFever(3, e.target.value)}
                     value={doYouhaveFever3[0]}
                   >
@@ -3701,11 +3727,9 @@ function FamilyHead(props) {
                 </AnswerCol>
               </QuestionRow>
               <QuestionRow>
-                <QuestionCol>
-                4. रक्तस्त्राव सह / with Bleeding
-                </QuestionCol>
+                <QuestionCol>4. रक्तस्त्राव सह / with Bleeding</QuestionCol>
                 <AnswerCol>
-                <Radio.Group
+                  <Radio.Group
                     onChange={(e) => handleDoYouHaveFever(4, e.target.value)}
                     value={doYouhaveFever4[0]}
                   >
@@ -3716,10 +3740,10 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                5. संवेदना सह / with Altered Sensorium
+                  5. संवेदना सह / with Altered Sensorium
                 </QuestionCol>
                 <AnswerCol>
-                <Radio.Group
+                  <Radio.Group
                     onChange={(e) => handleDoYouHaveFever(5, e.target.value)}
                     value={doYouhaveFever5[0]}
                   >
@@ -3728,20 +3752,27 @@ function FamilyHead(props) {
                   </Radio.Group>
                 </AnswerCol>
               </QuestionRow>
-            
 
-              
-               <div>
-                <p style={{fontSize:"15px" ,margin:"25px 20px" ,fontWeight:"600"}}> लेप्टोस्पायरोसिस / leptospirosis</p>
-               </div>
+              <div>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    margin: "25px 20px",
+                    fontWeight: "600",
+                  }}
+                >
+                  {" "}
+                  लेप्टोस्पायरोसिस / leptospirosis
+                </p>
+              </div>
 
-               <QuestionRow>
+              <QuestionRow>
                 <QuestionCol>
-                1.तुम्ही अनेकदा पाण्यात वावरता का? / Do you Waddling in
-                    water often?
+                  1.तुम्ही अनेकदा पाण्यात वावरता का? / Do you Waddling in water
+                  often?
                 </QuestionCol>
                 <AnswerCol>
-                <Radio.Group
+                  <Radio.Group
                     onChange={(e) => handleLeptospirosis(1, e.target.value)}
                     value={leptospirosis1[0]}
                   >
@@ -3752,12 +3783,12 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                2. गुरेढोरे / कुत्रा / मांजर / डुक्कर / उंदीर यांसारख्या
-                    पाळीव प्राण्यांच्या संपर्कात येणे? / Exposure to domestic
-                    animal like cattle / Dog / Cat / Pig / Rodent?
+                  2. गुरेढोरे / कुत्रा / मांजर / डुक्कर / उंदीर यांसारख्या पाळीव
+                  प्राण्यांच्या संपर्कात येणे? / Exposure to domestic animal
+                  like cattle / Dog / Cat / Pig / Rodent?
                 </QuestionCol>
                 <AnswerCol>
-                <Radio.Group
+                  <Radio.Group
                     onChange={(e) => handleLeptospirosis(2, e.target.value)}
                     value={leptospirosis2[0]}
                   >
@@ -3768,66 +3799,76 @@ function FamilyHead(props) {
               </QuestionRow>
 
               <div>
-                <p style={{fontSize:"15px" ,margin:"25px 20px" ,fontWeight:"600"}}> जुलाब / loose motion </p>
-               </div>
-
-         
+                <p
+                  style={{
+                    fontSize: "15px",
+                    margin: "25px 20px",
+                    fontWeight: "600",
+                  }}
+                >
+                  {" "}
+                  जुलाब / loose motion{" "}
+                </p>
+              </div>
 
               <>
-              <QuestionRow>
-                <QuestionCol>
-                A. जुलाब / Loose Motion
-                </QuestionCol>
-                <AnswerCol>
-                <Radio.Group
-                    onChange={(e) => handleLooseMotion(1, e.target.value)}
-                    value={looseMotion1[0]}
-                  >
-                    <Radio value="Yes">Yes / होय</Radio>
-                    <Radio value="No">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                B. रक्तासह / With Blood
-                </QuestionCol>
-                <AnswerCol>
-                <Radio.Group
-                    onChange={(e) => handleLooseMotion(2, e.target.value)}
-                    value={looseMotion2[0]}
-                  >
-                    <Radio value="Yes">Yes / होय</Radio>
-                    <Radio value="No">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                C. उलट्या होणे / Vomitting
-                </QuestionCol>
-                <AnswerCol>
-                <Radio.Group
-                    onChange={(e) => handleLooseMotion(3, e.target.value)}
-                    value={looseMotion3[0]}
-                  >
-                    <Radio value="Yes">Yes / होय</Radio>
-                    <Radio value="No">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow> 
+                <QuestionRow>
+                  <QuestionCol>A. जुलाब / Loose Motion</QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) => handleLooseMotion(1, e.target.value)}
+                      value={looseMotion1[0]}
+                    >
+                      <Radio value="Yes">Yes / होय</Radio>
+                      <Radio value="No">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
+                <QuestionRow>
+                  <QuestionCol>B. रक्तासह / With Blood</QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) => handleLooseMotion(2, e.target.value)}
+                      value={looseMotion2[0]}
+                    >
+                      <Radio value="Yes">Yes / होय</Radio>
+                      <Radio value="No">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
+                <QuestionRow>
+                  <QuestionCol>C. उलट्या होणे / Vomitting</QuestionCol>
+                  <AnswerCol>
+                    <Radio.Group
+                      onChange={(e) => handleLooseMotion(3, e.target.value)}
+                      value={looseMotion3[0]}
+                    >
+                      <Radio value="Yes">Yes / होय</Radio>
+                      <Radio value="No">No / नाही</Radio>
+                    </Radio.Group>
+                  </AnswerCol>
+                </QuestionRow>
               </>
               <div>
-                <p style={{fontSize:"15px" ,margin:"25px 20px" ,fontWeight:"600"}}> Hepatitis / Jaundice</p>
-               </div>
-               <QuestionRow>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    margin: "25px 20px",
+                    fontWeight: "600",
+                  }}
+                >
+                  {" "}
+                  Hepatitis / Jaundice
+                </p>
+              </div>
+              <QuestionRow>
                 <QuestionCol>
-                A. तुम्ही बाहेरचे/ उघडे अन्न खाता/ दूषित पाणी पिता का? /Do you
+                  A. तुम्ही बाहेरचे/ उघडे अन्न खाता/ दूषित पाणी पिता का? /Do you
                   eating outside / uncovered food / drinking contaminated water
                   ?
                 </QuestionCol>
                 <AnswerCol>
-                <Radio.Group
+                  <Radio.Group
                     onChange={(e) => handleHepatitis(1, e.target.value)}
                     value={hepatitis1[0]}
                   >
@@ -3835,12 +3876,20 @@ function FamilyHead(props) {
                     <Radio value="No">No / नाही</Radio>
                   </Radio.Group>
                 </AnswerCol>
-              </QuestionRow> 
-            
+              </QuestionRow>
+
               <div>
-                <p style={{fontSize:"15px" ,margin:"25px 20px" ,fontWeight:"600"}}> Bite</p>
-               </div>
-            
+                <p
+                  style={{
+                    fontSize: "15px",
+                    margin: "25px 20px",
+                    fontWeight: "600",
+                  }}
+                >
+                  {" "}
+                  Bite
+                </p>
+              </div>
 
               <QuestionRow>
                 <QuestionCol>
@@ -3923,7 +3972,7 @@ function FamilyHead(props) {
                 placeholder="Enter other reason here"
                 style={{ width: "80%" }}
                 rows={2}
-                onChange={(e)=>setVulnerableReason(e.target.value)}
+                onChange={(e) => setVulnerableReason(e.target.value)}
               />
             ) : (
               <></>
@@ -4006,7 +4055,10 @@ function FamilyHead(props) {
                 </Button>
                 {bloodSampleDenied ? (
                   <div style={{ margin: "10px 25px" }}>
-                    <Radio.Group onChange={(e)=>setDeniedBy(e.target.value)} value={deniedBy}>
+                    <Radio.Group
+                      onChange={(e) => setDeniedBy(e.target.value)}
+                      value={deniedBy}
+                    >
                       <Radio value="byindividual">By Individual</Radio>
                       <br />
                       <Radio value="byamo">By AMO</Radio>

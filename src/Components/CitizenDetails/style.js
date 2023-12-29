@@ -12,7 +12,7 @@ export const Container = styled.div`
 `;
 export const SubContainer = styled.div`
   display: flex;
-  margin: 1.3% 5%;
+  margin: 2% 5%;
 `;
 export const Box = styled.div`
   width: 25%;
@@ -231,7 +231,7 @@ export const AddButton = styled(Button)`
 export const ColorStrip = styled.div`
   background-color: #ff8551;
   border-radius: 15px 0px;
-  height: 12%;
+  height: 15%;
 `;
 export const ToDayCitizenCountModal = styled(Modal)``;
 export const ToDayFamilyCountModal = styled(Modal)``;

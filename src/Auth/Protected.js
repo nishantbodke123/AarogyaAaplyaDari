@@ -5,7 +5,10 @@ let loginToken = sessionStorage.getItem("Token");
 let userGroup = sessionStorage.getItem("group");
 export function HealthworkerProtected({ children }) {
   const navigate = useNavigate();
-  if (loginToken !== "" && userGroup === "healthworker") {
+  if (
+    (loginToken !== "" && userGroup === "healthworker") ||
+    userGroup === "CHV-ASHA"
+  ) {
     return children;
   } else {
     navigate("/");
@@ -31,9 +34,9 @@ export function AdminProtected({ children }) {
     return null;
   }
 }
-export function WardAdminProtected({children}){
-  const navigate =useNavigate();
-  if(loginToken !== "" && userGroup ==="MOH") {
+export function WardAdminProtected({ children }) {
+  const navigate = useNavigate();
+  if (loginToken !== "" && userGroup === "MOH") {
     return children;
   } else {
     navigate("/");
