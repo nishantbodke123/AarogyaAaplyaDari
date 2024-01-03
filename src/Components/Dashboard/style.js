@@ -15,13 +15,13 @@ export const SubContainer = styled.div`
   margin: 1.3% 5%;
 `;
 export const Box = styled.div`
-  width: 25%;
-  margin: 10px 20px;
+  width: 20%;
+  margin: 8px 30px;
   height: 90px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   border-radius: 15px 5px 5px 5px;
   &:hover {
-    width: 25%;
+    width: 20%;
     height: 90px;
     box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
   }

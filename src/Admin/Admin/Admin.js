@@ -9,6 +9,9 @@ import MO from "../Content/MO";
 import { useLocation } from "react-router-dom";
 import HealthworkerApproval from "../AdminApproval/Content/Healthworker";
 import CHVApproval from "../AdminApproval/Content/CHV";
+import AreaAndSection from "../CreateAndUpdate/Areas";
+import Area from "../CreateAndUpdate/Areas";
+import Section from "../CreateAndUpdate/Sections";
 
 const { Content } = Layout;
 
@@ -37,6 +40,8 @@ function Admin() {
               <HealthworkerApproval />
             )}
             {location.pathname === "/admin/chvApproval" && <CHVApproval />}
+            {location.pathname === "/admin/arealist" && <Area/>}
+            {location.pathname === "/admin/sectionlist" && <Section/>}
           </Content>
         </Layout>
       </Layout>

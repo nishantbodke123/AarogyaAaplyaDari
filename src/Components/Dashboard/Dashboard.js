@@ -1018,9 +1018,8 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <div
-              style={{ width: "50%", height: "47vh" }}
-            >
+
+            <div style={{ width: "50%", height: "47vh" }}>
               <div>
                 <p
                   style={{
@@ -1031,6 +1030,55 @@ const Dashboard = () => {
                 >
                   BLOOD COLLECTION
                 </p>
+              </div>
+              <div style={{display:"flex"}}>
+              <div>
+                <div
+                  style={{
+                    // border: "3px solid #607274",
+                    width:"120%",
+                    height: "10vh",
+                    margin: "10% 0% 0% 25%",
+                    boxShadow:"7px 6px 5px -3px rgba(0,0,0,0.75)"
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <Col>
+                      <CountIcon icon={faBars} />
+                    </Col>
+                    <Col>
+                      <CardHeader>Blood Collected At Home </CardHeader>
+                    </Col>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+                <div
+                  style={{
+                    // border: "1px solid #607274",
+                    width:"120%",
+                    height: "10vh",
+                    margin: "15% 0% 0% 25%",
+                    boxShadow:"7px 6px 5px -3px rgba(0,0,0,0.75)"
+                  }}
+                >
+                  {" "}
+                  <Row>
+                    <Col>
+                      <CountIcon icon={faBars} />
+                    </Col>
+                    <Col>
+                      <CardHeader>Blood Collected At Center </CardHeader>
+                    </Col>
+                  </Row>
+                  <CardCount>
+                    {dashboardCounts.blood_collected_center}
+                  </CardCount>
+                </div>
+              </div>
+              <div style={{margin:"0% 0% 0% 25%"}}><img width={170} src=".\blood-analysis.png"></img></div>
               </div>
             </div>
           </div>

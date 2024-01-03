@@ -191,7 +191,7 @@ function Healthworker() {
       })
       .catch((err) => {
         console.log(err);
-        if (err.response.status == "401") {
+        if (err.response.status == 401) {
           setTimeout(() => {
             LogOut();
           }, 1000);
@@ -258,6 +258,7 @@ function Healthworker() {
     setPhoneNumber();
     setSection();
     setAddHealthWorkerModal(false);
+   
   };
   let axiosConfig = {
     headers: {
@@ -606,7 +607,7 @@ function Healthworker() {
                       <Input
                         type="text"
                         style={{ width: "300px" }}
-                        placeholder="Enter Name / User Name  "
+                        placeholder="Search here  "
                         onChange={(e) => setSearchValue(e.target.value)}
                       ></Input>
 
@@ -757,6 +758,7 @@ function Healthworker() {
                                 .includes(inputValue.toLowerCase())
                             : false
                         }
+                       
                         onChange={(e) => handleHealthPostSelect(e)}
                       >
                         {healthPostNameList.map((data) => (

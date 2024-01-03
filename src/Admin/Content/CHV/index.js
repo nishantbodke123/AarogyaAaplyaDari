@@ -192,6 +192,7 @@ function CHV() {
           }, 1000);
         }
       });
+
     setAddCHVModal(true);
   };
   const handleWardSelect = (id) => {
@@ -212,6 +213,21 @@ function CHV() {
       })
       .catch((err) => {
         console.log(err);
+      });
+    axios
+      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/${id}/healthworker`)
+      .then((res) => {
+        setLoader(false);
+        console.log(res, "userlist Data");
+      })
+      .catch((error) => {
+        setLoader(false);
+        console.log(error);
+        if (error.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
       });
   };
   const handleHealthPostSelect = (id) => {
@@ -244,6 +260,7 @@ function CHV() {
     setSection();
     setHealthPostNameList([]);
     setSectionList([]);
+    setAreaList([]);
     setAddCHVModal(false);
   };
   let axiosConfig = {
@@ -652,7 +669,7 @@ function CHV() {
                         <Input
                           type="text"
                           style={{ width: "300px" }}
-                          placeholder="Enter Name / User Name / ward "
+                          placeholder="Search Here "
                           onChange={(e) => setSearchValue(e.target.value)}
                         ></Input>
 
@@ -818,40 +835,44 @@ function CHV() {
                     </FormItem>
                   </Col>
                   <Col span={12}>
-                  <FormItem label="Section">
-                    <Select
-                      showSearch
-                      style={{ width: "350px" }}
-                      value={section}
-                      filterOption={(inputValue, option) =>
-                        option.children
-                          ? option.children
-                              .toLowerCase()
-                              .includes(inputValue.toLowerCase())
-                          : false
-                      }
-                      onChange={(e) => setSection(e)}
-                    >
-                      {sectionList.map((data) => (
-                        <Option key={data.id} value={data.id}>
-                          {data.sectionName}
-                        </Option>
-                      ))}
-                    </Select>
-                  </FormItem>
+                    <FormItem label="Section">
+                      <Select
+                        showSearch
+                        style={{ width: "350px" }}
+                        value={section}
+                        filterOption={(inputValue, option) =>
+                          option.children
+                            ? option.children
+                                .toLowerCase()
+                                .includes(inputValue.toLowerCase())
+                            : false
+                        }
+                        onChange={(e) => setSection(e)}
+                      >
+                        {sectionList.map((data) => (
+                          <Option key={data.id} value={data.id}>
+                            {data.sectionName}
+                          </Option>
+                        ))}
+                      </Select>
+                    </FormItem>
                   </Col>
                   <Col>
-                  {/* <FormItem label="ANM/Healthworker">
-                  <Select showSearch style={{width:"350px"}}   filterOption={(inputValue, option) =>
-                        option.children
-                          ? option.children
-                              .toLowerCase()
-                              .includes(inputValue.toLowerCase())
-                          : false
-                      }>
-                    <Option/>
-                  </Select>
-                  </FormItem> */}
+                    {/* <FormItem label="ANM/Healthworker">
+                      <Select
+                        showSearch
+                        style={{ width: "350px" }}
+                        filterOption={(inputValue, option) =>
+                          option.children
+                            ? option.children
+                                .toLowerCase()
+                                .includes(inputValue.toLowerCase())
+                            : false
+                        }
+                      >
+                        <Option />
+                      </Select>
+                    </FormItem> */}
                   </Col>
                 </Row>
               </Form>

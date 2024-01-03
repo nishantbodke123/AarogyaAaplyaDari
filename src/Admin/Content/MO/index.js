@@ -552,7 +552,7 @@ function MO() {
                         <Input
                           type="text"
                           style={{ width: "300px" }}
-                          placeholder="Enter Name / User Name / ward "
+                          placeholder="search here "
                           onChange={(e) => setSearchValue(e.target.value)}
                         ></Input>
 

@@ -26,6 +26,9 @@ import WardCHV from "./WardAdmin/Content/WardCHV";
 import HealthworkerApproval from "./Admin/AdminApproval/Content/Healthworker";
 import CHVApproval from "./Admin/AdminApproval/Content/CHV";
 import CitizenDetails from "./Components/CitizenDetails";
+import AreaAndSection from "./Admin/CreateAndUpdate/Areas";
+import Area from "./Admin/CreateAndUpdate/Areas";
+import Section from "./Admin/CreateAndUpdate/Sections";
 
 function App() {
   let Token = sessionStorage.getItem("Token");
@@ -172,6 +175,22 @@ function App() {
               element={
                 <AdminProtected>
                   <CHVApproval />
+                </AdminProtected>
+              }
+            ></Route>
+                <Route
+              path="/admin/arealist"
+              element={
+                <AdminProtected>
+                  <Area />
+                </AdminProtected>
+              }
+            ></Route>
+              <Route
+              path="/admin/sectionlist"
+              element={
+                <AdminProtected>
+                  <Section />
                 </AdminProtected>
               }
             ></Route>

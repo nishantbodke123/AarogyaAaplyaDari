@@ -1,6 +1,6 @@
 import { Layout, Menu, theme } from "antd";
 import React, { useState } from "react";
-import { UserOutlined, HomeOutlined } from "@ant-design/icons";
+import { UserOutlined, HomeOutlined, FileAddOutlined } from "@ant-design/icons";
 import "./style.css";
 import { Link } from "react-router-dom";
 const { Sider } = Layout;
@@ -28,6 +28,7 @@ function Sidebar(props) {
       <HomeOutlined />,
       "/admin/adminDashboard"
     ),
+
     getItem(
       <p style={{ color: "white" }}>User Management</p>,
       null,
@@ -44,6 +45,7 @@ function Sidebar(props) {
         getItem("MO", "/admin/mo", null, "/admin/mo"),
       ]
     ),
+
     getItem(
       <p style={{ color: "white" }}>User Approval</p>,
       null,
@@ -57,6 +59,21 @@ function Sidebar(props) {
           "/admin/healthWorkerApproval"
         ),
         getItem("CHV/ASHA", "/admin/chvApproval", null, "/admin/chvApproval"),
+      ]
+    ),
+    getItem(
+      <p style={{ color: "white" }}>CREATE/UPDATE</p>,
+      null,
+      <FileAddOutlined />,
+      null,
+      [
+        getItem(
+          "Area",
+          "/admin/arealist",
+          null,
+          "/admin/arealist"
+        ),
+        getItem("Section", "/admin/sectionlist", null, "/admin/sectionlist"),
       ]
     ),
   ];
