@@ -251,7 +251,7 @@ function Area() {
             </>
           }
         >
-          <Form layout="vertical">
+          <Form layout="vertical" style={{ margin: "1% 1% 1% 20%" }}>
             <FormItem label="Select Ward" style={{ width: "250px" }}>
               <Select
                 showSearch

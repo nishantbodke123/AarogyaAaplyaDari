@@ -11,7 +11,7 @@ import {
   DashboardCardDiv,
   Title,
 } from "./style";
-import { AlignRightOutlined ,MenuOutlined } from "@ant-design/icons";
+import { AlignRightOutlined, MenuOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../../../Utils/BaseURL";
 import axios, { Axios } from "axios";
 import { LogOut } from "../../../Auth/Logout";
@@ -46,7 +46,6 @@ function AdminDashboard() {
             background: "white",
           }}
         >
-         
           <DashboardCardDiv>
             <DashboardCard>
               <DashboardCardContent>
@@ -677,7 +676,7 @@ function AdminDashboard() {
         </span>
         <img
           src="\BhugolGISLogo.png"
-          style={{ width: "14%", height: "10%" ,margin:"1% 0% 0% 2%" }}
+          style={{ width: "14%", height: "10%", margin: "1% 0% 0% 2%" }}
         ></img>
       </div>
     </>

@@ -132,6 +132,8 @@ function Healthworker() {
   const [phoneNumber, setPhoneNumber] = useState();
   const [email, setEmail] = useState(null);
   const [section, setSection] = useState();
+  const [ward, setWard] = useState();
+  const [healthPost, setHealthPost] = useState();
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -201,6 +203,7 @@ function Healthworker() {
   };
   const handleWardSelect = (id) => {
     setHealthPostNameList([]);
+    setWard(id);
     setU_ward(id);
     setSectionList([]);
     setU_HealthPost();
@@ -225,6 +228,7 @@ function Healthworker() {
       });
   };
   const handleHealthPostSelect = (id) => {
+    setHealthPost(id);
     setU_HealthPost(id);
     console.log(id);
     setSectionList([]);
@@ -257,8 +261,9 @@ function Healthworker() {
     setConfirmPassword();
     setPhoneNumber();
     setSection();
+    // setWard();
+    // setHealthPost();
     setAddHealthWorkerModal(false);
-   
   };
   let axiosConfig = {
     headers: {
@@ -514,13 +519,13 @@ function Healthworker() {
       dataIndex: "phoneNumber",
     },
 
-    {
-      title: "Date & Time Of Joining",
-      dataIndex: "date_joined",
-      render: (date) => {
-        return moment(date).format("DD/MM/YYYY h:mm:ss a");
-      },
-    },
+    // {
+    //   title: "Date & Time Of Joining",
+    //   dataIndex: "date_joined",
+    //   render: (date) => {
+    //     return moment(date).format("DD/MM/YYYY h:mm:ss a");
+    //   },
+    // },
     {
       title: "Update",
       render: (data) => {
@@ -736,6 +741,7 @@ function Healthworker() {
                                 .includes(inputValue.toLowerCase())
                             : false
                         }
+                        value={ward}
                         onChange={(e) => handleWardSelect(e)}
                       >
                         {areaList.map((data) => (
@@ -758,7 +764,7 @@ function Healthworker() {
                                 .includes(inputValue.toLowerCase())
                             : false
                         }
-                       
+                        value={healthPost}
                         onChange={(e) => handleHealthPostSelect(e)}
                       >
                         {healthPostNameList.map((data) => (

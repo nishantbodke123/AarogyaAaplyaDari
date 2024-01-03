@@ -466,13 +466,13 @@ function MO() {
       dataIndex: "phoneNumber",
     },
 
-    {
-      title: "Date & Time Of Joining",
-      dataIndex: "date_joined",
-      render: (date) => {
-        return moment(date).format("DD/MM/YYYY h:mm:ss a");
-      },
-    },
+    // {
+    //   title: "Date & Time Of Joining",
+    //   dataIndex: "date_joined",
+    //   render: (date) => {
+    //     return moment(date).format("DD/MM/YYYY h:mm:ss a");
+    //   },
+    // },
     {
       title: "Update",
       render: (data) => {
