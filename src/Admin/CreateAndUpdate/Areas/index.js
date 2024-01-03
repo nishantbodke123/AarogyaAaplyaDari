@@ -13,6 +13,7 @@ import {
   Select,
   Spin,
   Table,
+  message,
 } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { AddButton, SearchButton, SubmitButton } from "./style";
@@ -27,7 +28,9 @@ function Area() {
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState();
   const [healthPostNameList, setHealthPostNameList] = useState([]);
+  const [dispensaryList, setDispensaryList] = useState([]);
   const [healthPostId, setHealthPostId] = useState();
+  const [dispensaryId ,setDispensaryId]=useState();
   const [area, setArea] = useState();
   let axiosConfig = {
     headers: {
@@ -136,10 +139,29 @@ function Area() {
   const handleHideAddAreaModal = () => {
     setShowAddAreaModal(false);
     setHealthPostId();
+    setDispensaryId();
     setArea();
   };
   const handleWardSelect = (id) => {
     setHealthPostNameList([]);
+    axios
+      .get(`${BASE_URL}/allauth/api/GetDispensaryListAPI/${id}`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setDispensaryList(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
     axios
       .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${id}`, {
         headers: {
@@ -163,12 +185,14 @@ function Area() {
     setLoader(true);
     const formData = new FormData();
     formData.append("healthPost", healthPostId);
+    formData.append("dispensary",dispensaryId)
     formData.append("areas", area);
     axios
       .post(`${BASE_URL}/allauth/api/AddAreaAPI`, formData, axiosConfig)
       .then((res) => {
         setLoader(false);
         console.log(res);
+        message.success(res.data.message);
         handleHideAddAreaModal();
         setRefresh(refresh + 1);
       })
@@ -285,6 +309,26 @@ function Area() {
                 {healthPostNameList.map((data) => (
                   <Option key={data.id} value={data.id}>
                     {data.healthPostName}
+                  </Option>
+                ))}
+              </Select>
+            </FormItem>
+            <FormItem label="Dispensary" style={{ width: "250px" }}>
+              <Select
+                showSearch
+                filterOption={(inputValue, option) =>
+                  option.children
+                    ? option.children
+                        .toLowerCase()
+                        .includes(inputValue.toLowerCase())
+                    : false
+                }
+                value={dispensaryId}
+                onChange={(e) => setDispensaryId(e)}
+              >
+                {dispensaryList.map((data) => (
+                  <Option key={data.id} value={data.id}>
+                    {data.dispensaryName}
                   </Option>
                 ))}
               </Select>
