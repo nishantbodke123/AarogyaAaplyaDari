@@ -16,7 +16,7 @@ import {
   message,
 } from "antd";
 import FormItem from "antd/es/form/FormItem";
-import { AddButton, SearchButton, SubmitButton } from "./style";
+import { AddButton, SearchButton, SubmitButton, UpdateButton } from "./style";
 import { Option } from "antd/es/mentions";
 import { LogOut } from "../../../Auth/Logout";
 
@@ -30,6 +30,8 @@ function Section() {
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [healthPostId, setHealthPostId] = useState();
   const [section, setSection] = useState();
+  const [updatedSection, setUpdatedSection] = useState();
+  const [updateSectionId, setUpdateSectionId] = useState();
   let axiosConfig = {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -39,7 +41,10 @@ function Section() {
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/allauth/api/GetWardSectionListAPI/${wardSelect}`)
+      .get(
+        `${BASE_URL}/allauth/api/GetWardSectionListAPI/${wardSelect}`,
+        axiosConfig
+      )
       .then((res) => {
         console.log(res.data.data);
         setData(res.data.data);
@@ -82,6 +87,16 @@ function Section() {
     {
       title: "Section",
       dataIndex: "sectionName",
+    },
+    {
+      title: "",
+      render: (data) => {
+        return (
+          <UpdateButton onClick={() => handleShowEditSectionModal(data)}>
+            Update{" "}
+          </UpdateButton>
+        );
+      },
     },
   ];
   const handleSearch = () => {
@@ -177,6 +192,7 @@ function Section() {
       .catch((err) => {
         setLoader(false);
         console.log(err);
+        message.warning(err.response.data.message);
         if (err.response.status == "401") {
           setTimeout(() => {
             LogOut();
@@ -184,6 +200,46 @@ function Section() {
         }
       });
   };
+
+  const [showEditSectionModal, setShowEditSectionModal] = useState(false);
+  const handleShowEditSectionModal = (data) => {
+    console.log(data);
+    setUpdateSectionId(data.id);
+    setUpdatedSection(data.sectionName);
+    setShowEditSectionModal(true);
+  };
+  const handleHideEditSectionModal = () => {
+    setShowEditSectionModal(false);
+    setUpdatedSection();
+  };
+  const handleSectionUpdate = () => {
+    console.log(updatedSection);
+    const formData = new FormData();
+    formData.append("id", updateSectionId);
+    formData.append("sectionName", updatedSection);
+    axios
+      .patch(
+        `${BASE_URL}/allauth/api/updateSectionAPI/${updateSectionId}`,
+        formData,
+        axiosConfig
+      )
+      .then((res) => {
+        console.log(res);
+        message.success(res.data.message);
+        setRefresh(refresh + 1);
+        handleHideEditSectionModal();
+      })
+      .catch((err) => {
+        console.log(err);
+        message.warning(err.response.data.message);
+        if (err.response.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
+  };
+
   return (
     <Spin spinning={loader}>
       <>
@@ -251,7 +307,9 @@ function Section() {
           footer={
             <>
               <Button onClick={handleHideAddSectionModal}>Cancel</Button>
-              <SubmitButton onClick={handleNewSectionSubmit}>Submit</SubmitButton>
+              <SubmitButton onClick={handleNewSectionSubmit}>
+                Submit
+              </SubmitButton>
             </>
           }
         >
@@ -299,6 +357,26 @@ function Section() {
                 placeholder="Enter Section Here"
                 value={section}
                 onChange={(e) => setSection(e.target.value)}
+              ></Input>
+            </FormItem>
+          </Form>
+        </Modal>
+        <Modal
+          open={showEditSectionModal}
+          onCancel={handleHideEditSectionModal}
+          footer={
+            <UpdateButton onClick={() => handleSectionUpdate()}>
+              Update
+            </UpdateButton>
+          }
+        >
+          <Form layout="vertical">
+            <FormItem label="Section" style={{ width: "300px" }}>
+              <Input
+                type="text"
+                placeholder="Enter Section Name"
+                value={updatedSection}
+                onChange={(e) => setUpdatedSection(e.target.value)}
               ></Input>
             </FormItem>
           </Form>

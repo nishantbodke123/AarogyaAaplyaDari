@@ -518,7 +518,7 @@ function MO() {
         <div style={{ overflowY: "auto", maxHeight: "88.5vh" }}>
           <Content
             style={{
-              margin: "24px 16px",
+              margin: "15px 16px",
               padding: 24,
               minHeight: "81.9Vh",
               background: "white",
@@ -533,7 +533,7 @@ function MO() {
             >
               <p
                 style={{
-                  fontSize: "25px",
+                  fontSize: "20px",
                   fontWeight: 750,
                   fontFamily: "sans-serif",
                   color: "#176b87",

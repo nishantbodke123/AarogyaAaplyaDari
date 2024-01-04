@@ -16,9 +16,10 @@ import {
   message,
 } from "antd";
 import FormItem from "antd/es/form/FormItem";
-import { AddButton, SearchButton, SubmitButton } from "./style";
+import { AddButton, SearchButton, SubmitButton, UpdateButton } from "./style";
 import { Option } from "antd/es/mentions";
 import { LogOut } from "../../../Auth/Logout";
+import TextArea from "antd/es/input/TextArea";
 
 function Area() {
   const [wardSelect, setWardSelect] = useState("A");
@@ -30,8 +31,11 @@ function Area() {
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [dispensaryList, setDispensaryList] = useState([]);
   const [healthPostId, setHealthPostId] = useState();
-  const [dispensaryId ,setDispensaryId]=useState();
+  const [dispensaryId, setDispensaryId] = useState();
   const [area, setArea] = useState();
+  const [updateAreaId, setUpdateAreaId] = useState();
+  const [updatedArea, setUpdatedArea] = useState();
+  const [updateArea, setUpdateArea] = useState();
   let axiosConfig = {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -41,7 +45,7 @@ function Area() {
   useEffect(() => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/allauth/api/GetWardAreasAPI/${wardSelect}`)
+      .get(`${BASE_URL}/allauth/api/GetWardAreasAPI/${wardSelect}`, axiosConfig)
       .then((res) => {
         console.log(res.data.data);
         setData(res.data.data);
@@ -84,6 +88,16 @@ function Area() {
     {
       title: "Area",
       dataIndex: "areas",
+    },
+    {
+      title: "",
+      render: (data) => {
+        return (
+          <UpdateButton onClick={() => handleShowEditAreaModal(data)}>
+            Update{" "}
+          </UpdateButton>
+        );
+      },
     },
   ];
   const handleSearch = () => {
@@ -185,7 +199,7 @@ function Area() {
     setLoader(true);
     const formData = new FormData();
     formData.append("healthPost", healthPostId);
-    formData.append("dispensary",dispensaryId)
+    formData.append("dispensary", dispensaryId);
     formData.append("areas", area);
     axios
       .post(`${BASE_URL}/allauth/api/AddAreaAPI`, formData, axiosConfig)
@@ -199,6 +213,45 @@ function Area() {
       .catch((err) => {
         setLoader(false);
         console.log(err);
+        message.warning(err.response.data.message);
+        if (err.response.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
+  };
+  const [showEditAreaModal, setShowEditAreaModal] = useState(false);
+  const handleShowEditAreaModal = (data) => {
+    console.log(data);
+    setUpdateAreaId(data.id);
+    setUpdatedArea(data.areas);
+    setShowEditAreaModal(true);
+  };
+  const handleHideEditAreaModal = () => {
+    setShowEditAreaModal(false);
+    setUpdatedArea();
+  };
+  const handleAreaUpdate = () => {
+    console.log(updatedArea);
+    const formData = new FormData();
+    formData.append("id", updateAreaId);
+    formData.append("areas", updatedArea);
+    axios
+      .patch(
+        `${BASE_URL}/allauth/api/updateAreaAPI/${updateAreaId}`,
+        formData,
+        axiosConfig
+      )
+      .then((res) => {
+        console.log(res);
+        message.success(res.data.message);
+        setRefresh(refresh + 1);
+        handleHideEditAreaModal();
+      })
+      .catch((err) => {
+        console.log(err);
+        message.warning(err.response.data.message);
         if (err.response.status == "401") {
           setTimeout(() => {
             LogOut();
@@ -334,12 +387,32 @@ function Area() {
               </Select>
             </FormItem>
             <FormItem label="Area" style={{ width: "250px" }}>
-              <Input
-                type="text"
+              <TextArea
+                
                 placeholder="Enter Area Here"
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
-              ></Input>
+              ></TextArea>
+            </FormItem>
+          </Form>
+        </Modal>
+        <Modal
+          open={showEditAreaModal}
+          onCancel={handleHideEditAreaModal}
+          footer={
+            <UpdateButton onClick={() => handleAreaUpdate()}>
+              Update
+            </UpdateButton>
+          }
+        >
+          <Form layout="vertical">
+            <FormItem label="Area" style={{ width: "300px" }}>
+              <TextArea
+                type="text"
+                placeholder="Enter Area "
+                value={updatedArea}
+                onChange={(e) => setUpdatedArea(e.target.value)}
+              />
             </FormItem>
           </Form>
         </Modal>

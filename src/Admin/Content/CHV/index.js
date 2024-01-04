@@ -127,7 +127,6 @@ function CHV() {
   const [phoneNumber, setPhoneNumber] = useState();
   const [email, setEmail] = useState(null);
   const [section, setSection] = useState();
-  
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -147,6 +146,18 @@ function CHV() {
       setPhoneNumber(e.target.value);
     }
   };
+  // const handleSectionsSelect = (selectedValue) => {
+  //   console.log(selectedValue);
+  //   setSection(selectedValue);
+  //   // if (section.includes(selectedValue)) {
+  //   //   setSection(
+  //   //     section.filter((item) => item !== selectedValue)
+  //   //   );
+  //   // } else {
+  //   //   setSection([...section, selectedValue]);
+  //   // }
+  // };
+
   const handleSearch = () => {
     setLoader(true);
     axios
@@ -367,14 +378,18 @@ function CHV() {
     setSectionList([]);
   };
   const handleAddUser = () => {
+    console.log(section);
+
     let formData = new FormData();
     formData.append("name", name);
     formData.append("username", userName);
     formData.append("password", password);
     formData.append("phoneNumber", phoneNumber);
     email !== null && formData.append("emailId", email);
-    formData.append("section", section);
+    // formData.append("section", section);
+    formData.append("userSections", section);
     formData.append("group", "CHV-ASHA");
+    console.log(formData);
     if (password !== confirmPassword) {
       message.warning("password and confirm password should be same");
     } else {
@@ -636,7 +651,7 @@ function CHV() {
         <div style={{ overflowY: "auto", maxHeight: "88.5vh" }}>
           <Content
             style={{
-              margin: "24px 16px",
+              margin: "20px 16px",
               padding: 24,
               minHeight: "81.9Vh",
               background: "white",
@@ -651,7 +666,7 @@ function CHV() {
             >
               <p
                 style={{
-                  fontSize: "25px",
+                  fontSize: "20px",
                   fontWeight: 750,
                   fontFamily: "sans-serif",
                   color: "#176b87",
@@ -839,6 +854,7 @@ function CHV() {
                     <FormItem label="Section">
                       <Select
                         showSearch
+                        // mode="multiple"
                         style={{ width: "350px" }}
                         value={section}
                         filterOption={(inputValue, option) =>
@@ -1018,6 +1034,7 @@ function CHV() {
                     <FormItem label="Section">
                       <Select
                         showSearch
+                        mode="multiple"
                         style={{ width: "350px" }}
                         value={u_Section}
                         filterOption={(inputValue, option) =>
