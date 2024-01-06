@@ -1,19 +1,16 @@
-import { Button, Col, Row, Tooltip, theme } from "antd";
-import { Content } from "antd/es/layout/layout";
+import { Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import {
-  BloodCollectionCard,
-  CitizenDetailsCard,
-  CitizenDetailsCount,
-  CitizenDetailsCountLabel,
-  DashboardCard,
-  DashboardCardContent,
-  DashboardCardDiv,
-  Title,
+  BloodDetailCard,
+  CardTitle,
+  CountCard,
+  CountTitle,
+  DetailSubtitle,
+  Line,
+  MainCountRow,
 } from "./style";
-import { AlignRightOutlined, MenuOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../../../Utils/BaseURL";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { LogOut } from "../../../Auth/Logout";
 
 function AdminDashboard() {
@@ -36,649 +33,115 @@ function AdminDashboard() {
   }, []);
   return (
     <>
-      <div style={{ overflowY: "auto", maxHeight: "81.5vh" }}>
-        <Content
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: "81.9Vh",
-            maxHeight: "81.9Vh",
-            background: "white",
-          }}
-        >
-          <DashboardCardDiv>
-            <DashboardCard>
-              <DashboardCardContent>
-                <Row>
-                  <Col span={4}>
-                    <AlignRightOutlined />
-                  </Col>
-                  <Col span={20}>
-                    <p
-                      style={{
-                        margin: "0px 0px",
-                        fontSize: "15px",
-                        fontWeight: 500,
-                      }}
-                    >
-                      ANM/Co-Ordinator
-                    </p>
-                    <p
-                      style={{
-                        margin: "15px 0px",
-                        fontSize: "22px",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {AdminDashboardData.TotalHealthWorkerCount}
-                    </p>
-                  </Col>
-                </Row>
-              </DashboardCardContent>
-            </DashboardCard>
-            <DashboardCard>
-              <DashboardCardContent>
-                <Row>
-                  <Col span={4}>
-                    <AlignRightOutlined />
-                  </Col>
-                  <Col span={20}>
-                    <p
-                      style={{
-                        margin: "0px 0px",
-                        fontSize: "15px",
-                        fontWeight: 500,
-                      }}
-                    >
-                      CHV/ASHA
-                    </p>
-                    <p
-                      style={{
-                        margin: "15px 0px",
-                        fontSize: "22px",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {AdminDashboardData.TotalChvAshaCount}
-                    </p>
-                  </Col>
-                </Row>
-              </DashboardCardContent>
-            </DashboardCard>
-            <DashboardCard>
-              <DashboardCardContent>
-                <Row>
-                  <Col span={4}>
-                    <AlignRightOutlined />
-                  </Col>
-                  <Col span={20}>
-                    <p
-                      style={{
-                        margin: "0px 0px",
-                        fontSize: "15px",
-                        fontWeight: 500,
-                      }}
-                    >
-                      MO
-                    </p>
-                    <p
-                      style={{
-                        margin: "15px 0px",
-                        fontSize: "22px",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {AdminDashboardData.TotalMoCount}
-                    </p>
-                  </Col>
-                </Row>
-              </DashboardCardContent>
-            </DashboardCard>
-          </DashboardCardDiv>
-          <div
-            style={{
-              height: "40vh",
-              backgroundColor: "white",
-            }}
-          >
-            <div
-              style={{
-                margin: "1% 0% -3% 4%",
-              }}
-            >
-              <Title>Citizen Details</Title>
-            </div>
-            <Row>
-              <Col span={24}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                  }}
-                >
-                  <CitizenDetailsCard>
-                    <CitizenDetailsCountLabel>
-                      <span>
-                        <AlignRightOutlined />
-                      </span>{" "}
-                      Family Enrolled
-                    </CitizenDetailsCountLabel>
-                    <CitizenDetailsCount>
-                      {AdminDashboardData.NoOfFamilyEnrolled}
-                    </CitizenDetailsCount>
-                  </CitizenDetailsCard>
-                  <CitizenDetailsCard>
-                    <CitizenDetailsCountLabel>
-                      <span style={{ marginRight: "2%" }}>
-                        <AlignRightOutlined />
-                      </span>
-                      Citizen Enrolled
-                    </CitizenDetailsCountLabel>
-                    <CitizenDetailsCount>
-                      {AdminDashboardData.NoOfCitizenEnrolled}
-                    </CitizenDetailsCount>
-                  </CitizenDetailsCard>
-                  <CitizenDetailsCard>
-                    <CitizenDetailsCountLabel>
-                      <span style={{ marginRight: "2%" }}>
-                        <AlignRightOutlined />
-                      </span>
-                      Male
-                    </CitizenDetailsCountLabel>
-                    <CitizenDetailsCount>
-                      {AdminDashboardData.NoOfMaleEnrolled}
-                    </CitizenDetailsCount>
-                  </CitizenDetailsCard>
-                  <CitizenDetailsCard>
-                    <CitizenDetailsCountLabel>
-                      <span style={{ marginRight: "2%" }}>
-                        <AlignRightOutlined />
-                      </span>
-                      Female
-                    </CitizenDetailsCountLabel>
-                    <CitizenDetailsCount>
-                      {AdminDashboardData.NoOfFemaleEnrolled}
-                    </CitizenDetailsCount>
-                  </CitizenDetailsCard>
-                </div>
-                <div
-                  style={{ display: "flex", justifyContent: "space-around" }}
-                >
-                  <CitizenDetailsCard>
-                    <CitizenDetailsCountLabel>
-                      <span style={{ marginRight: "2%" }}>
-                        <AlignRightOutlined />
-                      </span>
-                      CBAC Filled
-                    </CitizenDetailsCountLabel>
-                    <CitizenDetailsCount>
-                      {AdminDashboardData.NoOfCBACFilled}
-                    </CitizenDetailsCount>
-                  </CitizenDetailsCard>
-                  <CitizenDetailsCard>
-                    <CitizenDetailsCountLabel>
-                      <span>
-                        <AlignRightOutlined />
-                      </span>{" "}
-                      ABHA ID Generated
-                    </CitizenDetailsCountLabel>
-                    <CitizenDetailsCount>
-                      {AdminDashboardData.NoOfAbhaIdGenerated}
-                    </CitizenDetailsCount>
-                  </CitizenDetailsCard>
-                  <CitizenDetailsCard>
-                    <CitizenDetailsCountLabel>
-                      <span style={{ marginRight: "2%" }}>
-                        <AlignRightOutlined />
-                      </span>
-                      Citizens of age > 30
-                    </CitizenDetailsCountLabel>
-                    <CitizenDetailsCount>
-                      {AdminDashboardData.NoOfPersonMoreThan30}
-                    </CitizenDetailsCount>
-                  </CitizenDetailsCard>
-                  <CitizenDetailsCard>
-                    <CitizenDetailsCountLabel>
-                      <span style={{ marginRight: "2%" }}>
-                        <AlignRightOutlined />
-                      </span>
-                      Citizens of age > 60
-                    </CitizenDetailsCountLabel>
-                    <CitizenDetailsCount>
-                      {AdminDashboardData.NoOfPersonMoreThan60}
-                    </CitizenDetailsCount>
-                  </CitizenDetailsCard>
-                </div>
-              </Col>
-              {/* <Col span={12}>
-                <div
-                  style={{
-                    width: "80%",
-                    height: "90%",
-                    margin: "5% 12%",
-                    borderRadius: "5px",
-                    backgroundColor: "#9BBEC8",
-
-                    position: "relative",
-                  }}
-                >
-                  <Row>
-                    <Col span={13}>
-                      <div
-                        style={{
-                          position: "absolute",
-                          backgroundColor: "white",
-                          borderRadius: "5px",
-                          width: "12vw",
-                          height: "13vh",
-                          margin: "5% 0% 0% 3%",
-                          top: 10,
-                          left: 10,
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "12px 10px",
-                          }}
-                        >
-                          <span>
-                            <AlignRightOutlined />
-                          </span>{" "}
-                          Male
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "0px 30px",
-                          }}
-                        >
-                          {AdminDashboardData.NoOfMaleEnrolled}
-                        </p>
-                      </div>
-                    </Col>
-                    <Col span={11}>
-                      <div
-                        style={{
-                          position: "absolute",
-                          backgroundColor: "white",
-                          borderRadius: "5px",
-                          margin: "5% 0% 0% 0%",
-                          width: "12vw",
-                          height: "13vh",
-                          top: 10,
-                          left: 10,
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "11px 10px",
-                          }}
-                        >
-                          <span>
-                            <AlignRightOutlined />
-                          </span>{" "}
-                          Female
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "0px 30px",
-                          }}
-                        >
-                          {AdminDashboardData.NoOfFemaleEnrolled}
-                        </p>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col span={13}>
-                      <div
-                        style={{
-                          position: "absolute",
-                          backgroundColor: "white",
-                          borderRadius: "5px",
-                          width: "12vw",
-                          height: "13vh",
-                          margin: "50% 7% 7% 3%",
-                          top: 10,
-                          left: 10,
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "12px 10px",
-                          }}
-                        >
-                          Citizens of age > 30
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "0px 30px",
-                          }}
-                        >
-                          {AdminDashboardData.NoOfPersonMoreThan30}
-                        </p>
-                      </div>
-                    </Col>
-                    <Col span={11}>
-                      <div
-                        style={{
-                          position: "absolute",
-                          backgroundColor: "white",
-                          borderRadius: "5px",
-                          margin: "59% 0% 0% 0%",
-                          width: "12vw",
-                          height: "13vh",
-                          top: 10,
-                          left: 10,
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "11px 10px",
-                          }}
-                        >
-                          Citizens of age > 60
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "0px 30px",
-                          }}
-                        >
-                          {AdminDashboardData.NoOfPersonMoreThan60}
-                        </p>
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
-              </Col> */}
-            </Row>
-            <div
-              style={{
-                margin: "1% 0% 0% 4%",
-              }}
-            >
-              <Title>Blood Collection Details</Title>
-            </div>
-            <Row>
-              <Col span={12}>
-                <div style={{ position: "relative" }}>
-                  <BloodCollectionCard>
-                    <Row>
-                      <Col
-                        span={1}
-                        style={{ backgroundColor: "#04364A", height: "10vh" }}
-                      ></Col>
-                      <Col span={11}>
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "9% 0% 0% 9%",
-                          }}
-                        >
-                          Total Lab Test Added
-                        </p>
-                      </Col>
-                      <Col span={12}>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "5% 0% 0% 20%",
-                          }}
-                        >
-                          {AdminDashboardData.NoLabTestAdded}
-                        </p>
-                      </Col>
-                    </Row>
-                  </BloodCollectionCard>
-                  <div
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: "5px",
-                      position: "absolute",
-                      top: 90,
-                      margin: "0% 15% 0% 8%",
-                      width: "34vw",
-                      height: "10vh",
-                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <Row>
-                      <Col
-                        span={1}
-                        style={{ backgroundColor: "#04364A", height: "10vh" }}
-                      ></Col>
-                      <Col span={11}>
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "9% 0% 0% 9%",
-                          }}
-                        >
-                          Blood Collected At Home
-                        </p>
-                      </Col>
-                      <Col span={12}>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "5% 0% 0% 20%",
-                          }}
-                        >
-                          {AdminDashboardData.BloodCollectedAtHome}
-                        </p>
-                      </Col>
-                    </Row>
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: "5px",
-                      position: "absolute",
-                      top: 180,
-                      margin: "0% 15% 0% 8%",
-                      width: "34vw",
-                      height: "10vh",
-                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <Row>
-                      <Col
-                        span={1}
-                        style={{ backgroundColor: "#04364A", height: "10vh" }}
-                      ></Col>
-                      <Col span={11}>
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "9% 0% 0% 9%",
-                          }}
-                        >
-                          Blood Collected At Center
-                        </p>
-                      </Col>
-                      <Col span={12}>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "5% 0% 0% 20%",
-                          }}
-                        >
-                          {AdminDashboardData.BloodCollectedAtCenter}
-                        </p>
-                      </Col>
-                    </Row>
-                  </div>
-                </div>
-              </Col>
-              <Col span={12}>
-                <div style={{ position: "relative" }}>
-                  <div
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: "5px",
-                      position: "absolute",
-                      top: 0,
-                      margin: "0% 15% 0% 8%",
-                      width: "34vw",
-                      height: "10vh",
-                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <Row>
-                      <Col
-                        span={1}
-                        style={{ backgroundColor: "#04364A", height: "10vh" }}
-                      ></Col>
-                      <Col span={11}>
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "9% 0% 0% 9%",
-                          }}
-                        >
-                          Total Reports Generated
-                        </p>
-                      </Col>
-                      <Col span={12}>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "5% 0% 0% 20%",
-                          }}
-                        >
-                          {AdminDashboardData.TotalReportGenerated}
-                        </p>
-                      </Col>
-                    </Row>
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: "5px",
-                      position: "absolute",
-                      top: 90,
-                      margin: "0% 15% 0% 8%",
-                      width: "34vw",
-                      height: "10vh",
-                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <Row>
-                      <Col
-                        span={1}
-                        style={{ backgroundColor: "#04364A", height: "10vh" }}
-                      ></Col>
-                      <Col span={11}>
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "7% 0% 0% 9%",
-                          }}
-                        >
-                          Blood Collecttion Denied By AMO
-                        </p>
-                      </Col>
-                      <Col span={12}>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "5% 0% 0% 20%",
-                          }}
-                        >
-                          {AdminDashboardData.BloodCollecttionDeniedByAmo}
-                        </p>
-                      </Col>
-                    </Row>
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: "5px",
-                      position: "absolute",
-                      top: 180,
-                      margin: "0% 15% 0% 8%",
-                      width: "34vw",
-                      height: "10vh",
-                      boxShadow: "8px 8px 6px -7px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    <Row>
-                      <Col
-                        span={1}
-                        style={{ backgroundColor: "#04364A", height: "10vh" }}
-                      ></Col>
-                      <Col span={11}>
-                        <p
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: "600",
-                            margin: "7% 0% 0% 9%",
-                          }}
-                        >
-                          Blood Collection Denied By Citizen
-                        </p>
-                      </Col>
-                      <Col span={12}>
-                        <p
-                          style={{
-                            fontSize: "26px",
-                            fontWeight: "700",
-                            margin: "5% 0% 0% 20%",
-                          }}
-                        >
-                          {
-                            AdminDashboardData.BloodCollecttionDeniedByIndividual
-                          }
-                        </p>
-                      </Col>
-                    </Row>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </div>
-        </Content>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          margin: "0% 5% 0% 0%",
-        }}
-      >
-        <span>
-          <p>Developed and maintained by </p>
-        </span>
-        <img
+      <Row style={{ padding: "2%", width: "100%", height: "100%" }}>
+        <Col span={14}>
+          <MainCountRow>
+            <CountCard>
+              <CardTitle>ANM/Co-Ordinator</CardTitle>
+              <CountTitle>
+                {AdminDashboardData.TotalHealthWorkerCount}
+              </CountTitle>
+            </CountCard>
+            <CountCard>
+              <CardTitle>CHV/ASHA</CardTitle>
+              <CountTitle>{AdminDashboardData.TotalChvAshaCount}</CountTitle>
+            </CountCard>
+            <CountCard>
+              <CardTitle>MO</CardTitle>
+              <CountTitle>{AdminDashboardData.TotalMoCount}</CountTitle>
+            </CountCard>
+          </MainCountRow>
+          <h3>Citizens Details</h3>
+          <MainCountRow>
+            <CountCard>
+              <CardTitle>Families Enrolled</CardTitle>
+              <CountTitle>{AdminDashboardData.NoOfFamilyEnrolled}</CountTitle>
+            </CountCard>
+            <CountCard>
+              <CardTitle>Citizens Enrolled</CardTitle>
+              <CountTitle>{AdminDashboardData.NoOfCitizenEnrolled}</CountTitle>
+            </CountCard>
+            <CountCard>
+              <CardTitle>Males Enrolled</CardTitle>
+              <CountTitle> {AdminDashboardData.NoOfMaleEnrolled}</CountTitle>
+            </CountCard>
+          </MainCountRow>
+          <br />
+          <MainCountRow>
+            <CountCard>
+              <CardTitle>Females Enrolled</CardTitle>
+              <CountTitle> {AdminDashboardData.NoOfFemaleEnrolled}</CountTitle>
+            </CountCard>
+            <CountCard>
+              <CardTitle>CBAC Filled</CardTitle>
+              <CountTitle>{AdminDashboardData.NoOfCBACFilled}</CountTitle>
+            </CountCard>
+            <CountCard>
+              <CardTitle>ABHA Id Generated</CardTitle>
+              <CountTitle>{AdminDashboardData.NoOfAbhaIdGenerated}</CountTitle>
+            </CountCard>
+          </MainCountRow>
+          <br />
+          <Row>
+            <CountCard style={{ marginRight: "14px" }}>
+              <CardTitle>Citizens of age {`>`} 30</CardTitle>
+              <CountTitle>{AdminDashboardData.NoOfPersonMoreThan30}</CountTitle>
+            </CountCard>
+            <CountCard>
+              <CardTitle>Citizens of age {`>`} 60</CardTitle>
+              <CountTitle>{AdminDashboardData.NoOfPersonMoreThan60}</CountTitle>
+            </CountCard>
+          </Row>
+        </Col>
+        <Col span={1}></Col>
+        <Col span={9} style={{ width: "100%" }}>
+          <BloodDetailCard>
+            <h3>Blood Collection Details</h3>
+            <br />
+            <MainCountRow>
+              <DetailSubtitle>Total Lab Test Added</DetailSubtitle>
+              <CountTitle>{AdminDashboardData.NoLabTestAdded}</CountTitle>
+            </MainCountRow>
+            <Line />
+            <MainCountRow>
+              <DetailSubtitle>Blood Collected At Home</DetailSubtitle>
+              <CountTitle>{AdminDashboardData.BloodCollectedAtHome}</CountTitle>
+            </MainCountRow>
+            <Line />
+            <MainCountRow>
+              <DetailSubtitle>Blood Collected At Center</DetailSubtitle>
+              <CountTitle>
+                {AdminDashboardData.BloodCollectedAtCenter}
+              </CountTitle>
+            </MainCountRow>
+            <Line />
+            <MainCountRow>
+              <DetailSubtitle>Total Reports Generated</DetailSubtitle>
+              <CountTitle>{AdminDashboardData.TotalReportGenerated}</CountTitle>
+            </MainCountRow>
+            <Line />
+            <MainCountRow>
+              <DetailSubtitle>Blood Collecttion Denied By AMO</DetailSubtitle>
+              <CountTitle>
+                {AdminDashboardData.BloodCollecttionDeniedByAmo}
+              </CountTitle>
+            </MainCountRow>
+            <Line />
+            <MainCountRow>
+              <DetailSubtitle>
+                Blood Collection Denied By Citizen
+              </DetailSubtitle>
+              <CountTitle>
+                {AdminDashboardData.BloodCollecttionDeniedByIndividual}
+              </CountTitle>
+            </MainCountRow>
+          </BloodDetailCard>
+        </Col>
+        {/* <img
           src="\BhugolGISLogo.png"
-          style={{ width: "14%", height: "10%", margin: "1% 0% 0% 2%" }}
-        ></img>
-      </div>
+          style={{ width: "12%", height: "6%", display: "flex" }}
+        /> */}
+      </Row>
     </>
   );
 }
