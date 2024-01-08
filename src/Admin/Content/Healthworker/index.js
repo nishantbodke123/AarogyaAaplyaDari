@@ -365,7 +365,7 @@ function Healthworker() {
     formData.append("password", password);
     formData.append("phoneNumber", phoneNumber);
     email !== null && formData.append("emailId", email);
-    formData.append("section", section);
+    formData.append("userSections", section);
     formData.append("group", "healthworker");
     if (password !== confirmPassword) {
       message.warning("password and confirm password should be same");
