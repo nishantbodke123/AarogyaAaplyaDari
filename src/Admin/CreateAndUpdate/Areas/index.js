@@ -107,6 +107,9 @@ function Area() {
         params: {
           search: searchValue,
         },
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
       })
       .then((res) => {
         setLoader(false);
@@ -388,7 +391,6 @@ function Area() {
             </FormItem>
             <FormItem label="Area" style={{ width: "250px" }}>
               <TextArea
-                
                 placeholder="Enter Area Here"
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
