@@ -31,7 +31,7 @@ function Area() {
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [dispensaryList, setDispensaryList] = useState([]);
   const [healthPostId, setHealthPostId] = useState();
-  const [dispensaryId, setDispensaryId] = useState();
+  const [dispensaryId, setDispensaryId] = useState("");
   const [area, setArea] = useState();
   const [updateAreaId, setUpdateAreaId] = useState();
   const [updatedArea, setUpdatedArea] = useState();
@@ -107,9 +107,6 @@ function Area() {
         params: {
           search: searchValue,
         },
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
       })
       .then((res) => {
         setLoader(false);
@@ -156,7 +153,7 @@ function Area() {
   const handleHideAddAreaModal = () => {
     setShowAddAreaModal(false);
     setHealthPostId();
-    setDispensaryId();
+    setDispensaryId("");
     setArea();
   };
   const handleWardSelect = (id) => {

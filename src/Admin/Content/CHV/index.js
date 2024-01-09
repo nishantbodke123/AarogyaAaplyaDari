@@ -126,7 +126,7 @@ function CHV() {
   const [confirmPassword, setConfirmPassword] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
   const [email, setEmail] = useState(null);
-  const [section, setSection] = useState();
+  const [section, setSection] = useState([]);
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -146,17 +146,19 @@ function CHV() {
       setPhoneNumber(e.target.value);
     }
   };
-  // const handleSectionsSelect = (selectedValue) => {
-  //   console.log(selectedValue);
-  //   setSection(selectedValue);
-  //   // if (section.includes(selectedValue)) {
-  //   //   setSection(
-  //   //     section.filter((item) => item !== selectedValue)
-  //   //   );
-  //   // } else {
-  //   //   setSection([...section, selectedValue]);
-  //   // }
-  // };
+  const handleSectionsSelect = (selectedValue) => {
+    console.log(selectedValue);
+    setSection(selectedValue);
+    // setSection([...section, ...selectedValue]);
+    // if (selectedValue === undefined) {
+    // } else {
+    //   // if (section.includes(selectedValue)) {
+    //   //   setSection(section.filter((item) => item !== selectedValue));
+    //   // } else {
+    //   //   setSection([...section, selectedValue]);
+    //   // }
+    // }
+  };
 
   const handleSearch = () => {
     setLoader(true);
@@ -864,7 +866,7 @@ function CHV() {
                                 .includes(inputValue.toLowerCase())
                             : false
                         }
-                        onChange={(e) => setSection(e)}
+                        onChange={(e) => handleSectionsSelect(e)}
                       >
                         {sectionList.map((data) => (
                           <Option key={data.id} value={data.id}>
