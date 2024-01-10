@@ -148,6 +148,7 @@ function CHV() {
   };
   const handleSectionsSelect = (selectedValue) => {
     console.log(selectedValue);
+    
     setSection(selectedValue);
     // setSection([...section, ...selectedValue]);
     // if (selectedValue === undefined) {
@@ -391,6 +392,15 @@ function CHV() {
     // formData.append("section", section);
     formData.append("userSections", section);
     formData.append("group", "CHV-ASHA");
+    // let formData = {
+    //   name: name,
+    //   userName: userName,
+    //   password: password,
+    //   phoneNumber: phoneNumber,
+    //   emailId: email,
+    //   useSection: section,
+    //   group: "CHV-ASHA",
+    // };
     console.log(formData);
     if (password !== confirmPassword) {
       message.warning("password and confirm password should be same");
@@ -640,12 +650,12 @@ function CHV() {
         );
       },
     },
-    {
-      title: "Group",
-      render: (data) => {
-        return <Button onClick={() => handleGroupChange(data)}>Change</Button>;
-      },
-    },
+    // {
+    //   title: "Group",
+    //   render: (data) => {
+    //     return <Button onClick={() => handleGroupChange(data)}>Change</Button>;
+    //   },
+    // },
   ];
   return (
     <Spin spinning={loader}>
@@ -856,7 +866,7 @@ function CHV() {
                     <FormItem label="Section">
                       <Select
                         showSearch
-                        // mode="multiple"
+                        mode="multiple"
                         style={{ width: "350px" }}
                         value={section}
                         filterOption={(inputValue, option) =>
@@ -1036,7 +1046,7 @@ function CHV() {
                     <FormItem label="Section">
                       <Select
                         showSearch
-                        mode="multiple"
+                        // mode="multiple"
                         style={{ width: "350px" }}
                         value={u_Section}
                         filterOption={(inputValue, option) =>

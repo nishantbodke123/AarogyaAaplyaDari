@@ -12,6 +12,7 @@ import CHVApproval from "../AdminApproval/Content/CHV";
 import AreaAndSection from "../CreateAndUpdate/Areas";
 import Area from "../CreateAndUpdate/Areas";
 import Section from "../CreateAndUpdate/Sections";
+import { Footer } from "antd/es/layout/layout";
 
 const { Content } = Layout;
 
@@ -43,6 +44,25 @@ function Admin() {
             {location.pathname === "/admin/arealist" && <Area/>}
             {location.pathname === "/admin/sectionlist" && <Section/>}
           </Content>
+          {/* <Footer>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "end",
+              width: "100%",
+              marginTop: "4.5%",
+            }}
+          >
+            <p style={{ margin: "0% 1% 0.5% 0%" }}>
+              Developed and Maintained By
+            </p>
+            <img
+              src="\BhugolGISLogo.png"
+              style={{ width: "10rem", height: "2rem" }}
+            />
+          </div>
+          </Footer> */}
         </Layout>
       </Layout>
     </>

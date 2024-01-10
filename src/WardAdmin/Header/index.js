@@ -42,7 +42,7 @@ function HeaderBar(props) {
           <div style={{ margin: "-1% 50% 0% 0%" }}>
             <div>
               <p>
-                Welcome , <b>{sessionStorage.getItem("name")}</b>
+                Welcome to Ward : <b>{sessionStorage.getItem("wardName")}</b>
               </p>
               <br />
             </div>

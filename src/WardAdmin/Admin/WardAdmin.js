@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import WardAdminDashboard from "../Content/Dashboard";
 import WardHealthworker from "../Content/Healthworker";
 import WardCHV from "../Content/WardCHV";
+import { Footer } from "antd/es/layout/layout";
 
 const { Content } = Layout;
 
@@ -32,6 +33,26 @@ function WardAdmin() {
             )}
             {location.pathname === "/wardadmin/wardchv" && <WardCHV />}
           </Content>
+          {/* <Footer>
+            {" "}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "end",
+                width: "100%",
+                margin: "-1% 0% 0% 0%",
+              }}
+            >
+              <p style={{ margin: "0% 1% 0.5% 0%" }}>
+                Developed and Maintained By
+              </p>
+              <img
+                src="\BhugolGISLogo.png"
+                style={{ width: "10rem", height: "2rem" }}
+              />
+            </div>
+          </Footer> */}
         </Layout>
       </Layout>
     </>

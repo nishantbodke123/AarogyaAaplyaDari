@@ -69,8 +69,17 @@ export const CountCard = styled(Card)`
     gap: 5px;
   }
 `;
+export const ReferralCountCard = styled(Card)`
+  width: 90%;
+  .ant-card-body {
+    padding: 0% 0%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+`;
 export const CardTitle = styled.span`
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 `;
 export const CountTitle = styled.span`
