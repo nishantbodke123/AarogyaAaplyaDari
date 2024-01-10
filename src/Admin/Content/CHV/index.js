@@ -126,7 +126,7 @@ function CHV() {
   const [confirmPassword, setConfirmPassword] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
   const [email, setEmail] = useState(null);
-  const [section, setSection] = useState([]);
+  const [section, setSection] = useState();
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -148,7 +148,6 @@ function CHV() {
   };
   const handleSectionsSelect = (selectedValue) => {
     console.log(selectedValue);
-    
     setSection(selectedValue);
     // setSection([...section, ...selectedValue]);
     // if (selectedValue === undefined) {
@@ -280,7 +279,7 @@ function CHV() {
   };
   let axiosConfig = {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
@@ -381,30 +380,18 @@ function CHV() {
     setSectionList([]);
   };
   const handleAddUser = () => {
-    console.log(section);
-
-    let formData = new FormData();
-    formData.append("name", name);
-    formData.append("username", userName);
-    formData.append("password", password);
-    formData.append("phoneNumber", phoneNumber);
-    email !== null && formData.append("emailId", email);
-    // formData.append("section", section);
-    formData.append("userSections", section);
-    formData.append("group", "CHV-ASHA");
-    // let formData = {
-    //   name: name,
-    //   userName: userName,
-    //   password: password,
-    //   phoneNumber: phoneNumber,
-    //   emailId: email,
-    //   useSection: section,
-    //   group: "CHV-ASHA",
-    // };
-    console.log(formData);
     if (password !== confirmPassword) {
       message.warning("password and confirm password should be same");
     } else {
+      const formData = {
+        name: name,
+        username: userName,
+        password: password,
+        phoneNumber: phoneNumber,
+        ...(email && { emailId: email }),
+        useSection: section,
+        group: "CHV-ASHA",
+      };
       axios
         .post(
           `${BASE_URL}/adminportal/api/InsertUsersByadmin`,
@@ -427,6 +414,52 @@ function CHV() {
           }
         });
     }
+    // if (emailId == null) {
+    //   const formData = {
+    //     name: name,
+    //     userName: userName,
+    //     password: password,
+    //     phoneNumber: phoneNumber,
+    //     useSection: section,
+    //     group: "CHV-ASHA",
+    //   };
+    // } else {
+    //   const formData = {
+    //     name: name,
+    //     userName: userName,
+    //     password: password,
+    //     phoneNumber: phoneNumber,
+    //     emailId: email,
+    //     useSection: section,
+    //     group: "CHV-ASHA",
+    //   };
+    // }
+    // console.log(formData);
+    // if (password !== confirmPassword) {
+    //   message.warning("password and confirm password should be same");
+    // } else {
+    //   axios
+    //     .post(
+    //       `${BASE_URL}/adminportal/api/InsertUsersByadmin`,
+    //       formData,
+    //       axiosConfig
+    //     )
+    //     .then((res) => {
+    //       console.log(res.data.message);
+    //       message.success(res.data.message);
+    //       setRefresh(refresh + 1);
+    //       handleCHVModalClose();
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //       message.warning(err.response.data.message);
+    //       if (err.response.status == "401") {
+    //         setTimeout(() => {
+    //           LogOut();
+    //         }, 1000);
+    //       }
+    //     });
+    // }
   };
   const handleUpdateUser = () => {
     console.log(CHVId);

@@ -28,7 +28,12 @@ function Sidebar(props) {
       <HomeOutlined />,
       "/admin/adminDashboard"
     ),
-
+    getItem(
+      "User View",
+      "/admin/userList",
+      <HomeOutlined />,
+      "/admin/userList"
+    ),
     getItem(
       <p style={{ color: "white" }}>User Management</p>,
       null,
@@ -67,12 +72,7 @@ function Sidebar(props) {
       <FileAddOutlined />,
       null,
       [
-        getItem(
-          "Area",
-          "/admin/arealist",
-          null,
-          "/admin/arealist"
-        ),
+        getItem("Area", "/admin/arealist", null, "/admin/arealist"),
         getItem("Section", "/admin/sectionlist", null, "/admin/sectionlist"),
       ]
     ),
