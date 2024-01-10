@@ -28,12 +28,12 @@ function Sidebar(props) {
       <HomeOutlined />,
       "/admin/adminDashboard"
     ),
-    getItem(
-      "User View",
-      "/admin/userList",
-      <HomeOutlined />,
-      "/admin/userList"
-    ),
+    // getItem(
+    //   "User View",
+    //   "/admin/userList",
+    //   <HomeOutlined />,
+    //   "/admin/userList"
+    // ),
     getItem(
       <p style={{ color: "white" }}>User Management</p>,
       null,

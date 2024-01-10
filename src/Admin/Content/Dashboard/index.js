@@ -215,6 +215,159 @@ function AdminDashboard() {
                 </Col>
               </Row>
             </div>
+          </div>{" "}
+          <Divider />
+          <div>
+            <div>
+              <h3>Vulnerable</h3>
+            </div>
+            <div style={{ width: "80vw" }}>
+              <Row>
+                <Col span={8}>
+                  <ReferralCountCard>
+                    <CardTitle> Total Vulnerable</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.total_vulnerabel}
+                    </CountTitle>
+                  </ReferralCountCard>
+                </Col>
+                <Col span={8}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Greater Than 70 years</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.vulnerabel_70_Years}
+                    </CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+                <Col span={8}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Physical Handicapped</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.vulnerabel_Physically_handicapped}
+                    </CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+              </Row>
+              <Row>
+                {" "}
+                <Col span={8}>
+                  <ReferralCountCard>
+                    <CardTitle> Completely Paralyzed or On Bed</CardTitle>
+                    <CountTitle>
+                      {
+                        AdminDashboardData.vulnerabel_completely_paralyzed_or_on_bed
+                      }
+                    </CountTitle>
+                  </ReferralCountCard>
+                </Col>
+                <Col span={8}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Elder or Alone At Home</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.vulnerabel_elderly_and_alone_at_home}
+                    </CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+                <Col span={8}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Other Reasons</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.vulnerabel_any_other_reason}
+                    </CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+              </Row>
+            </div>
+          </div>
+          <Divider />
+          <div>
+            <div>
+              <h3>Disease</h3>
+            </div>
+            <div style={{ width: "80vw" }}>
+              <Row>
+                <Col span={5}>
+                  <ReferralCountCard>
+                    <CardTitle> Total TB</CardTitle>
+                    <CountTitle>{AdminDashboardData.total_tb_count}</CountTitle>
+                  </ReferralCountCard>
+                </Col>
+                <Col span={5}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Total Diabetes</CardTitle>
+                    <CountTitle>{AdminDashboardData.total_diabetes}</CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+                <Col span={5}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Total Eye Problem</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.total_eye_problem}
+                    </CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+                <Col span={5}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Total Ear Problem</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.total_ear_problem}
+                    </CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+                <Col span={4}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Total Leprosy</CardTitle>
+                    <CountTitle>{AdminDashboardData.total_leprosy}</CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+              </Row>
+              <Row>
+                {" "}
+                <Col span={5}>
+                  <ReferralCountCard>
+                    <CardTitle> Total Fits Problem</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.total_fits_problem}
+                    </CountTitle>
+                  </ReferralCountCard>
+                </Col>
+                <Col span={5}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Total Breast Cancer</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.total_breast_cancer}
+                    </CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+                <Col span={5}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Total Oral Cancer</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.total_oral_cancer}
+                    </CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+                <Col span={5}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle> Total Cervival Cancer</CardTitle>
+                    <CountTitle>
+                      {AdminDashboardData.total_cervical_cancer}
+                    </CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+              </Row>
+            </div>
           </div>
           <div
             style={{

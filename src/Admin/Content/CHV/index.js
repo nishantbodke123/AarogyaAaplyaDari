@@ -285,7 +285,7 @@ function CHV() {
   };
 
   const handleEditModalShow = (data) => {
-    console.log(data);
+    console.log(data, "Update Data");
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -380,6 +380,7 @@ function CHV() {
     setSectionList([]);
   };
   const handleAddUser = () => {
+    setLoader(true);
     if (password !== confirmPassword) {
       message.warning("password and confirm password should be same");
     } else {
@@ -399,6 +400,7 @@ function CHV() {
           axiosConfig
         )
         .then((res) => {
+          setLoader(false);
           console.log(res.data.message);
           message.success(res.data.message);
           setRefresh(refresh + 1);
@@ -406,6 +408,7 @@ function CHV() {
         })
         .catch((err) => {
           console.log(err);
+          setLoader(false);
           message.warning(err.response.data.message);
           if (err.response.status == "401") {
             setTimeout(() => {
@@ -462,6 +465,8 @@ function CHV() {
     // }
   };
   const handleUpdateUser = () => {
+    console.log(u_Section);
+    setLoader(true);
     console.log(CHVId);
     if (u_name === "") {
       message.warning(" Please Enter Name");
@@ -474,30 +479,55 @@ function CHV() {
     } else if (u_is_ActiveStatus === undefined) {
       message.warning("Please select active status");
     } else {
-      const formData = new FormData();
-      formData.append("name", u_name);
-      formData.append("username", u_userName);
-      u_email !== null && formData.append("emailId", u_email);
-      formData.append("phoneNumber", u_phoneNumber);
-      formData.append("section", u_Section);
-      formData.append("is_active", u_is_ActiveStatus);
-
-      axios
-        .patch(
-          `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${CHVId}`,
-          formData,
-          axiosConfig
-        )
-        .then((res) => {
-          console.log(res);
-          message.success(res.data.message);
-          setRefresh(refresh + 1);
-          handleEditModalClose();
-        })
-        .catch((err) => {
-          console.log(err);
-          message.warning(err.response.data.message);
-        });
+      if (password !== confirmPassword) {
+        message.warning("password and confirm password should be same");
+      } else {
+        const formData = {
+          name: u_name,
+          username: u_userName,
+          phoneNumber: u_phoneNumber,
+          ...(email && { emailId: u_email }),
+          // ...(u_Section != [] && { userSections: u_Section }),
+          userSections: u_Section,
+          group: "CHV-ASHA",
+        };
+        // const formData = new FormData();
+        // formData.append("name", u_name);
+        // formData.append("username", u_userName);
+        // u_email !== null && formData.append("emailId", u_email);
+        // formData.append("phoneNumber", u_phoneNumber);
+        // formData.append("section", u_Section);
+        // formData.append("is_active", u_is_ActiveStatus);
+        axios
+          .patch(
+            `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${CHVId}`,
+            formData,
+            axiosConfig
+            // {
+            //   headers: {
+            //     "Content-Type": "multipart/form-data",
+            //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
+            //   },
+            // }
+          )
+          .then((res) => {
+            setLoader(false);
+            console.log(res);
+            message.success(res.data.message);
+            setRefresh(refresh + 1);
+            handleEditModalClose();
+          })
+          .catch((err) => {
+            setLoader(false);
+            console.log(err);
+            message.warning(err.response.data.message);
+            if (err.response.status == "401") {
+              setTimeout(() => {
+                LogOut();
+              }, 1000);
+            }
+          });
+      }
     }
   };
   const deleteUser = (data) => {
@@ -617,7 +647,10 @@ function CHV() {
     },
     {
       title: "Section",
-      dataIndex: "section",
+      dataIndex: "userSections",
+      render: (data) => {
+        return data.map((data) => <li>{data.sectionName}</li>);
+      },
     },
     {
       title: "Name",
@@ -1079,7 +1112,7 @@ function CHV() {
                     <FormItem label="Section">
                       <Select
                         showSearch
-                        // mode="multiple"
+                        mode="multiple"
                         style={{ width: "350px" }}
                         value={u_Section}
                         filterOption={(inputValue, option) =>

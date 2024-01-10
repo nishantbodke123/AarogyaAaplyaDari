@@ -24,17 +24,20 @@ import { BASE_URL } from "../../../Utils/BaseURL";
 import axios, { Axios } from "axios";
 
 function WardAdminDashboard() {
-  const [AdminDashboardData, setAdminDashboardData] = useState({});
+  const [MOHDashboardData, setMOHDashboardData] = useState({});
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/adminportal/api/AdminDashboard`, {
-        params: {
-          wardId: sessionStorage.getItem("ward_id"),
+      .get(`${BASE_URL}/adminportal/api/MOHDashboardView`, {
+        // params: {
+        //   wardId: sessionStorage.getItem("ward_id"),
+        // },
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
       })
       .then((response) => {
-        console.log(response.data.data);
-        setAdminDashboardData(response.data.data);
+        console.log(response);
+        setMOHDashboardData(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -55,58 +58,72 @@ function WardAdminDashboard() {
           <MainCountRow>
             <CountCard>
               <CardTitle>ANM/Co-Ordinator</CardTitle>
-              <CountTitle>
-                {AdminDashboardData.TotalHealthWorkerCount}
-              </CountTitle>
+              <CountTitle>{MOHDashboardData.ANM_count}</CountTitle>
             </CountCard>
             <CountCard>
               <CardTitle>CHV/ASHA</CardTitle>
-              <CountTitle>{AdminDashboardData.TotalChvAshaCount}</CountTitle>
+              <CountTitle>{MOHDashboardData.CHV_ASHA_count}</CountTitle>
             </CountCard>
             <CountCard>
               <CardTitle>MO</CardTitle>
-              <CountTitle>{AdminDashboardData.TotalMoCount}</CountTitle>
+              <CountTitle>{MOHDashboardData.MO_count}</CountTitle>
             </CountCard>
           </MainCountRow>
           <h3>Citizens Details</h3>
           <MainCountRow>
             <CountCard>
-              <CardTitle>Families Enrolled</CardTitle>
-              <CountTitle>{AdminDashboardData.NoOfFamilyEnrolled}</CountTitle>
+              <CardTitle>Total Families Enrolled</CardTitle>
+              <CountTitle>{MOHDashboardData.total_family_count}</CountTitle>
             </CountCard>
             <CountCard>
-              <CardTitle>Citizens Enrolled</CardTitle>
-              <CountTitle>{AdminDashboardData.NoOfCitizenEnrolled}</CountTitle>
+              <CardTitle>Today's Families Enrolled</CardTitle>
+              <CountTitle>{MOHDashboardData.today_family_count}</CountTitle>
             </CountCard>
             <CountCard>
-              <CardTitle>Males Enrolled</CardTitle>
-              <CountTitle> {AdminDashboardData.NoOfMaleEnrolled}</CountTitle>
+              <CardTitle> Total Citizens Enrolled</CardTitle>
+              <CountTitle>{MOHDashboardData.total_count}</CountTitle>
             </CountCard>
           </MainCountRow>
           <br />
           <MainCountRow>
             <CountCard>
-              <CardTitle>Females Enrolled</CardTitle>
-              <CountTitle> {AdminDashboardData.NoOfFemaleEnrolled}</CountTitle>
+              <CardTitle> Today's Citizens Enrolled</CardTitle>
+              <CountTitle>{MOHDashboardData.todays_count}</CountTitle>
             </CountCard>
             <CountCard>
+              <CardTitle>Males Enrolled</CardTitle>
+              <CountTitle> {MOHDashboardData.male}</CountTitle>
+            </CountCard>
+            <CountCard>
+              <CardTitle>Females Enrolled</CardTitle>
+              <CountTitle> {MOHDashboardData.female}</CountTitle>
+            </CountCard>
+          </MainCountRow>
+          <br />
+          <MainCountRow>
+            <CountCard>
+              <CardTitle>Transegender</CardTitle>
+              <CountTitle>{MOHDashboardData.transgender}</CountTitle>
+            </CountCard>
+
+            <CountCard>
               <CardTitle>CBAC Filled</CardTitle>
-              <CountTitle>{AdminDashboardData.NoOfCBACFilled}</CountTitle>
+              <CountTitle>{MOHDashboardData.total_cbac_count}</CountTitle>
             </CountCard>
             <CountCard>
               <CardTitle>ABHA Id Generated</CardTitle>
-              <CountTitle>{AdminDashboardData.NoOfAbhaIdGenerated}</CountTitle>
+              {/* <CountTitle>{MOHDashboardData.NoOfAbhaIdGenerated}</CountTitle> */}
             </CountCard>
           </MainCountRow>
           <br />
           <Row>
             <CountCard style={{ marginRight: "14px" }}>
               <CardTitle>Citizens of age {`>`} 30</CardTitle>
-              <CountTitle>{AdminDashboardData.NoOfPersonMoreThan30}</CountTitle>
+              <CountTitle>{MOHDashboardData.citizen_above_30}</CountTitle>
             </CountCard>
             <CountCard>
               <CardTitle>Citizens of age {`>`} 60</CardTitle>
-              <CountTitle>{AdminDashboardData.NoOfPersonMoreThan60}</CountTitle>
+              <CountTitle>{MOHDashboardData.citizen_above_60}</CountTitle>
             </CountCard>
           </Row>
         </Col>
@@ -117,31 +134,27 @@ function WardAdminDashboard() {
             <br />
             <MainCountRow>
               <DetailSubtitle>Total Lab Test Added</DetailSubtitle>
-              <CountTitle>{AdminDashboardData.NoLabTestAdded}</CountTitle>
+              <CountTitle>{MOHDashboardData.total_LabTestAdded}</CountTitle>
             </MainCountRow>
             <Line />
             <MainCountRow>
               <DetailSubtitle>Blood Collected At Home</DetailSubtitle>
-              <CountTitle>{AdminDashboardData.BloodCollectedAtHome}</CountTitle>
+              <CountTitle>{MOHDashboardData.blood_collected_home}</CountTitle>
             </MainCountRow>
             <Line />
             <MainCountRow>
               <DetailSubtitle>Blood Collected At Center</DetailSubtitle>
-              <CountTitle>
-                {AdminDashboardData.BloodCollectedAtCenter}
-              </CountTitle>
+              <CountTitle>{MOHDashboardData.blood_collected_center}</CountTitle>
             </MainCountRow>
             <Line />
             <MainCountRow>
               <DetailSubtitle>Total Reports Generated</DetailSubtitle>
-              <CountTitle>{AdminDashboardData.TotalReportGenerated}</CountTitle>
+              <CountTitle>{MOHDashboardData.TestReportGenerated}</CountTitle>
             </MainCountRow>
             <Line />
             <MainCountRow>
               <DetailSubtitle>Blood Collecttion Denied By AMO</DetailSubtitle>
-              <CountTitle>
-                {AdminDashboardData.BloodCollecttionDeniedByAmo}
-              </CountTitle>
+              <CountTitle>{MOHDashboardData.denieded_by_mo_count}</CountTitle>
             </MainCountRow>
             <Line />
             <MainCountRow>
@@ -149,7 +162,7 @@ function WardAdminDashboard() {
                 Blood Collection Denied By Citizen
               </DetailSubtitle>
               <CountTitle>
-                {AdminDashboardData.BloodCollecttionDeniedByIndividual}
+                {MOHDashboardData.denieded_by_mo_individual}
               </CountTitle>
             </MainCountRow>
           </BloodDetailCard>
@@ -157,7 +170,7 @@ function WardAdminDashboard() {
         <Divider />
         <div>
           <h3>Referrals</h3>
-          <div>
+          <div style={{ width: "80vw" }}>
             <Row>
               <Col span={8}>
                 <ReferralCountCard>
@@ -166,7 +179,11 @@ function WardAdminDashboard() {
                     Referral to Mun. Dispensary / HBT for Blood Test /
                     Confirmation / Treatment
                   </CardTitle>
-                  <CountTitle>0</CountTitle>
+                  <CountTitle>
+                    {
+                      MOHDashboardData.Referral_choice_Referral_to_Mun_Dispensary
+                    }
+                  </CountTitle>
                 </ReferralCountCard>
               </Col>
               <Col span={8}>
@@ -176,7 +193,11 @@ function WardAdminDashboard() {
                     {" "}
                     Referral to HBT polyclinic for physician consultation
                   </CardTitle>
-                  <CountTitle>0</CountTitle>
+                  <CountTitle>
+                    {
+                      MOHDashboardData.Referral_choice_Referral_to_HBT_polyclinic
+                    }
+                  </CountTitle>
                 </ReferralCountCard>{" "}
               </Col>
               <Col span={8}>
@@ -187,7 +208,11 @@ function WardAdminDashboard() {
                     Referral to Peripheral Hospital / Special Hospital for
                     management of Complication
                   </CardTitle>
-                  <CountTitle>0</CountTitle>
+                  <CountTitle>
+                    {
+                      MOHDashboardData.Referral_choice_Referral_to_Peripheral_Hospital
+                    }
+                  </CountTitle>
                 </ReferralCountCard>{" "}
               </Col>
             </Row>
@@ -199,19 +224,172 @@ function WardAdminDashboard() {
                     {" "}
                     Referral to Medical College for management of Complication
                   </CardTitle>
-                  <CountTitle>0</CountTitle>
+                  <CountTitle>
+                    {
+                      MOHDashboardData.Referral_choice_Referral_to_Medical_College
+                    }
+                  </CountTitle>
                 </ReferralCountCard>
               </Col>
               <Col span={8}>
                 {" "}
                 <ReferralCountCard>
                   <CardTitle> Referral to Private facility</CardTitle>
-                  <CountTitle>0</CountTitle>
+                  <CountTitle>
+                    {
+                      MOHDashboardData.Referral_choice_Referral_to_Private_facility
+                    }
+                  </CountTitle>
                 </ReferralCountCard>{" "}
               </Col>
             </Row>
           </div>
         </div>
+        <Divider />
+        <div>
+          <div>
+            <h3>Vulnerable</h3>
+          </div>
+          <div style={{ width: "80vw" }}>
+            <Row>
+              <Col span={8}>
+                <ReferralCountCard>
+                  <CardTitle> Total Vulnerable</CardTitle>
+                  <CountTitle>{MOHDashboardData.total_vulnerabel}</CountTitle>
+                </ReferralCountCard>
+              </Col>
+              <Col span={8}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle> Greater Than 70 years</CardTitle>
+                  <CountTitle>
+                    {MOHDashboardData.vulnerabel_70_Years}
+                  </CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+              <Col span={8}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle> Physical Handicapped</CardTitle>
+                  <CountTitle>
+                    {MOHDashboardData.vulnerabel_Physically_handicapped}
+                  </CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+            </Row>
+            <Row>
+              {" "}
+              <Col span={8}>
+                <ReferralCountCard>
+                  <CardTitle> Completely Paralyzed or On Bed</CardTitle>
+                  <CountTitle>
+                    {MOHDashboardData.vulnerabel_completely_paralyzed_or_on_bed}
+                  </CountTitle>
+                </ReferralCountCard>
+              </Col>
+              <Col span={8}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle> Elder or Alone At Home</CardTitle>
+                  <CountTitle>
+                    {MOHDashboardData.vulnerabel_elderly_and_alone_at_home}
+                  </CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+              <Col span={8}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle> Other Reasons</CardTitle>
+                  <CountTitle>
+                    {MOHDashboardData.vulnerabel_any_other_reason}
+                  </CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+            </Row>
+          </div>
+        </div>
+        <Divider />
+        <div>
+          <div>
+            <h3>Disease</h3>
+          </div>
+          <div style={{ width: "80vw" }}>
+            <Row>
+              <Col span={5}>
+                <ReferralCountCard>
+                  <CardTitle>TB</CardTitle>
+                  <CountTitle>{MOHDashboardData.tb}</CountTitle>
+                </ReferralCountCard>
+              </Col>
+              <Col span={5}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle> Diabetes</CardTitle>
+                  <CountTitle>{MOHDashboardData.diabetes}</CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+              <Col span={5}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle> Eye Problem</CardTitle>
+                  <CountTitle>{MOHDashboardData.eye_problem}</CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+              <Col span={5}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle> Oral Cancer</CardTitle>
+                  <CountTitle>{MOHDashboardData.oral_Cancer}</CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+              <Col span={4}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle>Breast Cancer </CardTitle>
+                  <CountTitle>{MOHDashboardData.breast_cancer}</CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+            </Row>
+            <Row>
+              {" "}
+              <Col span={5}>
+                <ReferralCountCard>
+                  <CardTitle> Communicable Disease</CardTitle>
+                  <CountTitle>{MOHDashboardData.communicable}</CountTitle>
+                </ReferralCountCard>
+              </Col>
+              <Col span={5}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle> Alzheimers</CardTitle>
+                  <CountTitle>{MOHDashboardData.Alzheimers}</CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+              <Col span={5}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle> Asthama</CardTitle>
+                  <CountTitle>{MOHDashboardData.asthama}</CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+              <Col span={5}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle>COPD </CardTitle>
+                  <CountTitle>{MOHDashboardData.copd}</CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+              <Col span={4}>
+                {" "}
+                <ReferralCountCard>
+                  <CardTitle>Hypertension </CardTitle>
+                  <CountTitle>{MOHDashboardData.hypertension}</CountTitle>
+                </ReferralCountCard>{" "}
+              </Col>
+            </Row>
+          </div>
+        </div>
+
         <div
           style={{
             display: "flex",
@@ -264,7 +442,7 @@ function WardAdminDashboard() {
     //                     fontWeight: 700,
     //                   }}
     //                 >
-    //                   {AdminDashboardData.TotalHealthWorkerCount}
+    //                   {MOHDashboardData.TotalHealthWorkerCount}
     //                 </p>
     //               </Col>
     //             </Row>
@@ -293,7 +471,7 @@ function WardAdminDashboard() {
     //                     fontWeight: 700,
     //                   }}
     //                 >
-    //                   {AdminDashboardData.TotalChvAshaCount}
+    //                   {MOHDashboardData.TotalChvAshaCount}
     //                 </p>
     //               </Col>
     //             </Row>
@@ -322,7 +500,7 @@ function WardAdminDashboard() {
     //                     fontWeight: 700,
     //                   }}
     //                 >
-    //                   {AdminDashboardData.TotalMoCount}
+    //                   {MOHDashboardData.TotalMoCount}
     //                 </p>
     //               </Col>
     //             </Row>
@@ -358,7 +536,7 @@ function WardAdminDashboard() {
     //                   Family Enrolled
     //                 </CitizenDetailsCountLabel>
     //                 <CitizenDetailsCount>
-    //                   {AdminDashboardData.NoOfFamilyEnrolled}
+    //                   {MOHDashboardData.NoOfFamilyEnrolled}
     //                 </CitizenDetailsCount>
     //               </CitizenDetailsCard>
     //               <CitizenDetailsCard>
@@ -369,7 +547,7 @@ function WardAdminDashboard() {
     //                   Citizen Enrolled
     //                 </CitizenDetailsCountLabel>
     //                 <CitizenDetailsCount>
-    //                   {AdminDashboardData.NoOfCitizenEnrolled}
+    //                   {MOHDashboardData.NoOfCitizenEnrolled}
     //                 </CitizenDetailsCount>
     //               </CitizenDetailsCard>
     //               <CitizenDetailsCard>
@@ -380,7 +558,7 @@ function WardAdminDashboard() {
     //                   Male
     //                 </CitizenDetailsCountLabel>
     //                 <CitizenDetailsCount>
-    //                   {AdminDashboardData.NoOfMaleEnrolled}
+    //                   {MOHDashboardData.NoOfMaleEnrolled}
     //                 </CitizenDetailsCount>
     //               </CitizenDetailsCard>
     //               <CitizenDetailsCard>
@@ -391,7 +569,7 @@ function WardAdminDashboard() {
     //                   Female
     //                 </CitizenDetailsCountLabel>
     //                 <CitizenDetailsCount>
-    //                   {AdminDashboardData.NoOfFemaleEnrolled}
+    //                   {MOHDashboardData.NoOfFemaleEnrolled}
     //                 </CitizenDetailsCount>
     //               </CitizenDetailsCard>
     //             </div>
@@ -406,7 +584,7 @@ function WardAdminDashboard() {
     //                   CBAC Filled
     //                 </CitizenDetailsCountLabel>
     //                 <CitizenDetailsCount>
-    //                   {AdminDashboardData.NoOfCBACFilled}
+    //                   {MOHDashboardData.NoOfCBACFilled}
     //                 </CitizenDetailsCount>
     //               </CitizenDetailsCard>
     //               <CitizenDetailsCard>
@@ -417,7 +595,7 @@ function WardAdminDashboard() {
     //                   ABHA ID Generated
     //                 </CitizenDetailsCountLabel>
     //                 <CitizenDetailsCount>
-    //                   {AdminDashboardData.NoOfAbhaIdGenerated}
+    //                   {MOHDashboardData.NoOfAbhaIdGenerated}
     //                 </CitizenDetailsCount>
     //               </CitizenDetailsCard>
     //               <CitizenDetailsCard>
@@ -428,7 +606,7 @@ function WardAdminDashboard() {
     //                   Citizens of age > 30
     //                 </CitizenDetailsCountLabel>
     //                 <CitizenDetailsCount>
-    //                   {AdminDashboardData.NoOfPersonMoreThan30}
+    //                   {MOHDashboardData.NoOfPersonMoreThan30}
     //                 </CitizenDetailsCount>
     //               </CitizenDetailsCard>
     //               <CitizenDetailsCard>
@@ -439,7 +617,7 @@ function WardAdminDashboard() {
     //                   Citizens of age > 60
     //                 </CitizenDetailsCountLabel>
     //                 <CitizenDetailsCount>
-    //                   {AdminDashboardData.NoOfPersonMoreThan60}
+    //                   {MOHDashboardData.NoOfPersonMoreThan60}
     //                 </CitizenDetailsCount>
     //               </CitizenDetailsCard>
     //             </div>
@@ -489,7 +667,7 @@ function WardAdminDashboard() {
     //                         margin: "0px 30px",
     //                       }}
     //                     >
-    //                       {AdminDashboardData.NoOfMaleEnrolled}
+    //                       {MOHDashboardData.NoOfMaleEnrolled}
     //                     </p>
     //                   </div>
     //                 </Col>
@@ -525,7 +703,7 @@ function WardAdminDashboard() {
     //                         margin: "0px 30px",
     //                       }}
     //                     >
-    //                       {AdminDashboardData.NoOfFemaleEnrolled}
+    //                       {MOHDashboardData.NoOfFemaleEnrolled}
     //                     </p>
     //                   </div>
     //                 </Col>
@@ -560,7 +738,7 @@ function WardAdminDashboard() {
     //                         margin: "0px 30px",
     //                       }}
     //                     >
-    //                       {AdminDashboardData.NoOfPersonMoreThan30}
+    //                       {MOHDashboardData.NoOfPersonMoreThan30}
     //                     </p>
     //                   </div>
     //                 </Col>
@@ -593,7 +771,7 @@ function WardAdminDashboard() {
     //                         margin: "0px 30px",
     //                       }}
     //                     >
-    //                       {AdminDashboardData.NoOfPersonMoreThan60}
+    //                       {MOHDashboardData.NoOfPersonMoreThan60}
     //                     </p>
     //                   </div>
     //                 </Col>
@@ -636,7 +814,7 @@ function WardAdminDashboard() {
     //                         margin: "5% 0% 0% 20%",
     //                       }}
     //                     >
-    //                       {AdminDashboardData.NoLabTestAdded}
+    //                       {MOHDashboardData.NoLabTestAdded}
     //                     </p>
     //                   </Col>
     //                 </Row>
@@ -677,7 +855,7 @@ function WardAdminDashboard() {
     //                         margin: "5% 0% 0% 20%",
     //                       }}
     //                     >
-    //                       {AdminDashboardData.BloodCollectedAtHome}
+    //                       {MOHDashboardData.BloodCollectedAtHome}
     //                     </p>
     //                   </Col>
     //                 </Row>
@@ -718,7 +896,7 @@ function WardAdminDashboard() {
     //                         margin: "5% 0% 0% 20%",
     //                       }}
     //                     >
-    //                       {AdminDashboardData.BloodCollectedAtCenter}
+    //                       {MOHDashboardData.BloodCollectedAtCenter}
     //                     </p>
     //                   </Col>
     //                 </Row>
@@ -763,7 +941,7 @@ function WardAdminDashboard() {
     //                         margin: "5% 0% 0% 20%",
     //                       }}
     //                     >
-    //                       {AdminDashboardData.TotalReportGenerated}
+    //                       {MOHDashboardData.TotalReportGenerated}
     //                     </p>
     //                   </Col>
     //                 </Row>
@@ -804,7 +982,7 @@ function WardAdminDashboard() {
     //                         margin: "5% 0% 0% 20%",
     //                       }}
     //                     >
-    //                       {AdminDashboardData.BloodCollecttionDeniedByAmo}
+    //                       {MOHDashboardData.BloodCollecttionDeniedByAmo}
     //                     </p>
     //                   </Col>
     //                 </Row>
@@ -846,7 +1024,7 @@ function WardAdminDashboard() {
     //                       }}
     //                     >
     //                       {
-    //                         AdminDashboardData.BloodCollecttionDeniedByIndividual
+    //                         MOHDashboardData.BloodCollecttionDeniedByIndividual
     //                       }
     //                     </p>
     //                   </Col>

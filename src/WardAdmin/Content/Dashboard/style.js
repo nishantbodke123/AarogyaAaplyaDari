@@ -131,7 +131,7 @@ export const ReferralCountCard = styled(Card)`
     padding: 0% 0%;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
   }
 `;
 export const CardTitle = styled.span`
@@ -155,5 +155,5 @@ export const DetailSubtitle = styled.span`
   margin-bottom: 20px;
 `;
 export const Line = styled(Divider)`
-  margin: 0px 0px 15px 0px !important;
+  margin: 0px 0px 25px 0px !important;
 `;
