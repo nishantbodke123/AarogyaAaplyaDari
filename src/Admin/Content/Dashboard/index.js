@@ -89,14 +89,14 @@ function AdminDashboard() {
               </CountCard>
             </MainCountRow>
             <br />
-            <Row>
-              <CountCard style={{ marginRight: "14px" }}>
+            <MainCountRow>
+              <CountCard>
                 <CardTitle>ABHA Id Generated</CardTitle>
                 <CountTitle>
                   {AdminDashboardData.NoOfAbhaIdGenerated}
                 </CountTitle>
               </CountCard>
-              <CountCard style={{ marginRight: "14px" }}>
+              <CountCard>
                 <CardTitle>Citizens of age {`>`} 30</CardTitle>
                 <CountTitle>
                   {AdminDashboardData.NoOfPersonMoreThan30}
@@ -108,7 +108,7 @@ function AdminDashboard() {
                   {AdminDashboardData.NoOfPersonMoreThan60}
                 </CountTitle>
               </CountCard>
-            </Row>
+            </MainCountRow>
           </Col>
           <Col span={1}></Col>
           <Col span={9} style={{ width: "100%" }}>
