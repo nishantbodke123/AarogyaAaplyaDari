@@ -207,7 +207,7 @@ function Healthworker() {
     setU_ward(id);
     setSectionList([]);
     setU_HealthPost();
-    setU_section();
+    setU_section([]);
     axios
       .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${id}`, {
         headers: {
@@ -232,7 +232,7 @@ function Healthworker() {
     setU_HealthPost(id);
     console.log(id);
     setSectionList([]);
-    setU_section();
+    setU_section([]);
     axios
       .get(`${BASE_URL}/allauth/api/GetSectionListAPI/${id}`, {
         headers: {
@@ -267,13 +267,13 @@ function Healthworker() {
   };
   let axiosConfig = {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
 
   const handleEditModalShow = (data) => {
-    console.log(data.is_active);
+    console.log(data);
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -340,7 +340,11 @@ function Healthworker() {
     setU_email(data.emailId);
     setU_ward(data.ward);
     setU_HealthPost(data.health_Post);
-    setU_section(data.section_id);
+    setU_section(
+      data.userSections.map((data) => {
+        return data.id;
+      })
+    );
     setU_Is_ActiveStatus(data.is_active);
     setShowEditModal(true);
   };
@@ -351,7 +355,7 @@ function Healthworker() {
     setU_email(null);
     setU_ward();
     setU_HealthPost();
-    setU_section();
+    setU_section([]);
     setU_Is_ActiveStatus();
     setShowEditModal(false);
     setHealthPostNameList([]);
@@ -359,17 +363,47 @@ function Healthworker() {
   };
 
   const handleAddUser = () => {
-    let formData = new FormData();
-    formData.append("name", name);
-    formData.append("username", userName);
-    formData.append("password", password);
-    formData.append("phoneNumber", phoneNumber);
-    email !== null && formData.append("emailId", email);
-    formData.append("userSections", section);
-    formData.append("group", "healthworker");
+    // let formData = new FormData();
+    // formData.append("name", name);
+    // formData.append("username", userName);
+    // formData.append("password", password);
+    // formData.append("phoneNumber", phoneNumber);
+    // email !== null && formData.append("emailId", email);
+    // formData.append("userSections", section);
+    // formData.append("group", "healthworker");
+    // if (password !== confirmPassword) {
+    //   message.warning("password and confirm password should be same");
+    // } else {
+    // axios
+    //   .post(
+    //     `${BASE_URL}/adminportal/api/InsertUsersByadmin`,
+    //     formData,
+    //     axiosConfig
+    //   )
+    //   .then((res) => {
+    //     console.log(res.data.message);
+    //     message.success(res.data.message);
+    //     setRefresh(refresh + 1);
+    //     handleHealthWorkerModalClose();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     message.warning(err.response.data.message);
+    //   });
+    // }
+    setLoader(true);
     if (password !== confirmPassword) {
       message.warning("password and confirm password should be same");
     } else {
+      const formData = {
+        name: name,
+        username: userName,
+        password: password,
+        phoneNumber: phoneNumber,
+        ...(email && { emailId: email }),
+        userSections: section,
+        group: "healthworker",
+      };
       axios
         .post(
           `${BASE_URL}/adminportal/api/InsertUsersByadmin`,
@@ -377,6 +411,7 @@ function Healthworker() {
           axiosConfig
         )
         .then((res) => {
+          setLoader(false);
           console.log(res.data.message);
           message.success(res.data.message);
           setRefresh(refresh + 1);
@@ -384,11 +419,18 @@ function Healthworker() {
         })
         .catch((err) => {
           console.log(err);
+          setLoader(false);
           message.warning(err.response.data.message);
+          if (err.response.status == "401") {
+            setTimeout(() => {
+              LogOut();
+            }, 1000);
+          }
         });
     }
   };
   const handleUpdateUser = () => {
+    setLoader(true);
     console.log(healthworkerID);
     console.log(u_is_ActiveStatus);
     if (u_name === "") {
@@ -402,29 +444,78 @@ function Healthworker() {
     } else if (u_is_ActiveStatus === undefined) {
       message.warning("Select Active Status");
     } else {
-      const formData = new FormData();
-      formData.append("name", u_name);
-      formData.append("username", u_userName);
-      u_email !== null && formData.append("emailId", u_email);
-      formData.append("phoneNumber", u_phoneNumber);
-      formData.append("section", u_Section);
-      formData.append("is_active", u_is_ActiveStatus);
-      axios
-        .patch(
-          `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${healthworkerID}`,
-          formData,
-          axiosConfig
-        )
-        .then((res) => {
-          console.log(res);
-          message.success(res.data.message);
-          setRefresh(refresh + 1);
-          handleEditModalClose();
-        })
-        .catch((err) => {
-          console.log(err);
-          message.warning(err.response.data.message);
-        });
+      // const formData = new FormData();
+      // formData.append("name", u_name);
+      // formData.append("username", u_userName);
+      // u_email !== null && formData.append("emailId", u_email);
+      // formData.append("phoneNumber", u_phoneNumber);
+      // formData.append("section", u_Section);
+      // formData.append("is_active", u_is_ActiveStatus);
+      // axios
+      //   .patch(
+      //     `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${healthworkerID}`,
+      //     formData,
+      //     axiosConfig
+      //   )
+      //   .then((res) => {
+      //     console.log(res);
+      //     message.success(res.data.message);
+      //     setRefresh(refresh + 1);
+      //     handleEditModalClose();
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //     message.warning(err.response.data.message);
+      //   });
+      if (password !== confirmPassword) {
+        message.warning("password and confirm password should be same");
+      } else {
+        const formData = {
+          name: u_name,
+          username: u_userName,
+          phoneNumber: u_phoneNumber,
+          ...(email && { emailId: u_email }),
+          // ...(u_Section != [] && { userSections: u_Section }),
+          userSections: u_Section,
+          group: "healthworker",
+        };
+        // const formData = new FormData();
+        // formData.append("name", u_name);
+        // formData.append("username", u_userName);
+        // u_email !== null && formData.append("emailId", u_email);
+        // formData.append("phoneNumber", u_phoneNumber);
+        // formData.append("section", u_Section);
+        // formData.append("is_active", u_is_ActiveStatus);
+        axios
+          .patch(
+            `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${healthworkerID}`,
+            formData,
+            axiosConfig
+            // {
+            //   headers: {
+            //     "Content-Type": "multipart/form-data",
+            //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
+            //   },
+            // }
+          )
+          .then((res) => {
+            setLoader(false);
+            console.log(res);
+            message.success(res.data.message);
+            setRefresh(refresh + 1);
+            handleEditModalClose();
+          })
+          .catch((err) => {
+            setLoader(false);
+            console.log(err);
+            message.warning(err.response.data.message);
+            if (err.response.status == "401") {
+              setTimeout(() => {
+                LogOut();
+              }, 1000);
+            }
+          });
+      }
     }
   };
 
@@ -498,7 +589,10 @@ function Healthworker() {
     },
     {
       title: "Section",
-      dataIndex: "section",
+      dataIndex: "userSections",
+      render: (data) => {
+        return data.map((data) => <li>{data.sectionName}</li>);
+      },
     },
     {
       title: "Name",
@@ -778,6 +872,7 @@ function Healthworker() {
                   <FormItem label="Section">
                     <Select
                       showSearch
+                      mode="multiple"
                       style={{ width: "350px" }}
                       value={section}
                       filterOption={(inputValue, option) =>
@@ -939,6 +1034,7 @@ function Healthworker() {
                     <FormItem label="Section">
                       <Select
                         showSearch
+                        mode="multiple"
                         style={{ width: "350px" }}
                         value={u_Section}
                         filterOption={(inputValue, option) =>

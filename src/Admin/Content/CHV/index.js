@@ -93,7 +93,7 @@ function CHV() {
   const [u_email, setU_email] = useState(null);
   const [u_ward, setU_ward] = useState();
   const [u_healthPost, setU_HealthPost] = useState();
-  const [u_Section, setU_section] = useState();
+  const [u_Section, setU_section] = useState([]);
   const [u_is_ActiveStatus, setU_Is_ActiveStatus] = useState();
 
   const handleU_NameChange = (e) => {
@@ -214,7 +214,7 @@ function CHV() {
     setHealthPostNameList([]);
     setSectionList([]);
     setU_HealthPost();
-    setU_section();
+    setU_section([]);
     axios
       .get(`${BASE_URL}/allauth/api/GethealthPostNameListAPI/${id}`, {
         headers: {
@@ -247,7 +247,7 @@ function CHV() {
   const handleHealthPostSelect = (id) => {
     setU_HealthPost(id);
     setSectionList([]);
-    setU_section();
+    setU_section([]);
     console.log(id);
     axios
       .get(`${BASE_URL}/allauth/api/GetSectionListAPI/${id}`, {
@@ -362,7 +362,11 @@ function CHV() {
     setU_ward(data.ward);
     setU_Is_ActiveStatus(data.is_active);
     setU_HealthPost(data.health_Post);
-    setU_section(data.section_id);
+    setU_section(
+      data.userSections.map((data) => {
+        return data.id;
+      })
+    );
     setShowEditModal(true);
   };
   const handleEditModalClose = () => {
@@ -372,7 +376,7 @@ function CHV() {
     setU_email(null);
     setU_ward();
     setU_HealthPost();
-    setU_section();
+    setU_section([]);
     setU_Is_ActiveStatus();
     setShowEditModal(false);
     setAreaList([]);
@@ -390,7 +394,7 @@ function CHV() {
         password: password,
         phoneNumber: phoneNumber,
         ...(email && { emailId: email }),
-        useSection: section,
+        userSections: section,
         group: "CHV-ASHA",
       };
       axios
@@ -1109,6 +1113,7 @@ function CHV() {
 
                 <Row>
                   <Col>
+                    {console.log(u_Section)}
                     <FormItem label="Section">
                       <Select
                         showSearch

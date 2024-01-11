@@ -351,7 +351,7 @@ function WardAdminDashboard() {
               </Col>
             </Row>
             <Row>
-              {" "}
+              
               <Col span={5}>
                 <ReferralCountCard>
                   <CardTitle> Communicable Disease</CardTitle>
@@ -359,7 +359,7 @@ function WardAdminDashboard() {
                 </ReferralCountCard>
               </Col>
               <Col span={5}>
-                {" "}
+                
                 <ReferralCountCard>
                   <CardTitle> Alzheimers</CardTitle>
                   <CountTitle>{MOHDashboardData.Alzheimers}</CountTitle>

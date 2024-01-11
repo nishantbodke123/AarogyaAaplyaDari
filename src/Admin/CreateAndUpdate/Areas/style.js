@@ -19,7 +19,7 @@ export const SubmitButton = styled(Button)`
   width: 150px;
   margin: 0% 5% 0% 0%;
 `;
-export const UpdateButton =styled(Button)`
-background-color: #176B87;
- color: white
-`
+export const UpdateButton = styled(Button)`
+  background-color: #176b87;
+  color: white;
+`;
