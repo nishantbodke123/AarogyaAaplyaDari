@@ -223,13 +223,22 @@ function AdminDashboard() {
                   </CountTitle>
                 </CountCard>
                 <CountCard>
-                  <CardTitle>Citizens of age {`>`} 30</CardTitle>
+                  <CardTitle>Citizens 30 years + enrolled</CardTitle>
                   <CountTitle>
                     {AdminDashboardData.NoOfPersonMoreThan30}
                   </CountTitle>
                 </CountCard>
                 <CountCard>
-                  <CardTitle>Citizens of age {`>`} 60</CardTitle>
+                  <CardTitle>Citizens 60 years + enrolled</CardTitle>
+                  <CountTitle>
+                    {AdminDashboardData.NoOfPersonMoreThan60}
+                  </CountTitle>
+                </CountCard>
+              </MainCountRow>
+              <br />
+              <MainCountRow>
+                <CountCard>
+                  <CardTitle>Vulnerable Citizen</CardTitle>
                   <CountTitle>
                     {AdminDashboardData.NoOfPersonMoreThan60}
                   </CountTitle>
@@ -242,8 +251,25 @@ function AdminDashboard() {
                 <h3>Blood Collection Details</h3>
                 <br />
                 <MainCountRow>
-                  <DetailSubtitle>Total Lab Test Added</DetailSubtitle>
+                  <DetailSubtitle> Tests Suggested</DetailSubtitle>
                   <CountTitle>{AdminDashboardData.NoLabTestAdded}</CountTitle>
+                </MainCountRow>
+                <Line />
+                <MainCountRow>
+                  <DetailSubtitle> Tests Assigned</DetailSubtitle>
+                  <CountTitle>{AdminDashboardData.NoLabTestAdded}</CountTitle>
+                </MainCountRow>
+                <Line />
+                <MainCountRow>
+                  <DetailSubtitle> Tests Done</DetailSubtitle>
+                  <CountTitle>{AdminDashboardData.NoLabTestAdded}</CountTitle>
+                </MainCountRow>
+                <Line />
+                <MainCountRow>
+                  <DetailSubtitle>Total Reports Generated</DetailSubtitle>
+                  <CountTitle>
+                    {AdminDashboardData.TotalReportGenerated}
+                  </CountTitle>
                 </MainCountRow>
                 <Line />
                 <MainCountRow>
@@ -260,13 +286,7 @@ function AdminDashboard() {
                   </CountTitle>
                 </MainCountRow>
                 <Line />
-                <MainCountRow>
-                  <DetailSubtitle>Total Reports Generated</DetailSubtitle>
-                  <CountTitle>
-                    {AdminDashboardData.TotalReportGenerated}
-                  </CountTitle>
-                </MainCountRow>
-                <Line />
+
                 <MainCountRow>
                   <DetailSubtitle>
                     Blood Collecttion Denied By AMO
@@ -323,6 +343,7 @@ function AdminDashboard() {
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
+                <div style={{ height: "10px" }}></div>
                 <Row>
                   {" "}
                   <Col span={8}>
@@ -346,7 +367,7 @@ function AdminDashboard() {
               </div>
             </div>{" "}
             <Divider />
-            <div>
+            {/* <div>
               <div>
                 <h3>Vulnerable</h3>
               </div>
@@ -363,7 +384,7 @@ function AdminDashboard() {
                   <Col span={8}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Greater Than 70 years</CardTitle>
+                      <CardTitle> Citizen of 70 years +</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.vulnerabel_70_Years}
                       </CountTitle>
@@ -379,6 +400,7 @@ function AdminDashboard() {
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
+                <div style={{ height: "10px" }}></div>
                 <Row>
                   {" "}
                   <Col span={8}>
@@ -413,8 +435,7 @@ function AdminDashboard() {
                   </Col>
                 </Row>
               </div>
-            </div>
-            <Divider />
+            </div> */}
             <div>
               <div>
                 <h3>Disease</h3>
@@ -423,7 +444,7 @@ function AdminDashboard() {
                 <Row>
                   <Col span={5}>
                     <ReferralCountCard>
-                      <CardTitle> Total TB</CardTitle>
+                      <CardTitle>TB</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.total_tb_count}
                       </CountTitle>
@@ -432,7 +453,7 @@ function AdminDashboard() {
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Total Diabetes</CardTitle>
+                      <CardTitle>Diabetes</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.total_diabetes}
                       </CountTitle>
@@ -441,7 +462,7 @@ function AdminDashboard() {
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Total Eye Problem</CardTitle>
+                      <CardTitle>Hypertension</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.total_eye_problem}
                       </CountTitle>
@@ -450,7 +471,7 @@ function AdminDashboard() {
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Total Ear Problem</CardTitle>
+                      <CardTitle> Oral Cancer</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.total_ear_problem}
                       </CountTitle>
@@ -459,18 +480,19 @@ function AdminDashboard() {
                   <Col span={4}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Total Leprosy</CardTitle>
+                      <CardTitle> Cervical Cancer</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.total_leprosy}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
+                <div style={{ height: "10px" }}></div>
                 <Row>
                   {" "}
                   <Col span={5}>
                     <ReferralCountCard>
-                      <CardTitle> Total Fits Problem</CardTitle>
+                      <CardTitle> Breast Cancer</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.total_fits_problem}
                       </CountTitle>
@@ -479,7 +501,7 @@ function AdminDashboard() {
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Total Breast Cancer</CardTitle>
+                      <CardTitle> COPD</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.total_breast_cancer}
                       </CountTitle>
@@ -488,7 +510,7 @@ function AdminDashboard() {
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Total Oral Cancer</CardTitle>
+                      <CardTitle> Asthama</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.total_oral_cancer}
                       </CountTitle>
@@ -497,7 +519,37 @@ function AdminDashboard() {
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Total Cervival Cancer</CardTitle>
+                      <CardTitle> Alzheimer/Dementia</CardTitle>
+                      <CountTitle>
+                        {AdminDashboardData.total_cervical_cancer}
+                      </CountTitle>
+                    </ReferralCountCard>{" "}
+                  </Col>
+                  <Col span={4}>
+                    {" "}
+                    <ReferralCountCard>
+                      <CardTitle> ENT Disorder</CardTitle>
+                      <CountTitle>
+                        {AdminDashboardData.total_cervical_cancer}
+                      </CountTitle>
+                    </ReferralCountCard>{" "}
+                  </Col>
+                </Row>
+                <div style={{ height: "10px" }}></div>
+                <Row>
+                  <Col span={5}>
+                    {" "}
+                    <ReferralCountCard>
+                      <CardTitle> Eye Disorder</CardTitle>
+                      <CountTitle>
+                        {AdminDashboardData.total_cervical_cancer}
+                      </CountTitle>
+                    </ReferralCountCard>{" "}
+                  </Col>
+                  <Col span={5}>
+                    {" "}
+                    <ReferralCountCard>
+                      <CardTitle> Other Communicable Disease</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.total_cervical_cancer}
                       </CountTitle>

@@ -38,7 +38,7 @@ function WardHealthworker() {
   const [refresh, setRefresh] = useState(1);
   let axiosConfig = {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
@@ -321,17 +321,47 @@ function WardHealthworker() {
   };
 
   const handleAddUser = () => {
-    let formData = new FormData();
-    formData.append("name", name);
-    formData.append("username", userName);
-    formData.append("password", password);
-    formData.append("phoneNumber", phoneNumber);
-    formData.append("emailId", email);
-    formData.append("section", section);
-    formData.append("group", "healthworker");
+    // let formData = new FormData();
+    // formData.append("name", name);
+    // formData.append("username", userName);
+    // formData.append("password", password);
+    // formData.append("phoneNumber", phoneNumber);
+    // formData.append("emailId", email);
+    // formData.append("section", section);
+    // formData.append("group", "healthworker");
+    // if (password !== confirmPassword) {
+    //   message.warning("password and confirm password should be same");
+    // } else {
+    // axios
+    //   .post(
+    //     `${BASE_URL}/adminportal/api/InsertUsersByMOH`,
+    //     formData,
+    //     axiosConfig
+    //   )
+    //   .then((res) => {
+    //     console.log(res.data.message);
+    //     message.success(res.data.message);
+    //     setRefresh(refresh + 1);
+    //     handleHealthWorkerModalClose();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     message.warning(err.response.data.message);
+    //   });
+    // }
+    setLoader(true);
     if (password !== confirmPassword) {
       message.warning("password and confirm password should be same");
     } else {
+      const formData = {
+        name: name,
+        username: userName,
+        password: password,
+        phoneNumber: phoneNumber,
+        ...(email && { emailId: email }),
+        userSections: section,
+        group: "healthworker",
+      };
       axios
         .post(
           `${BASE_URL}/adminportal/api/InsertUsersByMOH`,
@@ -339,12 +369,14 @@ function WardHealthworker() {
           axiosConfig
         )
         .then((res) => {
+          setLoader(false);
           console.log(res.data.message);
           message.success(res.data.message);
           setRefresh(refresh + 1);
           handleHealthWorkerModalClose();
         })
         .catch((err) => {
+          setLoader(false);
           console.log(err);
           message.warning(err.response.data.message);
         });
@@ -462,7 +494,10 @@ function WardHealthworker() {
     },
     {
       title: "Section",
-      dataIndex: "section",
+      dataIndex: "userSections",
+      render: (data) => {
+        return data.map((data) => <li>{data.sectionName}</li>);
+      },
     },
     {
       title: "Name",
@@ -710,6 +745,7 @@ function WardHealthworker() {
                   <FormItem label="Section">
                     <Select
                       showSearch
+                      mode="multiple"
                       style={{ width: "350px" }}
                       value={section}
                       filterOption={(inputValue, option) =>

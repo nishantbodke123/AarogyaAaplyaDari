@@ -99,5 +99,5 @@ export const DetailSubtitle = styled.span`
   margin-bottom: 20px;
 `;
 export const Line = styled(Divider)`
-  margin: 0px 0px 15px 0px !important;
+  margin: 0px 0px 12px 0px !important;
 `;

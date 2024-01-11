@@ -37,7 +37,7 @@ function WardCHV() {
   const [refresh, setRefresh] = useState(1);
   let axiosConfig = {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
@@ -326,17 +326,20 @@ function WardCHV() {
     setSectionList([]);
   };
   const handleAddUser = () => {
-    let formData = new FormData();
-    formData.append("name", name);
-    formData.append("username", userName);
-    formData.append("password", password);
-    formData.append("phoneNumber", phoneNumber);
-    formData.append("emailId", email);
-    formData.append("section", section);
-    formData.append("group", "CHV-ASHA");
     if (password !== confirmPassword) {
       message.warning("password and confirm password should be same");
     } else {
+      setLoader(true);
+      const formData = {
+        name: name,
+        username: userName,
+        password: password,
+        phoneNumber: phoneNumber,
+        ...(email && { emailId: email }),
+        userSections: section,
+        group: "CHV-ASHA",
+      };
+
       axios
         .post(
           `${BASE_URL}/adminportal/api/InsertUsersByMOH`,
@@ -344,15 +347,46 @@ function WardCHV() {
           axiosConfig
         )
         .then((res) => {
+          setLoader(false);
           console.log(res.data.message);
           message.success(res.data.message);
           setRefresh(refresh + 1);
           handleCHVModalClose();
         })
         .catch((err) => {
+          setLoader(false);
           console.log(err);
           message.warning(err.response.data.message);
         });
+
+      // let formData = new FormData();
+      // formData.append("name", name);
+      // formData.append("username", userName);
+      // formData.append("password", password);
+      // formData.append("phoneNumber", phoneNumber);
+      // formData.append("emailId", email);
+      // formData.append("section", section);
+      // formData.append("group", "CHV-ASHA");
+      // if (password !== confirmPassword) {
+      //   message.warning("password and confirm password should be same");
+      // } else {
+      //   axios
+      //     .post(
+      //       `${BASE_URL}/adminportal/api/InsertUsersByMOH`,
+      //       formData,
+      //       axiosConfig
+      //     )
+      //     .then((res) => {
+      //       console.log(res.data.message);
+      //       message.success(res.data.message);
+      //       setRefresh(refresh + 1);
+      //       handleCHVModalClose();
+      //     })
+      //     .catch((err) => {
+      //       console.log(err);
+      //       message.warning(err.response.data.message);
+      //     });
+      // }
     }
   };
   const handleUpdateUser = () => {
@@ -769,6 +803,7 @@ function WardCHV() {
                   <FormItem label="Section">
                     <Select
                       showSearch
+                      mode="multiple"
                       style={{ width: "350px" }}
                       value={section}
                       filterOption={(inputValue, option) =>
