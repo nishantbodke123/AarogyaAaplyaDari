@@ -118,7 +118,7 @@ function WardAdminDashboard() {
             width: "100%",
             height: "100%",
             overflowY: "auto",
-            maxHeight: "89vh",
+            maxHeight: "79vh",
           }}
         >
           <Col span={14}>
@@ -183,8 +183,8 @@ function WardAdminDashboard() {
               </CountCard>
             </MainCountRow>
             <br />
-            <Row>
-              <CountCard style={{ marginRight: "14px" }}>
+            <MainCountRow>
+              <CountCard>
                 <CardTitle>Citizens 30 years + enrolled</CardTitle>
                 <CountTitle>{MOHDashboardData.citizen_above_30}</CountTitle>
               </CountCard>
@@ -192,7 +192,11 @@ function WardAdminDashboard() {
                 <CardTitle>Citizens 60 years + enrolled </CardTitle>
                 <CountTitle>{MOHDashboardData.citizen_above_60}</CountTitle>
               </CountCard>
-            </Row>
+              <CountCard>
+                <CardTitle>Vulnerable Citizens </CardTitle>
+                <CountTitle>{MOHDashboardData.total_vulnerabel}</CountTitle>
+              </CountCard>
+            </MainCountRow>
           </Col>
           <Col span={1}></Col>
           <Col span={9} style={{ width: "100%" }}>
@@ -200,8 +204,23 @@ function WardAdminDashboard() {
               <h3>Blood Collection Details</h3>
               <br />
               <MainCountRow>
-                <DetailSubtitle>Total Lab Test Added</DetailSubtitle>
+                <DetailSubtitle> Tests Suggested</DetailSubtitle>
                 <CountTitle>{MOHDashboardData.total_LabTestAdded}</CountTitle>
+              </MainCountRow>
+              <Line />
+              <MainCountRow>
+                <DetailSubtitle> Tests Assigned</DetailSubtitle>
+                <CountTitle>0</CountTitle>
+              </MainCountRow>
+              <Line />
+              <MainCountRow>
+                <DetailSubtitle> Tests Done</DetailSubtitle>
+                <CountTitle>0</CountTitle>
+              </MainCountRow>
+              <Line />
+              <MainCountRow>
+                <DetailSubtitle>Total Reports Generated</DetailSubtitle>
+                <CountTitle>{MOHDashboardData.TestReportGenerated}</CountTitle>
               </MainCountRow>
               <Line />
               <MainCountRow>
@@ -216,11 +235,7 @@ function WardAdminDashboard() {
                 </CountTitle>
               </MainCountRow>
               <Line />
-              <MainCountRow>
-                <DetailSubtitle>Total Reports Generated</DetailSubtitle>
-                <CountTitle>{MOHDashboardData.TestReportGenerated}</CountTitle>
-              </MainCountRow>
-              <Line />
+
               <MainCountRow>
                 <DetailSubtitle>Blood Collecttion Denied By AMO</DetailSubtitle>
                 <CountTitle>{MOHDashboardData.denieded_by_mo_count}</CountTitle>
@@ -316,7 +331,7 @@ function WardAdminDashboard() {
             </div>
           </div>
           <Divider />
-          <div>
+          {/* <div>
             <div>
               <h3>Vulnerable</h3>
             </div>
@@ -380,7 +395,7 @@ function WardAdminDashboard() {
                 </Col>
               </Row>
             </div>
-          </div>
+          </div> */}
           <Divider />
           <div>
             <div>
@@ -461,12 +476,21 @@ function WardAdminDashboard() {
               </Row>
               <div style={{ height: "10px" }}></div>
               <Row>
-                <ReferralCountCard style={{ width: "19%" }}>
-                  <CardTitle> Other Communicable Disease</CardTitle>
-                  <CountTitle>
-                    {MOHDashboardData.other_communicable_dieases}
-                  </CountTitle>
-                </ReferralCountCard>
+                <Col span={5}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle>Cervical Cancer </CardTitle>
+                    <CountTitle>{MOHDashboardData.cervical_cancer}</CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+                <Col span={5}>
+                  <ReferralCountCard >
+                    <CardTitle> Other Communicable Disease</CardTitle>
+                    <CountTitle>
+                      {MOHDashboardData.other_communicable_dieases}
+                    </CountTitle>
+                  </ReferralCountCard>
+                </Col>
               </Row>
             </div>
           </div>
