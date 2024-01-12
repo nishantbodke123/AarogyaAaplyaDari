@@ -33,7 +33,7 @@ function AdminDashboard() {
     console.log(selectedWard);
     setLoader(true);
     axios
-      .get(`${BASE_URL}/adminportal/api/AdminDashboard`, {
+      .get(`${BASE_URL}/adminportal/api/AdminDashboardView`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
@@ -46,8 +46,8 @@ function AdminDashboard() {
       })
       .then((response) => {
         setLoader(false);
-        console.log(response.data.data);
-        setAdminDashboardData(response.data.data);
+        console.log(response.data);
+        setAdminDashboardData(response.data);
       })
       .catch((error) => {
         console.log(error.response.status);
@@ -159,19 +159,15 @@ function AdminDashboard() {
               <MainCountRow>
                 <CountCard>
                   <CardTitle>ANM/Co-Ordinator</CardTitle>
-                  <CountTitle>
-                    {AdminDashboardData.TotalHealthWorkerCount}
-                  </CountTitle>
+                  <CountTitle>{AdminDashboardData.ANM_count}</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>CHV/ASHA</CardTitle>
-                  <CountTitle>
-                    {AdminDashboardData.TotalChvAshaCount}
-                  </CountTitle>
+                  <CountTitle>{AdminDashboardData.CHV_ASHA_count}</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>MO</CardTitle>
-                  <CountTitle>{AdminDashboardData.TotalMoCount}</CountTitle>
+                  <CountTitle>{AdminDashboardData.MO_count}</CountTitle>
                 </CountCard>
               </MainCountRow>
               <h3>Citizens Details</h3>
@@ -179,18 +175,18 @@ function AdminDashboard() {
                 <CountCard>
                   <CardTitle>Families Enrolled</CardTitle>
                   <CountTitle>
-                    {AdminDashboardData.NoOfFamilyEnrolled}
+                    {AdminDashboardData.total_family_count}
                   </CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens Enrolled</CardTitle>
                   <CountTitle>
-                    {AdminDashboardData.NoOfCitizenEnrolled}
+                    {AdminDashboardData.total_count}
                   </CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>CBAC Filled</CardTitle>
-                  <CountTitle>{AdminDashboardData.NoOfCBACFilled}</CountTitle>
+                  <CountTitle>{AdminDashboardData.total_cbac_count}</CountTitle>
                 </CountCard>
               </MainCountRow>
               <br />
@@ -199,19 +195,19 @@ function AdminDashboard() {
                   <CardTitle>Males Enrolled</CardTitle>
                   <CountTitle>
                     {" "}
-                    {AdminDashboardData.NoOfMaleEnrolled}
+                    {AdminDashboardData.male}
                   </CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Females Enrolled</CardTitle>
                   <CountTitle>
                     {" "}
-                    {AdminDashboardData.NoOfFemaleEnrolled}
+                    {AdminDashboardData.female}
                   </CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Transegender Enrolled</CardTitle>
-                  <CountTitle> 0</CountTitle>
+                  <CountTitle> {AdminDashboardData.transgender}</CountTitle>
                 </CountCard>
               </MainCountRow>
               <br />
@@ -219,19 +215,19 @@ function AdminDashboard() {
                 <CountCard>
                   <CardTitle>ABHA Id Generated</CardTitle>
                   <CountTitle>
-                    {AdminDashboardData.NoOfAbhaIdGenerated}
+                   0
                   </CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens 30 years + enrolled</CardTitle>
                   <CountTitle>
-                    {AdminDashboardData.NoOfPersonMoreThan30}
+                    {AdminDashboardData.citizen_above_30}
                   </CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens 60 years + enrolled</CardTitle>
                   <CountTitle>
-                    {AdminDashboardData.NoOfPersonMoreThan60}
+                    {AdminDashboardData.citizen_above_60}
                   </CountTitle>
                 </CountCard>
               </MainCountRow>
@@ -240,7 +236,7 @@ function AdminDashboard() {
                 <CountCard>
                   <CardTitle>Vulnerable Citizen</CardTitle>
                   <CountTitle>
-                    {AdminDashboardData.NoOfPersonMoreThan60}
+                    {AdminDashboardData.total_vulnerabel}
                   </CountTitle>
                 </CountCard>
               </MainCountRow>
@@ -252,37 +248,37 @@ function AdminDashboard() {
                 <br />
                 <MainCountRow>
                   <DetailSubtitle> Tests Suggested</DetailSubtitle>
-                  <CountTitle>{AdminDashboardData.NoLabTestAdded}</CountTitle>
+                  <CountTitle>0</CountTitle>
                 </MainCountRow>
                 <Line />
                 <MainCountRow>
                   <DetailSubtitle> Tests Assigned</DetailSubtitle>
-                  <CountTitle>{AdminDashboardData.NoLabTestAdded}</CountTitle>
+                  <CountTitle>0</CountTitle>
                 </MainCountRow>
                 <Line />
                 <MainCountRow>
                   <DetailSubtitle> Tests Done</DetailSubtitle>
-                  <CountTitle>{AdminDashboardData.NoLabTestAdded}</CountTitle>
+                  <CountTitle>0</CountTitle>
                 </MainCountRow>
                 <Line />
                 <MainCountRow>
                   <DetailSubtitle>Total Reports Generated</DetailSubtitle>
                   <CountTitle>
-                    {AdminDashboardData.TotalReportGenerated}
+                    {AdminDashboardData.TestReportGenerated}
                   </CountTitle>
                 </MainCountRow>
                 <Line />
                 <MainCountRow>
                   <DetailSubtitle>Blood Collected At Home</DetailSubtitle>
                   <CountTitle>
-                    {AdminDashboardData.BloodCollectedAtHome}
+                    {AdminDashboardData.blood_collected_home}
                   </CountTitle>
                 </MainCountRow>
                 <Line />
                 <MainCountRow>
                   <DetailSubtitle>Blood Collected At Center</DetailSubtitle>
                   <CountTitle>
-                    {AdminDashboardData.BloodCollectedAtCenter}
+                    {AdminDashboardData.blood_collected_center}
                   </CountTitle>
                 </MainCountRow>
                 <Line />
@@ -292,7 +288,7 @@ function AdminDashboard() {
                     Blood Collecttion Denied By AMO
                   </DetailSubtitle>
                   <CountTitle>
-                    {AdminDashboardData.BloodCollecttionDeniedByAmo}
+                    {AdminDashboardData.denieded_by_mo_count}
                   </CountTitle>
                 </MainCountRow>
                 <Line />
@@ -301,7 +297,7 @@ function AdminDashboard() {
                     Blood Collection Denied By Citizen
                   </DetailSubtitle>
                   <CountTitle>
-                    {AdminDashboardData.BloodCollecttionDeniedByIndividual}
+                    {AdminDashboardData.denieded_by_mo_individual}
                   </CountTitle>
                 </MainCountRow>
               </BloodDetailCard>
@@ -318,7 +314,7 @@ function AdminDashboard() {
                         Referral to Mun. Dispensary / HBT for Blood Test /
                         Confirmation / Treatment
                       </CardTitle>
-                      <CountTitle>0</CountTitle>
+                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_Mun_Dispensary}</CountTitle>
                     </ReferralCountCard>
                   </Col>
                   <Col span={8}>
@@ -328,7 +324,7 @@ function AdminDashboard() {
                         {" "}
                         Referral to HBT polyclinic for physician consultation
                       </CardTitle>
-                      <CountTitle>0</CountTitle>
+                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_HBT_polyclinic}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={8}>
@@ -339,7 +335,7 @@ function AdminDashboard() {
                         Referral to Peripheral Hospital / Special Hospital for
                         management of Complication
                       </CardTitle>
-                      <CountTitle>0</CountTitle>
+                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_Peripheral_Hospital}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
@@ -353,14 +349,14 @@ function AdminDashboard() {
                         Referral to Medical College for management of
                         Complication
                       </CardTitle>
-                      <CountTitle>0</CountTitle>
+                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_Medical_College}</CountTitle>
                     </ReferralCountCard>
                   </Col>
                   <Col span={8}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Referral to Private facility</CardTitle>
-                      <CountTitle>0</CountTitle>
+                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_Private_facility}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
@@ -446,7 +442,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle>TB</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_tb_count}
+                        {AdminDashboardData.tb}
                       </CountTitle>
                     </ReferralCountCard>
                   </Col>
@@ -455,7 +451,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle>Diabetes</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_diabetes}
+                        {AdminDashboardData.diabetes}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -464,7 +460,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle>Hypertension</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_eye_problem}
+                        {AdminDashboardData.hypertension}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -473,7 +469,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle> Oral Cancer</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_ear_problem}
+                        {AdminDashboardData.oral_Cancer}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -482,7 +478,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle> Cervical Cancer</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_leprosy}
+                        {AdminDashboardData.cervical_cancer}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -494,7 +490,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle> Breast Cancer</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_fits_problem}
+                        {AdminDashboardData.breast_cancer}
                       </CountTitle>
                     </ReferralCountCard>
                   </Col>
@@ -503,7 +499,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle> COPD</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_breast_cancer}
+                        {AdminDashboardData.copd}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -512,7 +508,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle> Asthama</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_oral_cancer}
+                        {AdminDashboardData.asthama}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -521,7 +517,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle> Alzheimer/Dementia</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_cervical_cancer}
+                        {AdminDashboardData.Alzheimers}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -530,7 +526,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle> ENT Disorder</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_cervical_cancer}
+                        {AdminDashboardData.ent_disorder}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -542,7 +538,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle> Eye Disorder</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_cervical_cancer}
+                        {AdminDashboardData.eye_disorder}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -551,7 +547,7 @@ function AdminDashboard() {
                     <ReferralCountCard>
                       <CardTitle> Other Communicable Disease</CardTitle>
                       <CountTitle>
-                        {AdminDashboardData.total_cervical_cancer}
+                        {AdminDashboardData.other_communicable_dieases}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
