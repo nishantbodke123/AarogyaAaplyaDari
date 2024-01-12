@@ -107,6 +107,9 @@ function Area() {
         params: {
           search: searchValue,
         },
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
       })
       .then((res) => {
         setLoader(false);

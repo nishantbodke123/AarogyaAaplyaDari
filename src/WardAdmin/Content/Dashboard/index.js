@@ -139,24 +139,28 @@ function WardAdminDashboard() {
             <h3>Citizens Details</h3>
             <MainCountRow>
               <CountCard>
-                <CardTitle>Total Families Enrolled</CardTitle>
+                <CardTitle>Family Enrolled</CardTitle>
                 <CountTitle>{MOHDashboardData.total_family_count}</CountTitle>
               </CountCard>
-              <CountCard>
+              {/* <CountCard>
                 <CardTitle>Today's Families Enrolled</CardTitle>
                 <CountTitle>{MOHDashboardData.today_family_count}</CountTitle>
+              </CountCard> */}
+              <CountCard>
+                <CardTitle>Citizens Enrolled</CardTitle>
+                <CountTitle>{MOHDashboardData.total_count}</CountTitle>
               </CountCard>
               <CountCard>
-                <CardTitle> Total Citizens Enrolled</CardTitle>
-                <CountTitle>{MOHDashboardData.total_count}</CountTitle>
+                <CardTitle>CBAC Filled</CardTitle>
+                <CountTitle>{MOHDashboardData.total_cbac_count}</CountTitle>
               </CountCard>
             </MainCountRow>
             <br />
             <MainCountRow>
-              <CountCard>
+              {/* <CountCard>
                 <CardTitle> Today's Citizens Enrolled</CardTitle>
                 <CountTitle>{MOHDashboardData.todays_count}</CountTitle>
-              </CountCard>
+              </CountCard> */}
               <CountCard>
                 <CardTitle>Males Enrolled</CardTitle>
                 <CountTitle> {MOHDashboardData.male}</CountTitle>
@@ -165,25 +169,17 @@ function WardAdminDashboard() {
                 <CardTitle>Females Enrolled</CardTitle>
                 <CountTitle> {MOHDashboardData.female}</CountTitle>
               </CountCard>
-            </MainCountRow>
-            <br />
-            <MainCountRow>
               <CountCard>
                 <CardTitle>Transegender</CardTitle>
                 <CountTitle>{MOHDashboardData.transgender}</CountTitle>
               </CountCard>
-
-              <CountCard>
-                <CardTitle>CBAC Filled</CardTitle>
-                <CountTitle>{MOHDashboardData.total_cbac_count}</CountTitle>
-              </CountCard>
+            </MainCountRow>
+            <br />
+            <MainCountRow>
               <CountCard>
                 <CardTitle>ABHA Id Generated</CardTitle>
                 <CountTitle>0</CountTitle>
               </CountCard>
-            </MainCountRow>
-            <br />
-            <MainCountRow>
               <CountCard>
                 <CardTitle>Citizens 30 years + enrolled</CardTitle>
                 <CountTitle>{MOHDashboardData.citizen_above_30}</CountTitle>
@@ -192,6 +188,9 @@ function WardAdminDashboard() {
                 <CardTitle>Citizens 60 years + enrolled </CardTitle>
                 <CountTitle>{MOHDashboardData.citizen_above_60}</CountTitle>
               </CountCard>
+            </MainCountRow>
+            <br />
+            <MainCountRow>
               <CountCard>
                 <CardTitle>Vulnerable Citizens </CardTitle>
                 <CountTitle>{MOHDashboardData.total_vulnerabel}</CountTitle>

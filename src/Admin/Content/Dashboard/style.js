@@ -72,7 +72,7 @@ export const CountCard = styled(Card)`
 export const ReferralCountCard = styled(Card)`
   width: 90%;
   .ant-card-body {
-    padding: 0% 0%;
+    padding: 0% 5%;
     display: flex;
     flex-direction: column;
     gap: 5px;
