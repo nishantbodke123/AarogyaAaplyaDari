@@ -83,7 +83,7 @@ function WardAdminDashboard() {
           style={{
             display: "flex",
             justifyContent: "end",
-            margin: "1% 3% -3% 0%",
+            margin: "1% 3%-2% 0%",
           }}
         >
           <div style={{ width: "20%" }}>
@@ -396,7 +396,7 @@ function WardAdminDashboard() {
               </Row>
             </div>
           </div> */}
-          <Divider />
+
           <div>
             <div>
               <h3>Disease</h3>
@@ -484,7 +484,7 @@ function WardAdminDashboard() {
                   </ReferralCountCard>{" "}
                 </Col>
                 <Col span={5}>
-                  <ReferralCountCard >
+                  <ReferralCountCard>
                     <CardTitle> Other Communicable Disease</CardTitle>
                     <CountTitle>
                       {MOHDashboardData.other_communicable_dieases}
