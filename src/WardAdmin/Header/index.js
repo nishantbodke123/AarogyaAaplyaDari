@@ -39,9 +39,9 @@ function HeaderBar(props) {
               height: 64,
             }}
           />
-          <div style={{ margin: "-1% 50% 0% 0%" }}>
+          <div style={{ margin: "-1% 0% 0% 50%" }}>
             <div>
-              <p>
+              <p style={{ color: "#1087CA" }}>
                 Welcome to Ward : <b>{sessionStorage.getItem("wardName")}</b>
               </p>
               <br />

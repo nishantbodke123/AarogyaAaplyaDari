@@ -1,4 +1,4 @@
-import { Row, Col, Divider, Form, Spin } from "antd";
+import { Row, Col, Divider, Form, Spin, Button } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   BloodDetailCard,
@@ -13,8 +13,9 @@ import {
 import { BASE_URL } from "../../../Utils/BaseURL";
 import axios from "axios";
 import { LogOut } from "../../../Auth/Logout";
-import { Select } from "@mui/material";
+import { Select, Tooltip } from "@mui/material";
 import FormItem from "antd/es/form/FormItem";
+import { AlignRightOutlined, DownloadOutlined } from "@ant-design/icons";
 
 function AdminDashboard() {
   const [loader, setLoader] = useState(false);
@@ -31,6 +32,7 @@ function AdminDashboard() {
   };
   useEffect(() => {
     console.log(selectedWard);
+    console.log(selectedHealthPost);
     setLoader(true);
     axios
       .get(`${BASE_URL}/adminportal/api/AdminDashboardView`, {
@@ -38,7 +40,7 @@ function AdminDashboard() {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
         params: {
-          wardId: selectedWard,
+          ...(selectedWard !== "" && { wardId: selectedWard }),
           ...(selectedHealthPost !== "" && {
             healthpost_id: selectedHealthPost,
           }),
@@ -74,9 +76,10 @@ function AdminDashboard() {
       });
   }, [selectedWard, selectedHealthPost]);
   const handleWardSelect = (id) => {
+    console.log(id);
     setSelectedWard(id);
     setHealthPostNameList([]);
-    setSelectedHealthPost();
+    setSelectedHealthPost("");
     axios
       .get(
         `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${id}`,
@@ -85,6 +88,43 @@ function AdminDashboard() {
       .then((res) => {
         console.log(res.data.data);
         setHealthPostNameList(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
+  };
+  const handleAdminDashboardExcelDownload = () => {
+    axios
+      .get(`${BASE_URL}/adminportal/api/AdminDashboardExportView`, {
+        params: {
+          ...(selectedWard !== "" && { wardId: selectedWard }),
+          ...(selectedHealthPost !== "" && {
+            healthpost_id: selectedHealthPost,
+          }),
+        },
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute("download", `MOH_Dashboard_Data.xlsx`);
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
       })
       .catch((err) => {
         console.log(err);
@@ -106,10 +146,10 @@ function AdminDashboard() {
               margin: "1% 3% -3% 0%",
             }}
           >
-            <div style={{ width: "20%" }}>
+            <div style={{ width: "30%" }}>
               <Form layout="vertical">
                 <Row>
-                  <Col span={12}>
+                  <Col span={7}>
                     <FormItem label="Ward">
                       <select
                         style={{
@@ -120,7 +160,7 @@ function AdminDashboard() {
                         onChange={(e) => handleWardSelect(e.target.value)}
                       >
                         {" "}
-                        <option>All</option>
+                        <option value="">All</option>
                         {wardList.map((data, index) => (
                           <>
                             <option key={data.id} value={data.id}>
@@ -141,7 +181,7 @@ function AdminDashboard() {
                         value={selectedHealthPost}
                         onChange={(e) => setSelectedHealthPost(e.target.value)}
                       >
-                        <option>All</option>
+                        <option value={undefined}>All</option>
                         {healthPostNameList.map((data, index) => (
                           <option key={data.id} value={data.id}>
                             {data.healthPostName}
@@ -149,6 +189,15 @@ function AdminDashboard() {
                         ))}
                       </select>
                     </FormItem>
+                  </Col>
+                  <Col span={2}>
+                    <div style={{ marginTop: "4vh" }}>
+                      <Tooltip placement="bottom" title="Excel Download">
+                        <Button onClick={handleAdminDashboardExcelDownload}>
+                          <DownloadOutlined />
+                        </Button>
+                      </Tooltip>
+                    </div>
                   </Col>
                 </Row>
               </Form>
@@ -180,9 +229,7 @@ function AdminDashboard() {
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens Enrolled</CardTitle>
-                  <CountTitle>
-                    {AdminDashboardData.total_count}
-                  </CountTitle>
+                  <CountTitle>{AdminDashboardData.total_count}</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>CBAC Filled</CardTitle>
@@ -193,17 +240,11 @@ function AdminDashboard() {
               <MainCountRow>
                 <CountCard>
                   <CardTitle>Males Enrolled</CardTitle>
-                  <CountTitle>
-                    {" "}
-                    {AdminDashboardData.male}
-                  </CountTitle>
+                  <CountTitle> {AdminDashboardData.male}</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Females Enrolled</CardTitle>
-                  <CountTitle>
-                    {" "}
-                    {AdminDashboardData.female}
-                  </CountTitle>
+                  <CountTitle> {AdminDashboardData.female}</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Transegender Enrolled</CardTitle>
@@ -214,30 +255,22 @@ function AdminDashboard() {
               <MainCountRow>
                 <CountCard>
                   <CardTitle>ABHA Id Generated</CardTitle>
-                  <CountTitle>
-                   0
-                  </CountTitle>
+                  <CountTitle>0</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens 30 years + enrolled</CardTitle>
-                  <CountTitle>
-                    {AdminDashboardData.citizen_above_30}
-                  </CountTitle>
+                  <CountTitle>{AdminDashboardData.citizen_above_30}</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens 60 years + enrolled</CardTitle>
-                  <CountTitle>
-                    {AdminDashboardData.citizen_above_60}
-                  </CountTitle>
+                  <CountTitle>{AdminDashboardData.citizen_above_60}</CountTitle>
                 </CountCard>
               </MainCountRow>
               <br />
               <MainCountRow>
                 <CountCard>
                   <CardTitle>Vulnerable Citizen</CardTitle>
-                  <CountTitle>
-                    {AdminDashboardData.total_vulnerabel}
-                  </CountTitle>
+                  <CountTitle>{AdminDashboardData.total_vulnerabel}</CountTitle>
                 </CountCard>
               </MainCountRow>
             </Col>
@@ -314,7 +347,11 @@ function AdminDashboard() {
                         Referral to Mun. Dispensary / HBT for Blood Test /
                         Confirmation / Treatment
                       </CardTitle>
-                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_Mun_Dispensary}</CountTitle>
+                      <CountTitle>
+                        {
+                          AdminDashboardData.Referral_choice_Referral_to_Mun_Dispensary
+                        }
+                      </CountTitle>
                     </ReferralCountCard>
                   </Col>
                   <Col span={8}>
@@ -324,7 +361,11 @@ function AdminDashboard() {
                         {" "}
                         Referral to HBT polyclinic for physician consultation
                       </CardTitle>
-                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_HBT_polyclinic}</CountTitle>
+                      <CountTitle>
+                        {
+                          AdminDashboardData.Referral_choice_Referral_to_HBT_polyclinic
+                        }
+                      </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={8}>
@@ -335,7 +376,11 @@ function AdminDashboard() {
                         Referral to Peripheral Hospital / Special Hospital for
                         management of Complication
                       </CardTitle>
-                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_Peripheral_Hospital}</CountTitle>
+                      <CountTitle>
+                        {
+                          AdminDashboardData.Referral_choice_Referral_to_Peripheral_Hospital
+                        }
+                      </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
@@ -349,14 +394,22 @@ function AdminDashboard() {
                         Referral to Medical College for management of
                         Complication
                       </CardTitle>
-                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_Medical_College}</CountTitle>
+                      <CountTitle>
+                        {
+                          AdminDashboardData.Referral_choice_Referral_to_Medical_College
+                        }
+                      </CountTitle>
                     </ReferralCountCard>
                   </Col>
                   <Col span={8}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Referral to Private facility</CardTitle>
-                      <CountTitle>{AdminDashboardData.Referral_choice_Referral_to_Private_facility}</CountTitle>
+                      <CountTitle>
+                        {
+                          AdminDashboardData.Referral_choice_Referral_to_Private_facility
+                        }
+                      </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
@@ -441,36 +494,28 @@ function AdminDashboard() {
                   <Col span={5}>
                     <ReferralCountCard>
                       <CardTitle>TB</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.tb}
-                      </CountTitle>
+                      <CountTitle>{AdminDashboardData.tb}</CountTitle>
                     </ReferralCountCard>
                   </Col>
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle>Diabetes</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.diabetes}
-                      </CountTitle>
+                      <CountTitle>{AdminDashboardData.diabetes}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle>Hypertension</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.hypertension}
-                      </CountTitle>
+                      <CountTitle>{AdminDashboardData.hypertension}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Oral Cancer</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.oral_Cancer}
-                      </CountTitle>
+                      <CountTitle>{AdminDashboardData.oral_Cancer}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={4}>
@@ -498,36 +543,28 @@ function AdminDashboard() {
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> COPD</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.copd}
-                      </CountTitle>
+                      <CountTitle>{AdminDashboardData.copd}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Asthama</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.asthama}
-                      </CountTitle>
+                      <CountTitle>{AdminDashboardData.asthama}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Alzheimer/Dementia</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.Alzheimers}
-                      </CountTitle>
+                      <CountTitle>{AdminDashboardData.Alzheimers}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={4}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> ENT Disorder</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.ent_disorder}
-                      </CountTitle>
+                      <CountTitle>{AdminDashboardData.ent_disorder}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
@@ -537,9 +574,7 @@ function AdminDashboard() {
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Eye Disorder</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.eye_disorder}
-                      </CountTitle>
+                      <CountTitle>{AdminDashboardData.eye_disorder}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={5}>

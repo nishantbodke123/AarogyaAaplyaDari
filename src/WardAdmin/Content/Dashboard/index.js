@@ -1,4 +1,14 @@
-import { Col, Divider, Form, Row, Spin, theme } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  Form,
+  Row,
+  Select,
+  Spin,
+  Tooltip,
+  theme,
+} from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import React, { useEffect, useState } from "react";
 import {
@@ -19,7 +29,7 @@ import {
   ReferralCountCard,
   Title,
 } from "./style";
-import { AlignRightOutlined } from "@ant-design/icons";
+import { AlignRightOutlined, DownloadOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../../../Utils/BaseURL";
 import axios, { Axios } from "axios";
 import FormItem from "antd/es/form/FormItem";
@@ -76,6 +86,45 @@ function WardAdminDashboard() {
         }
       });
   }, [selectedHealthPost]);
+  const handleMOHDashboardExcelDownload = () => {
+    axios
+      .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
+        params: {
+          healthpost_id: selectedHealthPost,
+        },
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `MOH_Dashboard_${
+            selectedHealthPost != undefined ? selectedHealthPost : "All"
+          }_Data.xlsx`
+        );
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status == "401") {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        }
+      });
+  };
   return (
     <>
       <Spin spinning={loader}>
@@ -83,33 +132,41 @@ function WardAdminDashboard() {
           style={{
             display: "flex",
             justifyContent: "end",
-            margin: "1% 3%-2% 0%",
+            margin: "1% 2%-2% 0%",
           }}
         >
           <div style={{ width: "20%" }}>
             <Form layout="vertical">
               <Row>
                 <Col span={24}>
-                  <FormItem label="Health Post">
-                    <select
+                  <FormItem label="Health Post  ">
+                    <Select
                       style={{
                         width: "180px",
                         borderRadius: "5px",
                       }}
                       value={selectedHealthPost}
-                      onChange={(e) => setSelectedHealthPost(e.target.value)}
+                      placeholder="All"
+                      onChange={(e) => setSelectedHealthPost(e)}
                     >
-                      <option>All</option>
+                      <option value={undefined}>All</option>
                       {healthPostNameList.map((data, index) => (
                         <option key={data.id} value={data.id}>
                           {data.healthPostName}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </FormItem>
                 </Col>
               </Row>
             </Form>
+          </div>
+          <div style={{ margin: "2% 2% 0% 0%" }}>
+            <Tooltip placement="bottom" title="Excel Download">
+              <Button onClick={handleMOHDashboardExcelDownload}>
+                <DownloadOutlined />
+              </Button>
+            </Tooltip>
           </div>
         </div>
         <Row
