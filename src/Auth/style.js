@@ -15,10 +15,7 @@ export const Container = styled.div`
   @media (max-width: 900px) {
   }
 `;
-export const LogoContainer = styled(Col)`
-  background-color: #ffe5ad;
-  display: flex;
-  justify-content: center;
+export const LogoContainer = styled.div`
   width: 50%;
 
   @media (max-width: 415px) {
@@ -31,7 +28,7 @@ export const LogoContainer = styled(Col)`
   }
 `;
 export const LogoImage = styled.img`
-  width: 30vw;
+  width: 50vw;
   height: 90vh;
 
   @media (max-width: 900px) {
@@ -44,7 +41,7 @@ export const LogoImage = styled.img`
     height: 60vh;
   }
 `;
-export const FormContainer = styled(Col)`
+export const FormContainer = styled.div`
   width: 50%;
 
   @media (max-width: 415px) {

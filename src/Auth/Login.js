@@ -92,7 +92,7 @@ function Login() {
       <Spin tip="loading..." spinning={showLoading}>
         <Container>
           <LogoContainer>
-            <LogoImage src="logo (1).svg"></LogoImage>
+            <LogoImage src="aarogy aplya dari_log in page_1.jpg"></LogoImage>
           </LogoContainer>
           <FormContainer>
             <div>
