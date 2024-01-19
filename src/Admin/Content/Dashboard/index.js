@@ -549,7 +549,7 @@ function AdminDashboard() {
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Asthama</CardTitle>
+                      <CardTitle> Asthma</CardTitle>
                       <CountTitle>{AdminDashboardData.asthama}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
