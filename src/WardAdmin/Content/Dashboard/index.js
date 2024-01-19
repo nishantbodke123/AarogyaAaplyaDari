@@ -511,7 +511,7 @@ function WardAdminDashboard() {
                 <Col span={5}>
                   {" "}
                   <ReferralCountCard>
-                    <CardTitle> Asthama</CardTitle>
+                    <CardTitle> Asthma</CardTitle>
                     <CountTitle>{MOHDashboardData.asthama}</CountTitle>
                   </ReferralCountCard>{" "}
                 </Col>
