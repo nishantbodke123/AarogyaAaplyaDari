@@ -13,6 +13,7 @@ import AreaAndSection from "../CreateAndUpdate/Areas";
 import Area from "../CreateAndUpdate/Areas";
 import Section from "../CreateAndUpdate/Sections";
 import { Footer } from "antd/es/layout/layout";
+import AllUserDetails from "../Content/AllUserDetails";
 
 const { Content } = Layout;
 
@@ -37,12 +38,15 @@ function Admin() {
             {location.pathname === "/admin/healthWorker" && <Healthworker />}
             {location.pathname === "/admin/chv" && <CHV />}
             {location.pathname === "/admin/mo" && <MO />}
+            {location.pathname === "/admin/allUserDetails" && (
+              <AllUserDetails />
+            )}
             {location.pathname === "/admin/healthWorkerApproval" && (
               <HealthworkerApproval />
             )}
             {location.pathname === "/admin/chvApproval" && <CHVApproval />}
-            {location.pathname === "/admin/arealist" && <Area/>}
-            {location.pathname === "/admin/sectionlist" && <Section/>}
+            {location.pathname === "/admin/arealist" && <Area />}
+            {location.pathname === "/admin/sectionlist" && <Section />}
           </Content>
           {/* <Footer>
           <div

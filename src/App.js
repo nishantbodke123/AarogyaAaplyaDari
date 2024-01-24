@@ -29,6 +29,7 @@ import CitizenDetails from "./Components/CitizenDetails";
 import AreaAndSection from "./Admin/CreateAndUpdate/Areas";
 import Area from "./Admin/CreateAndUpdate/Areas";
 import Section from "./Admin/CreateAndUpdate/Sections";
+import AllUserDetails from "./Admin/Content/AllUserDetails";
 
 function App() {
   let Token = sessionStorage.getItem("Token");
@@ -159,6 +160,14 @@ function App() {
               element={
                 <AdminProtected>
                   <MO />
+                </AdminProtected>
+              }
+            ></Route>
+                 <Route
+              path="/admin/allUserDetails"
+              element={
+                <AdminProtected>
+                  <AllUserDetails/>
                 </AdminProtected>
               }
             ></Route>

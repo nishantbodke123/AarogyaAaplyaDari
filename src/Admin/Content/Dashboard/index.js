@@ -1,4 +1,4 @@
-import { Row, Col, Divider, Form, Spin, Button } from "antd";
+import { Row, Col, Divider, Form, Spin, Button, Dropdown, message } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   BloodDetailCard,
@@ -15,7 +15,11 @@ import axios from "axios";
 import { LogOut } from "../../../Auth/Logout";
 import { Select, Tooltip } from "@mui/material";
 import FormItem from "antd/es/form/FormItem";
-import { AlignRightOutlined, DownloadOutlined } from "@ant-design/icons";
+import {
+  AlignRightOutlined,
+  DownloadOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
 
 function AdminDashboard() {
   const [loader, setLoader] = useState(false);
@@ -23,6 +27,7 @@ function AdminDashboard() {
   const [wardList, setWardList] = useState([]);
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [selectedWard, setSelectedWard] = useState();
+  const [selectedWardName, setSelectedWardName] = useState();
   const [selectedHealthPost, setSelectedHealthPost] = useState();
   let axiosConfig = {
     headers: {
@@ -75,9 +80,11 @@ function AdminDashboard() {
         }
       });
   }, [selectedWard, selectedHealthPost]);
-  const handleWardSelect = (id) => {
+  const handleWardSelect = (data) => {
+    const [id, wardName] = data.split("|");
     console.log(id);
     setSelectedWard(id);
+    setSelectedWardName(wardName);
     setHealthPostNameList([]);
     setSelectedHealthPost("");
     axios
@@ -118,7 +125,7 @@ function AdminDashboard() {
 
         const link = document.createElement("a");
         link.href = href;
-        link.setAttribute("download", `MOH_Dashboard_Data.xlsx`);
+        link.setAttribute("download", `Admin_Dashboard_Data.xlsx`);
 
         document.body.appendChild(link);
         link.click();
@@ -135,6 +142,129 @@ function AdminDashboard() {
         }
       });
   };
+
+  const handleWardwiseCitizenDownload = () => {
+    axios
+      .get(
+        `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
+        {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          },
+          responseType: "blob",
+        }
+      )
+      .then((response) => {
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `${selectedWardName} ward's Citizens Report`
+        );
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        console.log(err.response.status);
+        if (err.response.status == 404) {
+          message.warning("Please Select Ward");
+        } else if (err.response.status == 401) {
+          LogOut();
+        } else {
+          message.warning(err.response.message);
+        }
+      });
+  };
+  const handleHealthPostwiseCitizenDownload=()=>{
+    axios
+    .get(
+      `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
+      {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+        responseType: "blob",
+      }
+    )
+    .then((response) => {
+      const href = URL.createObjectURL(response.data);
+
+      const link = document.createElement("a");
+      link.href = href;
+      link.setAttribute(
+        "download",
+        `${selectedHealthPost} Healthpost's Citizens Report`
+      );
+
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(href);
+    })
+    .catch((err) => {
+      console.log(err.response.status);
+      if (err.response.status == 404) {
+        message.warning("Please Select Healthpost");
+      } else if (err.response.status == 401) {
+        LogOut();
+      } else {
+        message.warning(err.response.message);
+      }
+    });
+  }
+  const items = [
+    {
+      key: "1",
+      label: (
+        <p onClick={handleAdminDashboardExcelDownload}>Download Dashboard</p>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <p onClick={handleWardwiseCitizenDownload}>
+          Download Citizens Ward wise
+        </p>
+        // <Tooltip
+        //   placement="top"
+        //   title={
+        //     <>
+        //       <select
+        //         style={{
+        //           width: "150px",
+        //           borderRadius: "5px",
+        //         }}
+        //         onChange={(e) => handleWardwiseCitizenDownload(e.target.value)}
+        //       >
+        //         {wardList.map((data, index) => (
+        //           <option key={data.id} value={`${data.id}|${data.wardName}`}>
+        //             {data.wardName}
+        //           </option>
+        //         ))}
+        //       </select>
+        //     </>
+        //   }
+        // >
+        //   <p>Download Citizens Ward wise</p>
+        // </Tooltip>
+      ),
+    },
+    {
+      key: "3",
+      label: <p onClick={handleHealthPostwiseCitizenDownload}>Download Citizens Healthpost wise</p>,
+    },
+    // {
+    //   key: "4",
+    //   label: <p>Download Citizens Dispensary wise</p>,
+    // },
+  ];
   return (
     <>
       <Spin spinning={loader}>
@@ -162,11 +292,12 @@ function AdminDashboard() {
                         {" "}
                         <option value="">All</option>
                         {wardList.map((data, index) => (
-                          <>
-                            <option key={data.id} value={data.id}>
-                              {data.wardName}
-                            </option>
-                          </>
+                          <option
+                            key={data.id}
+                            value={`${data.id}|${data.wardName}`}
+                          >
+                            {data.wardName}
+                          </option>
                         ))}
                       </select>
                     </FormItem>
@@ -192,11 +323,21 @@ function AdminDashboard() {
                   </Col>
                   <Col span={2}>
                     <div style={{ marginTop: "4vh" }}>
-                      <Tooltip placement="bottom" title="Excel Download">
+                      {/* <Tooltip placement="bottom" title="Excel Download">
                         <Button onClick={handleAdminDashboardExcelDownload}>
                           <DownloadOutlined />
                         </Button>
-                      </Tooltip>
+                      </Tooltip> */}
+                      <Dropdown
+                        menu={{
+                          items,
+                        }}
+                        placement="bottomLeft"
+                      >
+                        <Button>
+                          <MenuOutlined />
+                        </Button>
+                      </Dropdown>
                     </div>
                   </Col>
                 </Row>

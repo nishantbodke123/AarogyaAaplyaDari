@@ -48,6 +48,12 @@ function Sidebar(props) {
         ),
         getItem("CHV/ASHA", "/admin/chv", null, "/admin/chv"),
         getItem("MO", "/admin/mo", null, "/admin/mo"),
+        getItem(
+          "All User Details",
+          "/admin/allUserDetails",
+          null,
+          "/admin/allUserDetails"
+        ),
       ]
     ),
 
