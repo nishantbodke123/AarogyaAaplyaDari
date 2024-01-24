@@ -388,7 +388,7 @@ function AdminDashboard() {
                   <CountTitle> {AdminDashboardData.female}</CountTitle>
                 </CountCard>
                 <CountCard>
-                  <CardTitle>Transegender Enrolled</CardTitle>
+                  <CardTitle>Transgender Enrolled</CardTitle>
                   <CountTitle> {AdminDashboardData.transgender}</CountTitle>
                 </CountCard>
               </MainCountRow>
@@ -459,7 +459,7 @@ function AdminDashboard() {
 
                 <MainCountRow>
                   <DetailSubtitle>
-                    Blood Collecttion Denied By AMO
+                    Blood Collection Denied By AMO
                   </DetailSubtitle>
                   <CountTitle>
                     {AdminDashboardData.denieded_by_mo_count}

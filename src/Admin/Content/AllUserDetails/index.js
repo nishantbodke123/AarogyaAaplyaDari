@@ -107,7 +107,7 @@ const AllUserDetails = () => {
       <>
         {console.log(data)}
         <div
-          style={{ height: "85vh", overflowY: "scroll", margin: "1% 0% 0% 2%" }}
+          style={{ height: "85vh", overflowY: "scroll", margin: "1% 1% 0% 2%" }}
         >
           <div>
             <WardHeader>Wards</WardHeader>
