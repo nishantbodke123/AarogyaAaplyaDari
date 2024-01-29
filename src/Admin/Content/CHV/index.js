@@ -36,24 +36,49 @@ import { EditOutlined } from "@ant-design/icons";
 function CHV() {
   const [refresh, setRefresh] = useState(1);
   const [wardSelect, setWardSelect] = useState("A");
-  useEffect(() => {
+  const [nextPage, setNextPage] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  const fetchData = async (page = 1) => {
     setLoader(true);
-    axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/CHV-ASHA`)
-      .then((res) => {
-        setLoader(false);
-        console.log(res.data.data, "chv/ASHA");
-        setCHVData(res.data.data);
-      })
-      .catch((error) => {
-        setLoader(false);
-        console.log(error);
-        if (error.status == "401") {
-          setTimeout(() => {
-            LogOut();
-          }, 1000);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/CHV-ASHA`,
+        {
+          params: {
+            limit: pagination.pageSize,
+            offset: (page - 1) * pagination.pageSize,
+          },
         }
-      });
+      );
+      const data = response.data;
+
+      if (data.results && data.results.data) {
+        setCHVData(data.results.data);
+        setNextPage(data.next);
+        setPagination({
+          ...pagination,
+          current: page,
+          total: data.count,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+
+      if (error.response && error.response.status === 401) {
+        setTimeout(() => {
+          LogOut();
+        }, 1000);
+      }
+    } finally {
+      setLoader(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -73,6 +98,9 @@ function CHV() {
         }
       });
   }, [refresh, wardSelect]);
+  const handleTableChange = (pagination, filters, sorter) => {
+    fetchData(pagination.current);
+  };
 
   //generic State
   const [areaList, setAreaList] = useState([]);
@@ -91,10 +119,13 @@ function CHV() {
   const [u_userName, setU_userName] = useState();
   const [u_phoneNumber, setU_phoneNumber] = useState();
   const [u_email, setU_email] = useState(null);
+  const [u_oldWard, setU_OldWard] = useState();
   const [u_ward, setU_ward] = useState();
   const [u_healthPost, setU_HealthPost] = useState();
   const [u_Section, setU_section] = useState([]);
   const [u_is_ActiveStatus, setU_Is_ActiveStatus] = useState();
+  const [u_password, setU_Password] = useState();
+  const [u_ConfirmPassword, setU_ConfirmPassword] = useState();
 
   const handleU_NameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -360,6 +391,7 @@ function CHV() {
     setU_phoneNumber(data.phoneNumber);
     setU_email(data.emailId);
     setU_ward(data.ward);
+    setU_OldWard(data.ward);
     setU_Is_ActiveStatus(data.is_active);
     setU_HealthPost(data.health_Post);
     setU_section(
@@ -377,6 +409,7 @@ function CHV() {
     setU_ward();
     setU_HealthPost();
     setU_section([]);
+    setU_Password();
     setU_Is_ActiveStatus();
     setShowEditModal(false);
     setAreaList([]);
@@ -478,60 +511,111 @@ function CHV() {
       message.warning(" Please Enter Username");
     } else if (u_phoneNumber === "") {
       message.warning("Please Enter Phone Number");
-    } else if (u_Section === undefined) {
+    } else if (u_Section.length === 0) {
       message.warning("Please select Section");
     } else if (u_is_ActiveStatus === undefined) {
       message.warning("Please select active status");
-    } else {
-      if (password !== confirmPassword) {
-        message.warning("password and confirm password should be same");
+    } else if (u_ward !== u_oldWard) {
+      if (u_password !== undefined) {
+        if (u_password !== u_ConfirmPassword) {
+          message.warning("password and confirm password should be same");
+        } else {
+          const formData = {
+            name: u_name,
+            username: u_userName,
+            phoneNumber: u_phoneNumber,
+            ...(email && { emailId: u_email }),
+            // ...(u_Section != [] && { userSections: u_Section }),
+            userSections: u_Section,
+            newpassword: u_password,
+            group: "CHV-ASHA",
+          };
+          // const formData = new FormData();
+          // formData.append("name", u_name);
+          // formData.append("username", u_userName);
+          // u_email !== null && formData.append("emailId", u_email);
+          // formData.append("phoneNumber", u_phoneNumber);
+          // formData.append("section", u_Section);
+          // formData.append("is_active", u_is_ActiveStatus);
+          axios
+            .patch(
+              `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${CHVId}`,
+              formData,
+              axiosConfig
+              // {
+              //   headers: {
+              //     "Content-Type": "multipart/form-data",
+              //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
+              //   },
+              // }
+            )
+            .then((res) => {
+              setLoader(false);
+              console.log(res);
+              message.success(res.data.message);
+              setRefresh(refresh + 1);
+              handleEditModalClose();
+            })
+            .catch((err) => {
+              setLoader(false);
+              console.log(err);
+              message.warning(err.response.data.message);
+              if (err.response.status == "401") {
+                setTimeout(() => {
+                  LogOut();
+                }, 1000);
+              }
+            });
+        }
       } else {
-        const formData = {
-          name: u_name,
-          username: u_userName,
-          phoneNumber: u_phoneNumber,
-          ...(email && { emailId: u_email }),
-          // ...(u_Section != [] && { userSections: u_Section }),
-          userSections: u_Section,
-          group: "CHV-ASHA",
-        };
-        // const formData = new FormData();
-        // formData.append("name", u_name);
-        // formData.append("username", u_userName);
-        // u_email !== null && formData.append("emailId", u_email);
-        // formData.append("phoneNumber", u_phoneNumber);
-        // formData.append("section", u_Section);
-        // formData.append("is_active", u_is_ActiveStatus);
-        axios
-          .patch(
-            `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${CHVId}`,
-            formData,
-            axiosConfig
-            // {
-            //   headers: {
-            //     "Content-Type": "multipart/form-data",
-            //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
-            //   },
-            // }
-          )
-          .then((res) => {
-            setLoader(false);
-            console.log(res);
-            message.success(res.data.message);
-            setRefresh(refresh + 1);
-            handleEditModalClose();
-          })
-          .catch((err) => {
-            setLoader(false);
-            console.log(err);
-            message.warning(err.response.data.message);
-            if (err.response.status == "401") {
-              setTimeout(() => {
-                LogOut();
-              }, 1000);
-            }
-          });
+        message.warning("Please Enter Password");
       }
+    } else {
+      const formData = {
+        name: u_name,
+        username: u_userName,
+        phoneNumber: u_phoneNumber,
+        ...(email && { emailId: u_email }),
+        // ...(u_Section != [] && { userSections: u_Section }),
+        userSections: u_Section,
+        group: "CHV-ASHA",
+      };
+      // const formData = new FormData();
+      // formData.append("name", u_name);
+      // formData.append("username", u_userName);
+      // u_email !== null && formData.append("emailId", u_email);
+      // formData.append("phoneNumber", u_phoneNumber);
+      // formData.append("section", u_Section);
+      // formData.append("is_active", u_is_ActiveStatus);
+      axios
+        .patch(
+          `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${CHVId}`,
+          formData,
+          axiosConfig
+          // {
+          //   headers: {
+          //     "Content-Type": "multipart/form-data",
+          //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          //   },
+          // }
+        )
+        .then((res) => {
+          setLoader(false);
+          console.log(res);
+          message.success(res.data.message);
+          setRefresh(refresh + 1);
+          handleEditModalClose();
+        })
+        .catch((err) => {
+          setLoader(false);
+          console.log(err);
+          message.warning(err.response.data.message);
+          if (err.response.status == "401") {
+            setTimeout(() => {
+              LogOut();
+            }, 1000);
+          }
+        });
     }
   };
   const deleteUser = (data) => {
@@ -802,7 +886,12 @@ function CHV() {
                   </Col>
                 </Row>
               </div>
-              <Table columns={column} dataSource={CHVData}></Table>
+              <Table
+                columns={column}
+                dataSource={CHVData}
+                pagination={pagination}
+                onChange={handleTableChange}
+              ></Table>
             </div>
             <Modal
               open={addCHVModal}
@@ -1153,6 +1242,36 @@ function CHV() {
                     </FormItem>
                   </Col>
                 </Row>
+                {u_ward !== u_oldWard ? (
+                  <>
+                    {" "}
+                    <Row>
+                      <Col span={12}>
+                        {" "}
+                        <FormItem label="New Password">
+                          <Input.Password
+                            style={{ width: "350px" }}
+                            value={newPassword}
+                            onChange={(e) => setU_Password(e.target.value)}
+                          ></Input.Password>
+                        </FormItem>
+                      </Col>
+                      <Col span={12}>
+                        <FormItem label="Confirm new password">
+                          <Input.Password
+                            style={{ width: "350px" }}
+                            value={confirmNewPassword}
+                            onChange={(e) =>
+                              setU_ConfirmPassword(e.target.value)
+                            }
+                          ></Input.Password>
+                        </FormItem>
+                      </Col>
+                    </Row>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Form>
             </Modal>
           </Content>

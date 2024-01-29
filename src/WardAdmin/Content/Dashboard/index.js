@@ -460,12 +460,6 @@ function WardAdminDashboard() {
             <div style={{ width: "80vw" }}>
               <Row>
                 <Col span={5}>
-                  <ReferralCountCard>
-                    <CardTitle>TB</CardTitle>
-                    <CountTitle>{MOHDashboardData.tb}</CountTitle>
-                  </ReferralCountCard>
-                </Col>
-                <Col span={5}>
                   {" "}
                   <ReferralCountCard>
                     <CardTitle> Diabetes</CardTitle>
@@ -475,8 +469,8 @@ function WardAdminDashboard() {
                 <Col span={5}>
                   {" "}
                   <ReferralCountCard>
-                    <CardTitle> Eye Disorder</CardTitle>
-                    <CountTitle>{MOHDashboardData.eye_disorder}</CountTitle>
+                    <CardTitle>Hypertension </CardTitle>
+                    <CountTitle>{MOHDashboardData.hypertension}</CountTitle>
                   </ReferralCountCard>{" "}
                 </Col>
                 <Col span={5}>
@@ -486,6 +480,14 @@ function WardAdminDashboard() {
                     <CountTitle>{MOHDashboardData.oral_Cancer}</CountTitle>
                   </ReferralCountCard>{" "}
                 </Col>
+                <Col span={5}>
+                  {" "}
+                  <ReferralCountCard>
+                    <CardTitle>Cervical Cancer </CardTitle>
+                    <CountTitle>{MOHDashboardData.cervical_cancer}</CountTitle>
+                  </ReferralCountCard>{" "}
+                </Col>
+
                 <Col span={4}>
                   {" "}
                   <ReferralCountCard>
@@ -497,15 +499,10 @@ function WardAdminDashboard() {
               <div style={{ height: "10px" }}></div>
               <Row>
                 <Col span={5}>
+                  {" "}
                   <ReferralCountCard>
-                    <CardTitle>ENT Disorder </CardTitle>
-                    <CountTitle>{MOHDashboardData.ent_disorder}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-                <Col span={5}>
-                  <ReferralCountCard>
-                    <CardTitle> Alzheimers/Dementia</CardTitle>
-                    <CountTitle>{MOHDashboardData.Alzheimers}</CountTitle>
+                    <CardTitle>COPD </CardTitle>
+                    <CountTitle>{MOHDashboardData.copd}</CountTitle>
                   </ReferralCountCard>{" "}
                 </Col>
                 <Col span={5}>
@@ -516,17 +513,23 @@ function WardAdminDashboard() {
                   </ReferralCountCard>{" "}
                 </Col>
                 <Col span={5}>
-                  {" "}
                   <ReferralCountCard>
-                    <CardTitle>COPD </CardTitle>
-                    <CountTitle>{MOHDashboardData.copd}</CountTitle>
+                    <CardTitle>TB</CardTitle>
+                    <CountTitle>{MOHDashboardData.tb}</CountTitle>
+                  </ReferralCountCard>
+                </Col>
+
+                <Col span={5}>
+                  <ReferralCountCard>
+                    <CardTitle> Alzheimers/Dementia</CardTitle>
+                    <CountTitle>{MOHDashboardData.Alzheimers}</CountTitle>
                   </ReferralCountCard>{" "}
                 </Col>
+
                 <Col span={4}>
-                  {" "}
                   <ReferralCountCard>
-                    <CardTitle>Hypertension </CardTitle>
-                    <CountTitle>{MOHDashboardData.hypertension}</CountTitle>
+                    <CardTitle>ENT Disorder </CardTitle>
+                    <CountTitle>{MOHDashboardData.ent_disorder}</CountTitle>
                   </ReferralCountCard>{" "}
                 </Col>
               </Row>
@@ -535,10 +538,11 @@ function WardAdminDashboard() {
                 <Col span={5}>
                   {" "}
                   <ReferralCountCard>
-                    <CardTitle>Cervical Cancer </CardTitle>
-                    <CountTitle>{MOHDashboardData.cervical_cancer}</CountTitle>
+                    <CardTitle> Eye Disorder</CardTitle>
+                    <CountTitle>{MOHDashboardData.eye_disorder}</CountTitle>
                   </ReferralCountCard>{" "}
                 </Col>
+
                 <Col span={5}>
                   <ReferralCountCard>
                     <CardTitle> Other Communicable Disease</CardTitle>

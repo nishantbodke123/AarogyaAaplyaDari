@@ -29,6 +29,7 @@ function AdminDashboard() {
   const [selectedWard, setSelectedWard] = useState();
   const [selectedWardName, setSelectedWardName] = useState();
   const [selectedHealthPost, setSelectedHealthPost] = useState();
+  const [selectedHealthPostName, setSelectedHealthPostName] = useState();
   let axiosConfig = {
     headers: {
       "Content-Type": "application/json",
@@ -105,7 +106,13 @@ function AdminDashboard() {
         }
       });
   };
+  const handleHealthpostSelect = (data) => {
+    const [id, healthPostName] = data.split("|");
+    setSelectedHealthPost(id);
+    setSelectedHealthPostName(healthPostName);
+  };
   const handleAdminDashboardExcelDownload = () => {
+    setLoader(true);
     axios
       .get(`${BASE_URL}/adminportal/api/AdminDashboardExportView`, {
         params: {
@@ -120,6 +127,7 @@ function AdminDashboard() {
         responseType: "blob",
       })
       .then((response) => {
+        setLoader(false);
         console.log(response);
         const href = URL.createObjectURL(response.data);
 
@@ -135,6 +143,7 @@ function AdminDashboard() {
       })
       .catch((err) => {
         console.log(err);
+        setLoader(false);
         if (err.response.status == "401") {
           setTimeout(() => {
             LogOut();
@@ -144,6 +153,7 @@ function AdminDashboard() {
   };
 
   const handleWardwiseCitizenDownload = () => {
+    setLoader(true);
     axios
       .get(
         `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
@@ -155,6 +165,7 @@ function AdminDashboard() {
         }
       )
       .then((response) => {
+        setLoader(false);
         const href = URL.createObjectURL(response.data);
 
         const link = document.createElement("a");
@@ -171,6 +182,7 @@ function AdminDashboard() {
         URL.revokeObjectURL(href);
       })
       .catch((err) => {
+        setLoader(false);
         console.log(err.response.status);
         if (err.response.status == 404) {
           message.warning("Please Select Ward");
@@ -181,44 +193,47 @@ function AdminDashboard() {
         }
       });
   };
-  const handleHealthPostwiseCitizenDownload=()=>{
+  const handleHealthPostwiseCitizenDownload = () => {
+    setLoader(true);
     axios
-    .get(
-      `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
-      {
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-        responseType: "blob",
-      }
-    )
-    .then((response) => {
-      const href = URL.createObjectURL(response.data);
+      .get(
+        `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
+        {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          },
+          responseType: "blob",
+        }
+      )
+      .then((response) => {
+        setLoader(false);
+        const href = URL.createObjectURL(response.data);
 
-      const link = document.createElement("a");
-      link.href = href;
-      link.setAttribute(
-        "download",
-        `${selectedHealthPost} Healthpost's Citizens Report`
-      );
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `${selectedHealthPostName} Healthpost's Citizens Report`
+        );
 
-      document.body.appendChild(link);
-      link.click();
+        document.body.appendChild(link);
+        link.click();
 
-      document.body.removeChild(link);
-      URL.revokeObjectURL(href);
-    })
-    .catch((err) => {
-      console.log(err.response.status);
-      if (err.response.status == 404) {
-        message.warning("Please Select Healthpost");
-      } else if (err.response.status == 401) {
-        LogOut();
-      } else {
-        message.warning(err.response.message);
-      }
-    });
-  }
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.log(err.response.status);
+        if (err.response.status == 404) {
+          message.warning("Please Select Healthpost");
+        } else if (err.response.status == 401) {
+          LogOut();
+        } else {
+          message.warning(err.response.message);
+        }
+      });
+  };
   const items = [
     {
       key: "1",
@@ -258,7 +273,11 @@ function AdminDashboard() {
     },
     {
       key: "3",
-      label: <p onClick={handleHealthPostwiseCitizenDownload}>Download Citizens Healthpost wise</p>,
+      label: (
+        <p onClick={handleHealthPostwiseCitizenDownload}>
+          Download Citizens Healthpost wise
+        </p>
+      ),
     },
     // {
     //   key: "4",
@@ -309,12 +328,14 @@ function AdminDashboard() {
                           width: "130px",
                           borderRadius: "5px",
                         }}
-                        value={selectedHealthPost}
-                        onChange={(e) => setSelectedHealthPost(e.target.value)}
+                        onChange={(e) => handleHealthpostSelect(e.target.value)}
                       >
                         <option value={undefined}>All</option>
                         {healthPostNameList.map((data, index) => (
-                          <option key={data.id} value={data.id}>
+                          <option
+                            key={data.id}
+                            value={`${data.id}|${data.healthPostName}`}
+                          >
                             {data.healthPostName}
                           </option>
                         ))}
@@ -632,20 +653,14 @@ function AdminDashboard() {
               </div>
               <div style={{ width: "80vw" }}>
                 <Row>
-                  <Col span={5}>
-                    <ReferralCountCard>
-                      <CardTitle>TB</CardTitle>
-                      <CountTitle>{AdminDashboardData.tb}</CountTitle>
-                    </ReferralCountCard>
-                  </Col>
-                  <Col span={5}>
+                <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle>Diabetes</CardTitle>
                       <CountTitle>{AdminDashboardData.diabetes}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
-                  <Col span={5}>
+                <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle>Hypertension</CardTitle>
@@ -668,10 +683,6 @@ function AdminDashboard() {
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
-                </Row>
-                <div style={{ height: "10px" }}></div>
-                <Row>
-                  {" "}
                   <Col span={5}>
                     <ReferralCountCard>
                       <CardTitle> Breast Cancer</CardTitle>
@@ -680,6 +691,11 @@ function AdminDashboard() {
                       </CountTitle>
                     </ReferralCountCard>
                   </Col>
+                </Row>
+                <div style={{ height: "10px" }}></div>
+                <Row>
+                  {" "}
+              
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
@@ -693,6 +709,12 @@ function AdminDashboard() {
                       <CardTitle> Asthma</CardTitle>
                       <CountTitle>{AdminDashboardData.asthama}</CountTitle>
                     </ReferralCountCard>{" "}
+                  </Col>
+                  <Col span={5}>
+                    <ReferralCountCard>
+                      <CardTitle>TB</CardTitle>
+                      <CountTitle>{AdminDashboardData.tb}</CountTitle>
+                    </ReferralCountCard>
                   </Col>
                   <Col span={5}>
                     {" "}

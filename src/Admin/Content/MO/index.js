@@ -36,24 +36,49 @@ import { Option } from "antd/es/mentions";
 function MO() {
   const [refresh, setRefresh] = useState(1);
   const [wardSelect, setWardSelect] = useState("A");
-  useEffect(() => {
+  // const [nextPage, setNextPage] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  const fetchData = async (page = 1) => {
     setLoader(true);
-    axios
-      .get(`${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/mo`)
-      .then((res) => {
-        setLoader(false);
-        console.log(res.data);
-        setMOData(res.data.data);
-      })
-      .catch((error) => {
-        setLoader(false);
-        console.log(error);
-        if (error.response.status == "401") {
-          setTimeout(() => {
-            LogOut();
-          }, 1000);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/mo`,
+        {
+          params: {
+            limit: pagination.pageSize,
+            offset: (page - 1) * pagination.pageSize,
+          },
         }
-      });
+      );
+      const data = response.data;
+
+      if (data.results && data.results.data) {
+        setMOData(data.results.data);
+        // setNextPage(data.next);
+        setPagination({
+          ...pagination,
+          current: page,
+          total: data.count,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+
+      if (error.response && error.response.status === 401) {
+        setTimeout(() => {
+          LogOut();
+        }, 1000);
+      }
+    } finally {
+      setLoader(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -73,6 +98,10 @@ function MO() {
         }
       });
   }, [refresh, wardSelect]);
+
+  const handleTableChange = (pagination, filters, sorter) => {
+    fetchData(pagination.current);
+  };
   //generic State
   const [wardList, setWardList] = useState([]);
   const [MOData, setMOData] = useState([]);
@@ -100,9 +129,12 @@ function MO() {
   const [u_phoneNumber, setU_phoneNumber] = useState();
   const [u_email, setU_email] = useState(null);
   const [u_ward, setU_ward] = useState();
+  const [u_oldWard, setU_OldWard] = useState();
   const [u_healthPost, setU_HealthPost] = useState();
   const [u_Dispensary, setU_Dispensary] = useState();
   const [u_is_ActiveStatus, setU_Is_ActiveStatus] = useState();
+  const [u_password, setU_Password] = useState();
+  const [u_ConfirmPassword, setU_ConfirmPassword] = useState();
 
   const handleU_NameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -275,6 +307,7 @@ function MO() {
     setU_phoneNumber(data.phoneNumber);
     setU_email(data.emailId);
     setU_ward(data.ward_id);
+    setU_OldWard(data.ward_id);
     setU_Is_ActiveStatus(data.is_active);
     // handleWardSelect(data.ward_id);
     setU_HealthPost(data.health_Post_id);
@@ -288,6 +321,7 @@ function MO() {
     setU_phoneNumber();
     setU_email(null);
     setU_ward();
+    setU_Password();
     setU_Is_ActiveStatus();
     setU_HealthPost();
     setU_Dispensary();
@@ -341,6 +375,45 @@ function MO() {
       message.warning("Please select Dispensary");
     } else if (u_is_ActiveStatus === undefined) {
       message.warning("Select Active Status");
+    } else if (u_ward !== u_oldWard) {
+      if (u_password !== undefined) {
+        if (u_password !== u_ConfirmPassword) {
+          message.warning("password and confirm password should be same");
+        } else {
+          const formData = new FormData();
+          formData.append("name", u_name);
+          formData.append("username", u_userName);
+          u_email !== null && formData.append("emailId", u_email);
+          formData.append("phoneNumber", u_phoneNumber);
+          formData.append("dispensary", u_Dispensary);
+          formData.append("is_active", u_is_ActiveStatus);
+          formData.append("newpassword", u_password);
+
+          axios
+            .patch(
+              `${BASE_URL}/adminportal/api/UpdateUserDetailsAPI/${MOid}`,
+              formData,
+              axiosConfig
+            )
+            .then((res) => {
+              console.log(res);
+              message.success(res.data.message);
+              setRefresh(refresh + 1);
+              handleEditModalClose();
+            })
+            .catch((err) => {
+              console.log(err);
+              message.warning(err.response.data.message);
+              if (err.status == "401") {
+                setTimeout(() => {
+                  LogOut();
+                }, 1000);
+              }
+            });
+        }
+      } else {
+        message.warning("Please Enter Password");
+      }
     } else {
       const formData = new FormData();
       formData.append("name", u_name);
@@ -568,7 +641,7 @@ function MO() {
                         label="Select ward"
                         style={{
                           width: "250px",
-                          margin: "-10% 0% 0% 150%"
+                          margin: "-10% 0% 0% 150%",
                         }}
                       >
                         <Select
@@ -587,7 +660,12 @@ function MO() {
                   </Col>
                 </Row>
               </div>
-              <Table columns={column} dataSource={MOData}></Table>
+              <Table
+                columns={column}
+                dataSource={MOData}
+                pagination={pagination}
+                onChange={handleTableChange}
+              ></Table>
             </div>
             <Modal
               open={addMOModal}
@@ -854,6 +932,36 @@ function MO() {
                     </FormItem>
                   </Col>
                 </Row>
+                {u_ward !== u_oldWard ? (
+                  <>
+                    {" "}
+                    <Row>
+                      <Col span={12}>
+                        {" "}
+                        <FormItem label="New Password">
+                          <Input.Password
+                            style={{ width: "350px" }}
+                            value={newPassword}
+                            onChange={(e) => setU_Password(e.target.value)}
+                          ></Input.Password>
+                        </FormItem>
+                      </Col>
+                      <Col span={12}>
+                        <FormItem label="Confirm new password">
+                          <Input.Password
+                            style={{ width: "350px" }}
+                            value={confirmNewPassword}
+                            onChange={(e) =>
+                              setU_ConfirmPassword(e.target.value)
+                            }
+                          ></Input.Password>
+                        </FormItem>
+                      </Col>
+                    </Row>
+                  </>
+                ) : (
+                  <></>
+                )}
                 <FormItem label="Is Active" style={{ width: "350px" }}>
                   <Select onChange={(value) => setU_Is_ActiveStatus(value)}>
                     <Option value="true">Active</Option>
