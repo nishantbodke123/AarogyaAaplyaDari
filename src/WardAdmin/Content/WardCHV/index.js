@@ -35,35 +35,64 @@ import { EditOutlined } from "@ant-design/icons";
 
 function WardCHV() {
   const [refresh, setRefresh] = useState(1);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
   let axiosConfig = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
-  useEffect(() => {
+
+  const fetchData = async (page = 1) => {
     setLoader(true);
-    axios
-      .get(
+    try {
+      const response = await axios.get(
         `${BASE_URL}/adminportal/api/GetWardWiseSUerList/CHV-ASHA`,
-        axiosConfig
-      )
-      .then((res) => {
-        setLoader(false);
-        console.log(res.data.data);
-        setCHVData(res.data.data);
-      })
-      .catch((error) => {
-        setLoader(false);
-        console.log(error);
-        if (error.status == "401") {
-          setTimeout(() => {
-            LogOut();
-          }, 1000);
+        {
+          params: {
+            limit: pagination.pageSize,
+            offset: (page - 1) * pagination.pageSize,
+          },
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          },
         }
-      });
+      );
+      const data = response.data;
+
+      if (data.results && data.results.data) {
+        setCHVData(data.results.data);
+        // setNextPage(data.next);
+        setPagination({
+          ...pagination,
+          current: page,
+          total: data.count,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+
+      if (error.response && error.response.status === 401) {
+        setTimeout(() => {
+          LogOut();
+        }, 1000);
+      }
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [refresh]);
 
+  const handleTableChange = (pagination, filters, sorter) => {
+    fetchData(pagination.current);
+  };
   //generic State
   const [areaList, setAreaList] = useState([]);
   const [CHVData, setCHVData] = useState([]);
@@ -668,7 +697,12 @@ function WardCHV() {
                   </FormItem>
                 </Form>
               </div>
-              <Table columns={column} dataSource={CHVData}></Table>
+              <Table
+                columns={column}
+                dataSource={CHVData}
+                onChange={handleTableChange}
+                pagination={pagination}
+              ></Table>
             </div>
             <Modal
               open={addCHVModal}
