@@ -653,14 +653,14 @@ function AdminDashboard() {
               </div>
               <div style={{ width: "80vw" }}>
                 <Row>
-                <Col span={5}>
+                  <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle>Diabetes</CardTitle>
                       <CountTitle>{AdminDashboardData.diabetes}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
-                <Col span={5}>
+                  <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle>Hypertension</CardTitle>
@@ -674,7 +674,7 @@ function AdminDashboard() {
                       <CountTitle>{AdminDashboardData.oral_Cancer}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
-                  <Col span={4}>
+                  <Col span={5}>
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Cervical Cancer</CardTitle>
@@ -683,7 +683,7 @@ function AdminDashboard() {
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
-                  <Col span={5}>
+                  <Col span={4}>
                     <ReferralCountCard>
                       <CardTitle> Breast Cancer</CardTitle>
                       <CountTitle>
@@ -695,7 +695,6 @@ function AdminDashboard() {
                 <div style={{ height: "10px" }}></div>
                 <Row>
                   {" "}
-              
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
