@@ -26,3 +26,9 @@
 .ant-menu> .ant-menu-submenu-active,
 .ant-menu > .ant-menu-item-open,
 .ant-menu> .ant-menu-submenu-open, */
+
+
+.ant-tooltip-content{
+  margin-left:10px;
+  line-height: 0;
+}

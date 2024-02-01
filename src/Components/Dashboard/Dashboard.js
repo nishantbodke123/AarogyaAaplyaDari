@@ -1202,3 +1202,899 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { Row, Col, Divider, Form, Spin, Button, Dropdown, message, } from "antd";
+// import React, { useEffect, useState } from "react";
+// import {
+//   BloodDetailCard,
+//   CardTitle,
+//   CountCard,
+//   CountTitle,
+//   DetailSubtitle,
+//   Line,
+//   MainCountRow,
+//   ReferralCountCard,
+// } from "./style";
+// import { BASE_URL } from "../../../Utils/BaseURL";
+// import axios from "axios";
+// import { LogOut } from "../../../Auth/Logout";
+// import { Select, Tooltip } from "@mui/material";
+// import FormItem from "antd/es/form/FormItem";
+// import {
+//   AlignRightOutlined,
+//   DownloadOutlined,
+//   MenuOutlined,
+// } from "@ant-design/icons";
+
+
+// const { Option } = Select;
+
+// function Dashboard() {
+  
+//   const [dashboardCounts, setDashboardCounts] = useState({});
+//   const [familyHeadList, setFamilyHeadList] = useState([]);
+//   const [partiallyFamilyHeadList, setPartiallyFamilyHeadList] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [showViewModal, setShowViewModal] = useState(false);
+//   const [familyMemeberDetails, setFamilyMemberDetails] = useState([]);
+//   const [familyID, setFamilyID] = useState();
+//   const [noOfFamilyMembers, setNoOfFamilyMembers] = useState();
+//   const [familyMemberArrayLength, setFamilyMemberArrayLength] = useState();
+//   const [showToDayCitizenCountModal, setShowToDayCitizenCountModal] =
+//     useState(false);
+//   const [TodayCitizenCountList, setTodayCitizenCountList] = useState();
+//   const [showTodayFamilyCountModal, setShowTodayFamilyCountModal] =
+//     useState(false);
+//   const [TodayFamilyCountList, setTodayFamilyCountList] = useState();
+//   const [showTotalCountModal, setShowTotalCountModal] = useState(false);
+//   const [totolCountList, setTotalCountList] = useState();
+//   const [showTotalFamilyCountModal, setShowTotalFamilyCountModal] =
+//     useState(false);
+//   const [totalFamilyCountList, setTotalFamilyCountList] = useState();
+//   const [showPartialCountModal, setShowPartialCountModal] = useState(false);
+//   const [partialCountList, setPartialCountList] = useState();
+//   const navigate = useNavigate();
+
+//   let axiosConfig = {
+//     headers: {
+//       Authorization: `Token ${sessionStorage.getItem("Token")}`,
+//     },
+//   };
+
+//   const handleShowToDayCitizenCountModal = () => {
+//     axios
+//       .get(`${BASE_URL}/healthworker/api/GetCitizenList/Today`, axiosConfig)
+//       .then((response) => {
+//         console.log(response.data);
+//         setTodayCitizenCountList(response.data);
+//         setShowToDayCitizenCountModal(true);
+//       })
+//       .catch((error) => {
+//         if (error.response.status == 401) {
+//           message.warning("system is logged out");
+//           setTimeout(() => {
+//             window.location.replace("/");
+//           }, 1000);
+//         } else {
+//           message.error(error.message);
+//         }
+//       });
+//   };
+//   const handleHideToDayCitizenCountModal = () => {
+//     setShowToDayCitizenCountModal(false);
+//   };
+//   const handleShowTodayFamilyCountModal = () => {
+//     axios
+//       .get(`${BASE_URL}/healthworker/api/GetFamilyList/Today`, axiosConfig)
+//       .then((response) => {
+//         console.log(response.data);
+//         setTodayFamilyCountList(response.data);
+//         setShowTodayFamilyCountModal(true);
+//       })
+//       .catch((error) => {
+//         if (error.response.status == 401) {
+//           message.warning("system is logged out");
+//           setTimeout(() => {
+//             window.location.replace("/");
+//           }, 1000);
+//         } else {
+//           message.error(error.message);
+//         }
+//       });
+//   };
+//   const handleHideTodayFamilyCountModal = () => {
+//     setShowTodayFamilyCountModal(false);
+//   };
+
+//   const handleShowTotalCountModal = () => {
+//     axios
+//       .get(`${BASE_URL}/healthworker/api/GetCitizenList/All`, axiosConfig)
+//       .then((response) => {
+//         console.log(response.data);
+//         setTotalCountList(response.data);
+//         setShowTotalCountModal(true);
+//       })
+//       .catch((error) => {
+//         if (error.response.status == 401) {
+//           message.warning("system is logged out");
+//           setTimeout(() => {
+//             window.location.replace("/");
+//           }, 1000);
+//         } else {
+//           message.error(error.message);
+//         }
+//       });
+//   };
+//   const handleHideTotalCountModal = () => {
+//     setShowTotalCountModal(false);
+//   };
+//   const handleShowTotalFamilyCountModal = () => {
+//     axios
+//       .get(`${BASE_URL}/healthworker/api/GetFamilyList/All`, axiosConfig)
+//       .then((response) => {
+//         console.log(response.data);
+//         setTotalFamilyCountList(response.data);
+//         setShowTotalFamilyCountModal(true);
+//       })
+//       .catch((error) => {
+//         if (error.response.status == 401) {
+//           message.warning("system is logged out");
+//           setTimeout(() => {
+//             window.location.replace("/");
+//           }, 1000);
+//         } else {
+//           message.error(error.message);
+//         }
+//       });
+//   };
+//   const handleHideTotalFamilyCountModal = () => {
+//     setShowTotalFamilyCountModal(false);
+//   };
+
+//   const handleShowPartialCountModal = () => {
+//     setLoading(true);
+//     axios
+//       .get(
+//         `${BASE_URL}/healthworker/api/GetPartiallyInsertedRecord`,
+//         axiosConfig
+//       )
+//       .then((response) => {
+//         console.log(response.data);
+//         setLoading(false);
+//         setPartialCountList(response.data);
+//       })
+//       .catch((error) => {
+//         if (error.response.status == 401) {
+//           message.warning("system is logged out");
+//           setTimeout(() => {
+//             window.location.replace("/");
+//           }, 1000);
+//         } else {
+//           message.error(error.message);
+//         }
+//       });
+//     setShowPartialCountModal(true);
+//   };
+//   const handleHidePartialCountModal = () => {
+//     setShowPartialCountModal(false);
+//   };
+
+//   useEffect(() => {
+//     setLoading(true);
+
+//     console.log(axiosConfig);
+//     axios
+//       .get(`${BASE_URL}/healthworker/api/GetSurveyorDashboard`, axiosConfig)
+//       .then((response) => {
+//         console.log(response.data);
+//         setDashboardCounts(response.data);
+//         setLoading(false);
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//         if (error.response.status == 401) {
+//           message.warning("system is logged out");
+//           setTimeout(() => {
+//             LogOut();
+//           }, 1000);
+//         } else {
+//           message.error(error.message);
+//         }
+//         setLoading(false);
+//       });
+//     axios
+//       .get(`${BASE_URL}/healthworker/api/GetFamilyHeadList`, axiosConfig)
+//       .then((response) => {
+//         console.log(response.data);
+//         setFamilyHeadList(response.data);
+//         setLoading(false);
+//       })
+//       .catch((error) => {
+//         console.log(error.response.status);
+//         if (error.response.status == 401) {
+//           message.warning("system is logged out");
+//           setTimeout(() => {
+//             LogOut();
+//           }, 1000);
+//         } else {
+//           // message.error(error.message);
+//         }
+//         setLoading(false);
+//       });
+
+//     axios
+//       .get(
+//         `${BASE_URL}/healthworker/api/GetPartiallyInsertedRecord`,
+//         axiosConfig
+//       )
+//       .then((response) => {
+//         console.log(response.data);
+//         setLoading(false);
+//         setPartiallyFamilyHeadList(response.data);
+//       })
+//       .catch((error) => {
+//         setLoading(false);
+//         console.log(error);
+//       });
+//   }, []);
+
+//   const handleViewModal = (id) => {
+//     console.log(id);
+//     const formData = new FormData();
+//     formData.append("search", id);
+//     let axiosConfig = {
+//       headers: {
+//         Authorization: `Token ${sessionStorage.getItem("Token")}`,
+//       },
+//       params: {
+//         search: id,
+//       },
+//     };
+
+//     axios
+//       .get(`${BASE_URL}/healthworker/api/GetFamilyMembersDetails`, axiosConfig)
+//       .then((response) => {
+//         console.log(response.data.length);
+//         setFamilyMemberArrayLength(response.data.length);
+//         setFamilyMemberDetails(response.data);
+//         setShowViewModal(true);
+//       })
+//       .catch((error) => {
+//         if (error.response.status == 401) {
+//           message.warning("system is logged out");
+//           setTimeout(() => {
+//             LogOut();
+//           }, 1000);
+//         } else {
+//           message.error(error.message);
+//         }
+//       });
+//   };
+//   const handleHideViewModal = () => {
+//     setShowViewModal(false);
+//   };
+//   // familyHeadList
+//   const Items = [
+//     {
+//       title: "ID",
+//       dataIndex: "id",
+//     },
+//     {
+//       title: "Family ID",
+//       dataIndex: "familyId",
+//     },
+//     {
+//       title: "Name",
+//       dataIndex: "name",
+//     },
+//     {
+//       title: "Mobile Number",
+//       dataIndex: "mobileNo",
+//     },
+//     {
+//       title: "Address",
+//       dataIndex: "address",
+//     },
+//     {
+//       title: "Total Family Members",
+//       dataIndex: "totalFamilyMembers",
+//     },
+//     {
+//       title: "Action",
+//       render: (data) => {
+//         return (
+//           <>
+//             <ViewButton
+//               onClick={() => {
+//                 setFamilyID(data.id);
+//                 setNoOfFamilyMembers(data.totalFamilyMembers);
+//                 handleViewModal(data.familyId);
+//               }}
+//             >
+//               View
+//             </ViewButton>
+//           </>
+//         );
+//       },
+//     },
+//   ];
+
+//   const handleFamilyMembersView = (data) => {
+//     console.log(data);
+//     navigate("/update", { state: data });
+//   };
+
+//   const handleNewFamilyMemberAdd = () => {
+//     console.log(familyID, noOfFamilyMembers);
+//     navigate("/addMember", { state: familyID });
+//   };
+//   const FamilyMemberItems = [
+//     {
+//       title: "ID",
+//       dataIndex: "id",
+//     },
+//     {
+//       title: "Member ID",
+//       dataIndex: "memberId",
+//     },
+//     {
+//       title: "Name",
+//       dataIndex: "name",
+//     },
+//     {
+//       title: "Gender",
+//       dataIndex: "gender",
+//     },
+//     {
+//       title: "Age",
+//       dataIndex: "age",
+//     },
+//     {
+//       title: "Mobile Number",
+//       dataIndex: "mobileNo",
+//     },
+//     {
+//       title: "Aadhar No",
+//       dataIndex: "aadharCard",
+//     },
+//     {
+//       title: "Abha ID",
+//       dataIndex: "abhaId",
+//     },
+//     {
+//       title: "Action",
+//       render: (data) => {
+//         return (
+//           <ViewButton onClick={() => handleFamilyMembersView(data)}>
+//             View
+//           </ViewButton>
+//         );
+//       },
+//     },
+//   ];
+
+//   const TodayCitizenCountTitleList = [
+//     {
+//       title: "Member ID",
+//       dataIndex: "memberId",
+//     },
+//     {
+//       title: "Name",
+//       dataIndex: "name",
+//     },
+//     {
+//       title: "Gender",
+//       dataIndex: "gender",
+//     },
+//     {
+//       title: "Age",
+//       dataIndex: "age",
+//     },
+//   ];
+//   const TodayFamilyCountTitleList = [
+//     {
+//       title: "Family ID",
+//       dataIndex: "familyId",
+//     },
+//     {
+//       title: "Name",
+//       dataIndex: "name",
+//     },
+//     {
+//       title: "Address",
+//       dataIndex: "address",
+//     },
+//   ];
+//   const TotalCountTitleList = [
+//     {
+//       title: "Member ID",
+//       dataIndex: "memberId",
+//     },
+//     {
+//       title: "Name",
+//       dataIndex: "name",
+//     },
+//     {
+//       title: "Gender",
+//       dataIndex: "gender",
+//     },
+//     {
+//       title: "Age",
+//       dataIndex: "age",
+//     },
+//   ];
+//   const TotalFamilyCountList = [
+//     {
+//       title: "Family ID",
+//       dataIndex: "familyId",
+//     },
+//     {
+//       title: "Name",
+//       dataIndex: "name",
+//     },
+//     {
+//       title: "Address",
+//       dataIndex: "address",
+//     },
+//   ];
+//   const PartialCountTitleList = [
+//     {
+//       title: "ID",
+//       dataIndex: "id",
+//     },
+//     {
+//       title: "Family ID",
+//       dataIndex: "familyId",
+//     },
+//     {
+//       title: "Name",
+//       dataIndex: "name",
+//     },
+//     {
+//       title: "Mobile No",
+//       dataIndex: "mobileNo",
+//     },
+//   ];
+ 
+//   return (
+//     <>
+//       <Spin spinning={loader}>
+//         <div style={{ overflowY: "auto", maxHeight: "89vh" }}>
+          
+//           <Row style={{ padding: "2%", width: "100%", height: "100%" }}>
+//             <Col span={14}>
+//               <MainCountRow>
+//                 <CountCard>
+//                   <CardTitle>ANM/Co-Ordinator</CardTitle>
+//                   <CountTitle>{AdminDashboardData.ANM_count}</CountTitle>
+//                 </CountCard>
+//                 <CountCard>
+//                   <CardTitle>CHV/ASHA</CardTitle>
+//                   <CountTitle>{AdminDashboardData.CHV_ASHA_count}</CountTitle>
+//                 </CountCard>
+//                 <CountCard>
+//                   <CardTitle>MO</CardTitle>
+//                   <CountTitle>{AdminDashboardData.MO_count}</CountTitle>
+//                 </CountCard>
+//               </MainCountRow>
+//               <h3>Citizens Details</h3>
+//               <MainCountRow>
+//                 <CountCard>
+//                   <CardTitle>Families Enrolled</CardTitle>
+//                   <CountTitle>
+//                     {AdminDashboardData.total_family_count}
+//                   </CountTitle>
+//                 </CountCard>
+//                 <CountCard>
+//                   <CardTitle>Citizens Enrolled</CardTitle>
+//                   <CountTitle>{AdminDashboardData.total_count}</CountTitle>
+//                 </CountCard>
+//                 <CountCard>
+//                   <CardTitle>CBAC Filled</CardTitle>
+//                   <CountTitle>{AdminDashboardData.total_cbac_count}</CountTitle>
+//                 </CountCard>
+//               </MainCountRow>
+//               <br />
+//               <MainCountRow>
+//                 <CountCard>
+//                   <CardTitle>Males Enrolled</CardTitle>
+//                   <CountTitle> {AdminDashboardData.male}</CountTitle>
+//                 </CountCard>
+//                 <CountCard>
+//                   <CardTitle>Females Enrolled</CardTitle>
+//                   <CountTitle> {AdminDashboardData.female}</CountTitle>
+//                 </CountCard>
+//                 <CountCard>
+//                   <CardTitle>Transgender Enrolled</CardTitle>
+//                   <CountTitle> {AdminDashboardData.transgender}</CountTitle>
+//                 </CountCard>
+//               </MainCountRow>
+//               <br />
+//               <MainCountRow>
+//                 <CountCard>
+//                   <CardTitle>ABHA Id Generated</CardTitle>
+//                   <CountTitle>0</CountTitle>
+//                 </CountCard>
+//                 <CountCard>
+//                   <CardTitle>Citizens 30 years + enrolled</CardTitle>
+//                   <CountTitle>{AdminDashboardData.citizen_above_30}</CountTitle>
+//                 </CountCard>
+//                 <CountCard>
+//                   <CardTitle>Citizens 60 years + enrolled</CardTitle>
+//                   <CountTitle>{AdminDashboardData.citizen_above_60}</CountTitle>
+//                 </CountCard>
+//               </MainCountRow>
+//               <br />
+//               <MainCountRow>
+//                 <CountCard>
+//                   <CardTitle>Vulnerable Citizen</CardTitle>
+//                   <CountTitle>{AdminDashboardData.total_vulnerabel}</CountTitle>
+//                 </CountCard>
+//               </MainCountRow>
+//             </Col>
+//             <Col span={1}></Col>
+//             <Col span={9} style={{ width: "100%" }}>
+//               <BloodDetailCard>
+//                 <h3>Blood Collection Details</h3>
+//                 <br />
+//                 <MainCountRow>
+//                   <DetailSubtitle> Tests Suggested</DetailSubtitle>
+//                   <CountTitle>0</CountTitle>
+//                 </MainCountRow>
+//                 <Line />
+//                 <MainCountRow>
+//                   <DetailSubtitle> Tests Assigned</DetailSubtitle>
+//                   <CountTitle>0</CountTitle>
+//                 </MainCountRow>
+//                 <Line />
+//                 <MainCountRow>
+//                   <DetailSubtitle> Tests Done</DetailSubtitle>
+//                   <CountTitle>0</CountTitle>
+//                 </MainCountRow>
+//                 <Line />
+//                 <MainCountRow>
+//                   <DetailSubtitle>Total Reports Generated</DetailSubtitle>
+//                   <CountTitle>
+//                     {AdminDashboardData.TestReportGenerated}
+//                   </CountTitle>
+//                 </MainCountRow>
+//                 <Line />
+//                 <MainCountRow>
+//                   <DetailSubtitle>Blood Collected At Home</DetailSubtitle>
+//                   <CountTitle>
+//                     {AdminDashboardData.blood_collected_home}
+//                   </CountTitle>
+//                 </MainCountRow>
+//                 <Line />
+//                 <MainCountRow>
+//                   <DetailSubtitle>Blood Collected At Center</DetailSubtitle>
+//                   <CountTitle>
+//                     {AdminDashboardData.blood_collected_center}
+//                   </CountTitle>
+//                 </MainCountRow>
+//                 <Line />
+
+//                 <MainCountRow>
+//                   <DetailSubtitle>
+//                     Blood Collection Denied By AMO
+//                   </DetailSubtitle>
+//                   <CountTitle>
+//                     {AdminDashboardData.denieded_by_mo_count}
+//                   </CountTitle>
+//                 </MainCountRow>
+//                 <Line />
+//                 <MainCountRow>
+//                   <DetailSubtitle>
+//                     Blood Collection Denied By Citizen
+//                   </DetailSubtitle>
+//                   <CountTitle>
+//                     {AdminDashboardData.denieded_by_mo_individual}
+//                   </CountTitle>
+//                 </MainCountRow>
+//               </BloodDetailCard>
+//             </Col>
+//             <Divider />
+//             <div>
+//               <h3>Referrals</h3>
+//               <div>
+//                 <Row>
+//                   <Col span={8}>
+//                     <ReferralCountCard>
+//                       <CardTitle>
+//                         {" "}
+//                         Referral to Mun. Dispensary / HBT for Blood Test /
+//                         Confirmation / Treatment
+//                       </CardTitle>
+//                       <CountTitle>
+//                         {
+//                           AdminDashboardData.Referral_choice_Referral_to_Mun_Dispensary
+//                         }
+//                       </CountTitle>
+//                     </ReferralCountCard>
+//                   </Col>
+//                   <Col span={8}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle>
+//                         {" "}
+//                         Referral to HBT polyclinic for physician consultation
+//                       </CardTitle>
+//                       <CountTitle>
+//                         {
+//                           AdminDashboardData.Referral_choice_Referral_to_HBT_polyclinic
+//                         }
+//                       </CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={8}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle>
+//                         {" "}
+//                         Referral to Peripheral Hospital / Special Hospital for
+//                         management of Complication
+//                       </CardTitle>
+//                       <CountTitle>
+//                         {
+//                           AdminDashboardData.Referral_choice_Referral_to_Peripheral_Hospital
+//                         }
+//                       </CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                 </Row>
+//                 <div style={{ height: "10px" }}></div>
+//                 <Row>
+//                   {" "}
+//                   <Col span={8}>
+//                     <ReferralCountCard>
+//                       <CardTitle>
+//                         {" "}
+//                         Referral to Medical College for management of
+//                         Complication
+//                       </CardTitle>
+//                       <CountTitle>
+//                         {
+//                           AdminDashboardData.Referral_choice_Referral_to_Medical_College
+//                         }
+//                       </CountTitle>
+//                     </ReferralCountCard>
+//                   </Col>
+//                   <Col span={8}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Referral to Private facility</CardTitle>
+//                       <CountTitle>
+//                         {
+//                           AdminDashboardData.Referral_choice_Referral_to_Private_facility
+//                         }
+//                       </CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                 </Row>
+//               </div>
+//             </div>{" "}
+//             <Divider />
+//             {/* <div>
+//               <div>
+//                 <h3>Vulnerable</h3>
+//               </div>
+//               <div style={{ width: "80vw" }}>
+//                 <Row>
+//                   <Col span={8}>
+//                     <ReferralCountCard>
+//                       <CardTitle> Total Vulnerable</CardTitle>
+//                       <CountTitle>
+//                         {AdminDashboardData.total_vulnerabel}
+//                       </CountTitle>
+//                     </ReferralCountCard>
+//                   </Col>
+//                   <Col span={8}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Citizen of 70 years +</CardTitle>
+//                       <CountTitle>
+//                         {AdminDashboardData.vulnerabel_70_Years}
+//                       </CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={8}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Physical Handicapped</CardTitle>
+//                       <CountTitle>
+//                         {AdminDashboardData.vulnerabel_Physically_handicapped}
+//                       </CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                 </Row>
+//                 <div style={{ height: "10px" }}></div>
+//                 <Row>
+//                   {" "}
+//                   <Col span={8}>
+//                     <ReferralCountCard>
+//                       <CardTitle> Completely Paralyzed or On Bed</CardTitle>
+//                       <CountTitle>
+//                         {
+//                           AdminDashboardData.vulnerabel_completely_paralyzed_or_on_bed
+//                         }
+//                       </CountTitle>
+//                     </ReferralCountCard>
+//                   </Col>
+//                   <Col span={8}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Elder or Alone At Home</CardTitle>
+//                       <CountTitle>
+//                         {
+//                           AdminDashboardData.vulnerabel_elderly_and_alone_at_home
+//                         }
+//                       </CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={8}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Other Reasons</CardTitle>
+//                       <CountTitle>
+//                         {AdminDashboardData.vulnerabel_any_other_reason}
+//                       </CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                 </Row>
+//               </div>
+//             </div> */}
+//             <div>
+//               <div>
+//                 <h3>Disease</h3>
+//               </div>
+//               <div style={{ width: "80vw" }}>
+//                 <Row>
+//                   <Col span={5}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle>Diabetes</CardTitle>
+//                       <CountTitle>{AdminDashboardData.diabetes}</CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={5}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle>Hypertension</CardTitle>
+//                       <CountTitle>{AdminDashboardData.hypertension}</CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={5}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Oral Cancer</CardTitle>
+//                       <CountTitle>{AdminDashboardData.oral_Cancer}</CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={5}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Cervical Cancer</CardTitle>
+//                       <CountTitle>
+//                         {AdminDashboardData.cervical_cancer}
+//                       </CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={4}>
+//                     <ReferralCountCard>
+//                       <CardTitle> Breast Cancer</CardTitle>
+//                       <CountTitle>
+//                         {AdminDashboardData.breast_cancer}
+//                       </CountTitle>
+//                     </ReferralCountCard>
+//                   </Col>
+//                 </Row>
+//                 <div style={{ height: "10px" }}></div>
+//                 <Row>
+//                   {" "}
+//                   <Col span={5}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> COPD</CardTitle>
+//                       <CountTitle>{AdminDashboardData.copd}</CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={5}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Asthma</CardTitle>
+//                       <CountTitle>{AdminDashboardData.asthama}</CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={5}>
+//                     <ReferralCountCard>
+//                       <CardTitle>TB</CardTitle>
+//                       <CountTitle>{AdminDashboardData.tb}</CountTitle>
+//                     </ReferralCountCard>
+//                   </Col>
+//                   <Col span={5}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Alzheimer/Dementia</CardTitle>
+//                       <CountTitle>{AdminDashboardData.Alzheimers}</CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={4}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> ENT Disorder</CardTitle>
+//                       <CountTitle>{AdminDashboardData.ent_disorder}</CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                 </Row>
+//                 <div style={{ height: "10px" }}></div>
+//                 <Row>
+//                   <Col span={5}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Eye Disorder</CardTitle>
+//                       <CountTitle>{AdminDashboardData.eye_disorder}</CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                   <Col span={5}>
+//                     {" "}
+//                     <ReferralCountCard>
+//                       <CardTitle> Other Communicable Disease</CardTitle>
+//                       <CountTitle>
+//                         {AdminDashboardData.other_communicable_dieases}
+//                       </CountTitle>
+//                     </ReferralCountCard>{" "}
+//                   </Col>
+//                 </Row>
+//               </div>
+//             </div>
+//             <div
+//               style={{
+//                 display: "flex",
+//                 justifyContent: "flex-end",
+//                 alignItems: "end",
+//                 width: "100%",
+//                 margin: "3% 0% -5% 0%",
+//               }}
+//             >
+//               <p style={{ margin: "0% 1% 0.5% 0%" }}>
+//                 Developed and Maintained By
+//               </p>
+//               <img
+//                 src="\BhugolGISLogo.png"
+//                 style={{ width: "10rem", height: "2.5rem" }}
+//               />
+//             </div>
+//           </Row>
+//         </div>
+//       </Spin>
+//     </>
+//   );
+// }
+// export default AdminDashboard;
