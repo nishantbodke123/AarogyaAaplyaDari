@@ -10,3 +10,13 @@
    /* .ant-modal-body {
     height: calc(100vh - 110px);
    } */
+
+.citizenCard{
+    width: 50%;
+    margin: 5% 1%;
+}
+
+.ant-card-body {
+    padding: 0px;
+    border-radius: 0 0 8px 8px;
+}
