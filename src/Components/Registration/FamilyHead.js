@@ -874,10 +874,9 @@ function FamilyHead(props) {
       })
       .catch((err) => {
         console.log(err.response.status);
-        if(err.response.status == 401){
+        if (err.response.status == 401) {
           LogOut();
         }
-
       });
   };
   const handleConsentModalClose = () => {
@@ -1039,22 +1038,66 @@ function FamilyHead(props) {
   };
 
   const handleBloodPressureChange = (e) => {
-    const regex = /^[0-9]{1,3}$/;
-    if (e.target.value === "" || regex.test(e.target.value)) {
-      setBloodPressure(e.target.value);
+    // const regex = /^[0-9]{1,3}$/;
+
+    const alphanumericText = e.target.value.replace(/[^0-9]/g, ""); // Remove non-alphanumeric characters
+
+    let formattedText = "";
+    for (let i = 0; i < alphanumericText.length; i++) {
+      if (i === 3) {
+        formattedText += "/";
+      }
+      formattedText += alphanumericText[i];
     }
+
+    // Ensure that the input does not start with a hyphen
+    if (formattedText.startsWith("/")) {
+      formattedText = formattedText.substring(1);
+    }
+
+    setBloodPressure(formattedText);
+
+    // if (e.target.value === "" || regex.test(e.target.value)) {
+    // setBloodPressure(e.target.value);
+    // }
   };
   const handleWeightChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
     if (e.target.value === "" || regex.test(e.target.value)) {
       setWeight(e.target.value);
     }
+    calculateBMI();
   };
 
   const handleHeightChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
     if (e.target.value === "" || regex.test(e.target.value)) {
       setHeight(e.target.value);
+    }
+    calculateBMI();
+  };
+  // const handleBMI = () => {
+  //   var BMI;
+  // if (weight !== "" && height !== "") {
+  //   BMI = (weight / (height / 100)) * 2;
+  //   setBMI(BMI);
+  // }
+  // };
+  const calculateBMI = () => {
+    const weightInKg = parseFloat(weight);
+    const heightInCm = parseFloat(height);
+
+    if (weight !== "" && height !== "") {
+      // Convert height to meters
+      const heightInM = heightInCm / 100;
+
+      // Calculate BMI
+      const calculatedBMI = weightInKg / (heightInM * heightInM);
+
+      // Update state
+      setBMI(calculatedBMI.toFixed(2));
+    } else {
+      setBMI("");
     }
   };
   const handleBMIChange = (e) => {
@@ -1251,6 +1294,7 @@ function FamilyHead(props) {
 
   //E7
   const [snakeBitten, setSnakeBitten] = useState([]);
+  const [diabetes, setDiabetes] = useState([]);
 
   //E8
   const [leprosy, setLeprosy] = useState("");
@@ -1417,6 +1461,14 @@ function FamilyHead(props) {
   };
   const handleSnakeBitten = (selectedValue) => {
     const setQuestionFunction = eval(`setSnakeBitten`);
+    if (selectedValue === "Yes" || selectedValue === "No") {
+      setQuestionFunction([selectedValue]);
+    } else {
+      setQuestionFunction([]);
+    }
+  };
+  const handleDiabetes = (selectedValue) => {
+    const setQuestionFunction = eval(`setDiabetes`);
     if (selectedValue === "Yes" || selectedValue === "No") {
       setQuestionFunction([selectedValue]);
     } else {
@@ -1866,228 +1918,228 @@ function FamilyHead(props) {
     Questionnaire: {
       part_a: [
         {
-          question: "What_is_your_age_completeyears",
+          question: "What is your age? (complete years)",
           answer: question1A,
         },
         {
           question:
-            "Do_you_smoke_or_consume_smokeless_products_such_as_gutka_or_khaini",
+            "Do you smoke or consume smokeless product such as gutka or khaini?",
           answer: question2A,
         },
         {
-          question: "Do_you_consume_alcohol_daily",
+          question: "Do you consume alcohol daily",
           answer: question3A,
         },
         {
-          question: "Measurement_of_waist_in_cm",
+          question: "Measurement of waist in cm",
           answer: question4A,
         },
         {
           question:
-            "Do_you_undertake_any_physical_activities_for_minimum_of__minutes_in_a_week",
+            "Do you undertake any physical activities for minimum of 150 minutes in a week (Daily min 30 minutes per day- 5 days a week)",
           answer: question5A,
         },
         {
           question:
-            "Do_you_have_a_family_history_any_one_of_your_parents_or_siblings_of_high_blood_pressure_diabetes_and_heart_disease",
+            "Do you have a family history (any one of your parent or sibling ) of high BP, DM and Heart Disease",
           answer: question6A,
         },
       ],
       part_b: [
         {
-          question: "Shortness_of_breath_difficulty_breathing",
+          question: "Shortness of Breath (Difficulty in Breathing)",
           answer: question1B1,
         },
         {
-          question: "Coughing_more_than__weeks",
+          question: "Cough lasting more than 2 weeks",
           answer: question2B1,
         },
         {
-          question: "Blood_in_sputum",
+          question: "Blood in sputum",
           answer: question3B1,
         },
         {
-          question: "Fever_for_more_than__weeks",
+          question: "Fever for more than 2 weeks",
           answer: question4B1,
         },
         {
-          question: "Loss_of_weight",
+          question: "Loss of weight",
           answer: question5B1,
         },
         {
-          question: "Night_Sweats",
+          question: "Night sweat",
           answer: question6B1,
         },
         {
-          question: "Are_you_currently_taking_anti_TB_drugs",
+          question: "Are you currently taking Anti TB Drugs",
           answer: question7B1,
         },
         {
-          question: "Anyone_in_family_currently_suffering_from_TB",
+          question: "Anyone in family currently suffering from TB",
           answer: question8B1,
         },
         {
-          question: "History_of_TB",
+          question: "History of TB",
           answer: question9B1,
         },
         {
-          question: "Recurrent_ulceration_on_palms_or_sole",
+          question: "Recurrent ulceration on palms or sole",
           answer: question10B1,
         },
         {
-          question: "Recurrent_Tingling_on_palms_or_sole",
+          question: "Recurrent Tingling on palms or sole",
           answer: question11B1,
         },
         {
-          question: "Cloudy_or_blurred_vision",
+          question: "Cloudy or blurred vision",
           answer: question12B1,
         },
         {
-          question: "Difficulty_in_reading",
+          question: "Difficulty in Reading",
           answer: question13B1,
         },
         {
-          question: "Pain_in_eyes_lasting_for_more_than_a_week",
+          question: "Pain in eyes lasting for more than a week",
           answer: question14B1,
         },
         {
-          question: "Redness_in_eyes_lasting_for_more_than_a_week",
+          question: "Redness in eyes lasting for more than a week",
           answer: question15B1,
         },
         {
-          question: "Difficulty_in_hearing",
+          question: "Difficulty in hearing",
           answer: question16B1,
         },
         {
-          question: "History_of_convulsions__fits",
+          question: "History of convulsions – fits",
           answer: question17B1,
         },
         {
-          question: "Difficulty_in_opening_Mouth",
+          question: "Difficulty in opening Mouth",
           answer: question18B1,
         },
         {
-          question: "Any_ulcer_in_mouth_that_has_not_healed_in__week",
+          question: "Any ulcer in mouth that has not healed in 2 weeks",
           answer: question19B1,
         },
         {
-          question: "Any_growth__mass_in_mouth_that_has_not_healed_in__weeks",
+          question: "Any growth / mass in mouth that has not healed in 2 weeks",
           answer: question20B1,
         },
         {
           question:
-            "Any_white_or_red_patch_in_mouth_that_has_not_healed_in__weeks",
+            "Any white or red patch in mouth that has not healed in 2 weeks",
           answer: question21B1,
         },
         {
-          question: "Pain_while_chewing",
+          question: "Pain while chewing",
           answer: question22B1,
         },
         {
-          question: "Any_change_in_tone_of_your_voice",
+          question: "Any change in tone of your voice",
           answer: question23B1,
         },
         {
           question:
-            "Any_hypo_pigmented_patch_in_oral_cavity_or_discolored_lesions_with_loss_of_sensation",
+            "Any hypopigmented patch or discoloured lesions in oral cavity with loss of sensation",
           answer: question24B1,
         },
         {
-          question: "Any_thickened_skin",
+          question: "Any thickened skin",
           answer: question25B1,
         },
         {
-          question: "Any_nodules_on_skin",
+          question: "Any nodules on skin",
           answer: question26B1,
         },
         {
-          question: "recurrent_numbness_on_palms_or_sole",
+          question: "Recurrent numbness on palms or sole",
           answer: question27B1,
         },
         {
-          question: "clawing_of_fingers_of_hands_and_feet",
+          question: "Clawing of fingers of hands and feet",
           answer: question28B1,
         },
         {
-          question: "tingling_and_numbness_in_hands_and_feet",
+          question: "Tingling_and_numbness_in_hands_and_feet",
           answer: question29B1,
         },
         {
-          question: "inability_to_close_eyelids_completely",
+          question: "Inability to close eyelids completely",
           answer: question30B1,
         },
         {
-          question: "difficulty_in_holding_objects_in_hands",
+          question: "Difficulty in holding objects in hands",
           answer: question31B1,
         },
         {
-          question: "weakness_in_feet_that_causes_difficulty_in_walking",
+          question: "Weakness in feet that causes difficulty in walking",
           answer: question32B1,
         },
         {
-          question: "Lump_in_the_breast",
+          question: "Lump in breast",
           answer: question1B2,
         },
         {
-          question: "Blood_stained_discharge_from_the_nipple",
+          question: "Blood stained discharge from the nipple",
           answer: question2B2,
         },
         {
-          question: "Change_in_shape_and_size_of_breast",
+          question: "Changes in shape and size of breast",
           answer: question3B2,
         },
         {
-          question: "Bleeding_between_periods",
+          question: "Bleeding between periods",
           answer: question4B2,
         },
         {
-          question: "Bleeding_after_menopause",
+          question: "Bleeding after menopause",
           answer: question5B2,
         },
         {
-          question: "Bleeding_after_intercourse",
+          question: "Bleeding after intercourse",
           answer: question6B2,
         },
         {
-          question: "Foul_smelling_vaginal_discharge",
+          question: "Foul smelling vaginal discharge",
           answer: question7B2,
         },
         {
-          question: "Do_you_feel_unsteady_while_standing_or_walking",
+          question: "Feeling unsteady while standing or walking",
           answer: question1B3,
         },
         {
           question:
-            "Impairment_of_movement_if_suffering_from_physical_disability",
+            "Suffering from any physical disability that restricts movement",
           answer: question2B3,
         },
         {
           question:
-            "Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet",
+            "Needing help from others to perform everyday activities such as eating , getting dressed, grooming , bathing, walking, or using toilet",
           answer: question3B3,
         },
         {
-          question: "Forgetting_your_home_address_or_household_names",
+          question: "Forgetting names of your near ones or your home address",
           answer: question4B3,
         },
       ],
       part_c: [
         {
-          question: "Type_of_Fuel_used_for_cooking",
+          question: "Type of Fuel used for cooking",
           answer: partC1OptionSelect,
         },
         {
-          question: "Occupational_exposure",
+          question: "Occupational exposure",
           answer: partC2OptionSelect,
         },
       ],
       part_d: [
         {
-          question: "Little_interest_of_pleasure_in_doing_things",
+          question: "Little interest of pleasure in doing things ?",
           answer: question1D,
         },
         {
-          question: "Feeling_down_depressed_or_hopeless",
+          question: "Feeling low/down,depressed or hopeless/sadness ?",
           answer: question2D,
         },
       ],
@@ -2097,37 +2149,37 @@ function FamilyHead(props) {
           answer: doYouhaveFever1,
         },
         {
-          question: "With_Chills",
+          question: "With Chills",
           answer: doYouhaveFever2,
         },
         {
-          question: "With_Rash",
+          question: "With Rash",
           answer: doYouhaveFever3,
         },
         {
-          question: "with_Bleeding",
+          question: "With Bleeding",
           answer: doYouhaveFever4,
         },
         {
-          question: "with_Altered_Sensorium",
+          question: "With Altered Sensorium",
           answer: doYouhaveFever5,
         },
 
         {
-          question: "Waddling_in_water",
+          question: "Waddling in water",
           answer: leptospirosis1,
         },
         {
           question:
-            "Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent",
+            "Exposure to domestic animal like cattle / Dog / Cat / Pig / Rodent",
           answer: leptospirosis2,
         },
         {
-          question: "Loose_Motion",
+          question: "Loose Motion",
           answer: looseMotion1,
         },
         {
-          question: "With_Blood",
+          question: "With Blood",
           answer: looseMotion2,
         },
         {
@@ -2136,16 +2188,20 @@ function FamilyHead(props) {
         },
         {
           question:
-            "Eating_outside__uncovered_food__drinking_contaminated_water",
+            "Eating outside / uncovered food / drinking contaminated water",
           answer: hepatitis1,
         },
         {
-          question: "Animal_Bite",
+          question: "Animal Bite(cattle/dogs/cats)",
           answer: animalBitten,
         },
         {
-          question: "Snake_Bite",
+          question: "Snake Bite",
           answer: snakeBitten,
+        },
+        {
+          question: "History of amputation due to diabetes complication",
+          answer: diabetes,
         },
       ],
     },
@@ -2561,6 +2617,7 @@ function FamilyHead(props) {
                       <Input
                         type="text"
                         value={pulse}
+                        suffix="/min"
                         onChange={(e) => handlePulseChange(e)}
                       ></Input>
                     </FormItem>
@@ -2571,6 +2628,8 @@ function FamilyHead(props) {
                       <Input
                         type="text"
                         value={bloodPressure}
+                        suffix="mmHg"
+                        maxLength={6}
                         onChange={(e) => handleBloodPressureChange(e)}
                       ></Input>
                     </FormItem>
@@ -2580,6 +2639,7 @@ function FamilyHead(props) {
                       <Input
                         type="text"
                         value={weight}
+                        suffix="kg"
                         onChange={(e) => handleWeightChange(e)}
                       ></Input>
                     </FormItem>
@@ -2589,6 +2649,7 @@ function FamilyHead(props) {
                       <Input
                         type="text"
                         value={height}
+                        suffix="cm"
                         onChange={(e) => handleHeightChange(e)}
                       ></Input>
                     </FormItem>
@@ -2598,6 +2659,7 @@ function FamilyHead(props) {
                       <Input
                         type="text"
                         value={BMI}
+                        suffix="kg/m2"
                         onChange={(e) => handleBMIChange(e)}
                       ></Input>
                     </FormItem>
@@ -2665,8 +2727,8 @@ function FamilyHead(props) {
 
               <QuestionRow>
                 <QuestionCol>
-                  १. आपले वय काय आहे ? (पूर्ण वर्षात) / what is your age (in
-                  full year)
+                  १. आपले वय काय आहे ? (पूर्ण वर्षात) / What is your age?
+                  (complete years)
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -2694,8 +2756,8 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   २. तुम्ही धूम्रपान किंवा धूर रहित उत्पादने जसे गुटखा व
-                  खैनीसारख्या वापर करता ? / Do you smoke or smokeless products
-                  like gutkha and Use like Khaini?
+                  खैनीसारख्या वापर करता ? / Do you smoke or consume smokeless
+                  product such as gutka or khaini?
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3702,56 +3764,73 @@ function FamilyHead(props) {
                   </Radio.Group>
                 </AnswerCol>
               </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>2.थंडी वाजून येणे सह / With Chills</QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(2, e.target.value)}
-                    value={doYouhaveFever2[0]}
-                  >
-                    <Radio value="Yes">Yes / होय</Radio>
-                    <Radio value="No">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>3. रॅश सह / With Rash</QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(3, e.target.value)}
-                    value={doYouhaveFever3[0]}
-                  >
-                    <Radio value="Yes">Yes / होय</Radio>
-                    <Radio value="No">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>4. रक्तस्त्राव सह / with Bleeding</QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(4, e.target.value)}
-                    value={doYouhaveFever4[0]}
-                  >
-                    <Radio value="Yes">Yes / होय</Radio>
-                    <Radio value="No">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
-              <QuestionRow>
-                <QuestionCol>
-                  5. संवेदना सह / with Altered Sensorium
-                </QuestionCol>
-                <AnswerCol>
-                  <Radio.Group
-                    onChange={(e) => handleDoYouHaveFever(5, e.target.value)}
-                    value={doYouhaveFever5[0]}
-                  >
-                    <Radio value="Yes">Yes / होय</Radio>
-                    <Radio value="No">No / नाही</Radio>
-                  </Radio.Group>
-                </AnswerCol>
-              </QuestionRow>
+              {doYouhaveFever1 == "No" ? (
+                <></>
+              ) : (
+                <>
+                  {" "}
+                  <QuestionRow>
+                    <QuestionCol>
+                      2.थंडी वाजून येणे सह / With Chills
+                    </QuestionCol>
+                    <AnswerCol>
+                      <Radio.Group
+                        onChange={(e) =>
+                          handleDoYouHaveFever(2, e.target.value)
+                        }
+                        value={doYouhaveFever2[0]}
+                      >
+                        <Radio value="Yes">Yes / होय</Radio>
+                        <Radio value="No">No / नाही</Radio>
+                      </Radio.Group>
+                    </AnswerCol>
+                  </QuestionRow>
+                  <QuestionRow>
+                    <QuestionCol>3. रॅश सह / With Rash</QuestionCol>
+                    <AnswerCol>
+                      <Radio.Group
+                        onChange={(e) =>
+                          handleDoYouHaveFever(3, e.target.value)
+                        }
+                        value={doYouhaveFever3[0]}
+                      >
+                        <Radio value="Yes">Yes / होय</Radio>
+                        <Radio value="No">No / नाही</Radio>
+                      </Radio.Group>
+                    </AnswerCol>
+                  </QuestionRow>
+                  <QuestionRow>
+                    <QuestionCol>4. रक्तस्त्राव सह / with Bleeding</QuestionCol>
+                    <AnswerCol>
+                      <Radio.Group
+                        onChange={(e) =>
+                          handleDoYouHaveFever(4, e.target.value)
+                        }
+                        value={doYouhaveFever4[0]}
+                      >
+                        <Radio value="Yes">Yes / होय</Radio>
+                        <Radio value="No">No / नाही</Radio>
+                      </Radio.Group>
+                    </AnswerCol>
+                  </QuestionRow>
+                  <QuestionRow>
+                    <QuestionCol>
+                      5. संवेदना सह / with Altered Sensorium
+                    </QuestionCol>
+                    <AnswerCol>
+                      <Radio.Group
+                        onChange={(e) =>
+                          handleDoYouHaveFever(5, e.target.value)
+                        }
+                        value={doYouhaveFever5[0]}
+                      >
+                        <Radio value="Yes">Yes / होय</Radio>
+                        <Radio value="No">No / नाही</Radio>
+                      </Radio.Group>
+                    </AnswerCol>
+                  </QuestionRow>
+                </>
+              )}
 
               <div>
                 <p
@@ -3914,6 +3993,21 @@ function FamilyHead(props) {
                   <Radio.Group
                     onChange={(e) => handleSnakeBitten(e.target.value)}
                     value={snakeBitten[0]}
+                  >
+                    <Radio value="Yes">Yes / होय</Radio>
+                    <Radio value="No">No / नाही</Radio>
+                  </Radio.Group>
+                </AnswerCol>
+              </QuestionRow>
+              <QuestionRow>
+                <QuestionCol>
+                  7. मधुमेहाच्या गुंतागुंतीमुळे विच्छेदन करण्याचा इतिहास?
+                  History of amputation due to diabetes complication ?
+                </QuestionCol>
+                <AnswerCol>
+                  <Radio.Group
+                    onChange={(e) => handleDiabetes(e.target.value)}
+                    value={diabetes[0]}
                   >
                     <Radio value="Yes">Yes / होय</Radio>
                     <Radio value="No">No / नाही</Radio>

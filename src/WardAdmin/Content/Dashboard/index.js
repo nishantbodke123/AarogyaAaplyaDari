@@ -40,16 +40,17 @@ function WardAdminDashboard() {
   const [MOHDashboardData, setMOHDashboardData] = useState({});
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [selectedHealthPost, setSelectedHealthPost] = useState();
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
   let axiosConfig = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
-
-
-
 
   useEffect(() => {
     setLoader(true);
@@ -239,7 +240,7 @@ function WardAdminDashboard() {
             <br />
             <MainCountRow>
               <CountCard>
-                <CardTitle>ABHA Id Generated</CardTitle>
+                <CardTitle>ABHA ID Generated</CardTitle>
                 <CountTitle>0</CountTitle>
               </CountCard>
               <CountCard>
@@ -264,10 +265,10 @@ function WardAdminDashboard() {
             <BloodDetailCard>
               <h3>Blood Collection Details</h3>
               <br />
-              <MainCountRow>
+              {/* <MainCountRow>
                 <DetailSubtitle> Tests Suggested</DetailSubtitle>
                 <CountTitle>{MOHDashboardData.total_LabTestAdded}</CountTitle>
-              </MainCountRow>
+              </MainCountRow> */}
               <Line />
               <MainCountRow>
                 <DetailSubtitle> Tests Assigned</DetailSubtitle>
@@ -395,7 +396,7 @@ function WardAdminDashboard() {
 
           <div>
             <div>
-              <h3>Disease</h3>
+              <h3>Disease Suspected</h3>
             </div>
             <div style={{ width: "80vw" }}>
               <Row>

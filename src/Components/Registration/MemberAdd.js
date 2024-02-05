@@ -1412,6 +1412,7 @@ function MemberAdd(props) {
                     <Input
                       type="text"
                       value={pulse}
+                      suffix="/min"
                       onChange={(e) => handlePulseChange(e)}
                     ></Input>
                   </FormItem>

@@ -204,7 +204,6 @@ function AdminDashboard() {
       .then((response) => {
         setLoader(false);
         const href = URL.createObjectURL(response.data);
-
         const link = document.createElement("a");
         link.href = href;
         link.setAttribute(
@@ -551,7 +550,7 @@ function AdminDashboard() {
               <br />
               <MainCountRow>
                 <CountCard>
-                  <CardTitle>ABHA Id Generated</CardTitle>
+                  <CardTitle>ABHA ID Generated</CardTitle>
                   <CountTitle>0</CountTitle>
                 </CountCard>
                 <CountCard>
@@ -576,10 +575,10 @@ function AdminDashboard() {
               <BloodDetailCard>
                 <h3>Blood Collection Details</h3>
                 <br />
-                <MainCountRow>
+                {/* <MainCountRow>
                   <DetailSubtitle> Tests Suggested</DetailSubtitle>
                   <CountTitle>0</CountTitle>
-                </MainCountRow>
+                </MainCountRow> */}
                 <Line />
                 <MainCountRow>
                   <DetailSubtitle> Tests Assigned</DetailSubtitle>
@@ -784,7 +783,7 @@ function AdminDashboard() {
             </div> */}
             <div>
               <div>
-                <h3>Disease</h3>
+                <h3>Disease Suspected</h3>
               </div>
               <div style={{ width: "80vw" }}>
                 <Row>
