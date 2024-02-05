@@ -632,8 +632,9 @@ const Dashboard = () => {
           >
             <Card
               style={{
-                margin: "2%",
-                border: "1px solid grey",
+                // margin: "2%",
+                // border: "1px solid grey",
+                border: "none",
                 background: "transparent",
                 width: "45%",
               }}
@@ -653,160 +654,203 @@ const Dashboard = () => {
                 </div>
               </Row>
               <Row>
-                <div style={{
-                  width: "32%", height: "12vh", margin: "2% 1%", padding: 0, background: "white",
-                borderRadius:"8px"    }}>
-
-        <Row flex="auto">
-          <Card.Meta title="Family Enrolled" style={{ marginTop: "5px", marginLeft: "5px" }} />
-        </Row>
-        <Row>
-          <div style={{ marginTop: "1px", textAlign: "left" }}>
-            <CardCount>{dashboardCounts.total_family_count}</CardCount>
-          </div>
-        </Row>
-    </div>
-
-                <Card
+                <div
                   style={{
                     width: "30%",
                     height: "12vh",
                     margin: "2% 1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Citizen Enrolled" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Family Enrolled"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.today_family_count}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "1px", textAlign: "left" }}>
+                      <CardCount>
+                        {dashboardCounts.total_family_count}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
                     width: "30%",
                     height: "12vh",
                     margin: "2% 1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="More than 30 years" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Citizen Enrolled"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.citizen_above_30}</CardCount>
-                  </div>
-                </Card>
-                <Card
+                  <Row>
+                    <div style={{ marginTop: "1px", textAlign: "left" }}>
+                      <CardCount>
+                        {dashboardCounts.today_family_count}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
+                <div
                   style={{
                     width: "30%",
                     height: "12vh",
                     margin: "2% 1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="More than 60 years" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Citizen Enrolled"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.citizen_above_60}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "1px", textAlign: "left" }}>
+                      <CardCount>
+                        {dashboardCounts.today_family_count}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
+
+                <div
+                  style={{
+                    width: "30%",
+                    height: "12vh",
+                    margin: "2% 1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="More than 60 years"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
+                  </Row>
+                  <Row>
+                    <div style={{ marginTop: "1px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.citizen_above_60}</CardCount>
+                    </div>
+                  </Row>
+                </div>
                 {/* </SubContainer>
                 <SubContainer> */}
                 {/* vulnerable citizen and CBAC Filled */}
 
                 {/* ------------------------ */}
 
-                <Card
+                <div
                   style={{
                     width: "30%",
                     height: "12vh",
                     margin: "2% 1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="CBAC form filled" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="CBAC form filled"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>
-                      {dashboardCounts.blood_collected_center}
-                    </CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>
+                        {dashboardCounts.blood_collected_center}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
                     width: "30%",
                     height: "12vh",
                     margin: "2% 1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="ABHA ID Generated" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="ABHA ID Generated"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>
-                      {dashboardCounts.blood_collected_home}
-                    </CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>
+                        {dashboardCounts.blood_collected_home}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
                     width: "30%",
                     height: "12vh",
                     margin: "2% 1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="CBAC Count" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="CBAC Count"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.todays_count}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.todays_count}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
                     width: "30%",
                     height: "12vh",
                     margin: "2% 1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Family Recorded" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Family Recorded"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.total_count}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.total_count}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
                 {/* </SubContainer> */}
                 {/* </Col> */}
@@ -815,8 +859,9 @@ const Dashboard = () => {
 
             <Card
               style={{
-                margin: "2%",
-                border: "1px solid grey",
+                // margin: "2%",
+                // border: "1px solid grey",
+                border: "none",
                 background: "transparent",
                 width: "60%",
               }}
@@ -836,236 +881,283 @@ const Dashboard = () => {
               </Row>
 
               <div style={{ display: "flex" }}>
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Diabetes" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Diabetes"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.diabetes}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.diabetes}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Hypertension" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Hypertension"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.hypertension}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.hypertension}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Oral Cancer" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Oral Cancer"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.oral_Cancer}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.oral_Cancer}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Cervical Cancer" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Cervical Cancer"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.cervical_cancer}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.cervical_cancer}</CardCount>
+                    </div>
+                  </Row>
+                </div>
               </div>
               <div style={{ display: "flex" }}>
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Breast Cancer" />
+                  {" "}
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Breast Cancer"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.breast_cancer}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.breast_cancer}</CardCount>
+                    </div>
+                  </Row>
+                </div>
+                <div
+                  style={{
+                    width: "24%",
+                    height: "12vh",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="COPD"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
+                  </Row>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.copd}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="COPD" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Asthama"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.copd}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.asthama}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Asthama" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="TB"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.asthama}</CardCount>
-                  </div>
-                </Card>
-
-                <Card
-                  style={{
-                    width: "20%",
-                    height: "12vh",
-                    margin: "2% 2%",
-                  }}
-                >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="TB" />
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.tb}</CardCount>
+                    </div>
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.tb}</CardCount>
-                  </div>
-                </Card>
+                </div>
               </div>
               <div style={{ display: "flex" }}>
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Alzheimer/Dementia" />
-                    {/* <p style={{ whiteSpace: "break-spaces", fontWeight: "600", }}>Alzheimer's/ Dementia</p> */}
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Alzheimer/Dementia"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    {/* <CardCount>{dashboardCounts.tb}</CardCount> */}
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      {/* <CardCount>{dashboardCounts.tb}</CardCount> */}
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="ENT Disorder" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="ENT Disorder"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.ent_disorder}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.ent_disorder}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Eye Disorder" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Eye Disorder"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.eye_disorder}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.eye_disorder}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
-                    width: "20%",
+                    width: "24%",
                     height: "12vh",
-                    margin: "2% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row
-                    justify="center"
-                    align="middle"
-                    style={{ height: "100%" }}
-                  >
-                    <Card.Meta title="Communicable" />
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Communicable"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "5px", textAlign: "center" }}>
-                    <CardCount>{dashboardCounts.communicable}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>{dashboardCounts.communicable}</CardCount>
+                    </div>
+                  </Row>
+                </div>
               </div>
             </Card>
           </div>
@@ -1079,9 +1171,10 @@ const Dashboard = () => {
           >
             <Card
               style={{
-                margin: "2%",
+                // margin: "2%",
                 background: "transparent",
-                border: "1px solid grey",
+                // border: "1px solid grey",
+                border: "none",
                 width: "40%",
               }}
             >
@@ -1089,7 +1182,7 @@ const Dashboard = () => {
                 <p
                   style={{
                     margin: "3% 0% 0% 3%",
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontWeight: "600",
                   }}
                 >
@@ -1098,58 +1191,66 @@ const Dashboard = () => {
               </div>
 
               <div style={{ display: "flex" }}>
-                <Card
+                <div
                   style={{
                     width: "50%",
                     height: "12vh",
-                    margin: "1% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row gutter={[16, 16]}>
-                    {/* <Col>
-                        <CountIcon icon={faBars} />
-                        </Col> */}
-                    <Col>
-                      <Card.Meta title="Blood Collected At Home" />
-                    </Col>
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Blood Collected At Home"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "10px" }}>
-                    {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
-                    <CardCount>
-                      {dashboardCounts.blood_collected_home}
-                    </CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      {/* Uncomment the following line if you are using Card.Meta for title */}
+                      {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
+                      <CardCount>
+                        {dashboardCounts.blood_collected_home}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
                     width: "50%",
                     height: "12vh",
-                    margin: "1% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row gutter={[16, 16]}>
-                    {/* <Col>
-                      <CountIcon icon={faBars} />
-                      </Col> */}
-                    <Col>
-                      <Card.Meta title="Blood Collected At Center" />
-                    </Col>
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Blood Collected At Center"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "10px" }}>
-                    {/* <Card.Meta title={dashboardCounts.blood_collected_center} /> */}
-                    <CardCount>
-                      {dashboardCounts.blood_collected_center}
-                    </CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      {/* Uncomment the following line if you are using Card.Meta for title */}
+                      {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
+                      <CardCount>
+                        {dashboardCounts.blood_collected_center}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
               </div>
 
               <div>
                 <p
                   style={{
                     margin: "3% 0% 0% 3%",
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontWeight: "600",
                   }}
                 >
@@ -1158,56 +1259,64 @@ const Dashboard = () => {
               </div>
 
               <div style={{ display: "flex" }}>
-                <Card
+                <div
                   style={{
                     width: "50%",
                     height: "12vh",
-                    margin: "1% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row gutter={[16, 16]}>
-                    {/* <Col>
-                      <CountIcon icon={faBars} />
-                      </Col> */}
-                    <Col>
-                      <Card.Meta title="AMO's" />
-                    </Col>
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="AMO's"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "10px" }}>
-                    <CardCount>
-                      {dashboardCounts.denieded_by_mo_count}
-                    </CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      {/* Uncomment the following line if you are using Card.Meta for title */}
+                      {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
+                      <CardCount>
+                        {dashboardCounts.denieded_by_mo_count}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
                     width: "50%",
                     height: "12vh",
-                    margin: "1% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row gutter={[16, 16]}>
-                    {/* <Col>
-                      <CountIcon icon={faBars} />
-                      </Col> */}
-                    <Col>
-                      <Card.Meta title="Citizen" />
-                    </Col>
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Citizen"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "10px" }}>
-                    <CardCount>
-                      {dashboardCounts.denieded_by_mo_individual}
-                    </CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      <CardCount>
+                        {dashboardCounts.denieded_by_mo_individual}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
               </div>
 
               <div>
                 <p
                   style={{
                     margin: "3% 0% 0% 3%",
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontWeight: "600",
                   }}
                 >
@@ -1215,52 +1324,66 @@ const Dashboard = () => {
                 </p>
               </div>
               <div style={{ display: "flex" }}>
-                <Card
+                <div
                   style={{
                     width: "50%",
                     height: "12vh",
-                    margin: "1% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row gutter={[16, 16]}>
-                    {/* <Col>
-                      <CountIcon icon={faBars} />
-                      </Col> */}
-                    <Col>
-                      <Card.Meta title="Tests Assigned" />
-                    </Col>
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Tests Assigned"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "10px" }}>
-                    <CardCount>{dashboardCounts.TestsAssigned}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      {/* Uncomment the following line if you are using Card.Meta for title */}
+                      {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
+                      <CardCount>{dashboardCounts.TestsAssigned}</CardCount>
+                    </div>
+                  </Row>
+                </div>
 
-                <Card
+                <div
                   style={{
                     width: "50%",
                     height: "12vh",
-                    margin: "1% 2%",
+                    margin: "1%",
+                    padding: 0,
+                    background: "white",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Row gutter={[16, 16]}>
-                    {/* <Col>
-                      <CountIcon icon={faBars} />
-                      </Col> */}
-                    <Col>
-                      <Card.Meta title="Tests Done" />
-                    </Col>
+                  <Row flex="auto">
+                    <Card.Meta
+                      title="Tests Done"
+                      style={{ marginTop: "5px", marginLeft: "5px" }}
+                    />
                   </Row>
-                  <div style={{ marginTop: "10px" }}>
-                    <CardCount>{dashboardCounts.TestReportGenerated}</CardCount>
-                  </div>
-                </Card>
+                  <Row>
+                    <div style={{ marginTop: "5px", textAlign: "left" }}>
+                      {/* Uncomment the following line if you are using Card.Meta for title */}
+                      {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
+                      <CardCount>
+                        {dashboardCounts.TestReportGenerated}
+                      </CardCount>
+                    </div>
+                  </Row>
+                </div>
               </div>
             </Card>
 
             <Card
               style={{
-                margin: "2%",
-                border: "1px solid grey",
+                // margin: "2%",
+                // border: "1px solid grey",
+                border: "none",
+                background: "transparent",
                 width: "60%",
               }}
             >
@@ -1290,6 +1413,7 @@ const Dashboard = () => {
                     flex: "1",
                     height: "10vh",
                     fontWeight: "600",
+                    margin: "1%",
                   }}
                 >
                   <div
@@ -1320,6 +1444,7 @@ const Dashboard = () => {
                     flex: "1",
                     height: "10vh",
                     fontWeight: "600",
+                    margin: "1%",
                   }}
                 >
                   <div
@@ -1350,6 +1475,7 @@ const Dashboard = () => {
                     flex: "1",
                     height: "10vh",
                     fontWeight: "600",
+                    margin: "1%",
                   }}
                 >
                   <div
@@ -1382,6 +1508,7 @@ const Dashboard = () => {
                     height: "10vh",
                     // margin: "2% 1%",
                     fontWeight: "600",
+                    margin: "1%",
                     // boxShadow: "0px 4px 14px -4px rgba(0,0,0,0.75)",
                   }}
                 >
