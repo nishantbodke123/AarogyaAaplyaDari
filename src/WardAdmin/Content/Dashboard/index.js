@@ -8,6 +8,7 @@ import {
   Spin,
   Tooltip,
   theme,
+  message,
 } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import React, { useEffect, useState } from "react";
@@ -39,7 +40,11 @@ function WardAdminDashboard() {
   const [loader, setLoader] = useState(false);
   const [MOHDashboardData, setMOHDashboardData] = useState({});
   const [healthPostNameList, setHealthPostNameList] = useState([]);
-  const [selectedHealthPost, setSelectedHealthPost] = useState();
+  const [selectedHealthPost, setSelectedHealthPost] = useState("");
+
+  const wardId = sessionStorage.getItem("ward_id");
+  const wardName = sessionStorage.getItem("wardName");
+
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -72,6 +77,7 @@ function WardAdminDashboard() {
         setLoader(false);
         console.log(error);
       });
+
     axios
       .get(
         `${BASE_URL}/allauth/api/GethealthPostNameListAPI/${sessionStorage.getItem(
@@ -92,44 +98,130 @@ function WardAdminDashboard() {
         }
       });
   }, [selectedHealthPost]);
+
   const handleMOHDashboardExcelDownload = () => {
-    axios
-      .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
-        params: {
-          healthpost_id: selectedHealthPost,
-        },
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-        responseType: "blob",
-      })
-      .then((response) => {
-        console.log(response);
-        const href = URL.createObjectURL(response.data);
+    // if (selectedHealthPost === "" || selectedHealthPost === 0) {
+    //   axios
+    //     .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView/${wardId}`, {
+    //       headers: {
+    //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //       },
+    //       responseType: "blob",
+    //     })
+    //     .then((response) => {
+    //       // setLoader(false);
+    //       const href = URL.createObjectURL(response.data);
+    //       const link = document.createElement("a");
+    //       link.href = href;
+    //       link.setAttribute(
+    //         "download",
+    //         `${wardName} ward's Citizens Report.xlsx`
+    //       );
 
-        const link = document.createElement("a");
-        link.href = href;
-        link.setAttribute(
-          "download",
-          `MOH_Dashboard_${
-            selectedHealthPost != undefined ? selectedHealthPost : "All"
-          }_Data.xlsx`
-        );
+    //       document.body.appendChild(link);
+    //       link.click();
 
-        document.body.appendChild(link);
-        link.click();
+    //       document.body.removeChild(link);
+    //       URL.revokeObjectURL(href);
+    //     })
+    //     .catch((err) => {
+    //       setLoader(false);
+    //       console.log(err.response.status);
+    //       if (err.response.status == 404) {
+    //         message.warning("Please Select Ward");
+    //       } else if (err.response.status == 401) {
+    //         LogOut();
+    //       } else if (err.response.status == 400) {
+    //         message.warning("Data is not available");
+    //       } else {
+    //         message.warning("Error" + err.response.message);
+    //       }
+    //     });
+    // } else {
+    //   axios
+    //     .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
+    //       params: {
+    //         healthpost_id: selectedHealthPost,
+    //       },
+    //       headers: {
+    //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //       },
+    //       responseType: "blob",
+    //     })
+    //     .then((response) => {
+    //       console.log(response);
+    //       const href = URL.createObjectURL(response.data);
 
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.response.status == "401") {
-          setTimeout(() => {
-            LogOut();
-          }, 1000);
-        }
-      });
+    //       const link = document.createElement("a");
+    //       link.href = href;
+    //       link.setAttribute(
+    //         "download",
+    //         `MOH_Dashboard_${
+    //           selectedHealthPost != undefined ? selectedHealthPost : "All"
+    //         }_Data.xlsx`
+    //       );
+
+    //       document.body.appendChild(link);
+    //       link.click();
+
+    //       document.body.removeChild(link);
+    //       URL.revokeObjectURL(href);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //       if (err.response.status == "401") {
+    //         setTimeout(() => {
+    //           LogOut();
+    //         }, 1000);
+    //       } else if (err.response.status == 400) {
+    //         message.warning("Data is not available");
+    //       } else {
+    //         message.warning("Error" + err.response.message);
+    //       }
+    //     });
+    // }
+
+      axios
+    .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
+      params: {
+        wardId: wardId,
+        healthpost_id: selectedHealthPost !== undefined ? String(selectedHealthPost) : undefined,
+      },
+      headers: {
+        Authorization: `Token ${sessionStorage.getItem("Token")}`,
+      },
+      responseType: "blob",
+    })
+    .then((response) => {
+      console.log("selected healthpost is " + selectedHealthPost);
+      const href = URL.createObjectURL(response.data);
+
+      const link = document.createElement("a");
+      link.href = href;
+      link.setAttribute(
+        "download",
+        `MOH_Dashboard_${selectedHealthPost !== undefined ? selectedHealthPost : "All"}_Data.xlsx`
+      );
+
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(href);
+    })
+    .catch((err) => {
+      console.log("selected healthpost is " + selectedHealthPost);
+      console.log(err);
+      if (err.response.status === 401) {
+        setTimeout(() => {
+          LogOut();
+        }, 1000);
+      } else if (err.response.status === 400) {
+        message.warning("Data is not available");
+      } else {
+        message.warning("Error" + err.response.message);
+      }
+    });
   };
   return (
     <>
@@ -145,23 +237,27 @@ function WardAdminDashboard() {
             <Form layout="vertical">
               <Row>
                 <Col span={24}>
-                  <FormItem label="Health Post  ">
-                    <Select
+                  <FormItem label="Health Post">
+                    <select
                       style={{
-                        width: "180px",
+                        width: "200px",
+                        height: "30px",
                         borderRadius: "5px",
                       }}
-                      value={selectedHealthPost}
-                      placeholder="All"
-                      onChange={(e) => setSelectedHealthPost(e)}
+                      // value={selectedHealthPost}
+                      // placeholder="All"
+                      // onChange={(e) => setSelectedHealthPost(e)}
+                      onChange={(e) => setSelectedHealthPost(e.target.value)}
                     >
-                      <option value={undefined}>All</option>
+                      <option value={''} selected>
+                        All
+                      </option>
                       {healthPostNameList.map((data, index) => (
                         <option key={data.id} value={data.id}>
                           {data.healthPostName}
                         </option>
                       ))}
-                    </Select>
+                    </select>
                   </FormItem>
                 </Col>
               </Row>

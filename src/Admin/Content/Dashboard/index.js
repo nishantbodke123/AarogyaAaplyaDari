@@ -1,4 +1,4 @@
-import { Row, Col, Divider, Form, Spin, Button, Dropdown, message, } from "antd";
+import { Row, Col, Divider, Form, Spin, Button, Dropdown, message } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   BloodDetailCard,
@@ -21,10 +21,17 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 
-
 const { Option } = Select;
 
-function AdminDashboard() {
+function AdminDashboard(props) {
+
+  // const { value } = props;
+
+  // Accessing values
+  // const { sideKey, passedDashboard, passedHealthpost, passedDispensary } = value;
+
+
+
   const [loader, setLoader] = useState(false);
   const [AdminDashboardData, setAdminDashboardData] = useState({});
   const [wardList, setWardList] = useState([]);
@@ -36,6 +43,8 @@ function AdminDashboard() {
   const [selectedDispensary, setSelectedDispensary] = useState();
   const [selectedHealthPostName, setSelectedHealthPostName] = useState();
   const [selectedDispensaryName, setSelectedDispensaryName] = useState();
+
+  // const [sideKey1, setSideKey1] = useState(0);
 
   let axiosConfig = {
     headers: {
@@ -88,6 +97,22 @@ function AdminDashboard() {
         }
       });
   }, [selectedWard, selectedHealthPost]);
+
+  useEffect(() => {
+    if (props.sideKey === 4) {
+      setLoader(true);
+      console.log("dshboard passed value in dashboard content "+props.passedDashboard)
+      handleWardwiseCitizenDownload();
+    } else if (props.sideKey === 2) {
+      handleHealthPostwiseCitizenDownload();
+    } else if (props.sideKey === 3) {
+      handleDownloadAllCitizenList();
+    } else if (props.sideKey === 5) {
+      handleDownloadDispensarywise();
+    } else {
+      console.log("side key not pressed");
+    }
+  }, [props.sideKey]);
 
   const handleWardSelect = (data) => {
     const [id, wardName] = data.split("|");
@@ -202,7 +227,7 @@ function AdminDashboard() {
         }
       )
       .then((response) => {
-        setLoader(false);
+        // setLoader(false);
         const href = URL.createObjectURL(response.data);
         const link = document.createElement("a");
         link.href = href;
@@ -263,7 +288,7 @@ function AdminDashboard() {
         } else if (err.response.status == 401) {
           LogOut();
         } else {
-          message.warning(err.response.message);
+          message.warning(err.response);
         }
       });
   };
@@ -342,13 +367,14 @@ function AdminDashboard() {
             message.warning("Please Select Ward's Dispensary");
           } else if (err.response.status === 401) {
             LogOut();
+          } else if (err.response.status === 400) {
+            // console.log("error status is " + err.response.status);
+            message.warning("No data found for selected Dispensary");
           } else {
-            message.warning(err.response.message);
+            // Handle other error scenarios
+            console.error("Unexpected error:", err);
           }
-        } else {
-          // Handle other error scenarios
-          console.error("Unexpected error:", err);
-        }
+        } 
       });
   };
 
@@ -359,35 +385,35 @@ function AdminDashboard() {
         <p onClick={handleAdminDashboardExcelDownload}>Download Dashboard</p>
       ),
     },
-    {
-      key: "4",
-      label: <p onClick={handleDownloadAllCitizenList}>Download all Citizen</p>,
-    },
-    {
-      key: "2",
-      label: (
-        <p onClick={handleWardwiseCitizenDownload}>
-          Download Citizens Ward wise
-        </p>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <p onClick={handleHealthPostwiseCitizenDownload}>
-          Download Citizens Healthpost wise
-        </p>
-      ),
-    },
+    // {
+    //   key: "4",
+    //   label: <p onClick={handleDownloadAllCitizenList}>Download all Citizen</p>,
+    // },
+    // {
+    //   key: "2",
+    //   label: (
+    //     <p onClick={handleWardwiseCitizenDownload}>
+    //       Download Citizens Ward wise
+    //     </p>
+    //   ),
+    // },
+    // {
+    //   key: "3",
+    //   label: (
+    //     <p onClick={handleHealthPostwiseCitizenDownload}>
+    //       Download Citizens Healthpost wise
+    //     </p>
+    //   ),
+    // },
 
-    {
-      key: "5",
-      label: (
-        <p onClick={handleDownloadDispensarywise}>
-          Download Citizen Dispensarywise
-        </p>
-      ),
-    },
+    // {
+    //   key: "5",
+    //   label: (
+    //     <p onClick={handleDownloadDispensarywise}>
+    //       Download Citizen Dispensarywise
+    //     </p>
+    //   ),
+    // },
     // {
     //   key: "4",
     //   label: <p>Download Citizens Dispensary wise</p>,
@@ -404,15 +430,18 @@ function AdminDashboard() {
               margin: "1% 3% -3% 0%",
             }}
           >
-            <div style={{ width: "40%",}}>
-              <Form layout="vertical" style={{width:"100%", marginLeft:"60px" }}>
-                <Row style={{width:"100%",}}>
-                  <Col span={7} style={{marginRight:"80px"}}>
+            <div style={{ width: "50%" }}>
+              <Form
+                layout="vertical"
+                style={{ width: "100%", marginLeft: "40px" }}
+              >
+                <Row style={{ width: "100%" }}>
+                  <Col span={7} style={{ marginRight: "30px" }}>
                     <FormItem label="Ward">
                       <select
                         style={{
                           width: "200px",
-                          height:"30px",
+                          height: "30px",
                           borderRadius: "5px",
                           // marginRight:"30px",
                           value: { selectedWard },
@@ -438,7 +467,7 @@ function AdminDashboard() {
                       <select
                         style={{
                           width: "200px",
-                          height:"30px",
+                          height: "30px",
                           borderRadius: "5px",
                         }}
                         onChange={(e) => handleHealthpostSelect(e.target.value)}
@@ -480,9 +509,20 @@ function AdminDashboard() {
                     </FormItem>
                   </Col> */}
 
+<div style={{ margin: "2% 2% 0% 0%" }}>
+                    <Tooltip placement="bottom" title="Download Dashboard"
+                      style={{backgroundColor:"white"}}
+                    >
+                      <Button
+                        onClick={handleAdminDashboardExcelDownload}
+                      >
+                <DownloadOutlined />
+              </Button>
+            </Tooltip>
+          </div>
+
                   {/* <Col span={2}>
                     <div style={{ marginTop: "4vh" }}>
-          
                       <Dropdown
                         menu={{
                           items,

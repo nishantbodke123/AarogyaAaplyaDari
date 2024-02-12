@@ -11,7 +11,7 @@ import {
   Tooltip,
   Select,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext, useContext } from "react";
 import axios from "axios";
 import { UserOutlined, HomeOutlined, FileAddOutlined } from "@ant-design/icons";
 import "./style.css";
@@ -150,48 +150,13 @@ function Sidebar(props) {
     setSelectedDispensaryName(dispensaryName);
   };
 
-  const handleAdminDashboardExcelDownload = () => {
-    setLoader(true);
-    axios
-      .get(`${BASE_URL}/adminportal/api/AdminDashboardExportView`, {
-        params: {
-          ...(selectedWard !== "" && { wardId: selectedWard }),
-          ...(selectedHealthPost !== "" && {
-            healthpost_id: selectedHealthPost,
-          }),
-        },
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-        responseType: "blob",
-      })
-      .then((response) => {
-        setLoader(false);
-        console.log(response);
-        const href = URL.createObjectURL(response.data);
-
-        const link = document.createElement("a");
-        link.href = href;
-        link.setAttribute("download", `Admin_Dashboard_Data.xlsx`);
-
-        document.body.appendChild(link);
-        link.click();
-
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoader(false);
-        if (err.response.status == "401") {
-          setTimeout(() => {
-            LogOut();
-          }, 1000);
-        }
-      });
-  };
-
   const handleWardwiseCitizenDownload = () => {
+    props.handleSideKey(2);
+    props.handleFilter(
+      selectedWardName,
+      selectedHealthPost,
+      selectedDispensary
+    );
     setLoader(true);
     axios
       .get(
@@ -206,8 +171,12 @@ function Sidebar(props) {
       .then((response) => {
         setLoader(false);
 
-        if (JSON.stringify(response.data.message) === "data feteched successfully") {
-          console.log("the wardwise data download successful "+response.data.message);
+        if (
+          JSON.stringify(response.data.message) === "data feteched successfully"
+        ) {
+          console.log(
+            "the wardwise data download successful " + response.data.message
+          );
           const href = URL.createObjectURL(response.data);
 
           const link = document.createElement("a");
@@ -223,7 +192,10 @@ function Sidebar(props) {
           document.body.removeChild(link);
           URL.revokeObjectURL(href);
         } else {
-          console.error("Data not found. HTTP status code: ", response.data.message);
+          console.error(
+            "Data not found. HTTP status code: ",
+            response.data.message
+          );
         }
       })
       .catch((err) => {
@@ -233,12 +205,21 @@ function Sidebar(props) {
           message.warning("Please Select Ward");
         } else if (err.response.status == 401) {
           LogOut();
+        } else if (err.response.status == 400) {
+          console.log("error status is " + err.response.status);
+          message.warning("No data found for selected ward");
         } else {
           message.warning(err.response.message);
         }
       });
   };
   const handleHealthPostwiseCitizenDownload = () => {
+    props.handleSideKey(3);
+    props.handleFilter(
+      selectedWardName,
+      selectedHealthPost,
+      selectedDispensary
+    );
     axios
       .get(
         `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
@@ -271,14 +252,27 @@ function Sidebar(props) {
           message.warning("Please Select Healthpost");
         } else if (err.response.status == 401) {
           LogOut();
+        } else if (err.response.status == 400) {
+          console.log("error status is " + err.response.status);
+          // console.log("error message is " + JSON.stringify(err));
+          // console.log("error message is " + err);
+          message.warning("No data found for selected healthpost");
         } else {
-          message.warning(err.response.message);
+          message.warning(err.data.message);
         }
       });
   };
 
   ////////////////////////
   const handleDownloadAllCitizenList = () => {
+    //pass the value
+    props.handleSideKey(4);
+    props.handleFilter(
+      selectedWardName,
+      selectedHealthPost,
+      selectedDispensary
+    );
+
     axios
       .get(`${BASE_URL}/adminportal/api/DownloadAllWardUserList`, {
         headers: {
@@ -319,6 +313,13 @@ function Sidebar(props) {
 
   ////////////////////////
   const handleDownloadDispensarywise = () => {
+    props.handleSideKey(5);
+    props.handleFilter(
+      selectedWardName,
+      selectedHealthPost,
+      selectedDispensary
+    );
+
     axios
       .get(
         `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${selectedDispensary}`,
@@ -352,29 +353,30 @@ function Sidebar(props) {
             message.warning("Please Select Ward's Dispensary");
           } else if (err.response.status === 401) {
             LogOut();
-          } else {
-            message.warning(err.response.message);
+          } else if (err.response.status === 400) {
+            // console.log("error status is " + err.response.status);
+            message.warning("No data found for selected Dispensary");
+          }else {
+            // Handle other error scenarios
+            console.error("Unexpected error:", err);
           }
-        } else {
-          // Handle other error scenarios
-          console.error("Unexpected error:", err);
-        }
+        } 
       });
   };
 
   const items = [
+    // {
+    //   key: "1",
+    //   label: (
+    //     <p onClick={handleAdminDashboardExcelDownload}>Download Dashboard</p>
+    //   ),
+    // },
     {
-      key: "1",
-      label: (
-        <p onClick={handleAdminDashboardExcelDownload}>Download Dashboard</p>
-      ),
-    },
-    {
-      key: "4",
+      key: "2",
       label: <p onClick={handleDownloadAllCitizenList}>Download all Citizen</p>,
     },
     {
-      key: "2",
+      key: "3",
       label: (
         <p onClick={handleWardwiseCitizenDownload}>
           Download Citizens Ward wise
@@ -382,7 +384,7 @@ function Sidebar(props) {
       ),
     },
     {
-      key: "3",
+      key: "4",
       label: (
         <p onClick={handleHealthPostwiseCitizenDownload}>
           Download Citizens Healthpost wise
@@ -407,6 +409,7 @@ function Sidebar(props) {
   };
 
   const [collapsed, setCollapsed] = useState(false);
+  const [sideKey, setSideKey] = useState(null);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -492,14 +495,14 @@ function Sidebar(props) {
       <CloudDownloadOutlined />,
       null,
       [
-        {
-          key: "/admin/downloadDashboard",
-          label: "Download Dashboard",
-          icon: null, // You can specify the icon if needed
-          path: "/admin/adminDashboard",
-          isButton: true,
-          onClick: handleAdminDashboardExcelDownload,
-        },
+        // {
+        //   key: "/admin/downloadDashboard",
+        //   label: "Download Dashboard",
+        //   icon: null, // You can specify the icon if needed
+        //   path: "/admin/adminDashboard",
+        //   isButton: true,
+        //   onClick: handleAdminDashboardExcelDownload,
+        // },
         {
           key: "/admin/downloadAllCitizen",
           label: "Download all Citizen",

@@ -7,6 +7,7 @@ import WardAdminDashboard from "../Content/Dashboard";
 import WardHealthworker from "../Content/Healthworker";
 import WardCHV from "../Content/WardCHV";
 import { Footer } from "antd/es/layout/layout";
+import axios from 'axios';
 
 const { Content } = Layout;
 
@@ -14,9 +15,14 @@ function WardAdmin() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
+  // const [wardId, setWardId] = useState(null);
+  const wardId = sessionStorage.getItem("ward_id");
+  console.log("Ward id is "+wardId  )
+
   const handleCollapse = () => {
     setCollapsed(!collapsed);
   };
+
 
   return (
     <>

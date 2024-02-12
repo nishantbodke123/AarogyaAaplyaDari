@@ -19,19 +19,38 @@ const { Content } = Layout;
 
 function Admin() {
   const [collapsed, setCollapsed] = useState(false);
+  const [sideKey, setSideKey] = useState(null);
   const location = useLocation();
+
+  const [passedDashboard, setPassedDashboard] = useState(false);
+  const [passedHealthpost, setPassedHealthpost] = useState(false);
+  const [passedDispensary, setPassedDispensary] = useState(false);
 
   const handleCollapse = () => {
     setCollapsed(!collapsed);
   };
 
+  const handleSideKey = (value) => {
+    setSideKey(value)
+  }
+
+  const handleFilter = (passedDashboard, passedHealthpost, passedDispensary) => {
+    setPassedDashboard(passedDashboard);
+    setPassedHealthpost(passedHealthpost);
+    setPassedDispensary(passedDispensary);
+    // console.log("the values in admin is "+passedDashboard+ " "+passedHealthpost+ " "+passedDispensary)
+  }
+
   return (
     <>
       <Layout>
-        <Sidebar collapsed={collapsed} />
+        <Sidebar collapsed={collapsed} handleSideKey={handleSideKey}
+          handleFilter={handleFilter}
+          // handleFilter={handleFilter(passedDashboard, passedHealthpost, passedDispensary)}
+        />
         <Layout>
           <HeaderBar handleCollapse={handleCollapse} />
-          <Content>
+          <Content value={ sideKey }>
             {location.pathname === "/admin/adminDashboard" && (
               <AdminDashboard />
             )}
