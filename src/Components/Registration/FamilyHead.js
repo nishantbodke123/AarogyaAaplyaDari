@@ -111,6 +111,33 @@ function FamilyHead(props) {
   cQIDAQAB`;
   encrypt2.setPublicKey(publicKey2);
 
+
+  // OTP Timer 
+
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(interval);
+        } else {
+          setSeconds(59);
+          setMinutes(minutes - 1);
+        }
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
+
   let axiosConfig = {
     headers: {
       "Content-Type": "application/json",
@@ -356,6 +383,8 @@ function FamilyHead(props) {
 
   // adhar verification 1st step
   const handleAadharNumberSubmit = () => {
+    setMinutes(2);
+    setSeconds(29);
     setProgress(20);
     setLoading(true);
     var data = encrypt.encrypt(aadharNumber);
@@ -554,6 +583,7 @@ function FamilyHead(props) {
             cancelText: "Cancel",
           });
         } else {
+          console.log(res.data.mobileLinked);
           setAadharLinkedMobileNumber(res.data.mobileLinked);
         }
       })
@@ -976,51 +1006,51 @@ function FamilyHead(props) {
     console.log("ABHA ID Submitted");
     setABHAIDSubmited(true);
   };
-  // const ABHACARDDownloadInputContent = (
-  //   <>
-  //     <Form layout="vertical">
-  //       <Form.Item label="Health ID">
-  //         <InputForm type="text" placeholder="Enter ABHA ID"></InputForm>
-  //       </Form.Item>
-  //       {ABHAIDSubmited ? (
-  //         <>
-  //           {" "}
-  //           <Form.Item label="OTP">
-  //             <OtpInput
-  //               inputStyle={{
-  //                 width: "25px",
-  //                 height: "25px",
-  //                 margin: "2px 10px",
-  //               }}
-  //               value={otp}
-  //               numInputs={6}
-  //               type="number"
-  //               onChange={(value) => setOtp(value)}
-  //               renderSeparator={<span></span>}
-  //               renderInput={(props) => <input {...props} />}
-  //             ></OtpInput>
-  //             <div
-  //               style={{
-  //                 display: "flex",
-  //                 justifyContent: "flex-end",
-  //                 margin: "10px 40px ",
-  //               }}
-  //             >
-  //               <a onClick={handleABHAIDSubmit}>Resend OTP</a>
-  //             </div>
-  //           </Form.Item>
-  //         </>
-  //       ) : (
-  //         <></>
-  //       )}
-  //       <div style={{ display: "flex", justifyContent: "end" }}>
-  //         <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
-  //           Submit
-  //         </ABHAIDSubmitButton>
-  //       </div>
-  //     </Form>
-  //   </>
-  // );
+  const ABHACARDDownloadInputContent = (
+    <>
+      <Form layout="vertical">
+        <Form.Item label="Health ID">
+          <InputForm type="text" placeholder="Enter ABHA ID"></InputForm>
+        </Form.Item>
+        {ABHAIDSubmited ? (
+          <>
+            {" "}
+            <Form.Item label="OTP">
+              <OtpInput
+                inputStyle={{
+                  width: "25px",
+                  height: "25px",
+                  margin: "2px 10px",
+                }}
+                value={otp}
+                numInputs={6}
+                type="number"
+                onChange={(value) => setOtp(value)}
+                renderSeparator={<span></span>}
+                renderInput={(props) => <input {...props} />}
+              ></OtpInput>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  margin: "10px 40px ",
+                }}
+              >
+                <a onClick={handleABHAIDSubmit}>Resend OTP</a>
+              </div>
+            </Form.Item>
+          </>
+        ) : (
+          <></>
+        )}
+        <div style={{ display: "flex", justifyContent: "end" }}>
+          <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
+            Submit
+          </ABHAIDSubmitButton>
+        </div>
+      </Form>
+    </>
+  );
   const handleCBACRequired = () => {
     setCBACRequired(!CBACRequired);
   };
@@ -1307,11 +1337,11 @@ function FamilyHead(props) {
   const handlePartAQuestion1 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "0_29_year" ||
-      selectedValue === "30_39_year" ||
-      selectedValue === "40_49_year" ||
-      selectedValue === "50_59_year" ||
-      selectedValue === "60_year"
+      selectedValue === "0-29 years" ||
+      selectedValue === "30-39 years" ||
+      selectedValue === "40-49 years" ||
+      selectedValue === "50-59 years" ||
+      selectedValue === "60 years and above"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -1322,7 +1352,7 @@ function FamilyHead(props) {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
       selectedValue === "Never" ||
-      selectedValue === "Used_to_consume_in_the_past_Sometimes_now" ||
+      selectedValue === "Used to consume in the past/ Sometimes now" ||
       selectedValue === "Daily"
     ) {
       setQuestionFunction([selectedValue]);
@@ -1341,12 +1371,12 @@ function FamilyHead(props) {
   const handlePartAQuestion4 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "cm_90_cm_or_less" ||
-      selectedValue === "cm_91_100_cm" ||
-      selectedValue === "More_than_100_cm" ||
-      selectedValue === "cm_80_cm_or_less" ||
-      selectedValue === "cm_81_90_cm" ||
-      selectedValue === "More_than_90_cm"
+      selectedValue === "90 cm or less" ||
+      selectedValue === "91-100 cm" ||
+      selectedValue === "More than 100 cm" ||
+      selectedValue === "80 cm or less" ||
+      selectedValue === "81-90 cm" ||
+      selectedValue === "More than 90 cm"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -1356,8 +1386,8 @@ function FamilyHead(props) {
   const handlePartAQuestion5 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "At_least_150_minutes_in_a_week" ||
-      selectedValue === "Less_than_150_minutes_in_a_week"
+      selectedValue === "At least 150 minutes in a week" ||
+      selectedValue === "Less than 150 minutes in a week"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -1393,10 +1423,10 @@ function FamilyHead(props) {
   const handlePartDQuestions = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}D`);
     if (
-      selectedValue === "Not_at_all" ||
-      selectedValue === "Several_days" ||
-      selectedValue === "More_than_half_days" ||
-      selectedValue === "Nearly_every_days"
+      selectedValue === "Not at all" ||
+      selectedValue === "Several days" ||
+      selectedValue === "More than half days" ||
+      selectedValue === "Nearly every days"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -1409,8 +1439,8 @@ function FamilyHead(props) {
     if (
       selectedValue === "Yes" ||
       selectedValue === "No" ||
-      selectedValue === "More_than__days" ||
-      selectedValue === "Less_than__days" ||
+      selectedValue === "For 7 days or more" ||
+      selectedValue === "Less than 7 days" ||
       selectedValue === "No"
     ) {
       setQuestionFunction([selectedValue]);
@@ -1776,8 +1806,8 @@ function FamilyHead(props) {
 
   const partC1Options = [
     "Firewood",
-    "Crop_Residue",
-    "Cow_dung_cake",
+    "Crop Residue",
+    "Cow dung cake",
     "Coal",
     "Kerosene",
     "LPG",
@@ -1795,9 +1825,9 @@ function FamilyHead(props) {
   };
 
   const partC2Options = [
-    "Crop_residue_burning",
-    "burning_of_garbage_leaves",
-    "working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc",
+    "Crop residue burning",
+    "burning of garbage – leaves",
+    "working in industries with smoke, gas and dust exposure such as brick kilns and glass factories etc.",
   ];
   const [partC2OptionSelect, setPartC2OptionSelect] = useState([]);
   const handlePartC2Select = (option) => {
@@ -2562,24 +2592,24 @@ function FamilyHead(props) {
                         onChange={(e) => handleAbhaIDChange(e)}
                       ></Input>
                     </FormItem>
-                    {/* <p style={{ margin: "-20px 50px 15px", fontSize: "14px" }}>
-                    If you don't have ABHA ID?
-                    <a onClick={() => handleShowAadharOtpLinkedModal()}>
-                      Click here
-                    </a>
-                  </p> */}
+                    <p style={{ margin: "-20px 50px 15px", fontSize: "14px" }}>
+                      If you don't have ABHA ID?
+                      <a onClick={() => handleShowAadharOtpLinkedModal()}>
+                        Click here
+                      </a>
+                    </p>
                   </Column>
-                  {/* <Column span={1}>
-                  <Tooltip title="ABHA Card Download">
-                    <Popover
-                      content={ABHACARDDownloadInputContent}
-                      trigger="click"
-                      placement="left"
-                    >
-                      <ABHACardDownLoad icon={faFileArrowDown} />
-                    </Popover>
-                  </Tooltip>
-                </Column> */}
+                  <Column span={1}>
+                    <Tooltip title="ABHA Card Download">
+                      <Popover
+                        content={ABHACARDDownloadInputContent}
+                        trigger="click"
+                        placement="left"
+                      >
+                        <ABHACardDownLoad icon={faFileArrowDown} />
+                      </Popover>
+                    </Tooltip>
+                  </Column>
                 </Row>
               </>
             )}
@@ -2735,19 +2765,19 @@ function FamilyHead(props) {
                     onChange={(e) => handlePartAQuestion1(1, e.target.value)}
                     value={question1A[0]}
                   >
-                    <Radio value="0_29_year">0-29 years / 0-29 वर्षे</Radio>
+                    <Radio value="0-29 years">0-29 years / 0-29 वर्षे</Radio>
                     <br />
-                    <Radio value="30_39_year">30-39 Years / 30-39 वर्षे</Radio>
+                    <Radio value="30-39 years">30-39 Years / 30-39 वर्षे</Radio>
                     <br />
-                    <Radio value="40_49_year">
+                    <Radio value="40-49 years">
                       40 and 49 years / 40 आणि 49 वर्षे
                     </Radio>
                     <br />
-                    <Radio value="50_59_year">
+                    <Radio value="50-59 years">
                       50 and 59 years /50 आणि 59 वर्षे
                     </Radio>
                     <br />
-                    <Radio value="60_year">
+                    <Radio value="60 years and above">
                       60 years and above /60 वर्षे आणि त्यावरील
                     </Radio>
                   </Radio.Group>
@@ -2766,7 +2796,7 @@ function FamilyHead(props) {
                   >
                     <Radio value="Never">Never / कधीच नाही</Radio>
                     <br />
-                    <Radio value="Used_to_consume_in_the_past_Sometimes_now">
+                    <Radio value="Used to consume in the past/ Sometimes now">
                       Used to consume in the past/ Sometimes now /<br /> पूर्वी
                       करायचो/ कधी कधी आता
                     </Radio>
@@ -2777,8 +2807,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ३. तुम्ही दररोज मद्यपान करता ? / Do you drink alcohol every
-                  day?
+                  ३. तुम्ही दररोज मद्यपान करता ? / Do you consume alcohol daily
+                  ?
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -2794,7 +2824,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ४. कंबरेचा घेर (सेमी मध्ये) / Waist circumference (in cm)
+                  ४. कंबरेचा घेर (सेमी मध्ये) / Measurement of waist in cm
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -2804,27 +2834,25 @@ function FamilyHead(props) {
                     {gender === "male" ? (
                       <>
                         {" "}
-                        <Radio value="cm_90_cm_or_less">
+                        <Radio value="90 cm or less">
                           90 cm or less/90 सेमी किंवा कमी
                         </Radio>
                         <br />
-                        <Radio value="cm_91_100_cm">
-                          91-100 cm/91-100 सेमी
-                        </Radio>
+                        <Radio value="91-100 cm">91-100 cm/91-100 सेमी</Radio>
                         <br />
-                        <Radio value="More_than_100_cm">
+                        <Radio value="More than 100 cm">
                           More than 100 cm / 100 सेमी पेक्षा जास्त
                         </Radio>
                       </>
                     ) : (
                       <>
-                        <Radio value="cm_80_cm_or_less">
+                        <Radio value="80 cm or less">
                           80 cm or less/80 सेमी किंवा कमी
                         </Radio>
                         <br />
-                        <Radio value="cm_81_90_cm">81-90 cm/81-90 सेमी</Radio>
+                        <Radio value="81-90 cm">81-90 cm/81-90 सेमी</Radio>
                         <br />
-                        <Radio value="More_than_90_cm">
+                        <Radio value="More than 90 cm">
                           More than 90 cm / 90 सेमी पेक्षा जास्त
                         </Radio>
                       </>
@@ -2836,19 +2864,20 @@ function FamilyHead(props) {
                 <QuestionCol>
                   ५. तुम्ही आठवड्यातून किमान 150 मिनिटे कोणतीही शारीरिक क्रिया
                   करता का? / Do you undertake any physical activities for
-                  minimum of 150 minutes in a week?
+                  minimum of 150 minutes in a week (Daily min 30 minutes per
+                  day- 5 days a week)
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
                     onChange={(e) => handlePartAQuestion5(5, e.target.value)}
                     value={question5A[0]}
                   >
-                    <Radio value="At_least_150_minutes_in_a_week">
+                    <Radio value="At least 150 minutes in a week">
                       At least 150 minutes in a weak / <br />
                       एका आठवड्यात किमान 150 मिनिटे
                     </Radio>
                     <br />
-                    <Radio value="Less_than_150_minutes_in_a_week">
+                    <Radio value="Less than 150 minutes in a week">
                       Less than 150 minutes in a week /<br /> एका आठवड्यात 150
                       मिनिटांपेक्षा कमी
                     </Radio>
@@ -2859,8 +2888,8 @@ function FamilyHead(props) {
                 <QuestionCol>
                   ६. आपल्याकडे कौटुंबिक इतिहास आहे का ? (आपले पालक किंवा भावंडां
                   पैकी) उच्च रक्तदाब, मधुमेह आणि हृदयरोग आहे का ? / 6. Do you
-                  have a family history? Have high blood pressure, diabetes and
-                  heart disease (from your parents or siblings)?
+                  have a family history (any one of your parent or sibling ) of
+                  high BP, DM and Heart Disease ?
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -2922,8 +2951,8 @@ function FamilyHead(props) {
               ))} */}
               <QuestionRow>
                 <QuestionCol>
-                  १. धाप लागणे (श्वास घेण्यास त्रास होणे) / Shortness of breath
-                  (difficulty breathing)
+                  १. धाप लागणे (श्वास घेण्यास त्रास होणे) / Shortness of Breath
+                  (Difficulty in Breathing)
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -2989,7 +3018,7 @@ function FamilyHead(props) {
                 </AnswerCol>
               </QuestionRow>
               <QuestionRow>
-                <QuestionCol>६. रात्री खूप घाम येणे/ Night sweats</QuestionCol>
+                <QuestionCol>६. रात्री खूप घाम येणे/ Night sweat</QuestionCol>
                 <AnswerCol>
                   <Radio.Group
                     onChange={(e) => handleQuestionOfB1Part(6, e.target.value)}
@@ -3003,7 +3032,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   ७. आपण सध्या टीबीच्या उपचारासाठी औषधे घेत आहात ? / Are you
-                  currently taking Anti TB Drugs?
+                  currently taking Anti TB Drugs ?
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3018,7 +3047,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   ८. सध्या कुटुंबातील कोणत्याही सदस्याला टीबीचा आजार आहे का ? /
-                  Anyone in family currently suffering from TB?
+                  Anyone in family currently suffering from TB ?
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3032,7 +3061,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ९. टीबीचा आजार असण्याचा इतिहास / History of TB disease
+                  ९. टीबीचा आजार असण्याचा इतिहास / History of TB
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3090,7 +3119,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १३. वाचण्यास त्रास होणे / Difficulty in reading
+                  १३. वाचण्यास त्रास होणे / Difficulty in Reading
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3148,7 +3177,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १७. फीटक्याचा इतिहास / History of convulsions - fits
+                  १७. फीटक्याचा इतिहास / History of convulsions – fits
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3162,7 +3191,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  १८. तोंड उघडण्यास त्रास होणे / Difficulty in opening mouth
+                  १८. तोंड उघडण्यास त्रास होणे / Difficulty in opening Mouth
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3251,8 +3280,8 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   २४. तोंडामध्ये हलक्या रंगाचे चट्टे किंवा वर्ण होणे ज्यास
-                  संवेदना नसणे/ Any hypopigmented patch in oral cavity or
-                  discolored lesions with loss of sensation
+                  संवेदना नसणे/ "Any hypopigmented patch or discoloured lesions
+                  in oral cavity with loss of sensation
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3266,8 +3295,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  २५. शरीराच्या कोणत्याही भागात त्वचा जाड होणे/ Thickening of
-                  the skin in any part of the body
+                  २५. शरीराच्या कोणत्याही भागात त्वचा जाड होणे/Any thickened
+                  skin
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3282,7 +3311,7 @@ function FamilyHead(props) {
               <QuestionRow>
                 <QuestionCol>
                   २६. शरीराच्या कोणत्याही भागात त्वेचवर गाठी होणे/ Any nodules
-                  on skin
+                  on skinAny nodules on skin
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3311,7 +3340,7 @@ function FamilyHead(props) {
               </QuestionRow>{" "}
               <QuestionRow>
                 <QuestionCol>
-                  २८. हाताची आणि पायाची बोटे वाकडी होणे/ Clawing of fingers of
+                  २८. हाताची आणि पायाची बोटे वाकडी होणे/Clawing of fingers of
                   hands and feet
                 </QuestionCol>
                 <AnswerCol>
@@ -3371,8 +3400,8 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ३२. पायातील दुबळेपणामुळे चालण्यास त्रास होणे/ Difficulty
-                  walking due to weakness in legs
+                  ३२. पायातील दुबळेपणामुळे चालण्यास त्रास होणे/ Weakness in feet
+                  that causes difficulty in walking
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -3451,7 +3480,8 @@ function FamilyHead(props) {
                   </QuestionRow>
                   <QuestionRow>
                     <QuestionCol>
-                      ३. स्तनाच्या आकारात बदल होणे/ Changes in breast size
+                      ३. स्तनाच्या आकारात बदल होणे/ Changes in shape and size of
+                      breast
                     </QuestionCol>
                     <AnswerCol>
                       <Radio.Group
@@ -3485,7 +3515,7 @@ function FamilyHead(props) {
                   <QuestionRow>
                     <QuestionCol>
                       ५. मासिक पाळी बंद झाल्यानंतर रक्तस्त्राव होणे/ Bleeding
-                      after cessation of menstruation
+                      after menopause
                     </QuestionCol>
                     <AnswerCol>
                       <Radio.Group
@@ -3656,7 +3686,7 @@ function FamilyHead(props) {
                   </QuestionSubCol>
                   <AnswerSubCol>
                     <Checkbox
-                      value={partC1OptionSelect.includes(item)}
+                      checked={partC1OptionSelect.includes(item)}
                       onChange={() => handlePartC1Select(item)}
                     ></Checkbox>
                   </AnswerSubCol>
@@ -3676,7 +3706,7 @@ function FamilyHead(props) {
                     </QuestionSubCol>
                     <AnswerSubCol>
                       <Checkbox
-                        value={partC2OptionSelect.includes(item)}
+                        checked={partC2OptionSelect.includes(item)}
                         onChange={() => handlePartC2Select(item)}
                       ></Checkbox>
                     </AnswerSubCol>
@@ -3703,18 +3733,18 @@ function FamilyHead(props) {
                   १. गोष्टी करण्यात थोडीशी आवड किंवा आनंद असणे ? / Having little
                   interest or pleasure in doing things?
                 </QuestionCol>
-
+ 
                 <Radio.Group
                   style={{ margin: "1% 7%" }}
                   onChange={(e) => handlePartDQuestions(1, e.target.value)}
                   value={question1D[0]}
                 >
-                  <Radio value="Not_at_all">Not at all/अजिबात नाही</Radio>
-                  <Radio value="Several_days">Several days/अनेक दिवस</Radio>
-                  <Radio value="More_than_half_days">
+                  <Radio value="Not at all">Not at all/अजिबात नाही</Radio>
+                  <Radio value="Several days">Several days/अनेक दिवस</Radio>
+                  <Radio value="More than half days">
                     More than half days/अर्ध्याहून अधिक दिवस
                   </Radio>
-                  <Radio value="Nearly_every_days">
+                  <Radio value="Nearly every days">
                     Nearly every days / जवळजवळ प्रत्येक दिवस
                   </Radio>
                 </Radio.Group>
@@ -3729,12 +3759,12 @@ function FamilyHead(props) {
                   onChange={(e) => handlePartDQuestions(2, e.target.value)}
                   value={question2D[0]}
                 >
-                  <Radio value="Not_at_all">Not at all/अजिबात नाही</Radio>
-                  <Radio value="Several_days">Several days/अनेक दिवस</Radio>
-                  <Radio value="More_than_half_days">
+                  <Radio value="Not at all">Not at all/अजिबात नाही</Radio>
+                  <Radio value="Several days">Several days/अनेक दिवस</Radio>
+                  <Radio value="More than half days">
                     More than half days/अर्ध्याहून अधिक दिवस
                   </Radio>
-                  <Radio value="Nearly_every_days">
+                  <Radio value="Nearly every days">
                     Nearly every days/जवळजवळ प्रत्येक दिवस
                   </Radio>
                 </Radio.Group>
@@ -3754,10 +3784,10 @@ function FamilyHead(props) {
                     onChange={(e) => handleDoYouHaveFever(1, e.target.value)}
                     value={doYouhaveFever1[0]}
                   >
-                    <Radio value="More_than__days">
+                    <Radio value="For 7 days or more">
                       7 दिवसांपेक्षा जास्त काळ / More than 7 days
                     </Radio>
-                    <Radio value="Less_than__days">
+                    <Radio value="Less than 7 days">
                       7 दिवसांपेक्षा कमी / Less than 7 days
                     </Radio>
                     <Radio value="No">नाही / No</Radio>
@@ -4001,7 +4031,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  7. मधुमेहाच्या गुंतागुंतीमुळे विच्छेदन करण्याचा इतिहास?
+                  8. मधुमेहाच्या गुंतागुंतीमुळे विच्छेदन करण्याचा इतिहास?
                   History of amputation due to diabetes complication ?
                 </QuestionCol>
                 <AnswerCol>
@@ -4292,7 +4322,28 @@ function FamilyHead(props) {
                       renderSeparator={<span></span>}
                       renderInput={(props) => <input {...props} />}
                     ></OtpInput>
-                    <div
+                        <div className="countdown-text">
+          {seconds > 0 || minutes > 0 ? (
+            <p>
+              Time Remaining: {minutes < 10 ? `0${minutes}` : minutes}:
+              {seconds < 10 ? `0${seconds}` : seconds}
+            </p>
+          ) : (
+            <p>Didn't recieve code?</p>
+          )}
+          <a style={{display:seconds > 0 || minutes > 0 ? "none":""}} onClick={handleAadharNumberSubmit}>Resend OTP</a>
+          {/* <button
+            // disabled={seconds > 0 || minutes > 0}
+            style={{
+              color: seconds > 0 || minutes > 0 ? "#DFE3E8" : "#FF5630",
+              display: seconds > 0 || minutes > 0 ? "none":""
+            }}
+            onClick={handleAadharNumberSubmit}
+          >
+            Resend OTP
+          </button> */}
+        </div>
+                    {/* <div
                       style={{
                         display: "flex",
                         justifyContent: "flex-end",
@@ -4300,7 +4351,7 @@ function FamilyHead(props) {
                       }}
                     >
                       <a onClick={handleAadharNumberSubmit}>Resend OTP</a>
-                    </div>
+                    </div> */}
                   </Form.Item>
                 </>
               ) : (
@@ -4434,10 +4485,10 @@ function FamilyHead(props) {
               <h3>Name : {aadharCardName}</h3>
               <h3> Mobile No : {aadharMobileNumber} </h3>
               <h3>Health ID : {abhaId}</h3>
-              <p>
+              {/* <p>
                 Would you like to create your ABHA Address?{" "}
                 <a onClick={handleShowHealthIdModal}>Click Here</a>
-              </p>
+              </p> */}
             </div>
           </div>
         </HealthNumberModal>
