@@ -15,42 +15,52 @@ import Section from "../CreateAndUpdate/Sections";
 import { Footer } from "antd/es/layout/layout";
 import AllUserDetails from "../Content/AllUserDetails";
 
+
+
+import { createContext, useContext } from 'react';
+
+export const MyContext = createContext();
+
 const { Content } = Layout;
 
 function Admin() {
   const [collapsed, setCollapsed] = useState(false);
-  const [sideKey, setSideKey] = useState(null);
+  const [sideKey, setSideKey] = useState();
   const location = useLocation();
 
-  const [passedDashboard, setPassedDashboard] = useState(false);
-  const [passedHealthpost, setPassedHealthpost] = useState(false);
-  const [passedDispensary, setPassedDispensary] = useState(false);
+  const [passedDashboard, setPassedDashboard] = useState(1);
+  const [passedHealthpost, setPassedHealthpost] = useState(1);
+  const [passedDispensary, setPassedDispensary] = useState(1);
+
+
+  const values = {
+    sideKey,
+    passedDashboard,
+    passedHealthpost,
+    passedDispensary,
+  };
 
   const handleCollapse = () => {
     setCollapsed(!collapsed);
   };
 
-  const handleSideKey = (value) => {
-    setSideKey(value)
-  }
+  const updateSideKey = (newSideKey,dbVal, hpVal, dpVal) => {
+    console.log("The value got from the sider into updateSideKey is "+newSideKey+"db is"+dbVal)
+    setSideKey(newSideKey);
+    setPassedDashboard(dbVal)
+    setPassedHealthpost(hpVal)
+    setPassedDispensary(dpVal)
+  };
 
-  const handleFilter = (passedDashboard, passedHealthpost, passedDispensary) => {
-    setPassedDashboard(passedDashboard);
-    setPassedHealthpost(passedHealthpost);
-    setPassedDispensary(passedDispensary);
-    // console.log("the values in admin is "+passedDashboard+ " "+passedHealthpost+ " "+passedDispensary)
-  }
 
   return (
     <>
       <Layout>
-        <Sidebar collapsed={collapsed} handleSideKey={handleSideKey}
-          handleFilter={handleFilter}
-          // handleFilter={handleFilter(passedDashboard, passedHealthpost, passedDispensary)}
-        />
+        <MyContext.Provider value={{sideKey, updateSideKey,}}>
+        <Sidebar collapsed={collapsed} />
         <Layout>
           <HeaderBar handleCollapse={handleCollapse} />
-          <Content value={ sideKey }>
+          <Content>
             {location.pathname === "/admin/adminDashboard" && (
               <AdminDashboard />
             )}
@@ -86,7 +96,8 @@ function Admin() {
             />
           </div>
           </Footer> */}
-        </Layout>
+          </Layout>
+          </MyContext.Provider>
       </Layout>
     </>
   );

@@ -124,8 +124,8 @@ function Sidebar(props) {
         link.href = href;
         link.setAttribute(
           "download",
-          // `${wardName} ward's Citizens Report.xlsx`
-          `${response}.xlsx`
+          `${wardName} ward's Citizens Report.xlsx`
+          // `${response}.xlsx`
         );
 
         document.body.appendChild(link);

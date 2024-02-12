@@ -23,21 +23,39 @@ import { DownloadOutlined, CloudDownloadOutlined } from "@ant-design/icons";
 import { LogOut } from "../../Auth/Logout";
 import { BASE_URL } from "../../Utils/BaseURL";
 
+import { MyContext } from '../Admin/Admin';
+
+
 const { Sider } = Layout;
 
 function Sidebar(props) {
+
+  const { sideKey, updateSideKey } = useContext(MyContext);
+
+
+
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
   const [AdminDashboardData, setAdminDashboardData] = useState({});
   const [wardList, setWardList] = useState([]);
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [dispensaryList, setDispensaryList] = useState([]);
-  const [selectedWard, setSelectedWard] = useState();
+  // const [selectedWard, setSelectedWard] = useState();
   const [selectedWardName, setSelectedWardName] = useState();
-  const [selectedHealthPost, setSelectedHealthPost] = useState();
-  const [selectedDispensary, setSelectedDispensary] = useState();
+  // const [selectedHealthPost, setSelectedHealthPost] = useState();
+  // const [selectedDispensary, setSelectedDispensary] = useState();
   const [selectedHealthPostName, setSelectedHealthPostName] = useState();
   const [selectedDispensaryName, setSelectedDispensaryName] = useState();
+
+
+
+  const [selectedWard, setSelectedWard] = useState();
+  const [selectedHealthPost, setSelectedHealthPost] = useState();
+  const [selectedDispensary, setSelectedDispensary] = useState();
+
+
+  
+
 
   let axiosConfig = {
     headers: {
@@ -151,175 +169,154 @@ function Sidebar(props) {
   };
 
   const handleWardwiseCitizenDownload = () => {
-    props.handleSideKey(2);
-    props.handleFilter(
-      selectedWardName,
-      selectedHealthPost,
-      selectedDispensary
-    );
-    setLoader(true);
-    axios
-      .get(
-        `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
-        {
-          headers: {
-            Authorization: `Token ${sessionStorage.getItem("Token")}`,
-          },
-          responseType: "blob",
-        }
-      )
-      .then((response) => {
-        setLoader(false);
+    updateSideKey(3, selectedWard, selectedHealthPost, selectedDispensary);
+    // setLoader(true);
+    // axios
+    //   .get(
+    //     `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
+    //     {
+    //       headers: {
+    //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //       },
+    //       responseType: "blob",
+    //     }
+    //   )
+    //   .then((response) => {
+    //     setLoader(false);
 
-        if (
-          JSON.stringify(response.data.message) === "data feteched successfully"
-        ) {
-          console.log(
-            "the wardwise data download successful " + response.data.message
-          );
-          const href = URL.createObjectURL(response.data);
+    //     if (
+    //       JSON.stringify(response.data.message) === "data feteched successfully"
+    //     ) {
+    //       console.log(
+    //         "the wardwise data download successful " + response.data.message
+    //       );
+    //       const href = URL.createObjectURL(response.data);
 
-          const link = document.createElement("a");
-          link.href = href;
-          link.setAttribute(
-            "download",
-            `${selectedWardName} ward's Citizens Report.xlsx`
-          );
+    //       const link = document.createElement("a");
+    //       link.href = href;
+    //       link.setAttribute(
+    //         "download",
+    //         `${selectedWardName} ward's Citizens Report.xlsx`
+    //       );
 
-          document.body.appendChild(link);
-          link.click();
+    //       document.body.appendChild(link);
+    //       link.click();
 
-          document.body.removeChild(link);
-          URL.revokeObjectURL(href);
-        } else {
-          console.error(
-            "Data not found. HTTP status code: ",
-            response.data.message
-          );
-        }
-      })
-      .catch((err) => {
-        setLoader(false);
-        console.log(err.response.status);
-        if (err.response.status == 404) {
-          message.warning("Please Select Ward");
-        } else if (err.response.status == 401) {
-          LogOut();
-        } else if (err.response.status == 400) {
-          console.log("error status is " + err.response.status);
-          message.warning("No data found for selected ward");
-        } else {
-          message.warning(err.response.message);
-        }
-      });
+    //       document.body.removeChild(link);
+    //       URL.revokeObjectURL(href);
+    //     } else {
+    //       console.error(
+    //         "Data not found. HTTP status code: ",
+    //         response.data.message
+    //       );
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     setLoader(false);
+    //     console.log(err.response.status);
+    //     if (err.response.status == 404) {
+    //       message.warning("Please Select Ward");
+    //     } else if (err.response.status == 401) {
+    //       LogOut();
+    //     } else if (err.response.status == 400) {
+    //       console.log("error status is " + err.response.status);
+    //       message.warning("No data found for selected ward");
+    //     } else {
+    //       message.warning(err.response.message);
+    //     }
+    //   });
   };
   const handleHealthPostwiseCitizenDownload = () => {
-    props.handleSideKey(3);
-    props.handleFilter(
-      selectedWardName,
-      selectedHealthPost,
-      selectedDispensary
-    );
-    axios
-      .get(
-        `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
-        {
-          headers: {
-            Authorization: `Token ${sessionStorage.getItem("Token")}`,
-          },
-          responseType: "blob",
-        }
-      )
-      .then((response) => {
-        const href = URL.createObjectURL(response.data);
+    updateSideKey(4, selectedWard, selectedHealthPost, selectedDispensary);
+    // axios
+    //   .get(
+    //     `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
+    //     {
+    //       headers: {
+    //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //       },
+    //       responseType: "blob",
+    //     }
+    //   )
+    //   .then((response) => {
+    //     const href = URL.createObjectURL(response.data);
 
-        const link = document.createElement("a");
-        link.href = href;
-        link.setAttribute(
-          "download",
-          `${selectedHealthPost} Healthpost's Citizens Report.xlsx`
-        );
+    //     const link = document.createElement("a");
+    //     link.href = href;
+    //     link.setAttribute(
+    //       "download",
+    //       `${selectedHealthPost} Healthpost's Citizens Report.xlsx`
+    //     );
 
-        document.body.appendChild(link);
-        link.click();
+    //     document.body.appendChild(link);
+    //     link.click();
 
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
-      })
-      .catch((err) => {
-        console.log(err.response.status);
-        if (err.response.status == 404) {
-          message.warning("Please Select Healthpost");
-        } else if (err.response.status == 401) {
-          LogOut();
-        } else if (err.response.status == 400) {
-          console.log("error status is " + err.response.status);
-          // console.log("error message is " + JSON.stringify(err));
-          // console.log("error message is " + err);
-          message.warning("No data found for selected healthpost");
-        } else {
-          message.warning(err.data.message);
-        }
-      });
+    //     document.body.removeChild(link);
+    //     URL.revokeObjectURL(href);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.response.status);
+    //     if (err.response.status == 404) {
+    //       message.warning("Please Select Healthpost");
+    //     } else if (err.response.status == 401) {
+    //       LogOut();
+    //     } else if (err.response.status == 400) {
+    //       console.log("error status is " + err.response.status);
+    //       // console.log("error message is " + JSON.stringify(err));
+    //       // console.log("error message is " + err);
+    //       message.warning("No data found for selected healthpost");
+    //     } else {
+    //       message.warning(err.data.message);
+    //     }
+    //   });
   };
 
   ////////////////////////
   const handleDownloadAllCitizenList = () => {
-    //pass the value
-    props.handleSideKey(4);
-    props.handleFilter(
-      selectedWardName,
-      selectedHealthPost,
-      selectedDispensary
-    );
+    updateSideKey(2, selectedWard, selectedHealthPost, selectedDispensary);
 
-    axios
-      .get(`${BASE_URL}/adminportal/api/DownloadAllWardUserList`, {
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem("Token")}`,
-        },
-        responseType: "blob",
-      })
-      .then((response) => {
-        const href = URL.createObjectURL(response.data);
-        const link = document.createElement("a");
-        link.href = href;
 
-        link.setAttribute("download", `All Ward Citizen List.xlsx`);
+    // axios
+    //   .get(`${BASE_URL}/adminportal/api/DownloadAllWardUserList`, {
+    //     headers: {
+    //       Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //     },
+    //     responseType: "blob",
+    //   })
+    //   .then((response) => {
+    //     const href = URL.createObjectURL(response.data);
+    //     const link = document.createElement("a");
+    //     link.href = href;
 
-        document.body.appendChild(link);
-        link.click();
+    //     link.setAttribute("download", `All Ward Citizen List.xlsx`);
 
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
-      })
-      .catch((err) => {
-        console.log(err.response);
+    //     document.body.appendChild(link);
+    //     link.click();
 
-        if (err.response && err.response.status) {
-          if (err.response.status === 404) {
-            message.warning("File Not Found");
-          } else if (err.response.status === 401) {
-            LogOut();
-          } else {
-            message.warning(err.response.message);
-          }
-        } else {
-          // Handle other error scenarios
-          console.error("Unexpected error:", err);
-        }
-      });
+    //     document.body.removeChild(link);
+    //     URL.revokeObjectURL(href);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.response);
+
+    //     if (err.response && err.response.status) {
+    //       if (err.response.status === 404) {
+    //         message.warning("File Not Found");
+    //       } else if (err.response.status === 401) {
+    //         LogOut();
+    //       } else {
+    //         message.warning(err.response.message);
+    //       }
+    //     } else {
+    //       // Handle other error scenarios
+    //       console.error("Unexpected error:", err);
+    //     }
+    //   });
   };
 
   ////////////////////////
   const handleDownloadDispensarywise = () => {
-    props.handleSideKey(5);
-    props.handleFilter(
-      selectedWardName,
-      selectedHealthPost,
-      selectedDispensary
-    );
-
+    updateSideKey(5, selectedWard, selectedHealthPost, selectedDispensary);
     axios
       .get(
         `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${selectedDispensary}`,
@@ -409,7 +406,6 @@ function Sidebar(props) {
   };
 
   const [collapsed, setCollapsed] = useState(false);
-  const [sideKey, setSideKey] = useState(null);
   const {
     token: { colorBgContainer },
   } = theme.useToken();

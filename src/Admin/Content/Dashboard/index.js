@@ -21,16 +21,18 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 
+import { createContext, useContext } from 'react';
+
+import { MyContext } from '../../Admin/Admin';
+
 const { Option } = Select;
 
-function AdminDashboard(props) {
-
-  // const { value } = props;
-
-  // Accessing values
-  // const { sideKey, passedDashboard, passedHealthpost, passedDispensary } = value;
+function AdminDashboard() {
 
 
+  const { sideKey, passedDashboard } = useContext(MyContext);
+
+  // const { sideKey, passedDashboard, passedHealthpost, passedDispensary } = props.value;
 
   const [loader, setLoader] = useState(false);
   const [AdminDashboardData, setAdminDashboardData] = useState({});
@@ -53,8 +55,7 @@ function AdminDashboard(props) {
     },
   };
   useEffect(() => {
-    console.log(selectedWard);
-    console.log(selectedHealthPost);
+    console.log("the passed side key is "+sideKey+" "+passedDashboard);
     setLoader(true);
     axios
       .get(`${BASE_URL}/adminportal/api/AdminDashboardView`, {
@@ -98,21 +99,19 @@ function AdminDashboard(props) {
       });
   }, [selectedWard, selectedHealthPost]);
 
+  
   useEffect(() => {
-    if (props.sideKey === 4) {
+  
+    if (sideKey === 2) {
       setLoader(true);
-      console.log("dshboard passed value in dashboard content "+props.passedDashboard)
-      handleWardwiseCitizenDownload();
-    } else if (props.sideKey === 2) {
-      handleHealthPostwiseCitizenDownload();
-    } else if (props.sideKey === 3) {
       handleDownloadAllCitizenList();
-    } else if (props.sideKey === 5) {
-      handleDownloadDispensarywise();
-    } else {
-      console.log("side key not pressed");
+    }else if (sideKey === 3) {
+      setLoader(true);
+      handleWardwiseCitizenDownload();
     }
-  }, [props.sideKey]);
+  }, [sideKey]);
+  
+  
 
   const handleWardSelect = (data) => {
     const [id, wardName] = data.split("|");
