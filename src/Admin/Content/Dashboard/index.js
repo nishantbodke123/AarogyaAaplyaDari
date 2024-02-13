@@ -612,7 +612,7 @@ function AdminDashboard() {
               <MainCountRow>
                 <CountCard>
                   <CardTitle>ABHA ID Generated</CardTitle>
-                  <CountTitle>0</CountTitle>
+                  <CountTitle>{AdminDashboardData.total_AbhaCreated}</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens 30 years + enrolled</CardTitle>
@@ -643,13 +643,13 @@ function AdminDashboard() {
                 <Line />
                 <MainCountRow>
                   <DetailSubtitle> Tests Assigned</DetailSubtitle>
-                  <CountTitle>0</CountTitle>
+                  <CountTitle>{AdminDashboardData.total_LabTestAdded}</CountTitle>
                 </MainCountRow>
                 <Line />
-                <MainCountRow>
+                {/* <MainCountRow>
                   <DetailSubtitle> Tests Done</DetailSubtitle>
                   <CountTitle>0</CountTitle>
-                </MainCountRow>
+                </MainCountRow> */}
                 <Line />
                 <MainCountRow>
                   <DetailSubtitle>Total Reports Generated</DetailSubtitle>

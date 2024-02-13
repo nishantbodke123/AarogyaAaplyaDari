@@ -1332,7 +1332,7 @@ function MemberUpdate(props) {
                   value={name}
                   // onChange={(e) => handleNameChange(e)}
                   pattern="[a-zA-Z]+"
-                  allowClear
+                  
                 ></Input>
               </FormItem>
             </Column>
@@ -1375,7 +1375,7 @@ function MemberUpdate(props) {
                 <Input
                   type="number"
                   value={age}
-                  allowClear
+                
                   // onChange={(e) => handleAgeChange(e)}
                 ></Input>
               </FormItem>
@@ -1418,7 +1418,7 @@ function MemberUpdate(props) {
                       type="text"
                       value={aadharCard}
                       maxLength={12}
-                      allowClear
+                      
                       // onChange={(e) => handleAadharCardChange(e)}
                     ></Input>
                   </FormItem>
