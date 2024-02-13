@@ -464,24 +464,24 @@ function MemberAdd(props) {
     const newWeight = e.target.value;
 
     if (newWeight === "" || regex.test(newWeight)) {
-        setWeight(newWeight);
-        calculateBMI(); // You can also pass weight as an argument here
+      setWeight(newWeight);
+      calculateBMI(); // You can also pass weight as an argument here
     } else {
-        // Handle invalid input if needed
+      // Handle invalid input if needed
     }
-};
+  };
 
-const handleHeightChange = (e) => {
+  const handleHeightChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
     const newHeight = e.target.value;
 
     if (newHeight === "" || regex.test(newHeight)) {
-        setHeight(newHeight);
-        calculateBMI(); // You can also pass height as an argument here
+      setHeight(newHeight);
+      calculateBMI(); // You can also pass height as an argument here
     } else {
-        // Handle invalid input if needed
+      // Handle invalid input if needed
     }
-};
+  };
   // const handleBMI = () => {
   //   var BMI;
   // if (weight !== "" && height !== "") {
@@ -494,16 +494,15 @@ const handleHeightChange = (e) => {
     const heightInM = parseFloat(height) / 100;
 
     if (!isNaN(weightInKg) && !isNaN(heightInM) && heightInM > 0) {
-        // Calculate BMI using the Math object
-        const calculatedBMI = (weightInKg / Math.pow(heightInM, 2)).toFixed(1);
+      // Calculate BMI using the Math object
+      const calculatedBMI = (weightInKg / Math.pow(heightInM, 2)).toFixed(1);
 
-
-        // Update state
-        setBMI(calculatedBMI);
+      // Update state
+      setBMI(calculatedBMI);
     } else {
-        setBMI("");
+      setBMI("");
     }
-  };  
+  };
   const handleBMIChange = (e) => {
     const regex = /^[0-9]{1,1}$/;
     if (e.target.value === "" || regex.test(e.target.value)) {
@@ -1563,7 +1562,8 @@ const handleHeightChange = (e) => {
               <div>
                 <p>
                   Abha ID Already Exist with this Aadhar card Number ,ABHA ID is
-                  as given :
+                  as given : / या आधार कार्ड क्रमांकासह आभा आयडी आधीपासूनच अस्तित्वात आहे, ABHA आयडी आहे
+                   दिल्याप्रमाणे:
                 </p>
                 <h4>{response.data.healthIdNumber}</h4>
               </div>
@@ -1591,6 +1591,8 @@ const handleHeightChange = (e) => {
     setShowCheckAndGenerateMobileOtpModal(false);
   };
   const handleBackButtonOfCheckAndGenerateMobileOtpModal = () => {
+    setMinutes(0);
+    setSeconds(0);
     setAadharLinkedMobileNumber(true);
     setOtp();
   };
@@ -1608,6 +1610,8 @@ const handleHeightChange = (e) => {
 
   // 2nd step check mobile number linked with adhar or not for link with abha ID
   const handleCheckAndGenerateMobileOtp = () => {
+    setMinutes(2);
+    setSeconds(29);
     setProgress(20);
     setLoading(true);
     let axiosConfig = {
@@ -1639,7 +1643,8 @@ const handleHeightChange = (e) => {
               <>
                 <p>
                   This number is associated with your Aadhar card. Would you
-                  like to link it with your Abha card?
+                  like to link it with your Abha card? / हा क्रमांक तुमच्या आधार कार्डशी संलग्न आहे. तुम्ही कराल
+                   तुमच्या आभा कार्डशी लिंक करायला आवडेल?
                 </p>
               </>
             ),
@@ -1754,7 +1759,7 @@ const handleHeightChange = (e) => {
     console.log(axiosConfig);
     axios
       .post(
-        `${BASE_URL}/abdm/api/verifyAadharOTP`,
+        `${BASE_URL}/abdm/api/verifyMobileOTP`,
         {
           otp: data,
           txnId: txnId,
@@ -1765,6 +1770,34 @@ const handleHeightChange = (e) => {
         setProgress(70);
         setLoading(false);
         console.log(res.data.message);
+        if(res.status== 200){
+          setLoading(true);
+          settxnID(res.data.txnId);
+          axios.post(`${BASE_URL}/abdm/api/createHealthIdByAdhaarAPI`,{
+            consent:true,
+            consentVersion:"V1.0",
+            txnId:res.data.txnId
+          },axiosConfig).then((res)=>{
+            setLoading(false);
+            setProgress(100);
+            console.log(res);
+            setAadharPhotoURL(res.data.kycPhoto);
+            setAadharCardName(res.data.name);
+            setAadharMobileNumber(res.data.mobile);
+            setAbhaId(res.data.healthIdNumber);
+            setHealthId(res.data.healthId);
+            setMobileNumberForAbhaID("");
+            handleShowHealthNumberModal();
+            handleHideCheckAndGeneratedMobileOtp();
+          }).catch((err)=>{
+            setLoading(false);
+            console.log(err);
+            message.warning(err.response.data.message)
+          })
+        } else {
+          setLoading(false);
+          message.warning("Mobile number is not verified , try again")
+        }
       })
       .catch((err) => {
         setProgress(70);
@@ -2058,7 +2091,7 @@ const handleHeightChange = (e) => {
                 >
                   <h4>
                     If You want to fill Adhar Number and ABHA Number, tick the
-                    box
+                    box / जर तुम्हाला आधार क्रमांक आणि ABHA क्रमांक भरायचा असेल तर बॉक्सवर टिक करा
                   </h4>
                 </Checkbox>
               </Row>
@@ -2129,7 +2162,7 @@ const handleHeightChange = (e) => {
                   value={physicalDetailsRequired}
                   onChange={handlePhysicalDetailsRequired}
                 >
-                  <h4>If You want to fill physical details, tick the box</h4>
+                  <h4>If You want to fill physical details, tick the box / तुम्हाला भौतिक तपशील भरायचे असल्यास, बॉक्सवर खूण करा </h4>
                 </Checkbox>
               </Row>
             ) : (
@@ -2215,7 +2248,7 @@ const handleHeightChange = (e) => {
                   value={CBACRequired}
                   onChange={handleCBACRequired}
                 >
-                  <h4>If You want to fill CBAC Form, tick the box</h4>
+                  <h4>If You want to fill CBAC Form, tick the box / तुम्हाला CBAC फॉर्म भरायचा असेल तर बॉक्सवर टिक करा</h4>
                 </Checkbox>
               </Row>
             ) : (
@@ -3839,6 +3872,7 @@ const handleHeightChange = (e) => {
             </>
           }
         >
+          <Spin spinning={loading}>
           <div style={{ margin: "0px" }}>
             <Form layout="vertical">
               <div style={{ display: "flex", justifyContent: "space-around" }}>
@@ -3883,7 +3917,7 @@ const handleHeightChange = (e) => {
                     ></OtpInput>
                     <div className="countdown-text">
                       {seconds > 0 || minutes > 0 ? (
-                        <p>
+                        <p style={{ color: "red" }}>
                           Time Remaining:{" "}
                           {minutes < 10 ? `0${minutes}` : minutes}:
                           {seconds < 10 ? `0${seconds}` : seconds}
@@ -3899,16 +3933,6 @@ const handleHeightChange = (e) => {
                       >
                         Resend OTP
                       </a>
-                      {/* <button
-            // disabled={seconds > 0 || minutes > 0}
-            style={{
-              color: seconds > 0 || minutes > 0 ? "#DFE3E8" : "#FF5630",
-              display: seconds > 0 || minutes > 0 ? "none":""
-            }}
-            onClick={handleAadharNumberSubmit}
-          >
-            Resend OTP
-          </button> */}
                     </div>
                     {/* <div
                       style={{
@@ -3926,6 +3950,7 @@ const handleHeightChange = (e) => {
               )}
             </Form>
           </div>
+          </Spin>
         </AadharOtpLinkedModal>
         <CheckAndGenerateMobileOtpModal
           open={showCheckAndGenerateMobileOtpModal}
@@ -3977,6 +4002,7 @@ const handleHeightChange = (e) => {
           }
         >
           <>
+          <Spin spinning={loading}>
             <Form layout="vertical">
               <Form.Item label="Mobile Number" style={{ padding: "20px" }}>
                 <Input
@@ -4005,7 +4031,28 @@ const handleHeightChange = (e) => {
                           renderSeparator={<span></span>}
                           renderInput={(props) => <input {...props} />}
                         ></OtpInput>
-                        <div
+
+                        <div className="countdown-text">
+                          {seconds > 0 || minutes > 0 ? (
+                            <p style={{ color: "red" }}>
+                              Time Remaining:{" "}
+                              {minutes < 10 ? `0${minutes}` : minutes}:
+                              {seconds < 10 ? `0${seconds}` : seconds}
+                            </p>
+                          ) : (
+                            <p>Didn't recieve code?</p>
+                          )}
+                          <a
+                            style={{
+                              display: seconds > 0 || minutes > 0 ? "none" : "",
+                            }}
+                            onClick={handleCheckAndGenerateMobileOtp}
+                          >
+                            Resend OTP
+                          </a>
+                        </div>
+
+                        {/* <div
                           style={{
                             display: "flex",
                             justifyContent: "flex-end",
@@ -4015,13 +4062,14 @@ const handleHeightChange = (e) => {
                           <a onClick={handleCheckAndGenerateMobileOtp}>
                             Resend OTP
                           </a>
-                        </div>
+                        </div> */}
                       </Form.Item>
                     </div>
                   </>
                 )}
               </Form.Item>
             </Form>
+            </Spin>
           </>
         </CheckAndGenerateMobileOtpModal>
         <HealthNumberModal
@@ -4112,6 +4160,7 @@ const handleHeightChange = (e) => {
             >
               <a onClick={handleCheckAndGenerateMobileOtp}>Resend OTP</a>
             </div> */}
+
             </Form.Item>
           </Form>
         </HealthIdModal>

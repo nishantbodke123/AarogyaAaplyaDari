@@ -70,5 +70,22 @@
   "Loss of sensation in any parts of body": "शरीराच्या कोणत्याही भागात संवेदना कमी होणे ?",
   "Swelling / Nodule on Face/Hands/ Feet": "चेहरा/हात/पायांवर सूज ?",
   "Loss of eyelash or eyebrow": "पापणी किंवा भुवया गळणे ?",
-  "Thickened earlobes": "कानातले दाट ?"
+  "Thickened earlobes": "कानातले दाट ?",
+  "Would you like to add the citizen as vulnerable citizen?":
+"वरील नमूद केलेली व्यक्ती खालील जोखीमग्रस्त (Vulnerable) संवर्गात आहे?",
+"70+ Years": "वय ७० वर्षे किंवा अधिक",
+"Physically Handicapped": "शारीरिकदृष्ट्या अपंग",
+"Completely Paralyzed or On bed":
+"अर्धांगवायू झालेले किंवा अंथरुणाला खिळलेले",
+"Elderly and alone at home": "वयोवृद्ध आणि एकटे राहणारे",
+"Any other reason": "इतर कारण",
+"Referral to Mun. Dispensary / HBT for Blood Test / Confirmation / Treatment":
+"महानगरपालिका दवाखाने / एच बी टी आपला दवाखान्याला रक्त तपासणी / निदान/ उपचारासाठी संदर्भित",
+"Referral to HBT polyclinic for physician consultation":
+"एच बी टी पॉलीक्लिनिक व निदान केंद्राला विशेषज्ञ सेवेसाठी संदर्भित",
+"Referral to Peripheral Hospital / Special Hospital for management of Complication":
+"महानगरपालिका उपनगरीय व विशेष रुग्णालयाला पुढील उपचारासाठी संदर्भित",
+"Referral to Medical College for management of Complication":
+" वैद्यकीय महाविद्यालयाला पुढील उपचारासाठी संदर्भित",
+"Referral to Private facility": "खाजगी रुग्णालयाला संदर्भित"
 }

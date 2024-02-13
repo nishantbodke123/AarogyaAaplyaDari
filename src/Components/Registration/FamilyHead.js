@@ -111,8 +111,7 @@ function FamilyHead(props) {
   cQIDAQAB`;
   encrypt2.setPublicKey(publicKey2);
 
-
-  // OTP Timer 
+  // OTP Timer
 
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -305,7 +304,7 @@ function FamilyHead(props) {
           console.log(response.status);
           if (response.status == 200) {
             Modal.confirm({
-              title: `Once you click "Next," you cannot revisit the previous page.`,
+              title: `Once you click "Next," you cannot revisit the previous page./ एकदा तुम्ही "Next" वर क्लिक केल्यावर तुम्ही मागील पृष्ठावर पुन्हा जाऊ शकत नाही`,
               okText: "Confirm",
               onOk: () => setFamilyHeadRegister("Yes"),
             });
@@ -385,7 +384,7 @@ function FamilyHead(props) {
   const handleAadharNumberSubmit = () => {
     setMinutes(2);
     setSeconds(29);
-    setProgress(20);
+    // setProgress(20);
     setLoading(true);
     var data = encrypt.encrypt(aadharNumber);
 
@@ -404,7 +403,7 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((response) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
         console.log(response);
         setMobileNumberLinkedWithAadhar(response.data.mobileNumber);
@@ -430,7 +429,7 @@ function FamilyHead(props) {
 
   // aadhar verify by OTP in 1st step
   const handleAadharVerify = () => {
-    setProgress(20);
+    // setProgress(20);
     setLoading(true);
     var data = encrypt.encrypt(otp);
     let axiosConfig = {
@@ -449,7 +448,7 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((response) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
         console.log(response);
         handleHideAadharOtpLinkedModal();
@@ -462,7 +461,8 @@ function FamilyHead(props) {
               <div>
                 <p>
                   Abha ID Already Exist with this Aadhar card Number ,ABHA ID is
-                  as given :
+                  as given : / या आधार कार्ड क्रमांकासह आभा आयडी आधीपासूनच अस्तित्वात आहे, ABHA आयडी आहे
+                   दिल्याप्रमाणे:
                 </p>
                 <h4>{response.data.healthIdNumber}</h4>
               </div>
@@ -471,7 +471,7 @@ function FamilyHead(props) {
         } else {
           handleShowCheckAndGeneratedMobileOtp();
         }
-        setProgress(100);
+        // setProgress(100);
       })
       .catch((error) => {
         setLoading(false);
@@ -490,6 +490,8 @@ function FamilyHead(props) {
     setShowCheckAndGenerateMobileOtpModal(false);
   };
   const handleBackButtonOfCheckAndGenerateMobileOtpModal = () => {
+    setMinutes(0);
+    setSeconds(0);
     setAadharLinkedMobileNumber(true);
     setOtp();
   };
@@ -507,7 +509,9 @@ function FamilyHead(props) {
 
   // 2nd step check mobile number linked with adhar or not for link with abha ID
   const handleCheckAndGenerateMobileOtp = () => {
-    setProgress(20);
+    setMinutes(2);
+    setSeconds(29);
+    // setProgress(20);
     setLoading(true);
     let axiosConfig = {
       headers: {
@@ -525,12 +529,12 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((res) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
         console.log(res.data.txnId);
         settxnID(res.data.txnId);
         if (res.data.mobileLinked) {
-          setProgress(100);
+          // setProgress(100);
           Modal.confirm({
             title: "Create Health ID",
             icon: <ExclamationCircleOutlined />,
@@ -538,13 +542,14 @@ function FamilyHead(props) {
               <>
                 <p>
                   This number is associated with your Aadhar card. Would you
-                  like to link it with your Abha card?
+                  like to link it with your Abha card? / हा क्रमांक तुमच्या आधार कार्डशी संलग्न आहे. तुम्ही कराल
+                   तुमच्या आभा कार्डशी लिंक करायला आवडेल?
                 </p>
               </>
             ),
             okText: "Confirm",
             onOk() {
-              setProgress(20);
+              // setProgress(20);
               setLoading(true);
               console.log("Confirmed");
               axios
@@ -558,7 +563,7 @@ function FamilyHead(props) {
                   axiosConfig
                 )
                 .then((res) => {
-                  setProgress(70);
+                  // setProgress(70);
                   console.log(res);
                   setLoading(false);
                   setAadharPhotoURL(res.data.kycPhoto);
@@ -571,11 +576,11 @@ function FamilyHead(props) {
                   handleHideCheckAndGeneratedMobileOtp();
                 })
                 .catch((error) => {
-                  setProgress(70);
+                  // setProgress(70);
                   setLoading(false);
                   console.log(error);
                 });
-              setProgress(100);
+              // setProgress(100);
             },
             onCancel() {
               console.log("Cancel");
@@ -588,10 +593,10 @@ function FamilyHead(props) {
         }
       })
       .catch((err) => {
-        setProgress(70);
+        // setProgress(70);
         console.log(err);
       });
-    setProgress(100);
+    // setProgress(100);
   };
 
   const [showHealthNumberModal, setHealthNumberModal] = useState(false);
@@ -604,7 +609,7 @@ function FamilyHead(props) {
 
   const [showHealthIdModal, setShowHealthIdModal] = useState(false);
   const handleShowHealthIdModal = () => {
-    setProgress(20);
+    // setProgress(20);
     setLoading(true);
     let axiosConfig = {
       headers: {
@@ -621,14 +626,14 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((res) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
         console.log(res.data.authMethods);
         setAuthMethods(res.data.authMethods);
         setShowHealthIdModal(true);
       })
       .catch((error) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
         console.log(error);
       });
@@ -641,7 +646,8 @@ function FamilyHead(props) {
   };
 
   const handleVerifyNumberLinktoAbhaCard = () => {
-    setProgress(20);
+    console.log("Verify Numbar for ABHA")
+    // setProgress(20);
     setLoading(true);
     var data = encrypt.encrypt(otp);
     let axiosConfig = {
@@ -650,10 +656,10 @@ function FamilyHead(props) {
         Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
       },
     };
-    console.log(axiosConfig);
+
     axios
       .post(
-        `${BASE_URL}/abdm/api/verifyAadharOTP`,
+        `${BASE_URL}/abdm/api/verifyMobileOTP`,
         {
           otp: data,
           txnId: txnId,
@@ -661,12 +667,42 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((res) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
-        console.log(res.data.message);
+        console.log(res);
+        
+        if(res.status== 200){
+          setLoading(true);
+          settxnID(res.data.txnId);
+          axios.post(`${BASE_URL}/abdm/api/createHealthIdByAdhaarAPI`,{
+            consent:true,
+            consentVersion:"V1.0",
+            txnId:res.data.txnId
+          },axiosConfig).then((res)=>{
+            setLoading(false);
+            setProgress(100);
+            console.log(res);
+            setAadharPhotoURL(res.data.kycPhoto);
+            setAadharCardName(res.data.name);
+            setAadharMobileNumber(res.data.mobile);
+            setAbhaId(res.data.healthIdNumber);
+            setHealthId(res.data.healthId);
+            setMobileNumberForAbhaID("");
+            handleShowHealthNumberModal();
+            handleHideCheckAndGeneratedMobileOtp();
+          }).catch((err)=>{
+            setLoading(false);
+            console.log(err);
+            message.warning(err.response.data.message)
+          })
+        } else {
+          setLoading(false);
+          message.warning("Mobile number is not verified , try again")
+        }
+    
       })
       .catch((err) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
         console.log(err.response.data.message);
         message.warning(err.response.data.message);
@@ -2557,7 +2593,7 @@ function FamilyHead(props) {
                 >
                   <h4>
                     If You want to fill Adhar Number and ABHA Number, tick the
-                    box
+                    box / जर तुम्हाला आधार क्रमांक आणि ABHA क्रमांक भरायचा असेल तर बॉक्सवर टिक करा
                   </h4>
                 </Checkbox>
               </Row>
@@ -2583,7 +2619,7 @@ function FamilyHead(props) {
                       ></Input>
                     </FormItem>
                   </Column>
-                  <Column span={8}>
+                  <Column span={6}>
                     <FormItem label="Abha ID / आभा आयडी">
                       <Input
                         type="text"
@@ -2599,12 +2635,12 @@ function FamilyHead(props) {
                       </a>
                     </p>
                   </Column>
-                  <Column span={1}>
+                  <Column span={3}>
                     <Tooltip title="ABHA Card Download">
                       <Popover
                         content={ABHACARDDownloadInputContent}
                         trigger="click"
-                        placement="left"
+                        placement="right"
                       >
                         <ABHACardDownLoad icon={faFileArrowDown} />
                       </Popover>
@@ -2628,7 +2664,7 @@ function FamilyHead(props) {
                   value={physicalDetailsRequired}
                   onChange={handlePhysicalDetailsRequired}
                 >
-                  <h4>If You want to fill physical details, tick the box</h4>
+                  <h4>If You want to fill physical details, tick the box / तुम्हाला भौतिक तपशील भरायचे असल्यास, बॉक्सवर खूण करा</h4>
                 </Checkbox>
               </Row>
             ) : (
@@ -2714,7 +2750,7 @@ function FamilyHead(props) {
                   value={CBACRequired}
                   onChange={handleCBACRequired}
                 >
-                  <h4>If You want to fill CBAC Form, tick the box</h4>
+                  <h4>If You want to fill CBAC Form, tick the box / तुम्हाला CBAC फॉर्म भरायचा असेल तर बॉक्सवर टिक करा</h4>
                 </Checkbox>
               </Row>
             ) : (
@@ -2785,8 +2821,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  २. तुम्ही धूम्रपान किंवा धूर रहित उत्पादने जसे गुटखा व
-                  खैनीसारख्या वापर करता ? / Do you smoke or consume smokeless
+                  २. तुम्ही धूम्रपान किंवा धूर रहित उत्पादने जसे गुटखा व खैनीसारख्या वापर करता ? / Do you smoke or consume smokeless
                   product such as gutka or khaini?
                 </QuestionCol>
                 <AnswerCol>
@@ -2807,7 +2842,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ३. तुम्ही दररोज मद्यपान करता ? / Do you consume alcohol daily
+                  ३. तुम्ही दररोज मद्यपान करता ?/ Do you consume alcohol daily
                   ?
                 </QuestionCol>
                 <AnswerCol>
@@ -2824,7 +2859,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ४. कंबरेचा घेर (सेमी मध्ये) / Measurement of waist in cm
+                  ४.कंबरेचा घेर (सेमी मध्ये) / Measurement of waist in cm
                 </QuestionCol>
                 <AnswerCol>
                   <Radio.Group
@@ -2862,8 +2897,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ५. तुम्ही आठवड्यातून किमान 150 मिनिटे कोणतीही शारीरिक क्रिया
-                  करता का? / Do you undertake any physical activities for
+                  ५.तुम्ही एका आठवडयामध्ये कमीत कमी १५० मिनिटे कोणत्याही प्रकारचे शारीरिक हालचाल करता का ?  (दररोज कमीत कमी ३०मिनिटे – आठवडयातून ५ दिवस) / Do you undertake any physical activities for
                   minimum of 150 minutes in a week (Daily min 30 minutes per
                   day- 5 days a week)
                 </QuestionCol>
@@ -2886,8 +2920,7 @@ function FamilyHead(props) {
               </QuestionRow>
               <QuestionRow>
                 <QuestionCol>
-                  ६. आपल्याकडे कौटुंबिक इतिहास आहे का ? (आपले पालक किंवा भावंडां
-                  पैकी) उच्च रक्तदाब, मधुमेह आणि हृदयरोग आहे का ? / 6. Do you
+                  ६. आपल्याकडे कौटुंबिक इतिहास आहे का ? (आपले पालक किंवा भावंडां पैकी) उच्च रक्तदाब, मधुमेह आणि हृदयरोग आहे का ? / 6. Do you
                   have a family history (any one of your parent or sibling ) of
                   high BP, DM and Heart Disease ?
                 </QuestionCol>
@@ -3733,7 +3766,7 @@ function FamilyHead(props) {
                   १. गोष्टी करण्यात थोडीशी आवड किंवा आनंद असणे ? / Having little
                   interest or pleasure in doing things?
                 </QuestionCol>
- 
+
                 <Radio.Group
                   style={{ margin: "1% 7%" }}
                   onChange={(e) => handlePartDQuestions(1, e.target.value)}
@@ -4066,7 +4099,7 @@ function FamilyHead(props) {
         >
           <div>
             <p>
-              Would you like to mark the citizen as vulnerable citizen?
+              Would you like to mark the citizen as vulnerable citizen?/ वरील नमूद केलेली व्यक्ती खालील जोखीमग्रस्त (Vulnerable) संवर्गात आहे?"
               <span>
                 <Checkbox
                   style={{ margin: "0% 5%" }}
@@ -4083,7 +4116,7 @@ function FamilyHead(props) {
                       value={data.id}
                       onChange={(e) => handleVulnerableList(e.target.value)}
                     >
-                      {data.choice}
+                      {data.choice}/{t(data.choice)}
                     </Checkbox>
                   </li>
                 ))}
@@ -4103,7 +4136,7 @@ function FamilyHead(props) {
             )}
 
             <div>
-              <h4>REFERRAL OPTIONS :</h4>
+              <h4>REFERRAL OPTIONS / संदर्भ पर्याय :</h4>
             </div>
             {refarralList.map((data) => (
               <li>
@@ -4114,7 +4147,7 @@ function FamilyHead(props) {
                     handleReferralList(e.target.value);
                   }}
                 >
-                  {data.choice}
+                  {data.choice}/{t(data.choice)}
                 </Checkbox>
               </li>
             ))}
@@ -4183,9 +4216,9 @@ function FamilyHead(props) {
                       onChange={(e) => setDeniedBy(e.target.value)}
                       value={deniedBy}
                     >
-                      <Radio value="byindividual">By Individual</Radio>
+                      <Radio value="byindividual">By Individual /वैयक्तिकरित्या</Radio>
                       <br />
-                      <Radio value="byamo">By AMO</Radio>
+                      <Radio value="byamo">By AMO / AMO द्वारे</Radio>
                     </Radio.Group>
                   </div>
                 ) : (
@@ -4262,7 +4295,7 @@ function FamilyHead(props) {
         <AadharOtpLinkedModal
           open={showAadharOtpLinkedModal}
           onCancel={handleHideAadharOtpLinkedModal}
-          title="Validate your Aadhar number before generating your abha number"
+          title="Validate your Aadhar number before generating your abha number / तुमचा आभा क्रमांक तयार करण्यापूर्वी तुमचा आधार क्रमांक सत्यापित करा"
           footer={
             <>
               {aadharNumberSubmitted ? (
@@ -4280,11 +4313,12 @@ function FamilyHead(props) {
             </>
           }
         >
+          <Spin spinning={loading} tip="loading...">
           <div style={{ margin: "0px" }}>
             <Form layout="vertical">
               <div style={{ display: "flex", justifyContent: "space-around" }}>
                 <img width={100} src="Aadhar-Color.svg"></img>
-                <Form.Item label="Aadhar Number">
+                <Form.Item label="Aadhar Number / आधार नंबर">
                   <Input
                     type="text"
                     placeholder="Enter Aadhar Number "
@@ -4304,7 +4338,9 @@ function FamilyHead(props) {
                         {" "}
                         <b>OTP </b> (Please enter the One-Time Password (OTP)
                         that has been sent to the mobile number associated with
-                        your Aadhar registration . Registered Mobile Number is{" "}
+                        your Aadhar registration . Registered Mobile Number is <b>{mobileNumberLinkedWithAadhar}</b> /  कृपया वन-टाइम पासवर्ड (OTP) प्रविष्ट करा
+                         ज्याशी संबंधित मोबाईल नंबरवर पाठवले आहे
+                         तुमची आधार नोंदणी. नोंदणीकृत मोबाईल क्रमांक आहे{" "}
                         <b>{mobileNumberLinkedWithAadhar}</b> ){" "}
                       </p>
                     }
@@ -4322,17 +4358,25 @@ function FamilyHead(props) {
                       renderSeparator={<span></span>}
                       renderInput={(props) => <input {...props} />}
                     ></OtpInput>
-                        <div className="countdown-text">
-          {seconds > 0 || minutes > 0 ? (
-            <p>
-              Time Remaining: {minutes < 10 ? `0${minutes}` : minutes}:
-              {seconds < 10 ? `0${seconds}` : seconds}
-            </p>
-          ) : (
-            <p>Didn't recieve code?</p>
-          )}
-          <a style={{display:seconds > 0 || minutes > 0 ? "none":""}} onClick={handleAadharNumberSubmit}>Resend OTP</a>
-          {/* <button
+                    <div className="countdown-text">
+                      {seconds > 0 || minutes > 0 ? (
+                        <p style={{ color: "red" }}>
+                          Time Remaining:{" "}
+                          {minutes < 10 ? `0${minutes}` : minutes}:
+                          {seconds < 10 ? `0${seconds}` : seconds}
+                        </p>
+                      ) : (
+                        <p>Didn't recieve code? / कोड प्राप्त झाला नाही?</p>
+                      )}
+                      <a
+                        style={{
+                          display: seconds > 0 || minutes > 0 ? "none" : "",
+                        }}
+                        onClick={handleAadharNumberSubmit}
+                      >
+                        Resend OTP / OTP पुन्हा पाठवा
+                      </a>
+                      {/* <button
             // disabled={seconds > 0 || minutes > 0}
             style={{
               color: seconds > 0 || minutes > 0 ? "#DFE3E8" : "#FF5630",
@@ -4342,7 +4386,7 @@ function FamilyHead(props) {
           >
             Resend OTP
           </button> */}
-        </div>
+                    </div>
                     {/* <div
                       style={{
                         display: "flex",
@@ -4359,6 +4403,7 @@ function FamilyHead(props) {
               )}
             </Form>
           </div>
+          </Spin>
         </AadharOtpLinkedModal>
         <CheckAndGenerateMobileOtpModal
           open={showCheckAndGenerateMobileOtpModal}
@@ -4377,7 +4422,8 @@ function FamilyHead(props) {
                 <Col span={20}>
                   <h4 style={{ marginTop: "-5px" }}>
                     Please provide your mobile number for the purpose of linking
-                    it with your ABHA CARD
+                    it with your ABHA CARD / लिंक करण्याच्या उद्देशाने कृपया तुमचा मोबाईल नंबर द्या
+                     ते तुमच्या ABHA कार्डसह
                   </h4>
                 </Col>
               </Row>
@@ -4410,6 +4456,7 @@ function FamilyHead(props) {
           }
         >
           <>
+          <Spin spinning={loading}>
             <Form layout="vertical">
               <Form.Item label="Mobile Number" style={{ padding: "20px" }}>
                 <Input
@@ -4438,7 +4485,27 @@ function FamilyHead(props) {
                           renderSeparator={<span></span>}
                           renderInput={(props) => <input {...props} />}
                         ></OtpInput>
-                        <div
+                              <div className="countdown-text">
+                      {seconds > 0 || minutes > 0 ? (
+                        <p style={{color:"red"}}>
+                          Time Remaining:{" "}
+                          {minutes < 10 ? `0${minutes}` : minutes}:
+                          {seconds < 10 ? `0${seconds}` : seconds}
+                        </p>
+                      ) : (
+                        <p>Didn't recieve code? कोड प्राप्त झाला नाही ?</p>
+                      )}
+                      <a
+                        style={{
+                          display: seconds > 0 || minutes > 0 ? "none" : "",
+                        }}
+                        onClick={handleCheckAndGenerateMobileOtp}
+                      >
+                        Resend OTP / OTP पुन्हा पाठवा
+                      </a>
+        
+                    </div>
+                        {/* <div
                           style={{
                             display: "flex",
                             justifyContent: "flex-end",
@@ -4448,13 +4515,14 @@ function FamilyHead(props) {
                           <a onClick={handleCheckAndGenerateMobileOtp}>
                             Resend OTP
                           </a>
-                        </div>
+                        </div> */}
                       </Form.Item>
                     </div>
                   </>
                 )}
               </Form.Item>
             </Form>
+            </Spin>
           </>
         </CheckAndGenerateMobileOtpModal>
         <HealthNumberModal
