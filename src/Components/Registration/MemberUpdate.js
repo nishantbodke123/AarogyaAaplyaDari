@@ -130,6 +130,7 @@ function MemberUpdate(props) {
 
     // setPartC1OptionSelect(state.Questionnaire.part_c[0].selectedOptions);
 
+    console.log(state.Questionnaire.part_c[0].answer ,"Part C1 answer");
     setPartC1OptionSelect(state.Questionnaire.part_c[0].answer);
     // setPartC2OptionSelect(state.Questionnaire.part_c[1].selectedOptions);
     setPartC2OptionSelect(state.Questionnaire.part_c[1].answer);
@@ -164,10 +165,12 @@ function MemberUpdate(props) {
 
     setAnimalBitten(state.Questionnaire.part_e[11].answer);
     setSnakeBitten(state.Questionnaire.part_e[12].answer);
+    setDiabetes(state.Questionnaire.part_e[13].answer);
     setVulnerable(state.vulnerable);
     setSelectReferralList(state.referels);
-    setSelectReferralList(state.vulnerable_choices);
+    setSelectVulnerableList(state.vulnerable_choices);
     setVulnerableReason(state.vulnerable_reason);
+    setDeniedBy(state.deniedBy);
     // for (let i = 0; i < 5; i++) {
     //   console.log(state.Questionnaire.part_e[i + 17].answer);
     //   let setStateFunction = eval(`setLeprosy${i + 1}`);
@@ -235,7 +238,6 @@ function MemberUpdate(props) {
         .then((res) => {
           console.log(res.data);
           setVulnerableList(res.data);
-
         })
         .catch((err) => {
           console.log(err);
@@ -509,6 +511,7 @@ function MemberUpdate(props) {
 
   //E7
   const [snakeBitten, setSnakeBitten] = useState([]);
+  const [diabetes, setDiabetes] = useState([]);
 
   //E8
   // const [leprosy, setLeprosy] = useState("");
@@ -521,11 +524,11 @@ function MemberUpdate(props) {
   const handlePartAQuestion1 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "0_29_year" ||
-      selectedValue === "30_39_year" ||
-      selectedValue === "40_49_year" ||
-      selectedValue === "50_59_year" ||
-      selectedValue === "60_year"
+      selectedValue === "0-29 years" ||
+      selectedValue === "30-39 years" ||
+      selectedValue === "40-49 years" ||
+      selectedValue === "50-59 years" ||
+      selectedValue === "60 years and above"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -536,7 +539,7 @@ function MemberUpdate(props) {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
       selectedValue === "Never" ||
-      selectedValue === "Used_to_consume_in_the_past_Sometimes_now" ||
+      selectedValue === "Used to consume in the past/ Sometimes now" ||
       selectedValue === "Daily"
     ) {
       setQuestionFunction([selectedValue]);
@@ -555,12 +558,12 @@ function MemberUpdate(props) {
   const handlePartAQuestion4 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "cm_90_cm_or_less" ||
-      selectedValue === "cm_91_100_cm" ||
-      selectedValue === "More_than_100_cm" ||
-      selectedValue === "cm_80_cm_or_less" ||
-      selectedValue === "cm_81_90_cm" ||
-      selectedValue === "More_than_90_cm"
+      selectedValue === "90 cm or less" ||
+      selectedValue === "91-100 cm" ||
+      selectedValue === "More than 100 cm" ||
+      selectedValue === "80 cm or less" ||
+      selectedValue === "81-90 cm" ||
+      selectedValue === "More than 90 cm"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -570,8 +573,8 @@ function MemberUpdate(props) {
   const handlePartAQuestion5 = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}A`);
     if (
-      selectedValue === "At_least_150_minutes_in_a_week" ||
-      selectedValue === "Less_than_150_minutes_in_a_week"
+      selectedValue === "At least 150 minutes in a week" ||
+      selectedValue === "Less than 150 minutes in a week"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -607,10 +610,10 @@ function MemberUpdate(props) {
   const handlePartDQuestions = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setQuestion${questionNumber}D`);
     if (
-      selectedValue === "Not_at_all" ||
-      selectedValue === "Several_days" ||
-      selectedValue === "More_than_half_days" ||
-      selectedValue === "Nearly_every_days"
+      selectedValue === "Not at all" ||
+      selectedValue === "Several days" ||
+      selectedValue === "More than half days" ||
+      selectedValue === "Nearly every days"
     ) {
       setQuestionFunction([selectedValue]);
     } else {
@@ -623,8 +626,8 @@ function MemberUpdate(props) {
     if (
       selectedValue === "Yes" ||
       selectedValue === "No" ||
-      selectedValue === "More_than__days" ||
-      selectedValue === "Less_than__days" ||
+      selectedValue === "For 7 days or more" ||
+      selectedValue === "Less than 7 days" ||
       selectedValue === "No"
     ) {
       setQuestionFunction([selectedValue]);
@@ -675,6 +678,14 @@ function MemberUpdate(props) {
   };
   const handleSnakeBitten = (selectedValue) => {
     const setQuestionFunction = eval(`setSnakeBitten`);
+    if (selectedValue === "Yes" || selectedValue === "No") {
+      setQuestionFunction([selectedValue]);
+    } else {
+      setQuestionFunction([]);
+    }
+  };
+  const handleDiabetes = (selectedValue) => {
+    const setQuestionFunction = eval(`setDiabetes`);
     if (selectedValue === "Yes" || selectedValue === "No") {
       setQuestionFunction([selectedValue]);
     } else {
@@ -831,8 +842,8 @@ function MemberUpdate(props) {
 
   const partC1Options = [
     "Firewood",
-    "Crop_Residue",
-    "Cow_dung_cake",
+    "Crop Residue",
+    "Cow dung cake",
     "Coal",
     "Kerosene",
     "LPG",
@@ -840,6 +851,7 @@ function MemberUpdate(props) {
 
   const [partC1OptionSelect, setPartC1OptionSelect] = useState([]);
   const handlePartC1Select = (option) => {
+    console.log(partC1OptionSelect)
     if (partC1OptionSelect.includes(option)) {
       setPartC1OptionSelect(
         partC1OptionSelect.filter((item) => item !== option)
@@ -850,9 +862,9 @@ function MemberUpdate(props) {
   };
 
   const partC2Options = [
-    "Crop_residue_burning",
-    "burning_of_garbage_leaves",
-    "working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc",
+    "Crop residue burning",
+    "burning of garbage – leaves",
+    "working in industries with smoke, gas and dust exposure such as brick kilns and glass factories etc.",
   ];
   const [partC2OptionSelect, setPartC2OptionSelect] = useState([]);
   const handlePartC2Select = (option) => {
@@ -973,228 +985,228 @@ function MemberUpdate(props) {
     Questionnaire: {
       part_a: [
         {
-          question: "What_is_your_age_completeyears",
+          question: "What is your age? (complete years)",
           answer: question1A,
         },
         {
           question:
-            "Do_you_smoke_or_consume_smokeless_products_such_as_gutka_or_khaini",
+            "Do you smoke or consume smokeless product such as gutka or khaini?",
           answer: question2A,
         },
         {
-          question: "Do_you_consume_alcohol_daily",
+          question: "Do you consume alcohol daily",
           answer: question3A,
         },
         {
-          question: "Measurement_of_waist_in_cm",
+          question: "Measurement of waist in cm",
           answer: question4A,
         },
         {
           question:
-            "Do_you_undertake_any_physical_activities_for_minimum_of__minutes_in_a_week",
+            "Do you undertake any physical activities for minimum of 150 minutes in a week (Daily min 30 minutes per day- 5 days a week)",
           answer: question5A,
         },
         {
           question:
-            "Do_you_have_a_family_history_any_one_of_your_parents_or_siblings_of_high_blood_pressure_diabetes_and_heart_disease",
+            "Do you have a family history (any one of your parent or sibling ) of high BP, DM and Heart Disease",
           answer: question6A,
         },
       ],
       part_b: [
         {
-          question: "Shortness_of_breath_difficulty_breathing",
+          question: "Shortness of Breath (Difficulty in Breathing)",
           answer: question1B1,
         },
         {
-          question: "Coughing_more_than__weeks",
+          question: "Cough lasting more than 2 weeks",
           answer: question2B1,
         },
         {
-          question: "Blood_in_sputum",
+          question: "Blood in sputum",
           answer: question3B1,
         },
         {
-          question: "Fever_for_more_than__weeks",
+          question: "Fever for more than 2 weeks",
           answer: question4B1,
         },
         {
-          question: "Loss_of_weight",
+          question: "Loss of weight",
           answer: question5B1,
         },
         {
-          question: "Night_Sweats",
+          question: "Night sweat",
           answer: question6B1,
         },
         {
-          question: "Are_you_currently_taking_anti_TB_drugs",
+          question: "Are you currently taking Anti TB Drugs",
           answer: question7B1,
         },
         {
-          question: "Anyone_in_family_currently_suffering_from_TB",
+          question: "Anyone in family currently suffering from TB",
           answer: question8B1,
         },
         {
-          question: "History_of_TB",
+          question: "History of TB",
           answer: question9B1,
         },
         {
-          question: "Recurrent_ulceration_on_palms_or_sole",
+          question: "Recurrent ulceration on palms or sole",
           answer: question10B1,
         },
         {
-          question: "Recurrent_Tingling_on_palms_or_sole",
+          question: "Recurrent Tingling on palms or sole",
           answer: question11B1,
         },
         {
-          question: "Cloudy_or_blurred_vision",
+          question: "Cloudy or blurred vision",
           answer: question12B1,
         },
         {
-          question: "Difficulty_in_reading",
+          question: "Difficulty in Reading",
           answer: question13B1,
         },
         {
-          question: "Pain_in_eyes_lasting_for_more_than_a_week",
+          question: "Pain in eyes lasting for more than a week",
           answer: question14B1,
         },
         {
-          question: "Redness_in_eyes_lasting_for_more_than_a_week",
+          question: "Redness in eyes lasting for more than a week",
           answer: question15B1,
         },
         {
-          question: "Difficulty_in_hearing",
+          question: "Difficulty in hearing",
           answer: question16B1,
         },
         {
-          question: "History_of_convulsions__fits",
+          question: "History of convulsions – fits",
           answer: question17B1,
         },
         {
-          question: "Difficulty_in_opening_Mouth",
+          question: "Difficulty in opening Mouth",
           answer: question18B1,
         },
         {
-          question: "Any_ulcer_in_mouth_that_has_not_healed_in__week",
+          question: "Any ulcer in mouth that has not healed in 2 weeks",
           answer: question19B1,
         },
         {
-          question: "Any_growth__mass_in_mouth_that_has_not_healed_in__weeks",
+          question: "Any growth / mass in mouth that has not healed in 2 weeks",
           answer: question20B1,
         },
         {
           question:
-            "Any_white_or_red_patch_in_mouth_that_has_not_healed_in__weeks",
+            "Any white or red patch in mouth that has not healed in 2 weeks",
           answer: question21B1,
         },
         {
-          question: "Pain_while_chewing",
+          question: "Pain while chewing",
           answer: question22B1,
         },
         {
-          question: "Any_change_in_tone_of_your_voice",
+          question: "Any change in tone of your voice",
           answer: question23B1,
         },
         {
           question:
-            "Any_hypo_pigmented_patch_in_oral_cavity_or_discolored_lesions_with_loss_of_sensation",
+            "Any hypopigmented patch or discoloured lesions in oral cavity with loss of sensation",
           answer: question24B1,
         },
         {
-          question: "Any_thickened_skin",
+          question: "Any thickened skin",
           answer: question25B1,
         },
         {
-          question: "Any_nodules_on_skin",
+          question: "Any nodules on skin",
           answer: question26B1,
         },
         {
-          question: "recurrent_numbness_on_palms_or_sole",
+          question: "Recurrent numbness on palms or sole",
           answer: question27B1,
         },
         {
-          question: "clawing_of_fingers_of_hands_and_feet",
+          question: "Clawing of fingers of hands and feet",
           answer: question28B1,
         },
         {
-          question: "tingling_and_numbness_in_hands_and_feet",
+          question: "Tingling_and_numbness_in_hands_and_feet",
           answer: question29B1,
         },
         {
-          question: "inability_to_close_eyelids_completely",
+          question: "Inability to close eyelids completely",
           answer: question30B1,
         },
         {
-          question: "difficulty_in_holding_objects_in_hands",
+          question: "Difficulty in holding objects in hands",
           answer: question31B1,
         },
         {
-          question: "weakness_in_feet_that_causes_difficulty_in_walking",
+          question: "Weakness in feet that causes difficulty in walking",
           answer: question32B1,
         },
         {
-          question: "Lump_in_the_breast",
+          question: "Lump in breast",
           answer: question1B2,
         },
         {
-          question: "Blood_stained_discharge_from_the_nipple",
+          question: "Blood stained discharge from the nipple",
           answer: question2B2,
         },
         {
-          question: "Change_in_shape_and_size_of_breast",
+          question: "Changes in shape and size of breast",
           answer: question3B2,
         },
         {
-          question: "Bleeding_between_periods",
+          question: "Bleeding between periods",
           answer: question4B2,
         },
         {
-          question: "Bleeding_after_menopause",
+          question: "Bleeding after menopause",
           answer: question5B2,
         },
         {
-          question: "Bleeding_after_intercourse",
+          question: "Bleeding after intercourse",
           answer: question6B2,
         },
         {
-          question: "Foul_smelling_vaginal_discharge",
+          question: "Foul smelling vaginal discharge",
           answer: question7B2,
         },
         {
-          question: "Do_you_feel_unsteady_while_standing_or_walking",
+          question: "Feeling unsteady while standing or walking",
           answer: question1B3,
         },
         {
           question:
-            "Impairment_of_movement_if_suffering_from_physical_disability",
+            "Suffering from any physical disability that restricts movement",
           answer: question2B3,
         },
         {
           question:
-            "Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet",
+            "Needing help from others to perform everyday activities such as eating , getting dressed, grooming , bathing, walking, or using toilet",
           answer: question3B3,
         },
         {
-          question: "Forgetting_your_home_address_or_household_names",
+          question: "Forgetting names of your near ones or your home address",
           answer: question4B3,
         },
       ],
       part_c: [
         {
-          question: "Type_of_Fuel_used_for_cooking",
+          question: "Type of Fuel used for cooking",
           answer: partC1OptionSelect,
         },
         {
-          question: "Occupational_exposure",
+          question: "Occupational exposure",
           answer: partC2OptionSelect,
         },
       ],
       part_d: [
         {
-          question: "Little_interest_of_pleasure_in_doing_things",
+          question: "Little interest of pleasure in doing things ?",
           answer: question1D,
         },
         {
-          question: "Feeling_down_depressed_or_hopeless",
+          question: "Feeling low/down,depressed or hopeless/sadness ?",
           answer: question2D,
         },
       ],
@@ -1204,37 +1216,37 @@ function MemberUpdate(props) {
           answer: doYouhaveFever1,
         },
         {
-          question: "With_Chills",
+          question: "With Chills",
           answer: doYouhaveFever2,
         },
         {
-          question: "With_Rash",
+          question: "With Rash",
           answer: doYouhaveFever3,
         },
         {
-          question: "with_Bleeding",
+          question: "With Bleeding",
           answer: doYouhaveFever4,
         },
         {
-          question: "with_Altered_Sensorium",
+          question: "With Altered Sensorium",
           answer: doYouhaveFever5,
         },
 
         {
-          question: "Waddling_in_water",
+          question: "Waddling in water",
           answer: leptospirosis1,
         },
         {
           question:
-            "Exposure_to_domestic_animal_like_cattle__Dog__Cat__Pig__Rodent",
+            "Exposure to domestic animal like cattle / Dog / Cat / Pig / Rodent",
           answer: leptospirosis2,
         },
         {
-          question: "Loose_Motion",
+          question: "Loose Motion",
           answer: looseMotion1,
         },
         {
-          question: "With_Blood",
+          question: "With Blood",
           answer: looseMotion2,
         },
         {
@@ -1243,16 +1255,20 @@ function MemberUpdate(props) {
         },
         {
           question:
-            "Eating_outside__uncovered_food__drinking_contaminated_water",
+            "Eating outside / uncovered food / drinking contaminated water",
           answer: hepatitis1,
         },
         {
-          question: "Animal_Bite",
+          question: "Animal Bite(cattle/dogs/cats)",
           answer: animalBitten,
         },
         {
-          question: "Snake_Bite",
+          question: "Snake Bite",
           answer: snakeBitten,
+        },
+        {
+          question: "History of amputation due to diabetes complication",
+          answer: diabetes,
         },
       ],
     },
@@ -1471,6 +1487,7 @@ function MemberUpdate(props) {
                     <Input
                       type="text"
                       value={pulse}
+                      suffix="/min"
                       // onChange={(e) => handlePulseChange(e)}
                     ></Input>
                   </FormItem>
@@ -1481,6 +1498,7 @@ function MemberUpdate(props) {
                     <Input
                       type="text"
                       value={bloodPressure}
+                      suffix="mmHg"
                       // onChange={(e) => handleBloodPressureChange(e)}
                     ></Input>
                   </FormItem>
@@ -1490,6 +1508,7 @@ function MemberUpdate(props) {
                     <Input
                       type="text"
                       value={weight}
+                      suffix="kg"
                       // onChange={(e) => handleWeightChange(e)}
                     ></Input>
                   </FormItem>
@@ -1499,6 +1518,7 @@ function MemberUpdate(props) {
                     <Input
                       type="text"
                       value={height}
+                      suffix="cm"
                       // onChange={(e) => handleHeightChange(e)}
                     ></Input>
                   </FormItem>
@@ -1508,6 +1528,7 @@ function MemberUpdate(props) {
                     <Input
                       type="text"
                       value={BMI}
+                      suffix="kg/m2"
                       // onChange={(e) => handleBMIChange(e)}
                     ></Input>
                   </FormItem>
@@ -1583,19 +1604,19 @@ function MemberUpdate(props) {
                   // onChange={(e) => handlePartAQuestion1(1, e.target.value)}
                   value={question1A[0]}
                 >
-                  <Radio value="0_29_year">0-29 years / 0-29 वर्षे</Radio>
+                  <Radio value="0-29 years">0-29 years / 0-29 वर्षे</Radio>
                   <br />
-                  <Radio value="30_39_year">30-39 Years / 30-39 वर्षे</Radio>
+                  <Radio value="30-39 years">30-39 Years / 30-39 वर्षे</Radio>
                   <br />
-                  <Radio value="40_49_year">
+                  <Radio value="40-49 years">
                     40 and 49 years / 40 आणि 49 वर्षे
                   </Radio>
                   <br />
-                  <Radio value="50_59_year">
+                  <Radio value="50-59 years">
                     50 and 59 years /50 आणि 59 वर्षे
                   </Radio>
                   <br />
-                  <Radio value="60_year">
+                  <Radio value="60 years and above">
                     60 years and above /60 वर्षे आणि त्यावरील
                   </Radio>
                 </Radio.Group>
@@ -1614,7 +1635,7 @@ function MemberUpdate(props) {
                 >
                   <Radio value="Never">Never / कधीच नाही</Radio>
                   <br />
-                  <Radio value="Used_to_consume_in_the_past_Sometimes_now">
+                  <Radio value="Used to consume in the past/ Sometimes now">
                     Used to consume in the past/ Sometimes now /<br /> पूर्वी
                     करायचो/ कधी कधी आता
                   </Radio>
@@ -1649,25 +1670,25 @@ function MemberUpdate(props) {
                   {gender === "male" ? (
                     <>
                       {" "}
-                      <Radio value="cm_90_cm_or_less">
+                      <Radio value="90 cm or less">
                         90 cm or less/90 सेमी किंवा कमी
                       </Radio>
                       <br />
-                      <Radio value="cm_91_100_cm">91-100 cm/91-100 सेमी</Radio>
+                      <Radio value="91-100 cm">91-100 cm/91-100 सेमी</Radio>
                       <br />
-                      <Radio value="More_than_100_cm">
+                      <Radio value="More than 100 cm">
                         More than 100 cm / 100 सेमी पेक्षा जास्त
                       </Radio>
                     </>
                   ) : (
                     <>
-                      <Radio value="cm_80_cm_or_less">
+                      <Radio value="80 cm or less">
                         80 cm or less/80 सेमी किंवा कमी
                       </Radio>
                       <br />
-                      <Radio value="cm_81_90_cm">81-90 cm/81-90 सेमी</Radio>
+                      <Radio value="81-90 cm">81-90 cm/81-90 सेमी</Radio>
                       <br />
-                      <Radio value="More_than_90_cm">
+                      <Radio value="More than 90 cm">
                         More than 90 cm / 90 सेमी पेक्षा जास्त
                       </Radio>
                     </>
@@ -1686,12 +1707,12 @@ function MemberUpdate(props) {
                   // onChange={(e) => handlePartAQuestion5(5, e.target.value)}
                   value={question5A[0]}
                 >
-                  <Radio value="At_least_150_minutes_in_a_week">
+                  <Radio value="At least 150 minutes in a week">
                     At least 150 minutes in a weak / <br />
                     एका आठवड्यात किमान 150 मिनिटे
                   </Radio>
                   <br />
-                  <Radio value="Less_than_150_minutes_in_a_week">
+                  <Radio value="Less than 150 minutes in a week">
                     Less than 150 minutes in a week /<br /> एका आठवड्यात 150
                     मिनिटांपेक्षा कमी
                   </Radio>
@@ -2483,18 +2504,20 @@ function MemberUpdate(props) {
               </QuestionCol>
             </QuestionRow>
             {partC1Options.map((item, index) => (
-              <QuestionSubRow key={index}>
-                {console.log(partC1OptionSelect.includes(item))}
+              <>{console.log(partC1OptionSelect.includes(item))}
+              <QuestionSubRow >
+                
                 <QuestionSubCol>
                   {t(item)} / {item}
                 </QuestionSubCol>
                 <AnswerSubCol>
                   <Checkbox
-                    value={partC1OptionSelect.includes(item)}
+                    checked={partC1OptionSelect.includes(item)}
                     // onChange={() => handlePartC1Select(item)}
                   ></Checkbox>
                 </AnswerSubCol>
               </QuestionSubRow>
+              </>
             ))}
 
             <QuestionRow>
@@ -2510,7 +2533,7 @@ function MemberUpdate(props) {
                   </QuestionSubCol>
                   <AnswerSubCol>
                     <Checkbox
-                      value={partC2OptionSelect.includes(item)}
+                      checked={partC2OptionSelect.includes(item)}
                       // onChange={() => handlePartC2Select(item)}
                     ></Checkbox>
                   </AnswerSubCol>
@@ -2541,12 +2564,12 @@ function MemberUpdate(props) {
                 // onChange={(e) => handlePartDQuestions(1, e.target.value)}
                 value={question1D[0]}
               >
-                <Radio value="Not_at_all">Not at all/अजिबात नाही</Radio>
-                <Radio value="Several_days">Several days/अनेक दिवस</Radio>
-                <Radio value="More_than_half_days">
+                <Radio value="Not at all">Not at all/अजिबात नाही</Radio>
+                <Radio value="Several days">Several days/अनेक दिवस</Radio>
+                <Radio value="More than half days">
                   More than half days/अर्ध्याहून अधिक दिवस
                 </Radio>
-                <Radio value="Nearly_every_days">
+                <Radio value="Nearly every days">
                   Nearly every days / जवळजवळ प्रत्येक दिवस
                 </Radio>
               </Radio.Group>
@@ -2561,12 +2584,12 @@ function MemberUpdate(props) {
                 // onChange={(e) => handlePartDQuestions(2, e.target.value)}
                 value={question2D[0]}
               >
-                <Radio value="Not_at_all">Not at all/अजिबात नाही</Radio>
-                <Radio value="Several_days">Several days/अनेक दिवस</Radio>
-                <Radio value="More_than_half_days">
+                <Radio value="Not at all">Not at all/अजिबात नाही</Radio>
+                <Radio value="Several days">Several days/अनेक दिवस</Radio>
+                <Radio value="More than half days">
                   More than half days/अर्ध्याहून अधिक दिवस
                 </Radio>
-                <Radio value="Nearly_every_days">
+                <Radio value="Nearly every days">
                   Nearly every days/जवळजवळ प्रत्येक दिवस
                 </Radio>
               </Radio.Group>
@@ -2584,10 +2607,10 @@ function MemberUpdate(props) {
                   // onChange={(e) => handleDoYouHaveFever(1, e.target.value)}
                   value={doYouhaveFever1[0]}
                 >
-                  <Radio value="More_than__days">
+                  <Radio value="For 7 days or more">
                     7 दिवसांपेक्षा जास्त काळ / More than 7 days
                   </Radio>
-                  <Radio value="Less_than__days">
+                  <Radio value="Less than 7 days">
                     7 दिवसांपेक्षा कमी / Less than 7 days
                   </Radio>
                   <Radio value="No">नाही / No</Radio>
@@ -2809,6 +2832,21 @@ function MemberUpdate(props) {
                 </Radio.Group>
               </AnswerCol>
             </QuestionRow>
+            <QuestionRow>
+              <QuestionCol>
+                8. मधुमेहाच्या गुंतागुंतीमुळे विच्छेदन करण्याचा इतिहास? History
+                of amputation due to diabetes complication ?
+              </QuestionCol>
+              <AnswerCol>
+                <Radio.Group
+                  // onChange={(e) => handleDiabetes(e.target.value)}
+                  value={diabetes[0]}
+                >
+                  <Radio value="Yes">Yes / होय</Radio>
+                  <Radio value="No">No / नाही</Radio>
+                </Radio.Group>
+              </AnswerCol>
+            </QuestionRow>
 
             <SubmitButtonDiv>
               <Button onClick={() => onKeyChange("4")}>Back</Button>
@@ -2832,7 +2870,7 @@ function MemberUpdate(props) {
             <span>
               <Checkbox
                 style={{ margin: "0% 5%" }}
-                value={vulnerable}
+                checked={vulnerable}
                 onClick={handleVulnerableClick}
               ></Checkbox>
             </span>
@@ -2844,7 +2882,7 @@ function MemberUpdate(props) {
                   <Checkbox
                     key={data.id}
                     // value={data.choice}
-                    value={selectVulnerableList.includes(data.choice)}
+                    checked={selectVulnerableList.includes(data.id)}
                     onChange={(e) => handleVulnerableList(e.target.value)}
                   >
                     {data.choice}
@@ -2874,7 +2912,7 @@ function MemberUpdate(props) {
               <Checkbox
                 key={data.id}
                 // value={data.id}
-                value={selectedReferalList.includes(data.id)}
+                checked={selectedReferalList.includes(data.id)}
                 onChange={(e) => {
                   handleReferralList(e.target.value);
                 }}
@@ -2944,7 +2982,7 @@ function MemberUpdate(props) {
               </Button>
               {bloodSampleDenied ? (
                 <div style={{ margin: "10px 25px" }}>
-                  <Radio.Group>
+                  <Radio.Group value={deniedBy}>
                     <Radio value="byindividual">By Individual</Radio>
                     <br />
                     <Radio value="byamo">By AMO</Radio>

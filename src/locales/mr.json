@@ -43,14 +43,14 @@
   "Do_you_need_help_from_others_to_perform_daily_activities_such_as_eating_dressing_dressing_bathing_walking_or_using_the_toilet": "खाणे, कपडे घालणे, परिधान करणे, आंघोळ करणे, चालणे किंवा शौचालय वापरणे यासारख्या दैनंदिन क्रिया करण्यासाठी आपल्याला इतरांच्यामदतीची आवश्यकता आहे का ?",
   "Forgetting_your_home_address_or_household_names": "आपल्या घरचा पत्ता किंवा घरातील व्यक्तीची नावे विसरणे ?",
   "Firewood": "सरपण",
-  "Crop_Residue": "पीक अवशेष",
-  "Cow_dung_cake": "शेण गौरी",
+  "Crop residue burning": "पीक अवशेष",
+  "Cow dung cake": "शेण गौरी",
   "Coal": "कोळसा",
   "Kerosene": "रॉकेल",
   "LPG": "स्वंयपाकाचा गॅस",
-  "Crop_residue_burning": "पिकाचे अवशेष जाळणे",
-  "burning_of_garbage_leaves": "कचरा - पाने जाळणे",
-  "working_in_industries_with_smoke_gas_and_dust_exposure_such_as_brick_kilns_and_glass_factories_etc": "मध्ये काम करत आहे पीट भट्ट्यांसारखे धूर, वायू आणि धूळ यांच्या संपर्कात असलेले उद्योग आणि काचेचे कारखाने इ.",
+  "Crop Residue": "पिकाचे अवशेष जाळणे",
+  "burning of garbage – leaves": "कचरा - पाने जाळणे",
+  "working in industries with smoke, gas and dust exposure such as brick kilns and glass factories etc.": "मध्ये काम करत आहे पीट भट्ट्यांसारखे धूर, वायू आणि धूळ यांच्या संपर्कात असलेले उद्योग आणि काचेचे कारखाने इ.",
   "More than 7 days": "7 दिवसांपेक्षा जास्त काळ",
   "Less than 7 days": "7 दिवसांपेक्षा कमी",
   "With Chills": "थंडी वाजून येणे सह ",
@@ -70,5 +70,22 @@
   "Loss of sensation in any parts of body": "शरीराच्या कोणत्याही भागात संवेदना कमी होणे ?",
   "Swelling / Nodule on Face/Hands/ Feet": "चेहरा/हात/पायांवर सूज ?",
   "Loss of eyelash or eyebrow": "पापणी किंवा भुवया गळणे ?",
-  "Thickened earlobes": "कानातले दाट ?"
+  "Thickened earlobes": "कानातले दाट ?",
+  "Would you like to add the citizen as vulnerable citizen?":
+"वरील नमूद केलेली व्यक्ती खालील जोखीमग्रस्त (Vulnerable) संवर्गात आहे?",
+"70+ Years": "वय ७० वर्षे किंवा अधिक",
+"Physically Handicapped": "शारीरिकदृष्ट्या अपंग",
+"Completely Paralyzed or On bed":
+"अर्धांगवायू झालेले किंवा अंथरुणाला खिळलेले",
+"Elderly and alone at home": "वयोवृद्ध आणि एकटे राहणारे",
+"Any other reason": "इतर कारण",
+"Referral to Mun. Dispensary / HBT for Blood Test / Confirmation / Treatment":
+"महानगरपालिका दवाखाने / एच बी टी आपला दवाखान्याला रक्त तपासणी / निदान/ उपचारासाठी संदर्भित",
+"Referral to HBT polyclinic for physician consultation":
+"एच बी टी पॉलीक्लिनिक व निदान केंद्राला विशेषज्ञ सेवेसाठी संदर्भित",
+"Referral to Peripheral Hospital / Special Hospital for management of Complication":
+"महानगरपालिका उपनगरीय व विशेष रुग्णालयाला पुढील उपचारासाठी संदर्भित",
+"Referral to Medical College for management of Complication":
+" वैद्यकीय महाविद्यालयाला पुढील उपचारासाठी संदर्भित",
+"Referral to Private facility": "खाजगी रुग्णालयाला संदर्भित"
 }
