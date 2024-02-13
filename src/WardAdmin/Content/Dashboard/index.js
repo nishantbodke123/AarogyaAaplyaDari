@@ -477,7 +477,7 @@ function WardAdminDashboard() {
                 <DetailSubtitle> Tests Assigned</DetailSubtitle>
                 <CountTitle>{MOHDashboardData.total_LabTestAdded}</CountTitle>
               </MainCountRow>
-              <Line />
+              {/* <Line /> */}
               {/* <MainCountRow>
                 <DetailSubtitle> Tests Done</DetailSubtitle>
                 <CountTitle>0</CountTitle>

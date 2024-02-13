@@ -38,12 +38,12 @@ function AdminDashboard() {
   const [wardList, setWardList] = useState([]);
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [dispensaryList, setDispensaryList] = useState([]);
-  const [selectedWard, setSelectedWard] = useState(passedDashboard);
+  const [selectedWard, setSelectedWard] = useState("");
   const [selectedWardName, setSelectedWardName] = useState();
   const [selectedHealthPost, setSelectedHealthPost] =
-    useState(passedHealthpost);
+    useState("");
   const [selectedDispensary, setSelectedDispensary] =
-    useState(passedDispensary);
+    useState();
   const [selectedHealthPostName, setSelectedHealthPostName] = useState();
   const [selectedDispensaryName, setSelectedDispensaryName] = useState();
 
@@ -56,7 +56,7 @@ function AdminDashboard() {
     },
   };
   useEffect(() => {
-    console.log("the passed side key is " + sideKey + " " + passedDashboard);
+    // console.log("the passed side key is " + sideKey + " " + passedDashboard);
     setLoader(true);
     axios
       .get(`${BASE_URL}/adminportal/api/AdminDashboardView`, {
