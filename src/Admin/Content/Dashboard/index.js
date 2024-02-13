@@ -21,16 +21,15 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
-import { MyContext } from '../../Admin/Admin';
+import { MyContext } from "../../Admin/Admin";
 
 const { Option } = Select;
 
 function AdminDashboard() {
-
-
-  const { sideKey, passedDashboard, passedHealthpost, passedDispensary } = useContext(MyContext);
+  const { sideKey, passedDashboard, passedHealthpost, passedDispensary } =
+    useContext(MyContext);
 
   // const { sideKey, passedDashboard, passedHealthpost, passedDispensary } = props.value;
 
@@ -41,8 +40,10 @@ function AdminDashboard() {
   const [dispensaryList, setDispensaryList] = useState([]);
   const [selectedWard, setSelectedWard] = useState(passedDashboard);
   const [selectedWardName, setSelectedWardName] = useState();
-  const [selectedHealthPost, setSelectedHealthPost] = useState(passedHealthpost);
-  const [selectedDispensary, setSelectedDispensary] = useState(passedDispensary);
+  const [selectedHealthPost, setSelectedHealthPost] =
+    useState(passedHealthpost);
+  const [selectedDispensary, setSelectedDispensary] =
+    useState(passedDispensary);
   const [selectedHealthPostName, setSelectedHealthPostName] = useState();
   const [selectedDispensaryName, setSelectedDispensaryName] = useState();
 
@@ -55,7 +56,7 @@ function AdminDashboard() {
     },
   };
   useEffect(() => {
-    console.log("the passed side key is "+sideKey+" "+passedDashboard);
+    console.log("the passed side key is " + sideKey + " " + passedDashboard);
     setLoader(true);
     axios
       .get(`${BASE_URL}/adminportal/api/AdminDashboardView`, {
@@ -99,26 +100,21 @@ function AdminDashboard() {
       });
   }, [selectedWard, selectedHealthPost]);
 
-  
   useEffect(() => {
-  
     if (sideKey === 2) {
       setLoader(true);
       handleDownloadAllCitizenList();
-    }else if (sideKey === 3) {
+    } else if (sideKey === 3) {
       setLoader(true);
       handleWardwiseCitizenDownload();
-    }else if (sideKey === 4) {
+    } else if (sideKey === 4) {
       setLoader(true);
       handleHealthPostwiseCitizenDownload();
-    }else if (sideKey === 5) {
+    } else if (sideKey === 5) {
       setLoader(true);
       handleDownloadDispensarywise();
     }
-  }, [sideKey, passedDashboard, passedHealthpost, passedDispensary ]);
-  
-  
-  
+  }, [sideKey, passedDashboard, passedHealthpost, passedDispensary]);
 
   const handleWardSelect = (data) => {
     const [id, wardName] = data.split("|");
@@ -222,11 +218,11 @@ function AdminDashboard() {
 
   const handleWardwiseCitizenDownload = () => {
     setLoader(true);
-    console.log("value of dashboard in content is "+passedDashboard)
+    console.log("value of dashboard in content is " + passedDashboard);
     axios
       .get(
-      // `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
-      `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${passedDashboard}`,
+        // `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
+        `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${passedDashboard}`,
         {
           headers: {
             Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -266,8 +262,8 @@ function AdminDashboard() {
     setLoader(true);
     axios
       .get(
-      // `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
-      `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${passedHealthpost}`,
+        // `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
+        `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${passedHealthpost}`,
         {
           headers: {
             Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -276,7 +272,6 @@ function AdminDashboard() {
         }
       )
       .then((response) => {
-
         setLoader(false);
         const href = URL.createObjectURL(response.data);
 
@@ -332,7 +327,7 @@ function AdminDashboard() {
 
         document.body.removeChild(link);
         URL.revokeObjectURL(href);
-        
+
         setLoader(false);
       })
       .catch((err) => {
@@ -359,8 +354,8 @@ function AdminDashboard() {
     setLoader(true);
     axios
       .get(
-      // `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${selectedDispensary}`,
-      `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${passedDispensary}`,
+        // `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${selectedDispensary}`,
+        `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${passedDispensary}`,
         {
           headers: {
             Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -396,11 +391,11 @@ function AdminDashboard() {
           } else if (err.response.status === 400) {
             // console.log("error status is " + err.response.status);
             message.warning("No data found for selected Dispensary");
-          }else {
+          } else {
             // Handle other error scenarios
             console.error("Unexpected error:", err);
           }
-        } 
+        }
       });
   };
 
@@ -535,17 +530,17 @@ function AdminDashboard() {
                     </FormItem>
                   </Col> */}
 
-<div style={{ margin: "2% 2% 0% 0%" }}>
-                    <Tooltip placement="bottom" title="Download Dashboard"
-                      style={{backgroundColor:"white"}}
+                  <div style={{ margin: "2% 2% 0% 0%" }}>
+                    <Tooltip
+                      placement="bottom"
+                      title="Download Dashboard"
+                      style={{ backgroundColor: "white" }}
                     >
-                      <Button
-                        onClick={handleAdminDashboardExcelDownload}
-                      >
-                <DownloadOutlined />
-              </Button>
-            </Tooltip>
-          </div>
+                      <Button onClick={handleAdminDashboardExcelDownload}>
+                        <DownloadOutlined />
+                      </Button>
+                    </Tooltip>
+                  </div>
 
                   {/* <Col span={2}>
                     <div style={{ marginTop: "4vh" }}>
