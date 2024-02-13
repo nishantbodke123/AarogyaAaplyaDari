@@ -30,7 +30,7 @@ const { Option } = Select;
 function AdminDashboard() {
 
 
-  const { sideKey, passedDashboard } = useContext(MyContext);
+  const { sideKey, passedDashboard, passedHealthpost, passedDispensary } = useContext(MyContext);
 
   // const { sideKey, passedDashboard, passedHealthpost, passedDispensary } = props.value;
 
@@ -39,10 +39,10 @@ function AdminDashboard() {
   const [wardList, setWardList] = useState([]);
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [dispensaryList, setDispensaryList] = useState([]);
-  const [selectedWard, setSelectedWard] = useState();
+  const [selectedWard, setSelectedWard] = useState(passedDashboard);
   const [selectedWardName, setSelectedWardName] = useState();
-  const [selectedHealthPost, setSelectedHealthPost] = useState();
-  const [selectedDispensary, setSelectedDispensary] = useState();
+  const [selectedHealthPost, setSelectedHealthPost] = useState(passedHealthpost);
+  const [selectedDispensary, setSelectedDispensary] = useState(passedDispensary);
   const [selectedHealthPostName, setSelectedHealthPostName] = useState();
   const [selectedDispensaryName, setSelectedDispensaryName] = useState();
 
@@ -108,8 +108,15 @@ function AdminDashboard() {
     }else if (sideKey === 3) {
       setLoader(true);
       handleWardwiseCitizenDownload();
+    }else if (sideKey === 4) {
+      setLoader(true);
+      handleHealthPostwiseCitizenDownload();
+    }else if (sideKey === 5) {
+      setLoader(true);
+      handleDownloadDispensarywise();
     }
-  }, [sideKey]);
+  }, [sideKey, passedDashboard, passedHealthpost, passedDispensary ]);
+  
   
   
 
@@ -215,9 +222,11 @@ function AdminDashboard() {
 
   const handleWardwiseCitizenDownload = () => {
     setLoader(true);
+    console.log("value of dashboard in content is "+passedDashboard)
     axios
       .get(
-        `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
+      // `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
+      `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${passedDashboard}`,
         {
           headers: {
             Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -226,7 +235,7 @@ function AdminDashboard() {
         }
       )
       .then((response) => {
-        // setLoader(false);
+        setLoader(false);
         const href = URL.createObjectURL(response.data);
         const link = document.createElement("a");
         link.href = href;
@@ -254,9 +263,11 @@ function AdminDashboard() {
       });
   };
   const handleHealthPostwiseCitizenDownload = () => {
+    setLoader(true);
     axios
       .get(
-        `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
+      // `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
+      `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${passedHealthpost}`,
         {
           headers: {
             Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -265,13 +276,15 @@ function AdminDashboard() {
         }
       )
       .then((response) => {
+
+        setLoader(false);
         const href = URL.createObjectURL(response.data);
 
         const link = document.createElement("a");
         link.href = href;
         link.setAttribute(
           "download",
-          `${selectedHealthPost} Healthpost's Citizens Report`
+          `${selectedHealthPost} Healthpost's Citizens Report.xlsx`
         );
 
         document.body.appendChild(link);
@@ -281,19 +294,26 @@ function AdminDashboard() {
         URL.revokeObjectURL(href);
       })
       .catch((err) => {
+        setLoader(false);
         console.log(err.response.status);
         if (err.response.status == 404) {
           message.warning("Please Select Healthpost");
         } else if (err.response.status == 401) {
           LogOut();
+        } else if (err.response.status == 400) {
+          console.log("error status is " + err.response.status);
+          // console.log("error message is " + JSON.stringify(err));
+          // console.log("error message is " + err);
+          message.warning("No data found for selected healthpost");
         } else {
-          message.warning(err.response);
+          message.warning(err.data.message);
         }
       });
   };
 
   ////////////////////////
   const handleDownloadAllCitizenList = () => {
+    setLoader(true);
     axios
       .get(`${BASE_URL}/adminportal/api/DownloadAllWardUserList`, {
         headers: {
@@ -312,8 +332,11 @@ function AdminDashboard() {
 
         document.body.removeChild(link);
         URL.revokeObjectURL(href);
+        
+        setLoader(false);
       })
       .catch((err) => {
+        setLoader(false);
         console.log(err.response);
 
         if (err.response && err.response.status) {
@@ -333,9 +356,11 @@ function AdminDashboard() {
 
   ////////////////////////
   const handleDownloadDispensarywise = () => {
+    setLoader(true);
     axios
       .get(
-        `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${selectedDispensary}`,
+      // `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${selectedDispensary}`,
+      `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${passedDispensary}`,
         {
           headers: {
             Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -344,12 +369,13 @@ function AdminDashboard() {
         }
       )
       .then((response) => {
+        setLoader(false);
         const href = URL.createObjectURL(response.data);
         const link = document.createElement("a");
         link.href = href;
         link.setAttribute(
           "download",
-          `${selectedDispensaryName} ward's Dispensary Report`
+          `${selectedDispensaryName} ward's Dispensary Report.xlsx`
         );
 
         document.body.appendChild(link);
@@ -359,6 +385,7 @@ function AdminDashboard() {
         URL.revokeObjectURL(href);
       })
       .catch((err) => {
+        setLoader(false);
         console.log(err.response);
 
         if (err.response && err.response.status) {
@@ -369,7 +396,7 @@ function AdminDashboard() {
           } else if (err.response.status === 400) {
             // console.log("error status is " + err.response.status);
             message.warning("No data found for selected Dispensary");
-          } else {
+          }else {
             // Handle other error scenarios
             console.error("Unexpected error:", err);
           }

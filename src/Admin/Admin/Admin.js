@@ -45,7 +45,6 @@ function Admin() {
   };
 
   const updateSideKey = (newSideKey,dbVal, hpVal, dpVal) => {
-    console.log("The value got from the sider into updateSideKey is "+newSideKey+"db is"+dbVal)
     setSideKey(newSideKey);
     setPassedDashboard(dbVal)
     setPassedHealthpost(hpVal)
@@ -56,7 +55,7 @@ function Admin() {
   return (
     <>
       <Layout>
-        <MyContext.Provider value={{sideKey, updateSideKey,}}>
+        <MyContext.Provider value={{sideKey, passedDashboard, passedHealthpost, passedDispensary,  updateSideKey,}}>
         <Sidebar collapsed={collapsed} />
         <Layout>
           <HeaderBar handleCollapse={handleCollapse} />

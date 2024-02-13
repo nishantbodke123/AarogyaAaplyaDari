@@ -8,12 +8,20 @@ import WardHealthworker from "../Content/Healthworker";
 import WardCHV from "../Content/WardCHV";
 import { Footer } from "antd/es/layout/layout";
 import axios from 'axios';
+import { createContext, useContext } from 'react';
+
+export const MyContext = createContext();
 
 const { Content } = Layout;
 
 function WardAdmin() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+
+
+  const [sideKey, setSideKey] = useState();
+  const [passedHealthpost, setPassedHealthpost] = useState();
+
 
   // const [wardId, setWardId] = useState(null);
   const wardId = sessionStorage.getItem("ward_id");
@@ -23,10 +31,18 @@ function WardAdmin() {
     setCollapsed(!collapsed);
   };
 
+  const updateSideKey = (newSideKey, hpVal) => {
+    console.log("The value got from the sider into updateSideKey is "+newSideKey+"hp is "+hpVal)
+    setSideKey(newSideKey);
+    setPassedHealthpost(hpVal)
+
+  };
+
 
   return (
     <>
       <Layout>
+      <MyContext.Provider value={{sideKey, passedHealthpost, updateSideKey,}}>
         <Sidebar collapsed={collapsed} />
         <Layout>
           <HeaderBar handleCollapse={handleCollapse} />
@@ -59,7 +75,8 @@ function WardAdmin() {
               />
             </div>
           </Footer> */}
-        </Layout>
+          </Layout>
+          </MyContext.Provider>
       </Layout>
     </>
   );

@@ -11,7 +11,7 @@ import {
   message,
 } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   BloodCollectionCard,
   BloodDetailCard,
@@ -36,7 +36,12 @@ import axios, { Axios } from "axios";
 import FormItem from "antd/es/form/FormItem";
 import { LogOut } from "../../../Auth/Logout";
 
+import { MyContext } from '../../Admin/WardAdmin';
+
 function WardAdminDashboard() {
+
+  const { sideKey, passedHealthpost } = useContext(MyContext);
+
   const [loader, setLoader] = useState(false);
   const [MOHDashboardData, setMOHDashboardData] = useState({});
   const [healthPostNameList, setHealthPostNameList] = useState([]);
@@ -44,6 +49,8 @@ function WardAdminDashboard() {
 
   const wardId = sessionStorage.getItem("ward_id");
   const wardName = sessionStorage.getItem("wardName");
+
+  
 
   const [pagination, setPagination] = useState({
     current: 1,
@@ -98,6 +105,106 @@ function WardAdminDashboard() {
         }
       });
   }, [selectedHealthPost]);
+
+  useEffect(() => {
+  
+    if (sideKey === 1) {
+      handleWardwiseCitizenDownload();
+    }else if (sideKey === 2) {
+      handleHealthPostwiseCitizenDownload();
+    }
+  }, [sideKey, passedHealthpost]);
+  
+
+
+  const handleWardwiseCitizenDownload = () => {
+    setLoader(true);
+    axios
+      .get(`${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${wardId}`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        setLoader(false);
+        const href = URL.createObjectURL(response.data);
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `${wardName} ward's Citizens Report.xlsx`
+          // `${response}.xlsx`
+        );
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.log(err.response.status);
+        if (err.response.status == 404) {
+          message.warning("Please Select Ward");
+        } else if (err.response.status == 401) {
+          LogOut();
+        } else if (err.response.status == 400) {
+          message.warning("Data is not available");
+        } else {
+          message.warning("Error" + err.response.message);
+        }
+      });
+  };
+
+
+  const handleHealthPostwiseCitizenDownload = () => {
+    setLoader(true);
+    console.log("passed healthpost value in the content ward admin is "+passedHealthpost)
+    axios
+      .get(
+      // `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
+      `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${passedHealthpost}`,
+        {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem("Token")}`,
+          },
+          responseType: "blob",
+        }
+      )
+      .then((response) => {
+        setLoader(false);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `${selectedHealthPost} Healthpost's Citizens Report.xlsx`
+        );
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.log(err.response.status);
+        if (err.response.status == 404) {
+          message.warning("Please Select Healthpost");
+        } else if (err.response.status == 401) {
+          LogOut();
+        } else if (err.response.status == 400) {
+          message.warning("Data is not available");
+        } else {
+          message.warning("Error" + err.response.message);
+        }
+      });
+  };
+  
 
   const handleMOHDashboardExcelDownload = () => {
     // if (selectedHealthPost === "" || selectedHealthPost === 0) {

@@ -317,48 +317,48 @@ function Sidebar(props) {
   ////////////////////////
   const handleDownloadDispensarywise = () => {
     updateSideKey(5, selectedWard, selectedHealthPost, selectedDispensary);
-    axios
-      .get(
-        `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${selectedDispensary}`,
-        {
-          headers: {
-            Authorization: `Token ${sessionStorage.getItem("Token")}`,
-          },
-          responseType: "blob",
-        }
-      )
-      .then((response) => {
-        const href = URL.createObjectURL(response.data);
-        const link = document.createElement("a");
-        link.href = href;
-        link.setAttribute(
-          "download",
-          `${selectedDispensaryName} ward's Dispensary Report.xlsx`
-        );
+    // axios
+    //   .get(
+    //     `${BASE_URL}/adminportal/api/DownloadDispensarywiseUserList/${selectedDispensary}`,
+    //     {
+    //       headers: {
+    //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //       },
+    //       responseType: "blob",
+    //     }
+    //   )
+    //   .then((response) => {
+    //     const href = URL.createObjectURL(response.data);
+    //     const link = document.createElement("a");
+    //     link.href = href;
+    //     link.setAttribute(
+    //       "download",
+    //       `${selectedDispensaryName} ward's Dispensary Report.xlsx`
+    //     );
 
-        document.body.appendChild(link);
-        link.click();
+    //     document.body.appendChild(link);
+    //     link.click();
 
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
-      })
-      .catch((err) => {
-        console.log(err.response);
+    //     document.body.removeChild(link);
+    //     URL.revokeObjectURL(href);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.response);
 
-        if (err.response && err.response.status) {
-          if (err.response.status === 404) {
-            message.warning("Please Select Ward's Dispensary");
-          } else if (err.response.status === 401) {
-            LogOut();
-          } else if (err.response.status === 400) {
-            // console.log("error status is " + err.response.status);
-            message.warning("No data found for selected Dispensary");
-          }else {
-            // Handle other error scenarios
-            console.error("Unexpected error:", err);
-          }
-        } 
-      });
+    //     if (err.response && err.response.status) {
+    //       if (err.response.status === 404) {
+    //         message.warning("Please Select Ward's Dispensary");
+    //       } else if (err.response.status === 401) {
+    //         LogOut();
+    //       } else if (err.response.status === 400) {
+    //         // console.log("error status is " + err.response.status);
+    //         message.warning("No data found for selected Dispensary");
+    //       }else {
+    //         // Handle other error scenarios
+    //         console.error("Unexpected error:", err);
+    //       }
+    //     } 
+    //   });
   };
 
   const items = [
