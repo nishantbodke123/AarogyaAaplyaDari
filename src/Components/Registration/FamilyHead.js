@@ -744,19 +744,24 @@ function FamilyHead(props) {
         setProgress(70);
         setLoading(false);
         settxnID(response.data.transactionId);
+        setAadharNumberSubmitted(true);
+        setMinutes(2);
+        setSeconds(29);
+        setABHAIDSubmited(true);
         console.log(response);
       })
       .catch((error) => {
         setProgress(70);
         setLoading(false);
         console.log(error);
-        message.warning(error.response.data.details[0].message);
+        message.warning(error.response.data.message);
       });
     setProgress(100);
   };
   const handleVerifyWhileHealthIDGeneration = () => {
     setProgress(20);
     setLoading(true);
+    console.log(otp);
     let data = encrypt2.encrypt(otp);
     let axiosConfig = {
       headers: {
@@ -1047,11 +1052,11 @@ function FamilyHead(props) {
   };
 
   const [ABHAIDSubmited, setABHAIDSubmited] = useState(false);
-  const [authMethodSelected ,setAuthMethodSelected]=useState(false);
+  const [authMethodSelected, setAuthMethodSelected] = useState(false);
   const [mobileNumberLinkedWithABHAID, setMobileNumberLinkedWithABHAID] =
     useState();
-    const [authMethodResponse,setAuthMethodResponse]=useState([]);
-    const [healthIdResponse,setHealthIdResponse]=useState();
+  const [authMethodResponse, setAuthMethodResponse] = useState([]);
+  const [healthIdResponse, setHealthIdResponse] = useState();
   const handleABHAIDSubmit = () => {
     setMinutes(2);
     setSeconds(29);
@@ -1066,7 +1071,7 @@ function FamilyHead(props) {
       .post(
         `${BASE_URL}/abdm/api/v1/phr/registration/hid/search/auth-methods`,
         { healhtIdNumber: abhaId },
-       axiosConfig
+        axiosConfig
       )
       .then((res) => {
         console.log(res);
@@ -1074,13 +1079,54 @@ function FamilyHead(props) {
         setHealthIdResponse(res.data.healthIdNumber);
         // setABHAIDSubmited(true);
         setAuthMethodSelected(true);
+        // message.success(res.data.message);
       })
       .catch((err) => {
         console.log(err);
+        message.warning(err.response.message);
       });
   };
-  const handleAbhaIDVerify = () => {
+  const handleAbhaIDVerify = async () => {
     console.log(otp);
+    let encryptedOTP = encrypt.encrypt(otp);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+
+    try {
+      let response;
+      const data = {
+        otp: encryptedOTP,
+        txnId: txnId,
+      };
+      if (selectedAuthMethods === "AADHAAR_OTP") {
+        response = await axios.post(
+          `${BASE_URL}/abdm/api/v1/auth/confirmWithAadhaarOtp`,
+          data,
+          axiosConfig
+        );
+      } else if (selectedAuthMethods === "MOBILE_OTP") {
+        response = await axios.post(
+          `${BASE_URL}/abdm/api/v1/auth/confirmWithMobileOTP`,
+          data,
+          axiosConfig
+        );
+      }
+      console.log(response);
+    } catch (error) {
+      console.error("Error:", error);
+      message.warning(error.response.data.message);
+    }
+  };
+  const handleBackButtonOfABHADownload = () => {
+    setAuthMethodSelected(false);
+    setABHAIDSubmited(false);
+    setOtp();
+    setMinutes(0);
+    setSeconds(0);
   };
   const ABHACARDDownloadInputContent = (
     <>
@@ -1088,8 +1134,8 @@ function FamilyHead(props) {
         {" "}
         <Button
           style={{ borderRadius: "30px" }}
-          disabled={!ABHAIDSubmited}
-          onClick={() => setABHAIDSubmited(false)}
+          disabled={!authMethodSelected && !ABHAIDSubmited}
+          onClick={handleBackButtonOfABHADownload}
         >
           <FontAwesomeIcon icon={faArrowLeft} />
         </Button>
@@ -1104,48 +1150,69 @@ function FamilyHead(props) {
             placeholder="Enter ABHA ID"
           ></InputForm>
         </Form.Item>
+        {authMethodSelected ? (
+          <>
+            <div>
+              {" "}
+              <h4>
+                Please select one of the following options to receive your OTP
+              </h4>
+            </div>
+            {authMethodResponse.map((data) => (
+              <Radio.Group
+                onChange={(e) => handleSelectAuthMethods(e)}
+                value={selectedAuthMethods}
+                style={{ margin: "0px 30px" }}
+              >
+                <Radio value={data}>{data}</Radio>
+              </Radio.Group>
+            ))}
+          </>
+        ) : (
+          <></>
+        )}
         {ABHAIDSubmited ? (
           <>
-            {" "}
-            <Form.Item label="OTP">
-              <OtpInput
-                inputStyle={{
-                  width: "25px",
-                  height: "25px",
-                  margin: "2px 10px",
-                }}
-                value={otp}
-                numInputs={6}
-                type="number"
-                onChange={(value) => setOtp(value)}
-                renderSeparator={<span></span>}
-                renderInput={(props) => <input {...props} />}
-              ></OtpInput>
-              <div className="countdown-text">
-                {seconds > 0 || minutes > 0 ? (
-                  <p style={{ color: "red" }}>
-                    Time Remaining: {minutes < 10 ? `0${minutes}` : minutes}:
-                    {seconds < 10 ? `0${seconds}` : seconds}
-                  </p>
-                ) : (
-                  <p>Didn't recieve code?</p>
-                )}
-                <a
-                  style={{
-                    display: seconds > 0 || minutes > 0 ? "none" : "",
+            <div style={{ margin: "5% 5% " }}>
+              <Form.Item label="OTP">
+                <OtpInput
+                  inputStyle={{
+                    width: "35px",
+                    height: "30px",
+                    margin: "2px 10px",
                   }}
-                  onClick={handleCheckAndGenerateMobileOtp}
-                >
-                  Resend OTP
-                </a>
-              </div>
-              <div style={{ display: "flex", justifyContent: "end" }}>
-                <ABHAIDSubmitButton onClick={handleAbhaIDVerify}>
-                  Verify
-                </ABHAIDSubmitButton>
-              </div>
+                  value={otp}
+                  numInputs={6}
+                  type="number"
+                  onChange={(value) => setOtp(value)}
+                  renderSeparator={<span></span>}
+                  renderInput={(props) => <input {...props} />}
+                ></OtpInput>
+                <div className="countdown-text">
+                  {seconds > 0 || minutes > 0 ? (
+                    <p style={{ color: "red" }}>
+                      Time Remaining: {minutes < 10 ? `0${minutes}` : minutes}:
+                      {seconds < 10 ? `0${seconds}` : seconds}
+                    </p>
+                  ) : (
+                    <p>Didn't recieve code?</p>
+                  )}
+                  <a
+                    style={{
+                      display: seconds > 0 || minutes > 0 ? "none" : "",
+                    }}
+                    onClick={handleCheckAndGenerateMobileOtp}
+                  >
+                    Resend OTP
+                  </a>
+                </div>
+                <div style={{ display: "flex", justifyContent: "end" }}>
+                  <ABHAIDSubmitButton onClick={handleAbhaIDVerify}>
+                    Verify
+                  </ABHAIDSubmitButton>
+                </div>
 
-              {/* <div
+                {/* <div
                 style={{
                   display: "flex",
                   justifyContent: "flex-end",
@@ -1154,16 +1221,23 @@ function FamilyHead(props) {
               >
                 <a onClick={handleABHAIDSubmit}>Resend OTP</a>
               </div> */}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </>
         ) : (
           <>
-            {" "}
-            <div style={{ display: "flex", justifyContent: "end" }}>
-              <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
-                Submit
-              </ABHAIDSubmitButton>
-            </div>
+            {authMethodSelected ? (
+              <></>
+            ) : (
+              <>
+                {" "}
+                <div style={{ display: "flex", justifyContent: "end" }}>
+                  <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
+                    Submit
+                  </ABHAIDSubmitButton>
+                </div>
+              </>
+            )}
           </>
         )}
       </Form>
@@ -4512,10 +4586,11 @@ function FamilyHead(props) {
               <Row>
                 <Col span={3}>
                   <Button
+                    style={{ borderRadius: "30px" }}
                     disabled={aadharLinkedMobileNumber}
                     onClick={handleBackButtonOfCheckAndGenerateMobileOtpModal}
                   >
-                    <FontAwesomeIcon icon={faBackward} />
+                    <FontAwesomeIcon icon={faArrowLeft} />
                   </Button>
                 </Col>
                 <Col span={20}>
@@ -4764,4 +4839,4 @@ function FamilyHead(props) {
   );
 }
 
-export default FamilyHead;
+export default FamilyHead;  
