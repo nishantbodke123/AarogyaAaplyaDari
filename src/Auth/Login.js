@@ -131,6 +131,8 @@ function Login() {
                   >
                     <InputBox.Password
                       name="password"
+                      placeholder="Enter Password"
+                      style={{height:"6vh"}}
                       onChange={(e) => setPassword(e.target.value)}
                     ></InputBox.Password>
                   </FormItem>
