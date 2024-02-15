@@ -40,12 +40,13 @@ function AdminDashboard() {
   const [dispensaryList, setDispensaryList] = useState([]);
   const [selectedWard, setSelectedWard] = useState("");
   const [selectedWardName, setSelectedWardName] = useState();
-  const [selectedHealthPost, setSelectedHealthPost] =
-    useState("");
-  const [selectedDispensary, setSelectedDispensary] =
-    useState();
+  const [selectedHealthPost, setSelectedHealthPost] = useState("");
+  const [selectedDispensary, setSelectedDispensary] = useState();
   const [selectedHealthPostName, setSelectedHealthPostName] = useState();
   const [selectedDispensaryName, setSelectedDispensaryName] = useState();
+
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString();
 
   // const [sideKey1, setSideKey1] = useState(0);
 
@@ -218,7 +219,36 @@ function AdminDashboard() {
 
   const handleWardwiseCitizenDownload = () => {
     setLoader(true);
-    console.log("value of dashboard in content is " + passedDashboard);
+
+    // const apiUrl = `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${passedDashboard}`;
+    // fetch(apiUrl, {
+    //   headers: {
+    //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
+    //   },
+    // })
+    //   .then((response) => {
+    //     console.log(
+    //       "Response data is ---=====================================> " +
+    //         response.headers
+    //     );
+
+    //     // const mimeType = response.headers['content-disposition'] || 'application/octet-stream';
+    //     // const blob = new Blob([response.data], { type: mimeType });
+
+    //     const contentDisposition = response.headers["content-disposition"];
+    //     console.log(response.headers, "Abhishek");
+    //     const filename = contentDisposition
+    //       ? contentDisposition.split("=")[1].replace(/"/g, "")
+    //       : "downloaded_file";
+
+    //     console.log(
+    //       "minetype data is 0000000000000000000000000000> " + filename
+    //     );
+    //   })
+    //   .catch((error) => {
+    //     console.error("Fetch error:", error);
+    //   });
+
     axios
       .get(
         // `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
@@ -232,19 +262,30 @@ function AdminDashboard() {
       )
       .then((response) => {
         setLoader(false);
-        const href = URL.createObjectURL(response.data);
-        const link = document.createElement("a");
-        link.href = href;
-        link.setAttribute(
-          "download",
-          `${selectedWardName} ward's Citizens Report`
-        );
+        console.log("Response data is ---=====================================> " + JSON.stringify(response))
 
-        document.body.appendChild(link);
-        link.click();
+        // const mimeType = response.headers['content-disposition'] || 'application/octet-stream';
+        // const blob = new Blob([response.data], { type: mimeType });
 
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
+        const contentDisposition = response.headers.get('Content-Disposition');
+        console.log(response.headers)
+        const filename = contentDisposition ? contentDisposition.split('=')[1].replace(/"/g, '') : 'downloaded_file';
+
+        console.log("minetype data is 0000000000000000000000000000> " + filename)
+
+        // const href = URL.createObjectURL(response.data);
+        // const link = document.createElement("a");
+        // link.href = href;
+        // link.setAttribute(
+        //   "download",
+        //   `${selectedWardName} ward's Citizens Report`
+        // );
+
+        // document.body.appendChild(link);
+        // link.click();
+
+        // document.body.removeChild(link);
+        // URL.revokeObjectURL(href);
       })
       .catch((err) => {
         setLoader(false);
@@ -297,8 +338,6 @@ function AdminDashboard() {
           LogOut();
         } else if (err.response.status == 400) {
           console.log("error status is " + err.response.status);
-          // console.log("error message is " + JSON.stringify(err));
-          // console.log("error message is " + err);
           message.warning("No data found for selected healthpost");
         } else {
           message.warning(err.data.message);
@@ -320,7 +359,7 @@ function AdminDashboard() {
         const href = URL.createObjectURL(response.data);
         const link = document.createElement("a");
         link.href = href;
-        link.setAttribute("download", `All Ward Citizen List`);
+        link.setAttribute("download", `All_Ward_data_15-02-2024.xlsx`);
 
         document.body.appendChild(link);
         link.click();
@@ -343,7 +382,6 @@ function AdminDashboard() {
             message.warning(err.response.message);
           }
         } else {
-          // Handle other error scenarios
           console.error("Unexpected error:", err);
         }
       });
@@ -612,7 +650,9 @@ function AdminDashboard() {
               <MainCountRow>
                 <CountCard>
                   <CardTitle>ABHA ID Generated</CardTitle>
-                  <CountTitle>{AdminDashboardData.total_AbhaCreated}</CountTitle>
+                  <CountTitle>
+                    {AdminDashboardData.total_AbhaCreated}
+                  </CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens 30 years + enrolled</CardTitle>
@@ -643,7 +683,9 @@ function AdminDashboard() {
                 <Line />
                 <MainCountRow>
                   <DetailSubtitle> Tests Assigned</DetailSubtitle>
-                  <CountTitle>{AdminDashboardData.total_LabTestAdded}</CountTitle>
+                  <CountTitle>
+                    {AdminDashboardData.total_LabTestAdded}
+                  </CountTitle>
                 </MainCountRow>
                 <Line />
                 {/* <MainCountRow>

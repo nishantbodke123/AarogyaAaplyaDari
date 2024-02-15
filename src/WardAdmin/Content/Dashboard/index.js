@@ -36,10 +36,9 @@ import axios, { Axios } from "axios";
 import FormItem from "antd/es/form/FormItem";
 import { LogOut } from "../../../Auth/Logout";
 
-import { MyContext } from '../../Admin/WardAdmin';
+import { MyContext } from "../../Admin/WardAdmin";
 
 function WardAdminDashboard() {
-
   const { sideKey, passedHealthpost } = useContext(MyContext);
 
   const [loader, setLoader] = useState(false);
@@ -49,8 +48,6 @@ function WardAdminDashboard() {
 
   const wardId = sessionStorage.getItem("ward_id");
   const wardName = sessionStorage.getItem("wardName");
-
-  
 
   const [pagination, setPagination] = useState({
     current: 1,
@@ -107,15 +104,12 @@ function WardAdminDashboard() {
   }, [selectedHealthPost]);
 
   useEffect(() => {
-  
     if (sideKey === 1) {
       handleWardwiseCitizenDownload();
-    }else if (sideKey === 2) {
+    } else if (sideKey === 2) {
       handleHealthPostwiseCitizenDownload();
     }
   }, [sideKey, passedHealthpost]);
-  
-
 
   const handleWardwiseCitizenDownload = () => {
     setLoader(true);
@@ -124,24 +118,39 @@ function WardAdminDashboard() {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
-        responseType: "blob",
+        // responseType: "blob",
       })
       .then((response) => {
         setLoader(false);
-        const href = URL.createObjectURL(response.data);
-        const link = document.createElement("a");
-        link.href = href;
-        link.setAttribute(
-          "download",
-          `${wardName} ward's Citizens Report.xlsx`
-          // `${response}.xlsx`
-        );
+        console.log("Response data is ---> "+response.headers)
 
-        document.body.appendChild(link);
-        link.click();
+        ////////////////////////////////////////////////////////
+        // const contentDisposition = response.headers["content-disposition"];
+        // const filenameMatch = contentDisposition.match(/filename="(.+?)"/);
+        // const filename = filenameMatch ? filenameMatch[1] : null;
 
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
+        // if (filename) {
+        //   console.log("Filename:", filename);
+        // } else {
+        //   console.error("Filename not found in Content-Disposition header");
+        // }
+
+        ////////////////////////////////////////////////////////////
+
+        // const href = URL.createObjectURL(response.data);
+        // const link = document.createElement("a");
+        // link.href = href;
+        // link.setAttribute(
+        //   "download",
+        //   `${wardName} ward's Citizens Report.xlsx`
+        //   // `${response}.xlsx`
+        // );
+
+        // document.body.appendChild(link);
+        // link.click();
+
+        // document.body.removeChild(link);
+        // URL.revokeObjectURL(href);
       })
       .catch((err) => {
         setLoader(false);
@@ -158,14 +167,15 @@ function WardAdminDashboard() {
       });
   };
 
-
   const handleHealthPostwiseCitizenDownload = () => {
     setLoader(true);
-    console.log("passed healthpost value in the content ward admin is "+passedHealthpost)
+    console.log(
+      "passed healthpost value in the content ward admin is " + passedHealthpost
+    );
     axios
       .get(
-      // `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
-      `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${passedHealthpost}`,
+        // `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
+        `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${passedHealthpost}`,
         {
           headers: {
             Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -204,7 +214,6 @@ function WardAdminDashboard() {
         }
       });
   };
-  
 
   const handleMOHDashboardExcelDownload = () => {
     // if (selectedHealthPost === "" || selectedHealthPost === 0) {
@@ -288,47 +297,52 @@ function WardAdminDashboard() {
     //     });
     // }
 
-      axios
-    .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
-      params: {
-        wardId: wardId,
-        healthpost_id: selectedHealthPost !== undefined ? String(selectedHealthPost) : undefined,
-      },
-      headers: {
-        Authorization: `Token ${sessionStorage.getItem("Token")}`,
-      },
-      responseType: "blob",
-    })
-    .then((response) => {
-      console.log("selected healthpost is " + selectedHealthPost);
-      const href = URL.createObjectURL(response.data);
+    axios
+      .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
+        params: {
+          wardId: wardId,
+          healthpost_id:
+            selectedHealthPost !== undefined
+              ? String(selectedHealthPost)
+              : undefined,
+        },
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        console.log("selected healthpost is " + selectedHealthPost);
+        const href = URL.createObjectURL(response.data);
 
-      const link = document.createElement("a");
-      link.href = href;
-      link.setAttribute(
-        "download",
-        `MOH_Dashboard_${selectedHealthPost !== undefined ? selectedHealthPost : "All"}_Data.xlsx`
-      );
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `MOH_Dashboard_${
+            selectedHealthPost !== undefined ? selectedHealthPost : "All"
+          }_Data.xlsx`
+        );
 
-      document.body.appendChild(link);
-      link.click();
+        document.body.appendChild(link);
+        link.click();
 
-      document.body.removeChild(link);
-      URL.revokeObjectURL(href);
-    })
-    .catch((err) => {
-      console.log("selected healthpost is " + selectedHealthPost);
-      console.log(err);
-      if (err.response.status === 401) {
-        setTimeout(() => {
-          LogOut();
-        }, 1000);
-      } else if (err.response.status === 400) {
-        message.warning("Data is not available");
-      } else {
-        message.warning("Error" + err.response.message);
-      }
-    });
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        console.log("selected healthpost is " + selectedHealthPost);
+        console.log(err);
+        if (err.response.status === 401) {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        } else if (err.response.status === 400) {
+          message.warning("Data is not available");
+        } else {
+          message.warning("Error" + err.response.message);
+        }
+      });
   };
   return (
     <>
@@ -356,7 +370,7 @@ function WardAdminDashboard() {
                       // onChange={(e) => setSelectedHealthPost(e)}
                       onChange={(e) => setSelectedHealthPost(e.target.value)}
                     >
-                      <option value={''} selected>
+                      <option value={""} selected>
                         All
                       </option>
                       {healthPostNameList.map((data, index) => (

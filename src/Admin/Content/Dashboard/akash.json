@@ -1,0 +1,33 @@
+{
+  "data": {},
+  "status": 200,
+  "statusText": "OK",
+  "headers": {
+    "content-length": "14367",
+    "content-type": "application/vnd.ms-excel"
+  },
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": ["xhr", "http"],
+    "transformRequest": [null],
+    "transformResponse": [null],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json, text/plain, */*",
+      "Authorization": "Token 91d9ab4dbe94451e2aa8f8bf743173f24d3668e919ae1f2a51e6c181160e76c2"
+    },
+    "responseType": "blob",
+    "method": "get",
+    "url": "http://202.189.224.222:9061/adminportal/api/DownloadWardtwiseUserList/6"
+  },
+  "request": {}
+}
