@@ -64,7 +64,7 @@
 //   const [dashboardCounts, setDashboardCounts] = useState({});
 //   const [familyHeadList, setFamilyHeadList] = useState([]);
 //   const [partiallyFamilyHeadList, setPartiallyFamilyHeadList] = useState([]);
-//   const [loading, setLoading] = useState(false);
+//   const [loading, setLoader] = useState(false);
 //   const [showViewModal, setShowViewModal] = useState(false);
 //   const [familyMemeberDetails, setFamilyMemberDetails] = useState([]);
 //   const [familyID, setFamilyID] = useState();
@@ -182,7 +182,7 @@
 //   };
 
 //   const handleShowPartialCountModal = () => {
-//     setLoading(true);
+//     setLoader(true);
 //     axios
 //       .get(
 //         `${BASE_URL}/healthworker/api/GetPartiallyInsertedRecord`,
@@ -190,7 +190,7 @@
 //       )
 //       .then((response) => {
 //         console.log(response.data);
-//         setLoading(false);
+//         setLoader(false);
 //         setPartialCountList(response.data);
 //       })
 //       .catch((error) => {
@@ -210,7 +210,7 @@
 //   };
 
 //   useEffect(() => {
-//     setLoading(true);
+//     setLoader(true);
 
 //     console.log(axiosConfig);
 //     axios
@@ -218,7 +218,7 @@
 //       .then((response) => {
 //         console.log(response.data);
 //         setDashboardCounts(response.data);
-//         setLoading(false);
+//         setLoader(false);
 //       })
 //       .catch((error) => {
 //         console.log(error);
@@ -230,14 +230,14 @@
 //         } else {
 //           message.error(error.message);
 //         }
-//         setLoading(false);
+//         setLoader(false);
 //       });
 //     axios
 //       .get(`${BASE_URL}/healthworker/api/GetFamilyHeadList`, axiosConfig)
 //       .then((response) => {
 //         console.log(response.data);
 //         setFamilyHeadList(response.data);
-//         setLoading(false);
+//         setLoader(false);
 //       })
 //       .catch((error) => {
 //         console.log(error.response.status);
@@ -249,7 +249,7 @@
 //         } else {
 //           // message.error(error.message);
 //         }
-//         setLoading(false);
+//         setLoader(false);
 //       });
 
 //     axios
@@ -259,11 +259,11 @@
 //       )
 //       .then((response) => {
 //         console.log(response.data);
-//         setLoading(false);
+//         setLoader(false);
 //         setPartiallyFamilyHeadList(response.data);
 //       })
 //       .catch((error) => {
-//         setLoading(false);
+//         setLoader(false);
 //         console.log(error);
 //       });
 //   }, []);
@@ -1660,20 +1660,6 @@
 
 // export default Dashboard;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { Row, Col, Divider, Form, Spin, Button, Dropdown, message } from "antd";
 import React, { useEffect, useState } from "react";
 import {
@@ -1697,10 +1683,7 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 
-
-import {
-    ViewButton,
-  } from "./style";
+import { ViewButton } from "./style";
 
 import { useNavigate } from "react-router-dom";
 
@@ -1717,7 +1700,7 @@ function Dashboard() {
   const [dashboardCounts, setDashboardCounts] = useState({});
   const [familyHeadList, setFamilyHeadList] = useState([]);
   const [partiallyFamilyHeadList, setPartiallyFamilyHeadList] = useState([]);
-  const [loading, setLoading] = useState(false);
+
   const [showViewModal, setShowViewModal] = useState(false);
   const [familyMemeberDetails, setFamilyMemberDetails] = useState([]);
   const [familyID, setFamilyID] = useState();
@@ -1835,7 +1818,7 @@ function Dashboard() {
   };
 
   const handleShowPartialCountModal = () => {
-    setLoading(true);
+    setLoader(true);
     axios
       .get(
         `${BASE_URL}/healthworker/api/GetPartiallyInsertedRecord`,
@@ -1843,7 +1826,7 @@ function Dashboard() {
       )
       .then((response) => {
         console.log(response.data);
-        setLoading(false);
+        setLoader(false);
         setPartialCountList(response.data);
       })
       .catch((error) => {
@@ -1863,7 +1846,7 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    setLoading(true);
+    setLoader(true);
 
     console.log(axiosConfig);
     axios
@@ -1871,7 +1854,8 @@ function Dashboard() {
       .then((response) => {
         console.log(response.data);
         setDashboardCounts(response.data);
-        setLoading(false);
+
+        setLoader(false);
       })
       .catch((error) => {
         console.log(error);
@@ -1883,14 +1867,15 @@ function Dashboard() {
         } else {
           message.error(error.message);
         }
-        setLoading(false);
+
+        setLoader(false);
       });
     axios
       .get(`${BASE_URL}/healthworker/api/GetFamilyHeadList`, axiosConfig)
       .then((response) => {
         console.log(response.data);
         setFamilyHeadList(response.data);
-        setLoading(false);
+        setLoader(false);
       })
       .catch((error) => {
         console.log(error.response.status);
@@ -1902,7 +1887,7 @@ function Dashboard() {
         } else {
           // message.error(error.message);
         }
-        setLoading(false);
+        setLoader(false);
       });
 
     axios
@@ -1912,11 +1897,11 @@ function Dashboard() {
       )
       .then((response) => {
         console.log(response.data);
-        setLoading(false);
+        setLoader(false);
         setPartiallyFamilyHeadList(response.data);
       })
       .catch((error) => {
-        setLoading(false);
+        setLoader(false);
         console.log(error);
       });
   }, []);
@@ -2138,13 +2123,18 @@ function Dashboard() {
       dataIndex: "mobileNo",
     },
   ];
-  
-   
+
   return (
     <>
       <Spin spinning={loader}>
-      <Header />
-        <div style={{ overflowY: "auto", height: "92vh", backgroundColor:"#F5F5F5" }}>
+        <Header />
+        <div
+          style={{
+            overflowY: "auto",
+            height: "92vh",
+            backgroundColor: "#F5F5F5",
+          }}
+        >
           <Row style={{ padding: "2%", width: "100%", height: "100%" }}>
             <Col span={14}>
               {/* <MainCountRow>
@@ -2165,9 +2155,7 @@ function Dashboard() {
               <MainCountRow>
                 <CountCard>
                   <CardTitle>Families Enrolled</CardTitle>
-                  <CountTitle>
-                    {dashboardCounts.total_family_count}
-                  </CountTitle>
+                  <CountTitle>{dashboardCounts.total_family_count}</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens Enrolled</CardTitle>
@@ -2223,9 +2211,7 @@ function Dashboard() {
                 {/* <Line /> */}
                 <MainCountRow>
                   <DetailSubtitle>Total Reports Generated</DetailSubtitle>
-                  <CountTitle>
-                    {dashboardCounts.TestReportGenerated}
-                  </CountTitle>
+                  <CountTitle>{dashboardCounts.TestReportGenerated}</CountTitle>
                 </MainCountRow>
                 <Line />
                 <MainCountRow>
@@ -2275,9 +2261,7 @@ function Dashboard() {
                         Confirmation / Treatment
                       </CardTitle>
                       <CountTitle>
-                        {
-                          dashboardCounts.Referral_choice_further_management
-                        }
+                        {dashboardCounts.Referral_choice_further_management}
                       </CountTitle>
                     </ReferralCountCard>
                   </Col>
@@ -2289,9 +2273,7 @@ function Dashboard() {
                         Referral to HBT polyclinic for physician consultation
                       </CardTitle>
                       <CountTitle>
-                        {
-                          dashboardCounts.Referral_choice_suspect_symptoms
-                        }
+                        {dashboardCounts.Referral_choice_suspect_symptoms}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -2304,9 +2286,7 @@ function Dashboard() {
                         management of Complication
                       </CardTitle>
                       <CountTitle>
-                        {
-                          dashboardCounts.Referral_choice_diagnosis
-                        }
+                        {dashboardCounts.Referral_choice_diagnosis}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -2443,17 +2423,13 @@ function Dashboard() {
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Cervical Cancer</CardTitle>
-                      <CountTitle>
-                        {dashboardCounts.cervical_cancer}
-                      </CountTitle>
+                      <CountTitle>{dashboardCounts.cervical_cancer}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={4}>
                     <ReferralCountCard>
                       <CardTitle> Breast Cancer</CardTitle>
-                      <CountTitle>
-                        {dashboardCounts.breast_cancer}
-                      </CountTitle>
+                      <CountTitle>{dashboardCounts.breast_cancer}</CountTitle>
                     </ReferralCountCard>
                   </Col>
                 </Row>
@@ -2484,7 +2460,9 @@ function Dashboard() {
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Alzheimer/Dementia</CardTitle>
-                      <CountTitle>{dashboardCounts.Alzheimers_Dementia}</CountTitle>
+                      <CountTitle>
+                        {dashboardCounts.Alzheimers_Dementia}
+                      </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={4}>
@@ -2508,9 +2486,7 @@ function Dashboard() {
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Other Communicable Disease</CardTitle>
-                      <CountTitle>
-                        {dashboardCounts.communicable}
-                      </CountTitle>
+                      <CountTitle>{dashboardCounts.communicable}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
