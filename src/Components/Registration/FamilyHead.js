@@ -1792,14 +1792,14 @@ function FamilyHead(props) {
     }
   };
 
-  const handleConjuctivitis = (questionNumber, selectedValue) => {
-    const setQuestionFunction = eval(`setConjuctivitis${questionNumber}`);
-    if (selectedValue === "Yes" || selectedValue === "No") {
-      setQuestionFunction([selectedValue]);
-    } else {
-      setQuestionFunction([]);
-    }
-  };
+  // const handleConjuctivitis = (questionNumber, selectedValue) => {
+  //   const setQuestionFunction = eval(`setConjuctivitis${questionNumber}`);
+  //   if (selectedValue === "Yes" || selectedValue === "No") {
+  //     setQuestionFunction([selectedValue]);
+  //   } else {
+  //     setQuestionFunction([]);
+  //   }
+  // };
 
   const handleLeptospirosis = (questionNumber, selectedValue) => {
     const setQuestionFunction = eval(`setLeptospirosis${questionNumber}`);
@@ -1881,6 +1881,15 @@ function FamilyHead(props) {
     setWeight("");
     setHeight("");
     setBMI("");
+    setVulnerable(false);
+    setSelectVulnerableList([]);
+    setVulnerableReason("");
+    setSelectReferralList([]);
+    setBloodSampleCenter(false);
+    setBloodSampleHome(false);
+    setBloodSampleDenied(false);
+    setNotRequired(false);
+    
   };
 
   const handleClearPartA = () => {
@@ -1922,15 +1931,15 @@ function FamilyHead(props) {
   };
   const handleClearPartE = () => {
     // setPartE1OptionSelect([]);
-    for (let questionNumber = 1; questionNumber <= 6; questionNumber++) {
+    for (let questionNumber = 1; questionNumber <= 5; questionNumber++) {
       let setQuestionSelected = eval(`setDoYouHaveFever${questionNumber}`);
       setQuestionSelected([]);
     }
     // setPartE2OptionSelect([]);
-    for (let questionNumber = 1; questionNumber <= 3; questionNumber++) {
-      let setQuestionSelected = eval(`setConjuctivitis${questionNumber}`);
-      setQuestionSelected([]);
-    }
+    // for (let questionNumber = 1; questionNumber <= 3; questionNumber++) {
+    //   let setQuestionSelected = eval(`setConjuctivitis${questionNumber}`);
+    //   setQuestionSelected([]);
+    // }
     // setPartE3OptionSelect([]);
     for (let questionNumber = 1; questionNumber <= 2; questionNumber++) {
       let setQuestionSelected = eval(`setLeptospirosis${questionNumber}`);
@@ -1962,7 +1971,7 @@ function FamilyHead(props) {
       handleSubmit();
     } else if (totalFamilyMembers - noOfMembersCompleted > 0) {
       Modal.confirm({
-        title: `Once you click "Next," you cannot revisit the previous member's details. Please confirm before submit`,
+        title: `Once you click "Next," you cannot revisit the previous member's details. Please confirm before submit / एकदा तुम्ही "पुढील" वर क्लिक केल्यावर तुम्ही मागील सदस्याच्या तपशिलांना पुन्हा भेट देऊ शकत नाही. कृपया सबमिट करण्यापूर्वी पुष्टी करा`,
         okText: "Confirm",
         onOk: () => {
           familyMembersArray.push(memberData);
@@ -2023,6 +2032,7 @@ function FamilyHead(props) {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     const Data = {
       ward_name: sessionStorage.getItem("ward"),
       healthPost: sessionStorage.getItem("healthPostName"),
@@ -2051,10 +2061,12 @@ function FamilyHead(props) {
         console.log(response);
         message.success(response.data.message);
         setTimeout(() => {
+          setLoading(false);
           window.location.reload();
         }, 1000);
       })
       .catch((error) => {
+        setLoading(false);
         familyMembersArray.pop();
         message.warning(error.response.data.message);
       });
@@ -4413,14 +4425,16 @@ function FamilyHead(props) {
                 : "Submit & Next"}
             </SubmitButton>
           }
-        >
+        ><Spin spinning={loading} tip="Loading...">
           <div>
+            
             <p>
               Would you like to mark the citizen as vulnerable citizen?/ वरील
               नमूद केलेली व्यक्ती खालील जोखीमग्रस्त (Vulnerable) संवर्गात आहे?"
               <span>
                 <Checkbox
                   style={{ margin: "0% 5%" }}
+                  checked={vulnerable}
                   onClick={handleVulnerableClick}
                 ></Checkbox>
               </span>
@@ -4431,6 +4445,7 @@ function FamilyHead(props) {
                   <li>
                     <Checkbox
                       key={data.id}
+                      checked={selectVulnerableList.includes(data.id)}
                       value={data.id}
                       onChange={(e) => handleVulnerableList(e.target.value)}
                     >
@@ -4447,6 +4462,7 @@ function FamilyHead(props) {
                 placeholder="Enter other reason here"
                 style={{ width: "80%" }}
                 rows={2}
+                value={vulnerableReason}
                 onChange={(e) => setVulnerableReason(e.target.value)}
               />
             ) : (
@@ -4460,6 +4476,7 @@ function FamilyHead(props) {
               <li>
                 <Checkbox
                   key={data.id}
+                  checked={selectedReferalList.includes(data.id)}
                   value={data.id}
                   onChange={(e) => {
                     handleReferralList(e.target.value);
@@ -4562,6 +4579,7 @@ function FamilyHead(props) {
               </BloodSampleButtonCol>
             </BloodSampleButtonsRow>
           </>
+          </Spin>
 
           {/* {bloodSampleHome ? (
             <>
