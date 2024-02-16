@@ -53,6 +53,8 @@ import {
   InputBox,
   ABHACardDownLoad,
   ABHAIDSubmitButton,
+  DownlaodCARDButton,
+  DownlaodQRButton,
 } from "./style";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -356,7 +358,7 @@ function FamilyHead(props) {
         "Content-Type": "application/json",
       })
       .then((res) => {
-        console.log(res.data.accessToken);
+        console.log(res.data);
         sessionStorage.setItem("BearerToken", res.data.accessToken);
       })
       .catch((error) => {
@@ -413,7 +415,7 @@ function FamilyHead(props) {
         setMobileNumberLinkedWithAadhar(response.data.mobileNumber);
         settxnID(response.data.txnId);
         if (response.status == 200) {
-          setProgress(100);
+          // setProgress(100);
           setAadharNumberSubmitted(true);
         }
       })
@@ -642,7 +644,7 @@ function FamilyHead(props) {
         setLoading(false);
         console.log(error);
       });
-    setProgress(100);
+    // setProgress(100);
   };
   const handleHideHealthIdModal = () => {
     setSelectedAuthMethods();
@@ -691,7 +693,7 @@ function FamilyHead(props) {
             )
             .then((res) => {
               setLoading(false);
-              setProgress(100);
+              // setProgress(100);
               console.log(res);
               setAadharPhotoURL(res.data.kycPhoto);
               setAadharCardName(res.data.name);
@@ -718,10 +720,10 @@ function FamilyHead(props) {
         console.log(err.response.data.message);
         message.warning(err.response.data.message);
       });
-    setProgress(100);
+    // setProgress(100);
   };
   const handleSelectAuthMethods = (e) => {
-    setProgress(20);
+    // setProgress(20);
     setLoading(true);
     console.log(e.target.value);
     let axiosConfig = {
@@ -733,33 +735,33 @@ function FamilyHead(props) {
     setSelectedAuthMethods(e.target.value);
     axios
       .post(
-        `${BASE_URL}/abdm/api/v1/phr/registration/hid/init/AuthMethodAPI`,
+        `${BASE_URL}/abdm/api/v1/auth/init`,
         {
           authMethod: e.target.value,
-          healhtIdNumber: abhaId,
+          healthid: abhaId,
         },
         axiosConfig
       )
       .then((response) => {
-        setProgress(70);
+        console.log(response);
+        // setProgress(70);
         setLoading(false);
-        settxnID(response.data.transactionId);
+        settxnID(response.data.txnId);
         setAadharNumberSubmitted(true);
         setMinutes(2);
         setSeconds(29);
         setABHAIDSubmited(true);
-        console.log(response);
       })
       .catch((error) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
         console.log(error);
         message.warning(error.response.data.message);
       });
-    setProgress(100);
+    // setProgress(100);
   };
   const handleVerifyWhileHealthIDGeneration = () => {
-    setProgress(20);
+    // setProgress(20);
     setLoading(true);
     console.log(otp);
     let data = encrypt2.encrypt(otp);
@@ -779,7 +781,7 @@ function FamilyHead(props) {
         axiosConfig
       )
       .then((res) => {
-        setProgress(50);
+        // setProgress(50);
         setLoading(false);
         console.log(res);
         settxnID(res.data.transactionId);
@@ -792,14 +794,14 @@ function FamilyHead(props) {
             axiosConfig
           )
           .then((res) => {
-            setProgress(70);
+            // setProgress(70);
             console.log(res);
             setListOfSuggestedHealthID(res.data);
             handleShowCreateHealthIdModal();
             handleHideHealthNumberModal();
           })
           .catch((err) => {
-            setProgress(70);
+            // setProgress(70);
             console.log(err);
           });
 
@@ -807,12 +809,12 @@ function FamilyHead(props) {
         handleHideHealthIdModal();
       })
       .catch((err) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
         console.log(err);
         message.warning(err.response.data.message);
       });
-    setProgress(100);
+    // setProgress(100);
   };
 
   const [showCreateHealthIdModal, setShowCreateHealthIdModal] = useState(false);
@@ -834,7 +836,7 @@ function FamilyHead(props) {
     } else if (healthIdPassword == "") {
       message.warning("Password is required");
     } else {
-      setProgress(20);
+      // setProgress(20);
       axios
         .get(
           `${BASE_URL}/abdm/api/v1/phr/search/isExist?phrAddress=${healthId}`,
@@ -845,10 +847,10 @@ function FamilyHead(props) {
         .then((res) => {
           console.log(res);
           if (res.data) {
-            setProgress(100);
+            // setProgress(100);
             message.warning("Health ID Already Exist");
           } else {
-            setProgress(70);
+            // setProgress(70);
             axios
               .post(
                 `${BASE_URL}/abdm/api/v1/phr/registration/hid/create-phr-address`,
@@ -859,7 +861,7 @@ function FamilyHead(props) {
                 }
               )
               .then((res) => {
-                setProgress(100);
+                // setProgress(100);
                 console.log(res);
                 handleHideCreateHealthIdModal();
                 Modal.success({
@@ -876,14 +878,14 @@ function FamilyHead(props) {
                 });
               })
               .catch((err) => {
-                setProgress(100);
+                // setProgress(100);
                 console.log(err);
                 message.warning(err.response.data.message);
               });
           }
         })
         .catch((err) => {
-          setProgress(100);
+          // setProgress(100);
           console.log(err);
           message.warning(err.response.data.message);
         });
@@ -1053,11 +1055,12 @@ function FamilyHead(props) {
 
   const [ABHAIDSubmited, setABHAIDSubmited] = useState(false);
   const [authMethodSelected, setAuthMethodSelected] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
   const [mobileNumberLinkedWithABHAID, setMobileNumberLinkedWithABHAID] =
     useState();
   const [authMethodResponse, setAuthMethodResponse] = useState([]);
   const [healthIdResponse, setHealthIdResponse] = useState();
-  const handleABHAIDSubmit = () => {
+  const handleABHAIDSubmit = async () => {
     setMinutes(2);
     setSeconds(29);
     console.log(abhaId);
@@ -1067,23 +1070,43 @@ function FamilyHead(props) {
         Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
       },
     };
-    axios
-      .post(
-        `${BASE_URL}/abdm/api/v1/phr/registration/hid/search/auth-methods`,
-        { healhtIdNumber: abhaId },
-        axiosConfig
-      )
+
+    const formData = new FormData();
+    formData.append("clientId", "SBX_004200");
+    formData.append("clientSecret", "bed456a5-46bb-4de5-94ef-6caa2dc77a00");
+    await axios
+      .post(`${BASE_URL}/abdm/api/GetGatewaySessionTokenAPI`, formData, {
+        "Content-Type": "application/json",
+      })
       .then((res) => {
         console.log(res);
-        setAuthMethodResponse(res.data.authMethods);
-        setHealthIdResponse(res.data.healthIdNumber);
-        // setABHAIDSubmited(true);
-        setAuthMethodSelected(true);
-        // message.success(res.data.message);
+        sessionStorage.setItem("BearerToken", res.data.accessToken);
+        axios
+          .post(
+            `${BASE_URL}/abdm/api/v1/phr/registration/hid/search/auth-methods`,
+            { healhtIdNumber: abhaId },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${res.data.accessToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            setAuthMethodResponse(res.data.authMethods);
+            setHealthIdResponse(res.data.healthIdNumber);
+            // setABHAIDSubmited(true);
+            setAuthMethodSelected(true);
+            // message.success(res.data.message);
+          })
+          .catch((err) => {
+            console.log(err);
+            message.warning(err.response.message);
+          });
       })
-      .catch((err) => {
-        console.log(err);
-        message.warning(err.response.message);
+      .catch((error) => {
+        console.log(error);
       });
   };
   const handleAbhaIDVerify = async () => {
@@ -1099,31 +1122,107 @@ function FamilyHead(props) {
     try {
       let response;
       const data = {
-        otp: encryptedOTP,
+        otp: otp,
         txnId: txnId,
       };
       if (selectedAuthMethods === "AADHAAR_OTP") {
+        setOtp();
         response = await axios.post(
           `${BASE_URL}/abdm/api/v1/auth/confirmWithAadhaarOtp`,
           data,
           axiosConfig
         );
       } else if (selectedAuthMethods === "MOBILE_OTP") {
+        setOtp();
         response = await axios.post(
           `${BASE_URL}/abdm/api/v1/auth/confirmWithMobileOTP`,
           data,
           axiosConfig
         );
       }
-      console.log(response);
+      console.log(response, "ABHA OTP");
+      if (response.status == 200) {
+        sessionStorage.setItem("X-Token", response.data.token);
+        setOtpVerified(true);
+      }
     } catch (error) {
       console.error("Error:", error);
       message.warning(error.response.data.message);
     }
   };
+  const handleABHACardDownload = () => {
+    setLoading(true);
+    console.log(sessionStorage.getItem("X-Token"));
+    axios
+      .get(`${BASE_URL}/abdm/api/v1/account/getCard`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+          "content-type": "application/json",
+          "X-Token": `Bearer ${sessionStorage.getItem("X-Token")}`,
+          accept: "*/*",
+          "Accept-Language": "en-US",
+        },
+        responseType:"blob"
+      })
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute("download", `ABHACard.pdf`);
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
+  const handleABHAQRDownload = () => {
+    setLoading(true);
+    axios
+      .get(`${BASE_URL}/abdm/api/v1/account/getqrCode`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+          "content-type": "image/png",
+          "X-Token": `Bearer ${sessionStorage.getItem("X-Token")}`,
+          accept: "*/*",
+          "Accept-Language": "en-US",
+        },
+        responseType:"blob"
+      })
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute("download", `Qrcode.png`);
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
   const handleBackButtonOfABHADownload = () => {
     setAuthMethodSelected(false);
     setABHAIDSubmited(false);
+    setOtpVerified(false);
+    setSelectedAuthMethods();
     setOtp();
     setMinutes(0);
     setSeconds(0);
@@ -1134,85 +1233,135 @@ function FamilyHead(props) {
         {" "}
         <Button
           style={{ borderRadius: "30px" }}
-          disabled={!authMethodSelected && !ABHAIDSubmited}
+          disabled={!authMethodSelected && !ABHAIDSubmited && !otpVerified}
           onClick={handleBackButtonOfABHADownload}
         >
           <FontAwesomeIcon icon={faArrowLeft} />
         </Button>
       </div>
-      <Form layout="vertical">
-        <Form.Item label="Health ID">
-          <InputForm
-            type="text"
-            value={abhaId}
-            maxLength={17}
-            onChange={(e) => handleAbhaIDChange(e)}
-            placeholder="Enter ABHA ID"
-          ></InputForm>
-        </Form.Item>
-        {authMethodSelected ? (
-          <>
-            <div>
-              {" "}
-              <h4>
-                Please select one of the following options to receive your OTP
-              </h4>
+      {otpVerified ? (
+        <>
+          <div style={{ width: "25vw" }}>
+            <p style={{ fontSize: "15px", marginLeft: "3%" }}>
+              ABHA ID:
+              <span style={{ fontWeight: "700", marginLeft: "3%" }}>
+                {abhaId}
+              </span>
+            </p>
+            <p
+              style={{
+                fontSize: "20px",
+                fontWeight: "600",
+                margin: "-2% -2% 0% 3%",
+              }}
+            >
+              Download Options
+            </p>
+            <p style={{ margin: "0% 0% 3% 3%" }}>
+              Choose a format to download ABHA Card
+            </p>
+            <div style={{ display: "flex", justifyContent: "space-around" }}>
+              <DownlaodCARDButton onClick={handleABHACardDownload}>
+                Download Card
+              </DownlaodCARDButton>
+              <DownlaodQRButton onClick={handleABHAQRDownload}>
+                Download QR
+              </DownlaodQRButton>
             </div>
-            {authMethodResponse.map((data) => (
-              <Radio.Group
-                onChange={(e) => handleSelectAuthMethods(e)}
-                value={selectedAuthMethods}
-                style={{ margin: "0px 30px" }}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                margin: "5% 5%",
+              }}
+            >
+              <Button
+                onClick={handleBackButtonOfABHADownload}
+                style={{ width: "120px", backgroundColor: "#FF8551" }}
               >
-                <Radio value={data}>{data}</Radio>
-              </Radio.Group>
-            ))}
-          </>
-        ) : (
-          <></>
-        )}
-        {ABHAIDSubmited ? (
-          <>
-            <div style={{ margin: "5% 5% " }}>
-              <Form.Item label="OTP">
-                <OtpInput
-                  inputStyle={{
-                    width: "35px",
-                    height: "30px",
-                    margin: "2px 10px",
-                  }}
-                  value={otp}
-                  numInputs={6}
-                  type="number"
-                  onChange={(value) => setOtp(value)}
-                  renderSeparator={<span></span>}
-                  renderInput={(props) => <input {...props} />}
-                ></OtpInput>
-                <div className="countdown-text">
-                  {seconds > 0 || minutes > 0 ? (
-                    <p style={{ color: "red" }}>
-                      Time Remaining: {minutes < 10 ? `0${minutes}` : minutes}:
-                      {seconds < 10 ? `0${seconds}` : seconds}
-                    </p>
-                  ) : (
-                    <p>Didn't recieve code?</p>
-                  )}
-                  <a
-                    style={{
-                      display: seconds > 0 || minutes > 0 ? "none" : "",
-                    }}
-                    onClick={handleCheckAndGenerateMobileOtp}
-                  >
-                    Resend OTP
-                  </a>
-                </div>
-                <div style={{ display: "flex", justifyContent: "end" }}>
-                  <ABHAIDSubmitButton onClick={handleAbhaIDVerify}>
-                    Verify
-                  </ABHAIDSubmitButton>
-                </div>
+                Finish
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <Form layout="vertical">
+            <Form.Item label="Health ID">
+              <InputForm
+                type="text"
+                value={abhaId}
+                maxLength={17}
+                onChange={(e) => handleAbhaIDChange(e)}
+                placeholder="Enter ABHA ID"
+              ></InputForm>
+            </Form.Item>
 
-                {/* <div
+            {authMethodSelected ? (
+              <>
+                <div>
+                  {" "}
+                  <h4>
+                    Please select one of the following options to receive your
+                    OTP
+                  </h4>
+                </div>
+                {authMethodResponse.map((data) => (
+                  <Radio.Group
+                    onChange={(e) => handleSelectAuthMethods(e)}
+                    value={selectedAuthMethods}
+                    style={{ margin: "0px 30px" }}
+                  >
+                    <Radio value={data}>{data}</Radio>
+                  </Radio.Group>
+                ))}
+              </>
+            ) : (
+              <></>
+            )}
+            {ABHAIDSubmited ? (
+              <>
+                <div style={{ margin: "5% 5% " }}>
+                  <Form.Item label="OTP">
+                    <OtpInput
+                      inputStyle={{
+                        width: "35px",
+                        height: "30px",
+                        margin: "2px 10px",
+                      }}
+                      value={otp}
+                      numInputs={6}
+                      type="number"
+                      onChange={(value) => setOtp(value)}
+                      renderSeparator={<span></span>}
+                      renderInput={(props) => <input {...props} />}
+                    ></OtpInput>
+                    <div className="countdown-text">
+                      {seconds > 0 || minutes > 0 ? (
+                        <p style={{ color: "red" }}>
+                          Time Remaining:{" "}
+                          {minutes < 10 ? `0${minutes}` : minutes}:
+                          {seconds < 10 ? `0${seconds}` : seconds}
+                        </p>
+                      ) : (
+                        <p>Didn't recieve code?</p>
+                      )}
+                      <a
+                        style={{
+                          display: seconds > 0 || minutes > 0 ? "none" : "",
+                        }}
+                        onClick={handleCheckAndGenerateMobileOtp}
+                      >
+                        Resend OTP
+                      </a>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "end" }}>
+                      <ABHAIDSubmitButton onClick={handleAbhaIDVerify}>
+                        Verify
+                      </ABHAIDSubmitButton>
+                    </div>
+
+                    {/* <div
                 style={{
                   display: "flex",
                   justifyContent: "flex-end",
@@ -1221,26 +1370,28 @@ function FamilyHead(props) {
               >
                 <a onClick={handleABHAIDSubmit}>Resend OTP</a>
               </div> */}
-              </Form.Item>
-            </div>
-          </>
-        ) : (
-          <>
-            {authMethodSelected ? (
-              <></>
-            ) : (
-              <>
-                {" "}
-                <div style={{ display: "flex", justifyContent: "end" }}>
-                  <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
-                    Submit
-                  </ABHAIDSubmitButton>
+                  </Form.Item>
                 </div>
               </>
+            ) : (
+              <>
+                {authMethodSelected || otpVerified ? (
+                  <></>
+                ) : (
+                  <>
+                    {" "}
+                    <div style={{ display: "flex", justifyContent: "end" }}>
+                      <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
+                        Submit
+                      </ABHAIDSubmitButton>
+                    </div>
+                  </>
+                )}
+              </>
             )}
-          </>
-        )}
-      </Form>
+          </Form>
+        </>
+      )}
     </>
   );
   const handleCBACRequired = () => {
@@ -2776,7 +2927,7 @@ function FamilyHead(props) {
                       ></Input>
                     </FormItem>
                   </Column>
-                  <Column span={6}>
+                  <Column span={7}>
                     <FormItem label="Abha ID / आभा आयडी">
                       <Input
                         type="text"
@@ -4839,4 +4990,4 @@ function FamilyHead(props) {
   );
 }
 
-export default FamilyHead;  
+export default FamilyHead;
