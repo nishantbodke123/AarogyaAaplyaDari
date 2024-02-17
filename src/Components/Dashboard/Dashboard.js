@@ -2124,7 +2124,6 @@ function Dashboard() {
     },
   ];
 
-
   return (
     <>
       <Spin spinning={loader}>
@@ -2469,8 +2468,8 @@ function Dashboard() {
                   <Col span={4}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle>Leprosy</CardTitle>
-                      <CountTitle>{dashboardCounts.leprosy}</CountTitle>
+                      <CardTitle> ENT Disorder</CardTitle>
+                      <CountTitle>{dashboardCounts.ent_disorder}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
@@ -2486,15 +2485,15 @@ function Dashboard() {
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Other Communicable Disease</CardTitle>
-                      <CountTitle>{dashboardCounts.communicable}</CountTitle>
+                      <CardTitle>Leprosy</CardTitle>
+                      <CountTitle>{dashboardCounts.leprosy}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> ENT Disorder</CardTitle>
-                      <CountTitle>{dashboardCounts.ent_disorder}</CountTitle>
+                      <CardTitle> Other Communicable Disease</CardTitle>
+                      <CountTitle>{dashboardCounts.communicable}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
@@ -2518,7 +2517,7 @@ function Dashboard() {
               />
             </div>
           </Row>
-          </div>
+        </div>
       </Spin>
     </>
   );
