@@ -1660,20 +1660,6 @@
 
 // export default Dashboard;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { Row, Col, Divider, Form, Spin, Button, Dropdown, message } from "antd";
 import React, { useEffect, useState } from "react";
 import {
@@ -1697,10 +1683,7 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 
-
-import {
-    ViewButton,
-  } from "./style";
+import { ViewButton } from "./style";
 
 import { useNavigate } from "react-router-dom";
 
@@ -2138,13 +2121,18 @@ function Dashboard() {
       dataIndex: "mobileNo",
     },
   ];
-  
-   
+
   return (
     <>
       <Spin spinning={loader}>
-      <Header />
-        <div style={{ overflowY: "auto", height: "92vh", backgroundColor:"#F5F5F5" }}>
+        <Header />
+        <div
+          style={{
+            overflowY: "auto",
+            height: "92vh",
+            backgroundColor: "#F5F5F5",
+          }}
+        >
           <Row style={{ padding: "2%", width: "100%", height: "100%" }}>
             <Col span={14}>
               {/* <MainCountRow>
@@ -2165,9 +2153,7 @@ function Dashboard() {
               <MainCountRow>
                 <CountCard>
                   <CardTitle>Families Enrolled</CardTitle>
-                  <CountTitle>
-                    {dashboardCounts.total_family_count}
-                  </CountTitle>
+                  <CountTitle>{dashboardCounts.total_family_count}</CountTitle>
                 </CountCard>
                 <CountCard>
                   <CardTitle>Citizens Enrolled</CardTitle>
@@ -2223,9 +2209,7 @@ function Dashboard() {
                 {/* <Line /> */}
                 <MainCountRow>
                   <DetailSubtitle>Total Reports Generated</DetailSubtitle>
-                  <CountTitle>
-                    {dashboardCounts.TestReportGenerated}
-                  </CountTitle>
+                  <CountTitle>{dashboardCounts.TestReportGenerated}</CountTitle>
                 </MainCountRow>
                 <Line />
                 <MainCountRow>
@@ -2263,7 +2247,7 @@ function Dashboard() {
               </BloodDetailCard>
             </Col>
             <Divider />
-            <div>
+            <div style={{ width: "95vw" }}>
               <h3>Referrals</h3>
               <div>
                 <Row>
@@ -2275,9 +2259,7 @@ function Dashboard() {
                         Confirmation / Treatment
                       </CardTitle>
                       <CountTitle>
-                        {
-                          dashboardCounts.Referral_choice_further_management
-                        }
+                        {dashboardCounts.Referral_choice_further_management}
                       </CountTitle>
                     </ReferralCountCard>
                   </Col>
@@ -2289,9 +2271,7 @@ function Dashboard() {
                         Referral to HBT polyclinic for physician consultation
                       </CardTitle>
                       <CountTitle>
-                        {
-                          dashboardCounts.Referral_choice_suspect_symptoms
-                        }
+                        {dashboardCounts.Referral_choice_suspect_symptoms}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -2304,9 +2284,7 @@ function Dashboard() {
                         management of Complication
                       </CardTitle>
                       <CountTitle>
-                        {
-                          dashboardCounts.Referral_choice_diagnosis
-                        }
+                        {dashboardCounts.Referral_choice_diagnosis}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
@@ -2416,7 +2394,7 @@ function Dashboard() {
               <div>
                 <h3>Disease Suspected</h3>
               </div>
-              <div style={{ width: "80vw" }}>
+              <div style={{ width: "95vw" }}>
                 <Row>
                   <Col span={5}>
                     {" "}
@@ -2443,17 +2421,13 @@ function Dashboard() {
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Cervical Cancer</CardTitle>
-                      <CountTitle>
-                        {dashboardCounts.cervical_cancer}
-                      </CountTitle>
+                      <CountTitle>{dashboardCounts.cervical_cancer}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={4}>
                     <ReferralCountCard>
                       <CardTitle> Breast Cancer</CardTitle>
-                      <CountTitle>
-                        {dashboardCounts.breast_cancer}
-                      </CountTitle>
+                      <CountTitle>{dashboardCounts.breast_cancer}</CountTitle>
                     </ReferralCountCard>
                   </Col>
                 </Row>
@@ -2484,14 +2458,16 @@ function Dashboard() {
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Alzheimer/Dementia</CardTitle>
-                      <CountTitle>{dashboardCounts.Alzheimers_Dementia}</CountTitle>
+                      <CountTitle>
+                        {dashboardCounts.Alzheimers_Dementia}
+                      </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={4}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> ENT Disorder</CardTitle>
-                      <CountTitle>{dashboardCounts.ent_disorder}</CountTitle>
+                      <CardTitle>Leprosy</CardTitle>
+                      <CountTitle>{dashboardCounts.leprosy}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>
@@ -2508,9 +2484,14 @@ function Dashboard() {
                     {" "}
                     <ReferralCountCard>
                       <CardTitle> Other Communicable Disease</CardTitle>
-                      <CountTitle>
-                        {dashboardCounts.communicable}
-                      </CountTitle>
+                      <CountTitle>{dashboardCounts.communicable}</CountTitle>
+                    </ReferralCountCard>{" "}
+                  </Col>
+                  <Col span={5}>
+                    {" "}
+                    <ReferralCountCard>
+                      <CardTitle> ENT Disorder</CardTitle>
+                      <CountTitle>{dashboardCounts.ent_disorder}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                 </Row>

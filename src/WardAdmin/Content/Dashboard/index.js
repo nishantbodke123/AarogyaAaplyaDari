@@ -49,6 +49,10 @@ function WardAdminDashboard() {
   const wardId = sessionStorage.getItem("ward_id");
   const wardName = sessionStorage.getItem("wardName");
 
+  const today = new Date();
+  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+  const formattedDate = today.toLocaleDateString("en-IN", options);
+
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -118,12 +122,10 @@ function WardAdminDashboard() {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
-        // responseType: "blob",
+        responseType: "blob",
       })
       .then((response) => {
         setLoader(false);
-        console.log("Response data is ---> "+response.headers)
-
         ////////////////////////////////////////////////////////
         // const contentDisposition = response.headers["content-disposition"];
         // const filenameMatch = contentDisposition.match(/filename="(.+?)"/);
@@ -137,20 +139,19 @@ function WardAdminDashboard() {
 
         ////////////////////////////////////////////////////////////
 
-        // const href = URL.createObjectURL(response.data);
-        // const link = document.createElement("a");
-        // link.href = href;
-        // link.setAttribute(
-        //   "download",
-        //   `${wardName} ward's Citizens Report.xlsx`
-        //   // `${response}.xlsx`
-        // );
+        const href = URL.createObjectURL(response.data);
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `Ward_${wardName}_data_${formattedDate}.xlsx`
+        );
 
-        // document.body.appendChild(link);
-        // link.click();
+        document.body.appendChild(link);
+        link.click();
 
-        // document.body.removeChild(link);
-        // URL.revokeObjectURL(href);
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
       })
       .catch((err) => {
         setLoader(false);
@@ -216,87 +217,6 @@ function WardAdminDashboard() {
   };
 
   const handleMOHDashboardExcelDownload = () => {
-    // if (selectedHealthPost === "" || selectedHealthPost === 0) {
-    //   axios
-    //     .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView/${wardId}`, {
-    //       headers: {
-    //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //       },
-    //       responseType: "blob",
-    //     })
-    //     .then((response) => {
-    //       // setLoader(false);
-    //       const href = URL.createObjectURL(response.data);
-    //       const link = document.createElement("a");
-    //       link.href = href;
-    //       link.setAttribute(
-    //         "download",
-    //         `${wardName} ward's Citizens Report.xlsx`
-    //       );
-
-    //       document.body.appendChild(link);
-    //       link.click();
-
-    //       document.body.removeChild(link);
-    //       URL.revokeObjectURL(href);
-    //     })
-    //     .catch((err) => {
-    //       setLoader(false);
-    //       console.log(err.response.status);
-    //       if (err.response.status == 404) {
-    //         message.warning("Please Select Ward");
-    //       } else if (err.response.status == 401) {
-    //         LogOut();
-    //       } else if (err.response.status == 400) {
-    //         message.warning("Data is not available");
-    //       } else {
-    //         message.warning("Error" + err.response.message);
-    //       }
-    //     });
-    // } else {
-    //   axios
-    //     .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
-    //       params: {
-    //         healthpost_id: selectedHealthPost,
-    //       },
-    //       headers: {
-    //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //       },
-    //       responseType: "blob",
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //       const href = URL.createObjectURL(response.data);
-
-    //       const link = document.createElement("a");
-    //       link.href = href;
-    //       link.setAttribute(
-    //         "download",
-    //         `MOH_Dashboard_${
-    //           selectedHealthPost != undefined ? selectedHealthPost : "All"
-    //         }_Data.xlsx`
-    //       );
-
-    //       document.body.appendChild(link);
-    //       link.click();
-
-    //       document.body.removeChild(link);
-    //       URL.revokeObjectURL(href);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       if (err.response.status == "401") {
-    //         setTimeout(() => {
-    //           LogOut();
-    //         }, 1000);
-    //       } else if (err.response.status == 400) {
-    //         message.warning("Data is not available");
-    //       } else {
-    //         message.warning("Error" + err.response.message);
-    //       }
-    //     });
-    // }
-
     axios
       .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
         params: {
@@ -319,9 +239,9 @@ function WardAdminDashboard() {
         link.href = href;
         link.setAttribute(
           "download",
-          `MOH_Dashboard_${
-            selectedHealthPost !== undefined ? selectedHealthPost : "All"
-          }_Data.xlsx`
+          `${
+            selectedHealthPost !== "" ? selectedHealthPost : "All"
+          }_data_${formattedDate}.xlsx`
         );
 
         document.body.appendChild(link);
@@ -344,6 +264,22 @@ function WardAdminDashboard() {
         }
       });
   };
+
+  ////////////////////////////
+  const handleSelectChange = (event) => {
+    const selectedId = event.target.value;
+    const selectedHealthPostData = healthPostNameList.find(
+      (data) => data.id === selectedId
+    );
+
+    setSelectedHealthPost({
+      id: selectedId,
+      healthPostName: selectedHealthPostData
+        ? selectedHealthPostData.healthPostName
+        : "",
+    });
+  };
+
   return (
     <>
       <Spin spinning={loader}>
@@ -368,7 +304,8 @@ function WardAdminDashboard() {
                       // value={selectedHealthPost}
                       // placeholder="All"
                       // onChange={(e) => setSelectedHealthPost(e)}
-                      onChange={(e) => setSelectedHealthPost(e.target.value)}
+                      // onChange={(e) => setSelectedHealthPost(e.target.value)}
+                      onSelect={handleSelectChange}
                     >
                       <option value={""} selected>
                         All
