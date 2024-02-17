@@ -39,11 +39,11 @@ function AdminDashboard() {
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [dispensaryList, setDispensaryList] = useState([]);
   const [selectedWard, setSelectedWard] = useState("");
-  const [selectedWardName, setSelectedWardName] = useState();
+  const [selectedWardName, setSelectedWardName] = useState(null);
   const [selectedHealthPost, setSelectedHealthPost] = useState("");
   const [selectedDispensary, setSelectedDispensary] = useState();
-  const [selectedHealthPostName, setSelectedHealthPostName] = useState();
-  const [selectedDispensaryName, setSelectedDispensaryName] = useState();
+  const [selectedHealthPostName, setSelectedHealthPostName] = useState(null);
+  const [selectedDispensaryName, setSelectedDispensaryName] = useState(null);
 
   const today = new Date();
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
@@ -199,7 +199,14 @@ function AdminDashboard() {
 
         const link = document.createElement("a");
         link.href = href;
-        link.setAttribute("download", `Admin_Dashboard_Data.xlsx`);
+        link.setAttribute(
+          "download",
+          selectedWardName === null
+            ? `All_Ward_data_${formattedDate}.xlsx`
+            : selectedHealthPostName === null
+            ? `Ward_${selectedWardName}_data_${formattedDate}.xlsx`
+            : `${selectedHealthPostName}_data_${formattedDate}.xlsx`
+        );
 
         document.body.appendChild(link);
         link.click();

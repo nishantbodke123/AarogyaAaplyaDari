@@ -21,7 +21,7 @@ function WardAdmin() {
 
   const [sideKey, setSideKey] = useState();
   const [passedHealthpost, setPassedHealthpost] = useState();
-
+  const [name, setName] = useState();
 
   // const [wardId, setWardId] = useState(null);
   const wardId = sessionStorage.getItem("ward_id");
@@ -31,10 +31,10 @@ function WardAdmin() {
     setCollapsed(!collapsed);
   };
 
-  const updateSideKey = (newSideKey, hpVal) => {
-    console.log("The value got from the sider into updateSideKey is "+newSideKey+"hp is "+hpVal)
+  const updateSideKey = (newSideKey, hpVal, nameVal) => {
     setSideKey(newSideKey);
     setPassedHealthpost(hpVal)
+    setName(nameVal)
 
   };
 
@@ -42,7 +42,7 @@ function WardAdmin() {
   return (
     <>
       <Layout>
-      <MyContext.Provider value={{sideKey, passedHealthpost, updateSideKey,}}>
+      <MyContext.Provider value={{sideKey, passedHealthpost, name, updateSideKey,}}>
         <Sidebar collapsed={collapsed} />
         <Layout>
           <HeaderBar handleCollapse={handleCollapse} />

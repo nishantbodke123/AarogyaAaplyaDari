@@ -39,7 +39,7 @@ import { LogOut } from "../../../Auth/Logout";
 import { MyContext } from "../../Admin/WardAdmin";
 
 function WardAdminDashboard() {
-  const { sideKey, passedHealthpost } = useContext(MyContext);
+  const { sideKey, passedHealthpost, name } = useContext(MyContext);
 
   const [loader, setLoader] = useState(false);
   const [MOHDashboardData, setMOHDashboardData] = useState({});
@@ -190,10 +190,7 @@ function WardAdminDashboard() {
 
         const link = document.createElement("a");
         link.href = href;
-        link.setAttribute(
-          "download",
-          `${selectedHealthPost} Healthpost's Citizens Report.xlsx`
-        );
+        link.setAttribute("download", `${name}_data_${formattedDate}.xlsx`);
 
         document.body.appendChild(link);
         link.click();
@@ -239,9 +236,8 @@ function WardAdminDashboard() {
         link.href = href;
         link.setAttribute(
           "download",
-          `${
-            selectedHealthPost !== "" ? selectedHealthPost : "All"
-          }_data_${formattedDate}.xlsx`
+          `${wardName}_data_${formattedDate}.xlsx`
+          // A_data_17-02-2024.xlsx
         );
 
         document.body.appendChild(link);

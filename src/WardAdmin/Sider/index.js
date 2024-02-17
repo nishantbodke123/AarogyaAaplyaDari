@@ -72,11 +72,11 @@ function Sidebar(props) {
   }, [wardId]);
 
   const handleHealthPostwiseCitizenDownload = () => {
-    updateSideKey(2, selectedHealthPost, );
+    updateSideKey(2, selectedHealthPost, selectedHealthPostName );
   };
 
   const handleWardwiseCitizenDownload = () => {
-    updateSideKey(1, selectedHealthPost, );
+    updateSideKey(1, selectedHealthPost, selectedWardName);
   };
 
   const handleHealthpostSelect = (data) => {
