@@ -1,1666 +1,15 @@
-// import React, { useEffect, useState } from "react";
-// import Header from "../Header/Header";
-// import {
-//   Button,
-//   Card,
-//   Col,
-//   Divider,
-//   Input,
-//   Row,
-//   Select,
-//   Spin,
-//   Table,
-//   Tabs,
-//   message,
-// } from "antd";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faBars } from "@fortawesome/free-solid-svg-icons";
-// import axios from "axios";
-// import { BASE_URL } from "../../Utils/BaseURL";
-// import {
-//   AddButton,
-//   Box,
-//   BoxContainer,
-//   CardCount,
-//   CardHeader,
-//   ColorStrip,
-//   Column,
-//   Container,
-//   CountIcon,
-//   DesktopContainer,
-//   FormContainer,
-//   FormHeader,
-//   FormItem,
-//   InnerCard,
-//   InnerCard1,
-//   InnerCard2,
-//   InnerCard3,
-//   InnerCard4,
-//   MobileCardColumn,
-//   MobileContainer,
-//   ModalFormItem,
-//   OuterCard,
-//   PartialSurveyCountModal,
-//   StyledTabs,
-//   SubContainer,
-//   TableContainer,
-//   TableHeading,
-//   ToDayCitizenCountModal,
-//   ToDayFamilyCountModal,
-//   TotalCountModal,
-//   TotalFamilyCount,
-//   UpdateButton,
-//   UpdateModal,
-//   ViewButton,
-//   ViewModal,
-// } from "./style";
-// import TabPane from "antd/es/tabs/TabPane";
-// import { useNavigate } from "react-router-dom";
-// import FamilyHead from "../Registration/FamilyHead";
-// import TextArea from "antd/es/input/TextArea";
-// import { LogOut } from "../../Auth/Logout";
-
-// const Dashboard = () => {
-//   const [dashboardCounts, setDashboardCounts] = useState({});
-//   const [familyHeadList, setFamilyHeadList] = useState([]);
-//   const [partiallyFamilyHeadList, setPartiallyFamilyHeadList] = useState([]);
-//   const [loading, setLoader] = useState(false);
-//   const [showViewModal, setShowViewModal] = useState(false);
-//   const [familyMemeberDetails, setFamilyMemberDetails] = useState([]);
-//   const [familyID, setFamilyID] = useState();
-//   const [noOfFamilyMembers, setNoOfFamilyMembers] = useState();
-//   const [familyMemberArrayLength, setFamilyMemberArrayLength] = useState();
-//   const [showToDayCitizenCountModal, setShowToDayCitizenCountModal] =
-//     useState(false);
-//   const [TodayCitizenCountList, setTodayCitizenCountList] = useState();
-//   const [showTodayFamilyCountModal, setShowTodayFamilyCountModal] =
-//     useState(false);
-//   const [TodayFamilyCountList, setTodayFamilyCountList] = useState();
-//   const [showTotalCountModal, setShowTotalCountModal] = useState(false);
-//   const [totolCountList, setTotalCountList] = useState();
-//   const [showTotalFamilyCountModal, setShowTotalFamilyCountModal] =
-//     useState(false);
-//   const [totalFamilyCountList, setTotalFamilyCountList] = useState();
-//   const [showPartialCountModal, setShowPartialCountModal] = useState(false);
-//   const [partialCountList, setPartialCountList] = useState();
-//   const navigate = useNavigate();
-
-//   let axiosConfig = {
-//     headers: {
-//       Authorization: `Token ${sessionStorage.getItem("Token")}`,
-//     },
-//   };
-
-//   const handleShowToDayCitizenCountModal = () => {
-//     axios
-//       .get(`${BASE_URL}/healthworker/api/GetCitizenList/Today`, axiosConfig)
-//       .then((response) => {
-//         console.log(response.data);
-//         setTodayCitizenCountList(response.data);
-//         setShowToDayCitizenCountModal(true);
-//       })
-//       .catch((error) => {
-//         if (error.response.status == 401) {
-//           message.warning("system is logged out");
-//           setTimeout(() => {
-//             window.location.replace("/");
-//           }, 1000);
-//         } else {
-//           message.error(error.message);
-//         }
-//       });
-//   };
-//   const handleHideToDayCitizenCountModal = () => {
-//     setShowToDayCitizenCountModal(false);
-//   };
-//   const handleShowTodayFamilyCountModal = () => {
-//     axios
-//       .get(`${BASE_URL}/healthworker/api/GetFamilyList/Today`, axiosConfig)
-//       .then((response) => {
-//         console.log(response.data);
-//         setTodayFamilyCountList(response.data);
-//         setShowTodayFamilyCountModal(true);
-//       })
-//       .catch((error) => {
-//         if (error.response.status == 401) {
-//           message.warning("system is logged out");
-//           setTimeout(() => {
-//             window.location.replace("/");
-//           }, 1000);
-//         } else {
-//           message.error(error.message);
-//         }
-//       });
-//   };
-//   const handleHideTodayFamilyCountModal = () => {
-//     setShowTodayFamilyCountModal(false);
-//   };
-
-//   const handleShowTotalCountModal = () => {
-//     axios
-//       .get(`${BASE_URL}/healthworker/api/GetCitizenList/All`, axiosConfig)
-//       .then((response) => {
-//         console.log(response.data);
-//         setTotalCountList(response.data);
-//         setShowTotalCountModal(true);
-//       })
-//       .catch((error) => {
-//         if (error.response.status == 401) {
-//           message.warning("system is logged out");
-//           setTimeout(() => {
-//             window.location.replace("/");
-//           }, 1000);
-//         } else {
-//           message.error(error.message);
-//         }
-//       });
-//   };
-//   const handleHideTotalCountModal = () => {
-//     setShowTotalCountModal(false);
-//   };
-//   const handleShowTotalFamilyCountModal = () => {
-//     axios
-//       .get(`${BASE_URL}/healthworker/api/GetFamilyList/All`, axiosConfig)
-//       .then((response) => {
-//         console.log(response.data);
-//         setTotalFamilyCountList(response.data);
-//         setShowTotalFamilyCountModal(true);
-//       })
-//       .catch((error) => {
-//         if (error.response.status == 401) {
-//           message.warning("system is logged out");
-//           setTimeout(() => {
-//             window.location.replace("/");
-//           }, 1000);
-//         } else {
-//           message.error(error.message);
-//         }
-//       });
-//   };
-//   const handleHideTotalFamilyCountModal = () => {
-//     setShowTotalFamilyCountModal(false);
-//   };
-
-//   const handleShowPartialCountModal = () => {
-//     setLoader(true);
-//     axios
-//       .get(
-//         `${BASE_URL}/healthworker/api/GetPartiallyInsertedRecord`,
-//         axiosConfig
-//       )
-//       .then((response) => {
-//         console.log(response.data);
-//         setLoader(false);
-//         setPartialCountList(response.data);
-//       })
-//       .catch((error) => {
-//         if (error.response.status == 401) {
-//           message.warning("system is logged out");
-//           setTimeout(() => {
-//             window.location.replace("/");
-//           }, 1000);
-//         } else {
-//           message.error(error.message);
-//         }
-//       });
-//     setShowPartialCountModal(true);
-//   };
-//   const handleHidePartialCountModal = () => {
-//     setShowPartialCountModal(false);
-//   };
-
-//   useEffect(() => {
-//     setLoader(true);
-
-//     console.log(axiosConfig);
-//     axios
-//       .get(`${BASE_URL}/healthworker/api/GetSurveyorDashboard`, axiosConfig)
-//       .then((response) => {
-//         console.log(response.data);
-//         setDashboardCounts(response.data);
-//         setLoader(false);
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//         if (error.response.status == 401) {
-//           message.warning("system is logged out");
-//           setTimeout(() => {
-//             LogOut();
-//           }, 1000);
-//         } else {
-//           message.error(error.message);
-//         }
-//         setLoader(false);
-//       });
-//     axios
-//       .get(`${BASE_URL}/healthworker/api/GetFamilyHeadList`, axiosConfig)
-//       .then((response) => {
-//         console.log(response.data);
-//         setFamilyHeadList(response.data);
-//         setLoader(false);
-//       })
-//       .catch((error) => {
-//         console.log(error.response.status);
-//         if (error.response.status == 401) {
-//           message.warning("system is logged out");
-//           setTimeout(() => {
-//             LogOut();
-//           }, 1000);
-//         } else {
-//           // message.error(error.message);
-//         }
-//         setLoader(false);
-//       });
-
-//     axios
-//       .get(
-//         `${BASE_URL}/healthworker/api/GetPartiallyInsertedRecord`,
-//         axiosConfig
-//       )
-//       .then((response) => {
-//         console.log(response.data);
-//         setLoader(false);
-//         setPartiallyFamilyHeadList(response.data);
-//       })
-//       .catch((error) => {
-//         setLoader(false);
-//         console.log(error);
-//       });
-//   }, []);
-
-//   const handleViewModal = (id) => {
-//     console.log(id);
-//     const formData = new FormData();
-//     formData.append("search", id);
-//     let axiosConfig = {
-//       headers: {
-//         Authorization: `Token ${sessionStorage.getItem("Token")}`,
-//       },
-//       params: {
-//         search: id,
-//       },
-//     };
-
-//     axios
-//       .get(`${BASE_URL}/healthworker/api/GetFamilyMembersDetails`, axiosConfig)
-//       .then((response) => {
-//         console.log(response.data.length);
-//         setFamilyMemberArrayLength(response.data.length);
-//         setFamilyMemberDetails(response.data);
-//         setShowViewModal(true);
-//       })
-//       .catch((error) => {
-//         if (error.response.status == 401) {
-//           message.warning("system is logged out");
-//           setTimeout(() => {
-//             LogOut();
-//           }, 1000);
-//         } else {
-//           message.error(error.message);
-//         }
-//       });
-//   };
-//   const handleHideViewModal = () => {
-//     setShowViewModal(false);
-//   };
-//   // familyHeadList
-//   const Items = [
-//     {
-//       title: "ID",
-//       dataIndex: "id",
-//     },
-//     {
-//       title: "Family ID",
-//       dataIndex: "familyId",
-//     },
-//     {
-//       title: "Name",
-//       dataIndex: "name",
-//     },
-//     {
-//       title: "Mobile Number",
-//       dataIndex: "mobileNo",
-//     },
-//     {
-//       title: "Address",
-//       dataIndex: "address",
-//     },
-//     {
-//       title: "Total Family Members",
-//       dataIndex: "totalFamilyMembers",
-//     },
-//     {
-//       title: "Action",
-//       render: (data) => {
-//         return (
-//           <>
-//             <ViewButton
-//               onClick={() => {
-//                 setFamilyID(data.id);
-//                 setNoOfFamilyMembers(data.totalFamilyMembers);
-//                 handleViewModal(data.familyId);
-//               }}
-//             >
-//               View
-//             </ViewButton>
-//           </>
-//         );
-//       },
-//     },
-//   ];
-
-//   const handleFamilyMembersView = (data) => {
-//     console.log(data);
-//     navigate("/update", { state: data });
-//   };
-
-//   const handleNewFamilyMemberAdd = () => {
-//     console.log(familyID, noOfFamilyMembers);
-//     navigate("/addMember", { state: familyID });
-//   };
-//   const FamilyMemberItems = [
-//     {
-//       title: "ID",
-//       dataIndex: "id",
-//     },
-//     {
-//       title: "Member ID",
-//       dataIndex: "memberId",
-//     },
-//     {
-//       title: "Name",
-//       dataIndex: "name",
-//     },
-//     {
-//       title: "Gender",
-//       dataIndex: "gender",
-//     },
-//     {
-//       title: "Age",
-//       dataIndex: "age",
-//     },
-//     {
-//       title: "Mobile Number",
-//       dataIndex: "mobileNo",
-//     },
-//     {
-//       title: "Aadhar No",
-//       dataIndex: "aadharCard",
-//     },
-//     {
-//       title: "Abha ID",
-//       dataIndex: "abhaId",
-//     },
-//     {
-//       title: "Action",
-//       render: (data) => {
-//         return (
-//           <ViewButton onClick={() => handleFamilyMembersView(data)}>
-//             View
-//           </ViewButton>
-//         );
-//       },
-//     },
-//   ];
-
-//   const TodayCitizenCountTitleList = [
-//     {
-//       title: "Member ID",
-//       dataIndex: "memberId",
-//     },
-//     {
-//       title: "Name",
-//       dataIndex: "name",
-//     },
-//     {
-//       title: "Gender",
-//       dataIndex: "gender",
-//     },
-//     {
-//       title: "Age",
-//       dataIndex: "age",
-//     },
-//   ];
-//   const TodayFamilyCountTitleList = [
-//     {
-//       title: "Family ID",
-//       dataIndex: "familyId",
-//     },
-//     {
-//       title: "Name",
-//       dataIndex: "name",
-//     },
-//     {
-//       title: "Address",
-//       dataIndex: "address",
-//     },
-//   ];
-//   const TotalCountTitleList = [
-//     {
-//       title: "Member ID",
-//       dataIndex: "memberId",
-//     },
-//     {
-//       title: "Name",
-//       dataIndex: "name",
-//     },
-//     {
-//       title: "Gender",
-//       dataIndex: "gender",
-//     },
-//     {
-//       title: "Age",
-//       dataIndex: "age",
-//     },
-//   ];
-//   const TotalFamilyCountList = [
-//     {
-//       title: "Family ID",
-//       dataIndex: "familyId",
-//     },
-//     {
-//       title: "Name",
-//       dataIndex: "name",
-//     },
-//     {
-//       title: "Address",
-//       dataIndex: "address",
-//     },
-//   ];
-//   const PartialCountTitleList = [
-//     {
-//       title: "ID",
-//       dataIndex: "id",
-//     },
-//     {
-//       title: "Family ID",
-//       dataIndex: "familyId",
-//     },
-//     {
-//       title: "Name",
-//       dataIndex: "name",
-//     },
-//     {
-//       title: "Mobile No",
-//       dataIndex: "mobileNo",
-//     },
-//   ];
-//   return (
-//     <div style={{ backgroundColor: "#F5F5F5" }}>
-//       <Spin tip="Loading" spinning={loading}>
-//         <Header />
-//         <MobileContainer>
-//           <SubContainer>
-//             <Row>
-//               <MobileCardColumn>
-//                 <Box onClick={() => handleShowToDayCitizenCountModal()}>
-//                   <ColorStrip />
-//                   <BoxContainer>
-//                     <Row>
-//                       <Col>
-//                         <CountIcon icon={faBars} />
-//                       </Col>
-//                       <Col>
-//                         <CardHeader>Today's CBAC count</CardHeader>
-//                       </Col>
-//                     </Row>
-//                     <CardCount>{dashboardCounts.todays_count}</CardCount>
-//                   </BoxContainer>
-//                 </Box>
-//               </MobileCardColumn>
-//               <MobileCardColumn>
-//                 <Box onClick={() => handleShowTodayFamilyCountModal()}>
-//                   <ColorStrip />
-//                   <BoxContainer>
-//                     <Row>
-//                       <Col>
-//                         <CountIcon icon={faBars} />
-//                       </Col>
-//                       <Col>
-//                         <CardHeader>No of citizen Enrolled </CardHeader>
-//                       </Col>
-//                     </Row>
-//                     <CardCount>{dashboardCounts.today_family_count}</CardCount>
-//                   </BoxContainer>
-//                 </Box>
-//               </MobileCardColumn>
-//               <MobileCardColumn>
-//                 <Box onClick={() => handleShowTotalCountModal()}>
-//                   <ColorStrip />
-//                   <BoxContainer>
-//                     <Row>
-//                       <Col>
-//                         <CountIcon icon={faBars} />
-//                       </Col>
-//                       <Col>
-//                         <CardHeader>Today's family Recorded</CardHeader>
-//                       </Col>
-//                     </Row>
-//                     <CardCount>{dashboardCounts.total_count}</CardCount>
-//                   </BoxContainer>
-//                 </Box>
-//               </MobileCardColumn>
-//               <MobileCardColumn>
-//                 <Box onClick={() => handleShowTotalFamilyCountModal()}>
-//                   <ColorStrip />
-//                   <BoxContainer>
-//                     <Row>
-//                       <Col>
-//                         <CountIcon icon={faBars} />
-//                       </Col>
-//                       <Col>
-//                         <CardHeader>No of family Enrolled</CardHeader>
-//                       </Col>
-//                     </Row>
-//                     <CardCount>{dashboardCounts.total_family_count}</CardCount>
-//                   </BoxContainer>
-//                 </Box>
-//               </MobileCardColumn>
-//               <MobileCardColumn>
-//                 <Box onClick={() => handleShowPartialCountModal()}>
-//                   <ColorStrip />
-//                   <BoxContainer>
-//                     <Row>
-//                       <Col>
-//                         <CountIcon icon={faBars} />
-//                       </Col>
-//                       <Col>
-//                         <CardHeader>Partial Survey </CardHeader>
-//                       </Col>
-//                     </Row>
-//                     <CardCount>
-//                       {dashboardCounts.partial_survey_count}
-//                     </CardCount>
-//                   </BoxContainer>
-//                 </Box>
-//               </MobileCardColumn>
-//               <MobileCardColumn>
-//                 <Box>
-//                   <ColorStrip />
-//                   <BoxContainer>
-//                     <Row>
-//                       <Col>
-//                         <CountIcon icon={faBars} />
-//                       </Col>
-//                       <Col>
-//                         <CardHeader>Number of CBAC Filled </CardHeader>
-//                       </Col>
-//                     </Row>
-//                     <CardCount>{dashboardCounts.total_cbac_count}</CardCount>
-//                   </BoxContainer>
-//                 </Box>
-//               </MobileCardColumn>
-//               <MobileCardColumn>
-//                 <Box>
-//                   <ColorStrip />
-//                   <BoxContainer>
-//                     <Row>
-//                       <Col></Col>
-//                       <Col>
-//                         <CardHeader>Citizens more than of 30 years </CardHeader>
-//                       </Col>
-//                     </Row>
-//                     <CardCount>{dashboardCounts.citizen_above_30}</CardCount>
-//                   </BoxContainer>
-//                 </Box>
-//               </MobileCardColumn>
-//               <MobileCardColumn>
-//                 <Box>
-//                   <ColorStrip />
-//                   <BoxContainer>
-//                     <Row>
-//                       <Col></Col>
-//                       <Col>
-//                         <CardHeader>Citizens more than of 60 years </CardHeader>
-//                       </Col>
-//                     </Row>
-//                     <CardCount>{dashboardCounts.citizen_above_60}</CardCount>
-//                   </BoxContainer>
-//                 </Box>
-//               </MobileCardColumn>
-//             </Row>
-//           </SubContainer>
-//         </MobileContainer>
-
-//         <DesktopContainer>
-//           <div
-//             style={{
-//               display: "flex",
-//               flexDirection: "row",
-//               backgroundColor: "#F5F5F5",
-//             }}
-//           >
-//             <Card
-//               style={{
-//                 // margin: "2%",
-//                 // border: "1px solid grey",
-//                 border: "none",
-//                 background: "transparent",
-//                 width: "45%",
-//               }}
-//             >
-//               <Row>
-//                 <div
-//                   style={{
-//                     margin: "0.8% -5% -1.5% 2%",
-//                     fontSize: "19px",
-//                     fontWeight: "600",
-
-//                     width: "100%",
-//                     // backgroundColor: "#C7DCA7",
-//                   }}
-//                 >
-//                   <p style={{ margin: "0% 1% 1% 0%" }}>CITIZEN'S DETAILS</p>
-//                 </div>
-//               </Row>
-//               <Row>
-//                 <div
-//                   style={{
-//                     width: "30%",
-//                     height: "12vh",
-//                     margin: "2% 1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Family Enrolled"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "1px", textAlign: "left" }}>
-//                       <CardCount>
-//                         {dashboardCounts.total_family_count}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "30%",
-//                     height: "12vh",
-//                     margin: "2% 1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Citizen Enrolled"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "1px", textAlign: "left" }}>
-//                       <CardCount>
-//                         {dashboardCounts.today_family_count}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-//                 <div
-//                   style={{
-//                     width: "30%",
-//                     height: "12vh",
-//                     margin: "2% 1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Citizen Enrolled"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "1px", textAlign: "left" }}>
-//                       <CardCount>
-//                         {dashboardCounts.today_family_count}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "30%",
-//                     height: "12vh",
-//                     margin: "2% 1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="More than 60 years"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "1px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.citizen_above_60}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-//                 {/* </SubContainer>
-//                 <SubContainer> */}
-//                 {/* vulnerable citizen and CBAC Filled */}
-
-//                 {/* ------------------------ */}
-
-//                 <div
-//                   style={{
-//                     width: "30%",
-//                     height: "12vh",
-//                     margin: "2% 1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="CBAC form filled"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>
-//                         {dashboardCounts.blood_collected_center}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "30%",
-//                     height: "12vh",
-//                     margin: "2% 1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="ABHA ID Generated"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>
-//                         {dashboardCounts.blood_collected_home}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "30%",
-//                     height: "12vh",
-//                     margin: "2% 1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="CBAC Count"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.todays_count}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "30%",
-//                     height: "12vh",
-//                     margin: "2% 1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Family Recorded"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.total_count}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 {/* </SubContainer> */}
-//                 {/* </Col> */}
-//               </Row>
-//             </Card>
-
-//             <Card
-//               style={{
-//                 // margin: "2%",
-//                 // border: "1px solid grey",
-//                 border: "none",
-//                 background: "transparent",
-//                 width: "60%",
-//               }}
-//             >
-//               <Row>
-//                 <div
-//                   style={{
-//                     // margin: "2% -5% -1% 2%",
-//                     fontSize: "19px",
-//                     fontWeight: "600",
-//                     // backgroundColor: "#C7DCA7",
-//                     width: "100%",
-//                   }}
-//                 >
-//                   <p style={{ margin: "0.6% 0% 0.3% 1%" }}>DISEASE SUSPECTED</p>
-//                 </div>
-//               </Row>
-
-//               <div style={{ display: "flex" }}>
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Diabetes"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.diabetes}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Hypertension"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.hypertension}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Oral Cancer"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.oral_Cancer}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Cervical Cancer"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.cervical_cancer}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-//               </div>
-//               <div style={{ display: "flex" }}>
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   {" "}
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Breast Cancer"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.breast_cancer}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="COPD"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.copd}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Asthama"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.asthama}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="TB"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.tb}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-//               </div>
-//               <div style={{ display: "flex" }}>
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Alzheimer/Dementia"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       {/* <CardCount>{dashboardCounts.tb}</CardCount> */}
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="ENT Disorder"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.ent_disorder}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Eye Disorder"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.eye_disorder}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "24%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Communicable"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>{dashboardCounts.communicable}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-//               </div>
-//             </Card>
-//           </div>
-
-//           <div
-//             style={{
-//               display: "flex",
-//               height: "500px",
-//               backgroundColor: "#F5F5F5",
-//             }}
-//           >
-//             <Card
-//               style={{
-//                 // margin: "2%",
-//                 background: "transparent",
-//                 // border: "1px solid grey",
-//                 border: "none",
-//                 width: "40%",
-//               }}
-//             >
-//               <div>
-//                 <p
-//                   style={{
-//                     margin: "3% 0% 0% 3%",
-//                     fontSize: "16px",
-//                     fontWeight: "600",
-//                   }}
-//                 >
-//                   BLOOD COLLECTION
-//                 </p>
-//               </div>
-
-//               <div style={{ display: "flex" }}>
-//                 <div
-//                   style={{
-//                     width: "50%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Blood Collected At Home"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       {/* Uncomment the following line if you are using Card.Meta for title */}
-//                       {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
-//                       <CardCount>
-//                         {dashboardCounts.blood_collected_home}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "50%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Blood Collected At Center"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       {/* Uncomment the following line if you are using Card.Meta for title */}
-//                       {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
-//                       <CardCount>
-//                         {dashboardCounts.blood_collected_center}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <p
-//                   style={{
-//                     margin: "3% 0% 0% 3%",
-//                     fontSize: "16px",
-//                     fontWeight: "600",
-//                   }}
-//                 >
-//                   DENIED BY
-//                 </p>
-//               </div>
-
-//               <div style={{ display: "flex" }}>
-//                 <div
-//                   style={{
-//                     width: "50%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="AMO's"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       {/* Uncomment the following line if you are using Card.Meta for title */}
-//                       {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
-//                       <CardCount>
-//                         {dashboardCounts.denieded_by_mo_count}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "50%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Citizen"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       <CardCount>
-//                         {dashboardCounts.denieded_by_mo_individual}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <p
-//                   style={{
-//                     margin: "3% 0% 0% 3%",
-//                     fontSize: "16px",
-//                     fontWeight: "600",
-//                   }}
-//                 >
-//                   BLOOD TEST
-//                 </p>
-//               </div>
-//               <div style={{ display: "flex" }}>
-//                 <div
-//                   style={{
-//                     width: "50%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Tests Assigned"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       {/* Uncomment the following line if you are using Card.Meta for title */}
-//                       {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
-//                       <CardCount>{dashboardCounts.TestsAssigned}</CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-
-//                 <div
-//                   style={{
-//                     width: "50%",
-//                     height: "12vh",
-//                     margin: "1%",
-//                     padding: 0,
-//                     background: "white",
-//                     borderRadius: "8px",
-//                   }}
-//                 >
-//                   <Row flex="auto">
-//                     <Card.Meta
-//                       title="Tests Done"
-//                       style={{ marginTop: "5px", marginLeft: "5px" }}
-//                     />
-//                   </Row>
-//                   <Row>
-//                     <div style={{ marginTop: "5px", textAlign: "left" }}>
-//                       {/* Uncomment the following line if you are using Card.Meta for title */}
-//                       {/* <Card.Meta title={dashboardCounts.blood_collected_home} /> */}
-//                       <CardCount>
-//                         {dashboardCounts.TestReportGenerated}
-//                       </CardCount>
-//                     </div>
-//                   </Row>
-//                 </div>
-//               </div>
-//             </Card>
-
-//             <Card
-//               style={{
-//                 // margin: "2%",
-//                 // border: "1px solid grey",
-//                 border: "none",
-//                 background: "transparent",
-//                 width: "60%",
-//               }}
-//             >
-//               <Row>
-//                 <div
-//                   style={{
-//                     fontSize: "19px",
-//                     fontWeight: "600",
-//                     // backgroundColor: "#C7DCA7",
-//                     width: "100%",
-//                   }}
-//                 >
-//                   <p style={{ margin: "0.6% 0% 0.3% 1%" }}>REFERRALS</p>
-//                 </div>
-//               </Row>
-
-//               <div
-//                 style={{
-//                   display: "flex",
-//                   flexDirection: "column",
-//                   width: "100%",
-//                   justifyContent: "space-between",
-//                 }}
-//               >
-//                 <Card
-//                   style={{
-//                     flex: "1",
-//                     height: "10vh",
-//                     fontWeight: "600",
-//                     margin: "1%",
-//                   }}
-//                 >
-//                   <div
-//                     style={{
-//                       width: "100%",
-//                       display: "flex",
-//                       flexDirection: "row",
-//                     }}
-//                   >
-//                     <Row align="middle">
-//                       <Col flex="auto">
-//                         <Card.Meta
-//                           title="Referrals to Mun. Dispensary / HBT for Blood Test/Confirmation / Treatment : "
-//                           style={{ whiteSpace: "break-spaces" }}
-//                         />
-//                       </Col>
-//                       <Col>
-//                         <CardCount>
-//                           {dashboardCounts.Referral_choice_further_management}
-//                         </CardCount>
-//                       </Col>
-//                     </Row>
-//                   </div>
-//                 </Card>
-
-//                 <Card
-//                   style={{
-//                     flex: "1",
-//                     height: "10vh",
-//                     fontWeight: "600",
-//                     margin: "1%",
-//                   }}
-//                 >
-//                   <div
-//                     style={{
-//                       width: "100%",
-//                       display: "flex",
-//                       flexDirection: "row",
-//                     }}
-//                   >
-//                     <Row align="middle">
-//                       <Col flex="auto">
-//                         <Card.Meta
-//                           title="Referral to HBT polyclinic for physician consultation : "
-//                           style={{ whiteSpace: "break-spaces" }}
-//                         />
-//                       </Col>
-//                       <Col>
-//                         <CardCount>
-//                           {dashboardCounts.Referral_choice_suspect_symptoms}
-//                         </CardCount>
-//                       </Col>
-//                     </Row>
-//                   </div>
-//                 </Card>
-
-//                 <Card
-//                   style={{
-//                     flex: "1",
-//                     height: "10vh",
-//                     fontWeight: "600",
-//                     margin: "1%",
-//                   }}
-//                 >
-//                   <div
-//                     style={{
-//                       width: "100%",
-//                       display: "flex",
-//                       flexDirection: "row",
-//                     }}
-//                   >
-//                     <Row align="middle">
-//                       <Col flex="auto">
-//                         <Card.Meta
-//                           title="Referral to peripheral hospital / Special hospital for
-//                 management of complication : "
-//                           style={{ whiteSpace: "break-spaces" }}
-//                         />
-//                       </Col>
-//                       <Col>
-//                         <CardCount>
-//                           {dashboardCounts.Referral_choice_diagnosis}
-//                         </CardCount>
-//                       </Col>
-//                     </Row>
-//                   </div>
-//                 </Card>
-
-//                 <Card
-//                   style={{
-//                     flex: "1",
-//                     height: "10vh",
-//                     // margin: "2% 1%",
-//                     fontWeight: "600",
-//                     margin: "1%",
-//                     // boxShadow: "0px 4px 14px -4px rgba(0,0,0,0.75)",
-//                   }}
-//                 >
-//                   <div
-//                     style={{
-//                       width: "100%",
-//                       display: "flex",
-//                       flexDirection: "row",
-//                     }}
-//                   >
-//                     <Row align="middle">
-//                       <Col flex="auto">
-//                         <Card.Meta
-//                           title="Referral to Private facility : "
-//                           style={{ whiteSpace: "break-spaces" }}
-//                         />
-//                       </Col>
-//                       <Col>
-//                         <CardCount>
-//                           {
-//                             dashboardCounts.Referral_choice_co_morbid_investigation
-//                           }
-//                         </CardCount>
-//                       </Col>
-//                     </Row>
-//                   </div>
-//                 </Card>
-//               </div>
-//             </Card>
-//           </div>
-//         </DesktopContainer>
-
-//         {/* <TableContainer>
-//           <TableHeading>Family Heads Details </TableHeading>
-//           <StyledTabs defaultActiveKey="1" centered size="large">
-//             <TabPane tab="All Family Details" key="1">
-//               <Table
-//                 columns={Items}
-//                 dataSource={familyHeadList}
-//                 bordered
-//                 scroll={{ x: 500 }}
-//               ></Table>
-//             </TabPane>
-//             <TabPane tab="Partially Submitted Family Details" key="2">
-//               <Table
-//                 columns={Items}
-//                 dataSource={partiallyFamilyHeadList}
-//                 scroll={{ x: 500 }}
-//               ></Table>
-//             </TabPane>
-//           </StyledTabs>
-//         </TableContainer> */}
-//         <ViewModal
-//           footer={<></>}
-//           width={1200}
-//           open={showViewModal}
-//           onCancel={handleHideViewModal}
-//         >
-//           <Table
-//             columns={FamilyMemberItems}
-//             dataSource={familyMemeberDetails}
-//             scroll={{ x: 800, y: 800 }}
-//           ></Table>
-//           {familyMemberArrayLength == noOfFamilyMembers ? (
-//             <></>
-//           ) : (
-//             <>
-//               {" "}
-//               <AddButton
-//                 onClick={() => {
-//                   handleNewFamilyMemberAdd();
-//                 }}
-//               >
-//                 Add Member
-//               </AddButton>
-//             </>
-//           )}
-//         </ViewModal>
-//         <ToDayCitizenCountModal
-//           open={showToDayCitizenCountModal}
-//           onCancel={handleHideToDayCitizenCountModal}
-//           width={800}
-//           footer={<></>}
-//         >
-//           <h3>Today's Citizen Count</h3>
-//           <Table
-//             columns={TodayCitizenCountTitleList}
-//             dataSource={TodayCitizenCountList}
-//             bordered
-//             scroll={{ y: 300, x: 500 }}
-//           ></Table>
-//         </ToDayCitizenCountModal>
-//         <ToDayFamilyCountModal
-//           open={showTodayFamilyCountModal}
-//           onCancel={handleHideTodayFamilyCountModal}
-//           width={800}
-//           footer={<></>}
-//         >
-//           <h3>Today's Family Count</h3>
-//           <Table
-//             columns={TodayFamilyCountTitleList}
-//             dataSource={TodayFamilyCountList}
-//             bordered
-//             scroll={{ y: 300 }}
-//           ></Table>
-//         </ToDayFamilyCountModal>
-//         <TotalCountModal
-//           open={showTotalCountModal}
-//           width={800}
-//           onCancel={handleHideTotalCountModal}
-//           footer={<></>}
-//         >
-//           <h3>Total Count</h3>
-//           <Table
-//             columns={TotalCountTitleList}
-//             dataSource={totolCountList}
-//             scroll={{ y: 300 }}
-//           ></Table>
-//         </TotalCountModal>
-//         <TotalFamilyCount
-//           open={showTotalFamilyCountModal}
-//           onCancel={handleHideTotalFamilyCountModal}
-//           width={800}
-//           footer={<></>}
-//         >
-//           <h3>Total Family Count</h3>
-//           <Table
-//             columns={TotalFamilyCountList}
-//             dataSource={totalFamilyCountList}
-//             scroll={{ y: 400 }}
-//           ></Table>
-//         </TotalFamilyCount>
-//         <PartialSurveyCountModal
-//           open={showPartialCountModal}
-//           width={800}
-//           onCancel={handleHidePartialCountModal}
-//           footer={<></>}
-//         >
-//           <h3>Partial Survey</h3>
-//           <Table
-//             columns={PartialCountTitleList}
-//             dataSource={partialCountList}
-//           ></Table>
-//         </PartialSurveyCountModal>
-//       </Spin>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
-
-import { Row, Col, Divider, Form, Spin, Button, Dropdown, message } from "antd";
+import {
+  Row,
+  Col,
+  Divider,
+  Form,
+  Spin,
+  Button,
+  Dropdown,
+  message,
+  Popover,
+  Radio,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import {
   BloodDetailCard,
@@ -1682,14 +31,25 @@ import {
   DownloadOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
-import { ViewButton } from "./style";
+import {
+  ABHAIDSubmitButton,
+  DownlaodCARDButton,
+  DownlaodQRButton,
+  DownloadPopoverText,
+  InputForm,
+  ViewButton,
+} from "./style";
 
 import { useNavigate } from "react-router-dom";
 
 import Header from "../Header/Header";
 
 import { createContext, useContext } from "react";
+import JSEncrypt from "jsencrypt";
+import OtpInput from "react-otp-input";
 
 // import { MyContext } from "../../Admin/Admin";
 
@@ -1720,6 +80,59 @@ function Dashboard() {
   const [showPartialCountModal, setShowPartialCountModal] = useState(false);
   const [partialCountList, setPartialCountList] = useState();
   const navigate = useNavigate();
+
+  //1 st public key
+  var encrypt = new JSEncrypt();
+  var publicKey = `MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAstWB95C5pHLXiYW59qyO
+    4Xb+59KYVm9Hywbo77qETZVAyc6VIsxU+UWhd/k/YtjZibCznB+HaXWX9TVTFs9N
+    wgv7LRGq5uLczpZQDrU7dnGkl/urRA8p0Jv/f8T0MZdFWQgks91uFffeBmJOb58u
+    68ZRxSYGMPe4hb9XXKDVsgoSJaRNYviH7RgAI2QhTCwLEiMqIaUX3p1SAc178ZlN
+    8qHXSSGXvhDR1GKM+y2DIyJqlzfik7lD14mDY/I4lcbftib8cv7llkybtjX1Aayf
+    Zp4XpmIXKWv8nRM488/jOAF81Bi13paKgpjQUUuwq9tb5Qd/DChytYgBTBTJFe7i
+    rDFCmTIcqPr8+IMB7tXA3YXPp3z605Z6cGoYxezUm2Nz2o6oUmarDUntDhq/PnkN
+    ergmSeSvS8gD9DHBuJkJWZweG3xOPXiKQAUBr92mdFhJGm6fitO5jsBxgpmulxpG
+    0oKDy9lAOLWSqK92JMcbMNHn4wRikdI9HSiXrrI7fLhJYTbyU3I4v5ESdEsayHXu
+    iwO/1C8y56egzKSw44GAtEpbAkTNEEfK5H5R0QnVBIXOvfeF4tzGvmkfOO6nNXU3
+    o/WAdOyV3xSQ9dqLY5MEL4sJCGY1iJBIAQ452s8v0ynJG5Yq+8hNhsCVnklCzAls
+    IzQpnSVDUVEzv17grVAw078CAwEAAQ==`;
+  encrypt.setPublicKey(publicKey);
+
+  // 2 nd public key
+  var encrypt2 = new JSEncrypt();
+  var publicKey2 = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7Zq7YKcjmccSBnR9CDHd
+    6IX96V7D/a2XSMs+yCgejSe956mqjA/0Q9h+Xnx7ZZdwe2Tf2Jq/mWXa+gYdnta5
+    8otreXg/5oGnNV3Edlixz1Oc8tJg5bG4sIUCGZcbEQGSbm1iC+Fp1kS+YLVG4Su8
+    KoRxcCvRJI2QkfqAruX3JoFjggOkv0TgWCo9z6NV6PPmPN3UsXyH3OPDi3Ewnvd6
+    4ngCUKPSBiIDwhLj2yYSShcxH8aWbrz00SJodBJzqgjvCfZuljBXXIN4Ngi/nzqE
+    J7woKQ1kNgWoHFZy7YL74PihW//4OlniSRoITX+7ChILIv2ezSmAdIjpNJ9Dg9XK
+    cQIDAQAB`;
+  encrypt2.setPublicKey(publicKey2);
+
+  // OTP Timer
+
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(interval);
+        } else {
+          setSeconds(59);
+          setMinutes(minutes - 1);
+        }
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
 
   let axiosConfig = {
     headers: {
@@ -2123,6 +536,454 @@ function Dashboard() {
       dataIndex: "mobileNo",
     },
   ];
+  const [loading, setLoading] = useState(false);
+  const [otp, setOtp] = useState();
+  const [abhaId, setAbhaId] = useState();
+  const [txnId, settxnID] = useState();
+  const [selectedAuthMethods, setSelectedAuthMethods] = useState();
+  const [aadharNumberSubmitted, setAadharNumberSubmitted] = useState(false);
+  const [ABHAIDSubmited, setABHAIDSubmited] = useState(false);
+  const [authMethodSelected, setAuthMethodSelected] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [mobileNumberLinkedWithABHAID, setMobileNumberLinkedWithABHAID] =
+    useState();
+  const [authMethodResponse, setAuthMethodResponse] = useState([]);
+  const [healthIdResponse, setHealthIdResponse] = useState();
+  const handleABHAIDSubmit = async () => {
+    setMinutes(2);
+    setSeconds(29);
+    console.log(abhaId);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+
+    const formData = new FormData();
+    formData.append("clientId", "SBX_004200");
+    formData.append("clientSecret", "bed456a5-46bb-4de5-94ef-6caa2dc77a00");
+    await axios
+      .post(`${BASE_URL}/abdm/api/GetGatewaySessionTokenAPI`, formData, {
+        "Content-Type": "application/json",
+      })
+      .then((res) => {
+        console.log(res);
+        sessionStorage.setItem("BearerToken", res.data.accessToken);
+        axios
+          .post(
+            `${BASE_URL}/abdm/api/v1/phr/registration/hid/search/auth-methods`,
+            { healhtIdNumber: abhaId },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${res.data.accessToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            setAuthMethodResponse(res.data.authMethods);
+            setHealthIdResponse(res.data.healthIdNumber);
+            // setABHAIDSubmited(true);
+            setAuthMethodSelected(true);
+            // message.success(res.data.message);
+          })
+          .catch((err) => {
+            console.log(err);
+            message.warning(err.response.data.message);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleAbhaIDVerify = async () => {
+    console.log(otp);
+    let encryptedOTP = encrypt.encrypt(otp);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+
+    try {
+      let response;
+      const data = {
+        otp: otp,
+        txnId: txnId,
+      };
+      if (selectedAuthMethods === "AADHAAR_OTP") {
+        setOtp();
+        response = await axios.post(
+          `${BASE_URL}/abdm/api/v1/auth/confirmWithAadhaarOtp`,
+          data,
+          axiosConfig
+        );
+      } else if (selectedAuthMethods === "MOBILE_OTP") {
+        setOtp();
+        response = await axios.post(
+          `${BASE_URL}/abdm/api/v1/auth/confirmWithMobileOTP`,
+          data,
+          axiosConfig
+        );
+      }
+      console.log(response, "ABHA OTP");
+      if (response.status == 200) {
+        sessionStorage.setItem("X-Token", response.data.token);
+        setOtpVerified(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.warning(error.response.data.message);
+    }
+  };
+  const handleABHACardDownload = () => {
+    setLoading(true);
+    console.log(sessionStorage.getItem("X-Token"));
+    axios
+      .get(`${BASE_URL}/abdm/api/v1/account/getCard`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+          "content-type": "application/json",
+          "X-Token": `Bearer ${sessionStorage.getItem("X-Token")}`,
+          accept: "*/*",
+          "Accept-Language": "en-US",
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute("download", `ABHACard.pdf`);
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
+  const handleABHAQRDownload = () => {
+    setLoading(true);
+    axios
+      .get(`${BASE_URL}/abdm/api/v1/account/getqrCode`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+          "content-type": "image/png",
+          "X-Token": `Bearer ${sessionStorage.getItem("X-Token")}`,
+          accept: "*/*",
+          "Accept-Language": "en-US",
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute("download", `Qrcode.png`);
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
+  const handleBackButtonOfABHADownload = () => {
+    setAuthMethodSelected(false);
+    setABHAIDSubmited(false);
+    setOtpVerified(false);
+    setSelectedAuthMethods();
+    setOtp();
+    setMinutes(0);
+    setSeconds(0);
+  };
+  const handleAbhaIDChange = (e) => {
+    const alphanumericText = e.target.value.replace(/[^0-9]/g, ""); // Remove non-alphanumeric characters
+
+    let formattedText = "";
+    for (let i = 0; i < alphanumericText.length; i++) {
+      if (i === 2 || i === 6 || i === 10) {
+        formattedText += "-";
+      }
+      formattedText += alphanumericText[i];
+    }
+
+    // Ensure that the input does not start with a hyphen
+    if (formattedText.startsWith("-")) {
+      formattedText = formattedText.substring(1);
+    }
+
+    setAbhaId(formattedText);
+  };
+  const handleSelectAuthMethods = (e) => {
+    // setProgress(20);
+    setLoading(true);
+    console.log(e.target.value);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+    setSelectedAuthMethods(e.target.value);
+    axios
+      .post(
+        `${BASE_URL}/abdm/api/v1/auth/init`,
+        {
+          authMethod: e.target.value,
+          healthid: abhaId,
+        },
+        axiosConfig
+      )
+      .then((response) => {
+        console.log(response);
+        // setProgress(70);
+        setLoading(false);
+        settxnID(response.data.txnId);
+        setAadharNumberSubmitted(true);
+        setMinutes(2);
+        setSeconds(29);
+        setABHAIDSubmited(true);
+      })
+      .catch((error) => {
+        // setProgress(70);
+        setLoading(false);
+        console.log(error);
+        message.warning(error.response.data.message);
+      });
+    // setProgress(100);
+  };
+  const ABHACARDDownloadInputContent = (
+    <>
+      <div>
+        {" "}
+        <Button
+          style={{
+            borderRadius: "30px",
+            display:
+              !authMethodSelected && !ABHAIDSubmited && !otpVerified
+                ? "none"
+                : "block",
+          }}
+          disabled={!authMethodSelected && !ABHAIDSubmited && !otpVerified}
+          onClick={handleBackButtonOfABHADownload}
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </Button>
+      </div>
+      {otpVerified ? (
+        <>
+          <div style={{ width: "25vw" }}>
+            <p style={{ fontSize: "15px", marginLeft: "3%" }}>
+              ABHA ID:
+              <span style={{ fontWeight: "700", marginLeft: "3%" }}>
+                {abhaId}
+              </span>
+            </p>
+            <p
+              style={{
+                fontSize: "20px",
+                fontWeight: "600",
+                margin: "-2% -2% 0% 3%",
+              }}
+            >
+              Download Options
+            </p>
+            <p style={{ margin: "0% 0% 3% 3%" }}>
+              Choose a format to download ABHA Card
+            </p>
+            <div style={{ display: "flex", justifyContent: "space-around" }}>
+              <DownlaodCARDButton onClick={handleABHACardDownload}>
+                Download Card
+              </DownlaodCARDButton>
+              <DownlaodQRButton onClick={handleABHAQRDownload}>
+                Download QR
+              </DownlaodQRButton>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                margin: "5% 5%",
+              }}
+            >
+              <Button
+                onClick={handleBackButtonOfABHADownload}
+                style={{ width: "120px", backgroundColor: "#FF8551" }}
+              >
+                Finish
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <Form layout="vertical">
+            <Form.Item label="Health ID">
+              <InputForm
+                type="text"
+                value={abhaId}
+                maxLength={17}
+                onChange={(e) => handleAbhaIDChange(e)}
+                placeholder="Enter ABHA ID"
+              ></InputForm>
+            </Form.Item>
+
+            {authMethodSelected ? (
+              <>
+                <div>
+                  {" "}
+                  <h4>
+                    Please select one of the following options to receive your
+                    OTP
+                  </h4>
+                </div>
+                {authMethodResponse.map((data) => (
+                  <Radio.Group
+                    onChange={(e) => handleSelectAuthMethods(e)}
+                    value={selectedAuthMethods}
+                    style={{ margin: "0px 30px" }}
+                  >
+                    <Radio value={data}>{data}</Radio>
+                  </Radio.Group>
+                ))}
+              </>
+            ) : (
+              <></>
+            )}
+            {ABHAIDSubmited ? (
+              <>
+                <div style={{ margin: "5% 5% " }}>
+                  <Form.Item label="OTP">
+                    <OtpInput
+                      inputStyle={{
+                        width: "35px",
+                        height: "30px",
+                        margin: "2px 10px",
+                      }}
+                      value={otp}
+                      numInputs={6}
+                      type="number"
+                      onChange={(value) => setOtp(value)}
+                      renderSeparator={<span></span>}
+                      renderInput={(props) => <input {...props} />}
+                    ></OtpInput>
+                    <div className="countdown-text">
+                      {seconds > 0 || minutes > 0 ? (
+                        <p style={{ color: "red" }}>
+                          Time Remaining:{" "}
+                          {minutes < 10 ? `0${minutes}` : minutes}:
+                          {seconds < 10 ? `0${seconds}` : seconds}
+                        </p>
+                      ) : (
+                        <p>Didn't recieve code?</p>
+                      )}
+                      <a
+                        style={{
+                          display: seconds > 0 || minutes > 0 ? "none" : "",
+                        }}
+                        onClick={handleABHAIDSubmit}
+                      >
+                        Resend OTP
+                      </a>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "end" }}>
+                      <ABHAIDSubmitButton onClick={handleAbhaIDVerify}>
+                        Verify
+                      </ABHAIDSubmitButton>
+                    </div>
+
+                    {/* <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  margin: "10px 40px ",
+                }}
+              >
+                <a onClick={handleABHAIDSubmit}>Resend OTP</a>
+              </div> */}
+                  </Form.Item>
+                </div>
+              </>
+            ) : (
+              <>
+                {authMethodSelected || otpVerified ? (
+                  <></>
+                ) : (
+                  <>
+                    {" "}
+                    <div style={{ display: "flex", justifyContent: "end" }}>
+                      <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
+                        Submit
+                      </ABHAIDSubmitButton>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </Form>
+        </>
+      )}
+    </>
+  );
+
+  const handleUserListDownload = () => {
+    setLoader(true);
+    // Create a new Date object
+    const today = new Date();
+
+    // Get the current date components
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1; // Months are zero-indexed, so add 1
+    const day = today.getDate();
+    axios
+      .get(`${BASE_URL}/healthworker/api/DownloadANM_CHV_UserList`, {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        setLoader(false);
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `Citizen Details_${day + "-" + month + "-" + year}.xlsx`
+        );
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .then((err) => {
+        setLoader(false);
+        console.log(err);
+      });
+  };
 
   return (
     <>
@@ -2137,20 +998,6 @@ function Dashboard() {
         >
           <Row style={{ padding: "2%", width: "100%", height: "100%" }}>
             <Col span={14}>
-              {/* <MainCountRow>
-                <CountCard>
-                  <CardTitle>ANM/Co-Ordinator</CardTitle>
-                  <CountTitle>{dashboardCounts.ANM_count}</CountTitle>
-                </CountCard>
-                <CountCard>
-                  <CardTitle>CHV/ASHA</CardTitle>
-                  <CountTitle>{dashboardCounts.CHV_ASHA_count}</CountTitle>
-                </CountCard>
-                <CountCard>
-                  <CardTitle>MO</CardTitle>
-                  <CountTitle>{dashboardCounts.MO_count}</CountTitle>
-                </CountCard>
-              </MainCountRow> */}
               <h3>Citizens Details</h3>
               <MainCountRow>
                 <CountCard>
@@ -2191,24 +1038,50 @@ function Dashboard() {
             </Col>
             <Col span={1}></Col>
             <Col span={9} style={{ width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "end",
+                  margin: "2% 2%",
+                }}
+              >
+                <Popover
+                  content={
+                    <>
+                      <Popover
+                        content={ABHACARDDownloadInputContent}
+                        trigger="click"
+                        placement="right"
+                      >
+                        <DownloadPopoverText>
+                          ABHA Card Download
+                        </DownloadPopoverText>
+                      </Popover>
+                      <div>
+                        <DownloadPopoverText onClick={handleUserListDownload}>
+                          Citizen Details Download
+                        </DownloadPopoverText>
+                      </div>
+                    </>
+                  }
+                  trigger="hover"
+                  placement="right"
+                >
+                  <Button>
+                    <MenuOutlined />
+                  </Button>
+                </Popover>
+              </div>
               <BloodDetailCard>
                 <h3>Blood Collection Details</h3>
                 <br />
-                {/* <MainCountRow>
-                  <DetailSubtitle> Tests Suggested</DetailSubtitle>
-                  <CountTitle>0</CountTitle>
-                </MainCountRow> */}
-                {/* <Line /> */}
+
                 <MainCountRow>
                   <DetailSubtitle> Tests Assigned</DetailSubtitle>
                   <CountTitle>{dashboardCounts.TestsAssigned}</CountTitle>
                 </MainCountRow>
                 <Line />
-                {/* <MainCountRow>
-                  <DetailSubtitle> Tests Done</DetailSubtitle>
-                  <CountTitle>0</CountTitle>
-                </MainCountRow> */}
-                {/* <Line /> */}
+
                 <MainCountRow>
                   <DetailSubtitle>Total Reports Generated</DetailSubtitle>
                   <CountTitle>{dashboardCounts.TestReportGenerated}</CountTitle>
@@ -2323,75 +1196,6 @@ function Dashboard() {
               </div>
             </div>{" "}
             <Divider />
-            {/* <div>
-              <div>
-                <h3>Vulnerable</h3>
-              </div>
-              <div style={{ width: "80vw" }}>
-                <Row>
-                  <Col span={8}>
-                    <ReferralCountCard>
-                      <CardTitle> Total Vulnerable</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.total_vulnerabel}
-                      </CountTitle>
-                    </ReferralCountCard>
-                  </Col>
-                  <Col span={8}>
-                    {" "}
-                    <ReferralCountCard>
-                      <CardTitle> Citizen of 70 years +</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.vulnerabel_70_Years}
-                      </CountTitle>
-                    </ReferralCountCard>{" "}
-                  </Col>
-                  <Col span={8}>
-                    {" "}
-                    <ReferralCountCard>
-                      <CardTitle> Physical Handicapped</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.vulnerabel_Physically_handicapped}
-                      </CountTitle>
-                    </ReferralCountCard>{" "}
-                  </Col>
-                </Row>
-                <div style={{ height: "10px" }}></div>
-                <Row>
-                  {" "}
-                  <Col span={8}>
-                    <ReferralCountCard>
-                      <CardTitle> Completely Paralyzed or On Bed</CardTitle>
-                      <CountTitle>
-                        {
-                          AdminDashboardData.vulnerabel_completely_paralyzed_or_on_bed
-                        }
-                      </CountTitle>
-                    </ReferralCountCard>
-                  </Col>
-                  <Col span={8}>
-                    {" "}
-                    <ReferralCountCard>
-                      <CardTitle> Elder or Alone At Home</CardTitle>
-                      <CountTitle>
-                        {
-                          AdminDashboardData.vulnerabel_elderly_and_alone_at_home
-                        }
-                      </CountTitle>
-                    </ReferralCountCard>{" "}
-                  </Col>
-                  <Col span={8}>
-                    {" "}
-                    <ReferralCountCard>
-                      <CardTitle> Other Reasons</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.vulnerabel_any_other_reason}
-                      </CountTitle>
-                    </ReferralCountCard>{" "}
-                  </Col>
-                </Row>
-              </div>
-            </div> */}
             <div>
               <div>
                 <h3>Disease Suspected</h3>
@@ -2480,6 +1284,13 @@ function Dashboard() {
                     <ReferralCountCard>
                       <CardTitle> Eye Disorder</CardTitle>
                       <CountTitle>{dashboardCounts.eye_disorder}</CountTitle>
+                    </ReferralCountCard>{" "}
+                  </Col>
+                  <Col span={5}>
+                    {" "}
+                    <ReferralCountCard>
+                      <CardTitle> Leprosy</CardTitle>
+                      <CountTitle>{dashboardCounts.leprosy}</CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
                   <Col span={5}>

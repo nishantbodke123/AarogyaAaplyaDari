@@ -18,6 +18,8 @@ import {
   message,
   Divider,
   Spin,
+  Tooltip,
+  Popover,
 } from "antd";
 
 import {
@@ -50,6 +52,10 @@ import {
   HealthNumberModal,
   CheckAndGenerateMobileOtpModal,
   AadharOtpLinkedModal,
+  DownlaodCARDButton,
+  DownlaodQRButton,
+  ABHAIDSubmitButton,
+  ABHACardDownLoad,
 } from "./style";
 
 import axios, { Axios } from "axios";
@@ -63,7 +69,10 @@ import {
   faPlus,
   faXmark,
   faBackward,
+  faArrowLeft,
+  faFileArrowDown
 } from "@fortawesome/free-solid-svg-icons";
+
 import { LogOut } from "../../Auth/Logout";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import JSEncrypt from "jsencrypt";
@@ -360,6 +369,7 @@ function MemberAdd(props) {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
+  const [relationWithHead ,setRelationWithHead]=useState("");
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState(null);
   const [abhaId, setAbhaId] = useState("");
@@ -1024,6 +1034,7 @@ function MemberAdd(props) {
     name: name,
     gender: gender,
     age: age,
+    relationshipWithHead:relationWithHead,
     mobileNo: phone,
     aadharCard: aadharCard,
     familyHead: state,
@@ -1346,7 +1357,10 @@ function MemberAdd(props) {
       message.warning("Please Enter Name");
     } else if (gender === "") {
       message.warning("Please Mention Gender");
-    } else if (age === "") {
+    } else if(relationWithHead === ""){
+      message.warning("Select Relation With Family Head")
+    } 
+    else if (age === "") {
       message.warning("Please Enter Age");
     } else if (section === "") {
       message.warning("Please Select Area");
@@ -1808,7 +1822,7 @@ function MemberAdd(props) {
     setProgress(100);
   };
   const handleSelectAuthMethods = (e) => {
-    setProgress(20);
+    // setProgress(20);
     setLoading(true);
     console.log(e.target.value);
     let axiosConfig = {
@@ -1820,26 +1834,30 @@ function MemberAdd(props) {
     setSelectedAuthMethods(e.target.value);
     axios
       .post(
-        `${BASE_URL}/abdm/api/v1/phr/registration/hid/init/AuthMethodAPI`,
+        `${BASE_URL}/abdm/api/v1/auth/init`,
         {
           authMethod: e.target.value,
-          healhtIdNumber: abhaId,
+          healthid: abhaId,
         },
         axiosConfig
       )
       .then((response) => {
-        setProgress(70);
-        setLoading(false);
-        settxnID(response.data.transactionId);
         console.log(response);
+        // setProgress(70);
+        setLoading(false);
+        settxnID(response.data.txnId);
+        setAadharNumberSubmitted(true);
+        setMinutes(2);
+        setSeconds(29);
+        setABHAIDSubmited(true);
       })
       .catch((error) => {
-        setProgress(70);
+        // setProgress(70);
         setLoading(false);
         console.log(error);
-        message.warning(error.response.data.details[0].message);
+        message.warning(error.response.data.message);
       });
-    setProgress(100);
+    // setProgress(100);
   };
   const handleVerifyWhileHealthIDGeneration = () => {
     setProgress(20);
@@ -1971,6 +1989,348 @@ function MemberAdd(props) {
         });
     }
   };
+  const [ABHAIDSubmited, setABHAIDSubmited] = useState(false);
+  const [authMethodSelected, setAuthMethodSelected] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [mobileNumberLinkedWithABHAID, setMobileNumberLinkedWithABHAID] =
+    useState();
+  const [authMethodResponse, setAuthMethodResponse] = useState([]);
+  const [healthIdResponse, setHealthIdResponse] = useState();
+  const handleABHAIDSubmit = async () => {
+    setMinutes(2);
+    setSeconds(29);
+    console.log(abhaId);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+
+    const formData = new FormData();
+    formData.append("clientId", "SBX_004200");
+    formData.append("clientSecret", "bed456a5-46bb-4de5-94ef-6caa2dc77a00");
+    await axios
+      .post(`${BASE_URL}/abdm/api/GetGatewaySessionTokenAPI`, formData, {
+        "Content-Type": "application/json",
+      })
+      .then((res) => {
+        console.log(res);
+        sessionStorage.setItem("BearerToken", res.data.accessToken);
+        axios
+          .post(
+            `${BASE_URL}/abdm/api/v1/phr/registration/hid/search/auth-methods`,
+            { healhtIdNumber: abhaId },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${res.data.accessToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            setAuthMethodResponse(res.data.authMethods);
+            setHealthIdResponse(res.data.healthIdNumber);
+            // setABHAIDSubmited(true);
+            setAuthMethodSelected(true);
+            // message.success(res.data.message);
+          })
+          .catch((err) => {
+            console.log(err);
+            message.warning(err.response.data.message);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleAbhaIDVerify = async () => {
+    console.log(otp);
+    let encryptedOTP = encrypt.encrypt(otp);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+
+    try {
+      let response;
+      const data = {
+        otp: otp,
+        txnId: txnId,
+      };
+      if (selectedAuthMethods === "AADHAAR_OTP") {
+        setOtp();
+        response = await axios.post(
+          `${BASE_URL}/abdm/api/v1/auth/confirmWithAadhaarOtp`,
+          data,
+          axiosConfig
+        );
+      } else if (selectedAuthMethods === "MOBILE_OTP") {
+        setOtp();
+        response = await axios.post(
+          `${BASE_URL}/abdm/api/v1/auth/confirmWithMobileOTP`,
+          data,
+          axiosConfig
+        );
+      }
+      console.log(response, "ABHA OTP");
+      if (response.status == 200) {
+        sessionStorage.setItem("X-Token", response.data.token);
+        setOtpVerified(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.warning(error.response.data.message);
+    }
+  };
+  const handleABHACardDownload = () => {
+    setLoading(true);
+    console.log(sessionStorage.getItem("X-Token"));
+    axios
+      .get(`${BASE_URL}/abdm/api/v1/account/getCard`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+          "content-type": "application/json",
+          "X-Token": `Bearer ${sessionStorage.getItem("X-Token")}`,
+          accept: "*/*",
+          "Accept-Language": "en-US",
+        },
+        responseType:"blob"
+      })
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute("download", `ABHACard.pdf`);
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
+  const handleABHAQRDownload = () => {
+    setLoading(true);
+    axios
+      .get(`${BASE_URL}/abdm/api/v1/account/getqrCode`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+          "content-type": "image/png",
+          "X-Token": `Bearer ${sessionStorage.getItem("X-Token")}`,
+          accept: "*/*",
+          "Accept-Language": "en-US",
+        },
+        responseType:"blob"
+      })
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute("download", `Qrcode.png`);
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
+
+  const handleBackButtonOfABHADownload = () => {
+    setAuthMethodSelected(false);
+    setABHAIDSubmited(false);
+    setOtpVerified(false);
+    setSelectedAuthMethods();
+    setOtp();
+    setMinutes(0);
+    setSeconds(0);
+  };
+  const ABHACARDDownloadInputContent = (
+    <>
+      <div>
+        {" "}
+        <Button
+          style={{ borderRadius: "30px" }}
+          disabled={!authMethodSelected && !ABHAIDSubmited && !otpVerified}
+          onClick={handleBackButtonOfABHADownload}
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </Button>
+      </div>
+      {otpVerified ? (
+        <>
+          <div style={{ width: "25vw" }}>
+            <p style={{ fontSize: "15px", marginLeft: "3%" }}>
+              ABHA ID:
+              <span style={{ fontWeight: "700", marginLeft: "3%" }}>
+                {abhaId}
+              </span>
+            </p>
+            <p
+              style={{
+                fontSize: "20px",
+                fontWeight: "600",
+                margin: "-2% -2% 0% 3%",
+              }}
+            >
+              Download Options
+            </p>
+            <p style={{ margin: "0% 0% 3% 3%" }}>
+              Choose a format to download ABHA Card
+            </p>
+            <div style={{ display: "flex", justifyContent: "space-around" }}>
+              <DownlaodCARDButton onClick={handleABHACardDownload}>
+                Download Card
+              </DownlaodCARDButton>
+              <DownlaodQRButton onClick={handleABHAQRDownload}>
+                Download QR
+              </DownlaodQRButton>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                margin: "5% 5%",
+              }}
+            >
+              <Button
+                onClick={handleBackButtonOfABHADownload}
+                style={{ width: "120px", backgroundColor: "#FF8551" }}
+              >
+                Finish
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <Form layout="vertical">
+            <Form.Item label="Health ID">
+              <InputForm
+                type="text"
+                value={abhaId}
+                maxLength={17}
+                onChange={(e) => handleAbhaIDChange(e)}
+                placeholder="Enter ABHA ID"
+              ></InputForm>
+            </Form.Item>
+
+            {authMethodSelected ? (
+              <>
+                <div>
+                  {" "}
+                  <h4>
+                    Please select one of the following options to receive your
+                    OTP
+                  </h4>
+                </div>
+                {authMethodResponse.map((data) => (
+                  <Radio.Group
+                    onChange={(e) => handleSelectAuthMethods(e)}
+                    value={selectedAuthMethods}
+                    style={{ margin: "0px 30px" }}
+                  >
+                    <Radio value={data}>{data}</Radio>
+                  </Radio.Group>
+                ))}
+              </>
+            ) : (
+              <></>
+            )}
+            {ABHAIDSubmited ? (
+              <>
+                <div style={{ margin: "5% 5% " }}>
+                  <Form.Item label="OTP">
+                    <OtpInput
+                      inputStyle={{
+                        width: "35px",
+                        height: "30px",
+                        margin: "2px 10px",
+                      }}
+                      value={otp}
+                      numInputs={6}
+                      type="number"
+                      onChange={(value) => setOtp(value)}
+                      renderSeparator={<span></span>}
+                      renderInput={(props) => <input {...props} />}
+                    ></OtpInput>
+                    <div className="countdown-text">
+                      {seconds > 0 || minutes > 0 ? (
+                        <p style={{ color: "red" }}>
+                          Time Remaining:{" "}
+                          {minutes < 10 ? `0${minutes}` : minutes}:
+                          {seconds < 10 ? `0${seconds}` : seconds}
+                        </p>
+                      ) : (
+                        <p>Didn't recieve code?</p>
+                      )}
+                      <a
+                        style={{
+                          display: seconds > 0 || minutes > 0 ? "none" : "",
+                        }}
+                        onClick={handleCheckAndGenerateMobileOtp}
+                      >
+                        Resend OTP
+                      </a>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "end" }}>
+                      <ABHAIDSubmitButton onClick={handleAbhaIDVerify}>
+                        Verify
+                      </ABHAIDSubmitButton>
+                    </div>
+
+                    {/* <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  margin: "10px 40px ",
+                }}
+              >
+                <a onClick={handleABHAIDSubmit}>Resend OTP</a>
+              </div> */}
+                  </Form.Item>
+                </div>
+              </>
+            ) : (
+              <>
+                {authMethodSelected || otpVerified ? (
+                  <></>
+                ) : (
+                  <>
+                    {" "}
+                    <div style={{ display: "flex", justifyContent: "end" }}>
+                      <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
+                        Submit
+                      </ABHAIDSubmitButton>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </Form>
+        </>
+      )}
+    </>
+  );
 
   const handleAdd = () => {
     axios
@@ -2073,6 +2433,19 @@ function MemberAdd(props) {
                   ></Input>
                 </FormItem>
               </Column>
+              <Column span={8}>
+                <FormItem label="Relation with the family head" required>
+                   <Select value={relationWithHead} onChange={(value)=>setRelationWithHead(value)} placeholder="Select Relationship with family head" >
+                    <Option value="Self">Self</Option>
+                    <Option value="Mother">Mother</Option>
+                    <Option value="Father">Father</Option>
+                    <Option value="Spouse">Spouse</Option>
+                    <Option value="Son">Son</Option>
+                    <Option value="Daughter">Daughter</Option>
+                    <Option value="Grandson">Grandson</Option>
+                   </Select>
+                </FormItem>
+              </Column>
             </Row>
             {age === "" || age <= 18 ? (
               <Row
@@ -2133,17 +2506,18 @@ function MemberAdd(props) {
                       </a>
                     </p>
                   </Column>
-                  {/* <Column span={1}>
-                  <Tooltip title="ABHA Card Download">
-                    <Popover
-                      content={ABHACARDDownloadInputContent}
-                      trigger="click"
-                      placement="left"
-                    >
-                      <ABHACardDownLoad icon={faFileArrowDown} />
-                    </Popover>
-                  </Tooltip>
-                </Column> */}
+                  <Column span={3}>
+                    <Tooltip title="ABHA Card Download">
+                      <Popover
+                        content={ABHACARDDownloadInputContent}
+                        trigger="click"
+                        placement="right"
+                      >
+                        <ABHACardDownLoad icon={faFileArrowDown} />
+                      </Popover>
+                    </Tooltip>
+                  </Column>
+            
                 </Row>
               </>
             )}

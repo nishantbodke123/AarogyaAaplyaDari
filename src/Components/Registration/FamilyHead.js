@@ -996,6 +996,7 @@ function FamilyHead(props) {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
+  const [relationWithHead ,setRelationWithHead]=useState("");
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState(null);
   const [abhaId, setAbhaId] = useState();
@@ -1102,7 +1103,7 @@ function FamilyHead(props) {
           })
           .catch((err) => {
             console.log(err);
-            message.warning(err.response.message);
+            message.warning(err.response.data.message);
           });
       })
       .catch((error) => {
@@ -1350,7 +1351,7 @@ function FamilyHead(props) {
                         style={{
                           display: seconds > 0 || minutes > 0 ? "none" : "",
                         }}
-                        onClick={handleCheckAndGenerateMobileOtp}
+                        onClick={handleABHAIDSubmit}
                       >
                         Resend OTP
                       </a>
@@ -1500,6 +1501,8 @@ function FamilyHead(props) {
       message.warning("Please Mention Gender");
     } else if (age === "") {
       message.warning("Please Enter Age");
+    } else if(relationWithHead ===""){
+      message.warning("Please Select Relation with Family Head");
     } else if (aadharCard !== null) {
       //|| adharAbhaRequired
       axios
@@ -1873,6 +1876,7 @@ function FamilyHead(props) {
     setName("");
     setGender("");
     setAge("");
+    setRelationWithHead("");
     setPhone("");
     setAadharCard(null);
     setAbhaId("");
@@ -2288,6 +2292,7 @@ function FamilyHead(props) {
     area: section,
     name: name,
     gender: gender,
+    relationshipWithHead:relationWithHead,
     age: age,
     mobileNo: phone,
     aadharCard: aadharCard,
@@ -2892,6 +2897,19 @@ function FamilyHead(props) {
                     allowClear
                     onChange={(e) => handleAgeChange(e)}
                   ></Input>
+                </FormItem>
+              </Column>
+              <Column span={8}>
+                <FormItem label="Relation with the family head" required>
+                   <Select value={relationWithHead} onChange={(value)=>setRelationWithHead(value)} placeholder="Select Relationship with family head" >
+                    <Option value="Self">Self</Option>
+                    <Option value="Mother">Mother</Option>
+                    <Option value="Father">Father</Option>
+                    <Option value="Spouse">Spouse</Option>
+                    <Option value="Son">Son</Option>
+                    <Option value="Daughter">Daughter</Option>
+                    <Option value="Grandson">Grandson</Option>
+                   </Select>
                 </FormItem>
               </Column>
             </Row>

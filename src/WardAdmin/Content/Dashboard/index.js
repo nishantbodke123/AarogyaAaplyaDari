@@ -709,6 +709,14 @@ function WardAdminDashboard() {
                     </CountTitle>
                   </ReferralCountCard>
                 </Col>
+                <Col span={5}>
+                  <ReferralCountCard>
+                    <CardTitle> Leprosy</CardTitle>
+                    <CountTitle>
+                      {MOHDashboardData.leprosy}
+                    </CountTitle>
+                  </ReferralCountCard>
+                </Col>
               </Row>
             </div>
           </div>

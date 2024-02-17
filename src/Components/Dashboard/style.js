@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Col, Form, Modal, Tabs } from "antd";
+import { Button, Col, Form, Input, Modal, Tabs } from "antd";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -325,3 +325,42 @@ export const InnerCard4 = styled.div`
   left: 52%;
   border-radius: 10px;
 `;
+export const InputForm = styled(Input)`
+  width: 300px;
+`;
+export const DownlaodCARDButton=styled(Button)`
+width:200px;
+height:50px;
+&:hover{
+background-color: #C9D7DD;
+color: white;
+}
+`
+export const DownlaodQRButton=styled(Button)`
+width:200px;
+height:50px;
+&:hover{
+background-color: #C9D7DD;
+color: white;
+}
+
+`
+export const ABHAIDSubmitButton = styled.button`
+  border: none;
+  cursor: pointer;
+  width: 60px;
+  height: 23px;
+  border-radius: 10px;
+  background-color: #ff8551;
+  &:hover {
+    color: white;
+    background-color: #f29727;
+  }
+`;
+export const DownloadPopoverText=styled.p`
+  font-size: 14px;
+  &:hover{
+    cursor: pointer;
+    color: #ff8551;
+  }
+`

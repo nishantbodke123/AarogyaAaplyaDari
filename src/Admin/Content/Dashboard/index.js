@@ -985,6 +985,15 @@ function AdminDashboard() {
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
+                  <Col span={5}>
+                    {" "}
+                    <ReferralCountCard>
+                      <CardTitle> Leprosy</CardTitle>
+                      <CountTitle>
+                        {AdminDashboardData.leprosy}
+                      </CountTitle>
+                    </ReferralCountCard>{" "}
+                  </Col>
                 </Row>
               </div>
             </div>
