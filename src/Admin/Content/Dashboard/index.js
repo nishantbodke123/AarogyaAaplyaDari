@@ -1,4 +1,14 @@
-import { Row, Col, Divider, Form, Spin, Button, Dropdown, message } from "antd";
+import {
+  Row,
+  Col,
+  Divider,
+  Form,
+  Spin,
+  Button,
+  Dropdown,
+  message,
+  Tooltip,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import {
   BloodDetailCard,
@@ -13,7 +23,7 @@ import {
 import { BASE_URL } from "../../../Utils/BaseURL";
 import axios from "axios";
 import { LogOut } from "../../../Auth/Logout";
-import { Select, Tooltip } from "@mui/material";
+import { Select } from "@mui/material";
 import FormItem from "antd/es/form/FormItem";
 import {
   AlignRightOutlined,
@@ -28,7 +38,7 @@ import { MyContext } from "../../Admin/Admin";
 const { Option } = Select;
 
 function AdminDashboard() {
-  const { sideKey, passedDashboard, passedHealthpost, passedDispensary } =
+  const { sideKey, passedDashboard, passedHealthpost, passedDispensary, name } =
     useContext(MyContext);
 
   // const { sideKey, passedDashboard, passedHealthpost, passedDispensary } = props.value;
@@ -39,14 +49,15 @@ function AdminDashboard() {
   const [healthPostNameList, setHealthPostNameList] = useState([]);
   const [dispensaryList, setDispensaryList] = useState([]);
   const [selectedWard, setSelectedWard] = useState("");
-  const [selectedWardName, setSelectedWardName] = useState();
+  const [selectedWardName, setSelectedWardName] = useState(null);
   const [selectedHealthPost, setSelectedHealthPost] = useState("");
   const [selectedDispensary, setSelectedDispensary] = useState();
-  const [selectedHealthPostName, setSelectedHealthPostName] = useState();
-  const [selectedDispensaryName, setSelectedDispensaryName] = useState();
+  const [selectedHealthPostName, setSelectedHealthPostName] = useState(null);
+  const [selectedDispensaryName, setSelectedDispensaryName] = useState(null);
 
   const today = new Date();
-  const formattedDate = today.toLocaleDateString();
+  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+  const formattedDate = today.toLocaleDateString("en-IN", options);
 
   // const [sideKey1, setSideKey1] = useState(0);
 
@@ -198,7 +209,14 @@ function AdminDashboard() {
 
         const link = document.createElement("a");
         link.href = href;
-        link.setAttribute("download", `Admin_Dashboard_Data.xlsx`);
+        link.setAttribute(
+          "download",
+          selectedWardName === null
+            ? `All_Ward_data_${formattedDate}.xlsx`
+            : selectedHealthPostName === null
+            ? `Ward_${selectedWardName}_data_${formattedDate}.xlsx`
+            : `${selectedHealthPostName}_data_${formattedDate}.xlsx`
+        );
 
         document.body.appendChild(link);
         link.click();
@@ -219,36 +237,6 @@ function AdminDashboard() {
 
   const handleWardwiseCitizenDownload = () => {
     setLoader(true);
-
-    // const apiUrl = `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${passedDashboard}`;
-    // fetch(apiUrl, {
-    //   headers: {
-    //     Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //   },
-    // })
-    //   .then((response) => {
-    //     console.log(
-    //       "Response data is ---=====================================> " +
-    //         response.headers
-    //     );
-
-    //     // const mimeType = response.headers['content-disposition'] || 'application/octet-stream';
-    //     // const blob = new Blob([response.data], { type: mimeType });
-
-    //     const contentDisposition = response.headers["content-disposition"];
-    //     console.log(response.headers, "Abhishek");
-    //     const filename = contentDisposition
-    //       ? contentDisposition.split("=")[1].replace(/"/g, "")
-    //       : "downloaded_file";
-
-    //     console.log(
-    //       "minetype data is 0000000000000000000000000000> " + filename
-    //     );
-    //   })
-    //   .catch((error) => {
-    //     console.error("Fetch error:", error);
-    //   });
-
     axios
       .get(
         // `${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${selectedWard}`,
@@ -262,30 +250,20 @@ function AdminDashboard() {
       )
       .then((response) => {
         setLoader(false);
-        console.log("Response data is ---=====================================> " + JSON.stringify(response))
+        const href = URL.createObjectURL(response.data);
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `Ward_${name}_data_${formattedDate}`
+          // Ward_A_data_17-02-2024
+        );
 
-        // const mimeType = response.headers['content-disposition'] || 'application/octet-stream';
-        // const blob = new Blob([response.data], { type: mimeType });
+        document.body.appendChild(link);
+        link.click();
 
-        const contentDisposition = response.headers.get('Content-Disposition');
-        console.log(response.headers)
-        const filename = contentDisposition ? contentDisposition.split('=')[1].replace(/"/g, '') : 'downloaded_file';
-
-        console.log("minetype data is 0000000000000000000000000000> " + filename)
-
-        // const href = URL.createObjectURL(response.data);
-        // const link = document.createElement("a");
-        // link.href = href;
-        // link.setAttribute(
-        //   "download",
-        //   `${selectedWardName} ward's Citizens Report`
-        // );
-
-        // document.body.appendChild(link);
-        // link.click();
-
-        // document.body.removeChild(link);
-        // URL.revokeObjectURL(href);
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
       })
       .catch((err) => {
         setLoader(false);
@@ -294,8 +272,10 @@ function AdminDashboard() {
           message.warning("Please Select Ward");
         } else if (err.response.status == 401) {
           LogOut();
+        } else if (err.response.status == 400) {
+          message.warning("No data found for selected Ward");
         } else {
-          message.warning(err.response.message);
+          message.warning(err.data.message);
         }
       });
   };
@@ -320,7 +300,8 @@ function AdminDashboard() {
         link.href = href;
         link.setAttribute(
           "download",
-          `${selectedHealthPost} Healthpost's Citizens Report.xlsx`
+          `${name}_data_${formattedDate}.xlsx`
+          // Colaba Health Post _data_17-02-2024
         );
 
         document.body.appendChild(link);
@@ -359,7 +340,8 @@ function AdminDashboard() {
         const href = URL.createObjectURL(response.data);
         const link = document.createElement("a");
         link.href = href;
-        link.setAttribute("download", `All_Ward_data_15-02-2024.xlsx`);
+        link.setAttribute("download", `All_Ward_data_${formattedDate}.xlsx`);
+        // All_Ward_data_17-02-2024.xlsx
 
         document.body.appendChild(link);
         link.click();
@@ -408,7 +390,8 @@ function AdminDashboard() {
         link.href = href;
         link.setAttribute(
           "download",
-          `${selectedDispensaryName} ward's Dispensary Report.xlsx`
+          `${name}_data_${formattedDate}.xlsx`
+          // Colaba Dispensary_data_17-02-2024
         );
 
         document.body.appendChild(link);
@@ -489,20 +472,22 @@ function AdminDashboard() {
               margin: "1% 3% -3% 0%",
             }}
           >
-            <div style={{ width: "50%" }}>
+            <div style={{ width: "70%", marginLeft: "50%" }}>
               <Form
                 layout="vertical"
-                style={{ width: "100%", marginLeft: "40px" }}
+                style={{
+                  width: "100%",
+                  // marginLeft: "40px"
+                }}
               >
                 <Row style={{ width: "100%" }}>
-                  <Col span={7} style={{ marginRight: "30px" }}>
+                  <Col span={7} style={{ marginRight: "5%", minWidth: "50px" }}>
                     <FormItem label="Ward">
                       <select
                         style={{
                           width: "200px",
                           height: "30px",
                           borderRadius: "5px",
-                          // marginRight:"30px",
                           value: { selectedWard },
                         }}
                         onChange={(e) => handleWardSelect(e.target.value)}
@@ -521,7 +506,7 @@ function AdminDashboard() {
                     </FormItem>
                   </Col>
 
-                  <Col span={12}>
+                  <Col span={7} style={{ marginRight: "5%" }}>
                     <FormItem label="Health Post">
                       <select
                         style={{
@@ -568,7 +553,7 @@ function AdminDashboard() {
                     </FormItem>
                   </Col> */}
 
-                  <div style={{ margin: "2% 2% 0% 0%" }}>
+                  <div style={{ margin: "4% 0% 0% 0%" }}>
                     <Tooltip
                       placement="bottom"
                       title="Download Dashboard"

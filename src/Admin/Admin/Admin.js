@@ -28,34 +28,28 @@ function Admin() {
   const [sideKey, setSideKey] = useState();
   const location = useLocation();
 
-  const [passedDashboard, setPassedDashboard] = useState(1);
-  const [passedHealthpost, setPassedHealthpost] = useState(1);
-  const [passedDispensary, setPassedDispensary] = useState(1);
-
-
-  const values = {
-    sideKey,
-    passedDashboard,
-    passedHealthpost,
-    passedDispensary,
-  };
+  const [passedDashboard, setPassedDashboard] = useState(null);
+  const [passedHealthpost, setPassedHealthpost] = useState(null);
+  const [passedDispensary, setPassedDispensary] = useState(null);
+  const [name, setName] = useState(null);
 
   const handleCollapse = () => {
     setCollapsed(!collapsed);
   };
 
-  const updateSideKey = (newSideKey,dbVal, hpVal, dpVal) => {
+  const updateSideKey = (newSideKey,dbVal, hpVal, dpVal, nameVal) => {
     setSideKey(newSideKey);
     setPassedDashboard(dbVal)
     setPassedHealthpost(hpVal)
     setPassedDispensary(dpVal)
+    setName(nameVal)
   };
 
 
   return (
     <>
       <Layout>
-        <MyContext.Provider value={{sideKey, passedDashboard, passedHealthpost, passedDispensary,  updateSideKey,}}>
+        <MyContext.Provider value={{sideKey, passedDashboard, passedHealthpost, passedDispensary, name, updateSideKey,}}>
         <Sidebar collapsed={collapsed} />
         <Layout>
           <HeaderBar handleCollapse={handleCollapse} />

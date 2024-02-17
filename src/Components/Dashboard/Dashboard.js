@@ -1122,7 +1122,7 @@ function Dashboard() {
               </BloodDetailCard>
             </Col>
             <Divider />
-            <div>
+            <div style={{ width: "95vw" }}>
               <h3>Referrals</h3>
               <div>
                 <Row>
@@ -1200,7 +1200,7 @@ function Dashboard() {
               <div>
                 <h3>Disease Suspected</h3>
               </div>
-              <div style={{ width: "80vw" }}>
+              <div style={{ width: "95vw" }}>
                 <Row>
                   <Col span={5}>
                     {" "}
