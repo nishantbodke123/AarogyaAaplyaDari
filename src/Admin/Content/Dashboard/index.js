@@ -1,4 +1,14 @@
-import { Row, Col, Divider, Form, Spin, Button, Dropdown, message } from "antd";
+import {
+  Row,
+  Col,
+  Divider,
+  Form,
+  Spin,
+  Button,
+  Dropdown,
+  message,
+  Tooltip,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import {
   BloodDetailCard,
@@ -13,7 +23,7 @@ import {
 import { BASE_URL } from "../../../Utils/BaseURL";
 import axios from "axios";
 import { LogOut } from "../../../Auth/Logout";
-import { Select, Tooltip } from "@mui/material";
+import { Select } from "@mui/material";
 import FormItem from "antd/es/form/FormItem";
 import {
   AlignRightOutlined,
@@ -462,20 +472,22 @@ function AdminDashboard() {
               margin: "1% 3% -3% 0%",
             }}
           >
-            <div style={{ width: "50%" }}>
+            <div style={{ width: "70%", marginLeft: "50%" }}>
               <Form
                 layout="vertical"
-                style={{ width: "100%", marginLeft: "40px" }}
+                style={{
+                  width: "100%",
+                  // marginLeft: "40px"
+                }}
               >
                 <Row style={{ width: "100%" }}>
-                  <Col span={7} style={{ marginRight: "30px" }}>
+                  <Col span={7} style={{ marginRight: "5%", minWidth: "50px" }}>
                     <FormItem label="Ward">
                       <select
                         style={{
                           width: "200px",
                           height: "30px",
                           borderRadius: "5px",
-                          // marginRight:"30px",
                           value: { selectedWard },
                         }}
                         onChange={(e) => handleWardSelect(e.target.value)}
@@ -494,7 +506,7 @@ function AdminDashboard() {
                     </FormItem>
                   </Col>
 
-                  <Col span={12}>
+                  <Col span={7} style={{ marginRight: "5%" }}>
                     <FormItem label="Health Post">
                       <select
                         style={{
@@ -541,7 +553,7 @@ function AdminDashboard() {
                     </FormItem>
                   </Col> */}
 
-                  <div style={{ margin: "2% 2% 0% 0%" }}>
+                  <div style={{ margin: "4% 0% 0% 0%" }}>
                     <Tooltip
                       placement="bottom"
                       title="Download Dashboard"

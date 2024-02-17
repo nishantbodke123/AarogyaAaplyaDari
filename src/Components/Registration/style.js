@@ -226,7 +226,7 @@ export const BloodSampleText = styled.div`
   font-size: 20px;
   font-weight: 600;
   margin: 5% 0%;
-  font-family= serif;
+  font-family:serif;
 
     @media (max-width: 820px) {
      font-size: 18px;
@@ -283,3 +283,21 @@ export const CheckAndGenerateMobileOtpModal = styled(Modal)``;
 export const HealthNumberModal = styled(Modal)``;
 export const HealthIdModal = styled(Modal)``;
 export const CreateHealthIdModal = styled(Modal)``;
+
+export const DownlaodCARDButton=styled(Button)`
+width:200px;
+height:50px;
+&:hover{
+background-color: #C9D7DD;
+color: white;
+}
+`
+export const DownlaodQRButton=styled(Button)`
+width:200px;
+height:50px;
+&:hover{
+background-color: #C9D7DD;
+color: white;
+}
+
+`

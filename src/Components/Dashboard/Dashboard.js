@@ -64,7 +64,7 @@
 //   const [dashboardCounts, setDashboardCounts] = useState({});
 //   const [familyHeadList, setFamilyHeadList] = useState([]);
 //   const [partiallyFamilyHeadList, setPartiallyFamilyHeadList] = useState([]);
-//   const [loading, setLoading] = useState(false);
+//   const [loading, setLoader] = useState(false);
 //   const [showViewModal, setShowViewModal] = useState(false);
 //   const [familyMemeberDetails, setFamilyMemberDetails] = useState([]);
 //   const [familyID, setFamilyID] = useState();
@@ -182,7 +182,7 @@
 //   };
 
 //   const handleShowPartialCountModal = () => {
-//     setLoading(true);
+//     setLoader(true);
 //     axios
 //       .get(
 //         `${BASE_URL}/healthworker/api/GetPartiallyInsertedRecord`,
@@ -190,7 +190,7 @@
 //       )
 //       .then((response) => {
 //         console.log(response.data);
-//         setLoading(false);
+//         setLoader(false);
 //         setPartialCountList(response.data);
 //       })
 //       .catch((error) => {
@@ -210,7 +210,7 @@
 //   };
 
 //   useEffect(() => {
-//     setLoading(true);
+//     setLoader(true);
 
 //     console.log(axiosConfig);
 //     axios
@@ -218,7 +218,7 @@
 //       .then((response) => {
 //         console.log(response.data);
 //         setDashboardCounts(response.data);
-//         setLoading(false);
+//         setLoader(false);
 //       })
 //       .catch((error) => {
 //         console.log(error);
@@ -230,14 +230,14 @@
 //         } else {
 //           message.error(error.message);
 //         }
-//         setLoading(false);
+//         setLoader(false);
 //       });
 //     axios
 //       .get(`${BASE_URL}/healthworker/api/GetFamilyHeadList`, axiosConfig)
 //       .then((response) => {
 //         console.log(response.data);
 //         setFamilyHeadList(response.data);
-//         setLoading(false);
+//         setLoader(false);
 //       })
 //       .catch((error) => {
 //         console.log(error.response.status);
@@ -249,7 +249,7 @@
 //         } else {
 //           // message.error(error.message);
 //         }
-//         setLoading(false);
+//         setLoader(false);
 //       });
 
 //     axios
@@ -259,11 +259,11 @@
 //       )
 //       .then((response) => {
 //         console.log(response.data);
-//         setLoading(false);
+//         setLoader(false);
 //         setPartiallyFamilyHeadList(response.data);
 //       })
 //       .catch((error) => {
-//         setLoading(false);
+//         setLoader(false);
 //         console.log(error);
 //       });
 //   }, []);
@@ -1700,7 +1700,7 @@ function Dashboard() {
   const [dashboardCounts, setDashboardCounts] = useState({});
   const [familyHeadList, setFamilyHeadList] = useState([]);
   const [partiallyFamilyHeadList, setPartiallyFamilyHeadList] = useState([]);
-  const [loading, setLoading] = useState(false);
+
   const [showViewModal, setShowViewModal] = useState(false);
   const [familyMemeberDetails, setFamilyMemberDetails] = useState([]);
   const [familyID, setFamilyID] = useState();
@@ -1818,7 +1818,7 @@ function Dashboard() {
   };
 
   const handleShowPartialCountModal = () => {
-    setLoading(true);
+    setLoader(true);
     axios
       .get(
         `${BASE_URL}/healthworker/api/GetPartiallyInsertedRecord`,
@@ -1826,7 +1826,7 @@ function Dashboard() {
       )
       .then((response) => {
         console.log(response.data);
-        setLoading(false);
+        setLoader(false);
         setPartialCountList(response.data);
       })
       .catch((error) => {
@@ -1846,7 +1846,7 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    setLoading(true);
+    setLoader(true);
 
     console.log(axiosConfig);
     axios
@@ -1854,7 +1854,8 @@ function Dashboard() {
       .then((response) => {
         console.log(response.data);
         setDashboardCounts(response.data);
-        setLoading(false);
+
+        setLoader(false);
       })
       .catch((error) => {
         console.log(error);
@@ -1866,14 +1867,15 @@ function Dashboard() {
         } else {
           message.error(error.message);
         }
-        setLoading(false);
+
+        setLoader(false);
       });
     axios
       .get(`${BASE_URL}/healthworker/api/GetFamilyHeadList`, axiosConfig)
       .then((response) => {
         console.log(response.data);
         setFamilyHeadList(response.data);
-        setLoading(false);
+        setLoader(false);
       })
       .catch((error) => {
         console.log(error.response.status);
@@ -1885,7 +1887,7 @@ function Dashboard() {
         } else {
           // message.error(error.message);
         }
-        setLoading(false);
+        setLoader(false);
       });
 
     axios
@@ -1895,11 +1897,11 @@ function Dashboard() {
       )
       .then((response) => {
         console.log(response.data);
-        setLoading(false);
+        setLoader(false);
         setPartiallyFamilyHeadList(response.data);
       })
       .catch((error) => {
-        setLoading(false);
+        setLoader(false);
         console.log(error);
       });
   }, []);
@@ -2121,6 +2123,7 @@ function Dashboard() {
       dataIndex: "mobileNo",
     },
   ];
+
 
   return (
     <>
@@ -2515,7 +2518,7 @@ function Dashboard() {
               />
             </div>
           </Row>
-        </div>
+          </div>
       </Spin>
     </>
   );

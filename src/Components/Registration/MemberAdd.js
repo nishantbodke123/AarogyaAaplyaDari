@@ -361,7 +361,7 @@ function MemberAdd(props) {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [phone, setPhone] = useState("");
-  const [aadharCard, setAadharCard] = useState("");
+  const [aadharCard, setAadharCard] = useState(null);
   const [abhaId, setAbhaId] = useState("");
   const [pulse, setPulse] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
@@ -1352,7 +1352,7 @@ function MemberAdd(props) {
       message.warning("Please Select Area");
     } else if (selectedCHV === "") {
       message.warning("Please Select CHV");
-    } else if (aadharCard !== "") {
+    } else if (aadharCard !== null) {
       //|| adharAbhaRequired
       axios
         .get(
@@ -3584,6 +3584,7 @@ function MemberAdd(props) {
             <SubmitButton onClick={() => handleAdd()}>Submit</SubmitButton>
           }
         >
+          <Spin spinning={loading}>
           <div>
             <p>
               Would you like to mark the citizen as vulnerable citizen?
@@ -3621,7 +3622,7 @@ function MemberAdd(props) {
             ) : (
               <></>
             )}
-
+            
             <div>
               <h4>REFERRAL OPTIONS :</h4>
             </div>
@@ -3728,7 +3729,9 @@ function MemberAdd(props) {
                 </Button>
               </BloodSampleButtonCol>
             </BloodSampleButtonsRow>
+            
           </>
+          </Spin>
 
           {/* {bloodSampleHome ? (
             <>
