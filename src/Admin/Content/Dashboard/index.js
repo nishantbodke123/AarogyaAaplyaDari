@@ -506,7 +506,7 @@ function AdminDashboard() {
                     </FormItem>
                   </Col>
 
-                  <Col span={7} style={{ marginRight: "5%" }}>
+                  <Col span={7} style={{ margin: "0% 5% 0% 3%" }}>
                     <FormItem label="Health Post">
                       <select
                         style={{
@@ -553,7 +553,7 @@ function AdminDashboard() {
                     </FormItem>
                   </Col> */}
 
-                  <div style={{ margin: "4% 0% 0% 0%" }}>
+                  <div style={{ margin: "4vh 0vw 0vh 4vw" }}>
                     <Tooltip
                       placement="bottom"
                       title="Download Dashboard"

@@ -962,6 +962,7 @@ function Dashboard() {
         responseType: "blob",
       })
       .then((response) => {
+        
         setLoader(false);
         console.log(response);
         const href = URL.createObjectURL(response.data);
@@ -980,6 +981,14 @@ function Dashboard() {
         URL.revokeObjectURL(href);
       })
       .then((err) => {
+        // if (err.response.status == 401) {
+        //   message.warning("system is logged out");
+        //   setTimeout(() => {
+        //     LogOut();
+        //   }, 1000);
+        // } else {
+        //   // message.error(error.message);
+        // }
         setLoader(false);
         console.log(err);
       });

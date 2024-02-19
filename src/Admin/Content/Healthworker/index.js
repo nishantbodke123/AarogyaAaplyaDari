@@ -471,14 +471,16 @@ function Healthworker() {
         if (u_password !== u_ConfirmPassword) {
           message.warning("password and confirm password should be same");
         } else {
+       
           const formData = {
             name: u_name,
             username: u_userName,
             phoneNumber: u_phoneNumber,
-            ...(email && { emailId: u_email }),
+            ...(u_email && { emailId: u_email }),
             // ...(u_Section != [] && { userSections: u_Section }),
             userSections: u_Section,
             group: "healthworker",
+            is_active:u_is_ActiveStatus,
             newpassword: u_password,
           };
 
@@ -520,9 +522,10 @@ function Healthworker() {
         name: u_name,
         username: u_userName,
         phoneNumber: u_phoneNumber,
-        ...(email && { emailId: u_email }),
+        ...(u_email && { emailId: u_email }),
         // ...(u_Section != [] && { userSections: u_Section }),
         userSections: u_Section,
+        is_active:u_is_ActiveStatus,
         group: "healthworker",
       };
 
@@ -673,7 +676,7 @@ function Healthworker() {
       title: "Status",
       dataIndex: "is_active",
       render: (data) => {
-        return data ? "Active" : "Deactive";
+        return data ? <p>Active</p> : <p style={{color:"red"}}>Inactive</p>;
       },
     },
     // {
@@ -1107,7 +1110,7 @@ function Healthworker() {
                         value={u_is_ActiveStatus}
                       >
                         <Option value="true">Active</Option>
-                        <Option value="false">Deactive</Option>
+                        <Option value="false">Inactive</Option>
                       </Select>
                     </FormItem>
                   </Col>

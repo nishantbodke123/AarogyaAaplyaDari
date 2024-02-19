@@ -524,10 +524,11 @@ function CHV() {
             name: u_name,
             username: u_userName,
             phoneNumber: u_phoneNumber,
-            ...(email && { emailId: u_email }),
+            ...(u_email && { emailId: u_email }),
             // ...(u_Section != [] && { userSections: u_Section }),
             userSections: u_Section,
             newpassword: u_password,
+            is_active: u_is_ActiveStatus,
             group: "CHV-ASHA",
           };
           // const formData = new FormData();
@@ -575,9 +576,10 @@ function CHV() {
         name: u_name,
         username: u_userName,
         phoneNumber: u_phoneNumber,
-        ...(email && { emailId: u_email }),
+        ...(u_email && { emailId: u_email }),
         // ...(u_Section != [] && { userSections: u_Section }),
         userSections: u_Section,
+        is_active: u_is_ActiveStatus,
         group: "CHV-ASHA",
       };
       // const formData = new FormData();
@@ -788,7 +790,7 @@ function CHV() {
       title: "Status",
       dataIndex: "is_active",
       render: (data) => {
-        return data ? "Active" : "Deactive";
+        return data ? <p>Active</p> : <p style={{color:"red"}}>Inactive</p>;
       },
     },
     {
@@ -1237,7 +1239,7 @@ function CHV() {
                         value={u_is_ActiveStatus}
                       >
                         <Option value="true">Active</Option>
-                        <Option value="false">Deactive</Option>
+                        <Option value="false">Inactive</Option>
                       </Select>
                     </FormItem>
                   </Col>
