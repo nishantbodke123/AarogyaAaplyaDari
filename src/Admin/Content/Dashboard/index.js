@@ -964,21 +964,22 @@ function AdminDashboard() {
                   <Col span={5}>
                     {" "}
                     <ReferralCountCard>
-                      <CardTitle> Other Communicable Disease</CardTitle>
-                      <CountTitle>
-                        {AdminDashboardData.other_communicable_dieases}
-                      </CountTitle>
-                    </ReferralCountCard>{" "}
-                  </Col>
-                  <Col span={5}>
-                    {" "}
-                    <ReferralCountCard>
                       <CardTitle> Leprosy</CardTitle>
                       <CountTitle>
                         {AdminDashboardData.leprosy}
                       </CountTitle>
                     </ReferralCountCard>{" "}
                   </Col>
+                  <Col span={5}>
+                    {" "}
+                    <ReferralCountCard>
+                      <CardTitle> Other Communicable Disease</CardTitle>
+                      <CountTitle>
+                        {AdminDashboardData.other_communicable_dieases}
+                      </CountTitle>
+                    </ReferralCountCard>{" "}
+                  </Col>
+                  
                 </Row>
               </div>
             </div>
