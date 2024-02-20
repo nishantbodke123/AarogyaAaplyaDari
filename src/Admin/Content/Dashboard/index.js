@@ -672,7 +672,7 @@ function AdminDashboard() {
                     {AdminDashboardData.total_LabTestAdded}
                   </CountTitle>
                 </MainCountRow>
-                <Line />
+                {/* <Line /> */}
                 {/* <MainCountRow>
                   <DetailSubtitle> Tests Done</DetailSubtitle>
                   <CountTitle>0</CountTitle>
