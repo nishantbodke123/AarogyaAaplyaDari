@@ -28,31 +28,34 @@ export const Box = styled.div`
   @media (max-width: 1200px) {
     width: 200px;
     height: 110px;
-      &:hover {
-    width: 205px;
-    height: 130px;
-    box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
+    &:hover {
+      width: 205px;
+      height: 130px;
+      box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
+    }
   }
   @media (max-width: 420px) {
     width: 185px;
     height: 120px;
-      &:hover {
-    width: 190px;
-    height: 120px;
-    box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
+    &:hover {
+      width: 190px;
+      height: 120px;
+      box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
+    }
   }
   @media (max-width: 390px) {
     width: 170px;
-      &:hover {
-    width: 175px;
-    box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
+    &:hover {
+      width: 175px;
+      box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
+    }
   }
   @media (max-width: 360px) {
     width: 150px;
-      &:hover {
-    width: 155px;
-    
-    box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
+    &:hover {
+      width: 155px;
+      box-shadow: #ff8551 0px 4px 6px -1px, #ff8551 0px 2px 4px -1px;
+    }
   }
 `;
 export const BoxContainer = styled.div`
@@ -328,23 +331,22 @@ export const InnerCard4 = styled.div`
 export const InputForm = styled(Input)`
   width: 300px;
 `;
-export const DownlaodCARDButton=styled(Button)`
-width:200px;
-height:50px;
-&:hover{
-background-color: #C9D7DD;
-color: white;
-}
-`
-export const DownlaodQRButton=styled(Button)`
-width:200px;
-height:50px;
-&:hover{
-background-color: #C9D7DD;
-color: white;
-}
-
-`
+export const DownlaodCARDButton = styled(Button)`
+  width: 200px;
+  height: 50px;
+  &:hover {
+    background-color: #c9d7dd;
+    color: white;
+  }
+`;
+export const DownlaodQRButton = styled(Button)`
+  width: 200px;
+  height: 50px;
+  &:hover {
+    background-color: #c9d7dd;
+    color: white;
+  }
+`;
 export const ABHAIDSubmitButton = styled.button`
   border: none;
   cursor: pointer;
@@ -357,10 +359,10 @@ export const ABHAIDSubmitButton = styled.button`
     background-color: #f29727;
   }
 `;
-export const DownloadPopoverText=styled.p`
+export const DownloadPopoverText = styled.p`
   font-size: 14px;
-  &:hover{
+  &:hover {
     cursor: pointer;
     color: #ff8551;
   }
-`
+`;

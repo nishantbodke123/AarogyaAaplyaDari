@@ -265,12 +265,14 @@ function Dashboard() {
     axios
       .get(`${BASE_URL}/healthworker/api/GetSurveyorDashboard`, axiosConfig)
       .then((response) => {
+        setLoader(false);
         console.log(response.data);
         setDashboardCounts(response.data);
 
         setLoader(false);
       })
       .catch((error) => {
+        setLoader(false);
         console.log(error);
         if (error.response.status == 401) {
           message.warning("system is logged out");
@@ -281,7 +283,7 @@ function Dashboard() {
           message.error(error.message);
         }
 
-        setLoader(false);
+        
       });
     axios
       .get(`${BASE_URL}/healthworker/api/GetFamilyHeadList`, axiosConfig)
@@ -550,6 +552,7 @@ function Dashboard() {
   const [authMethodResponse, setAuthMethodResponse] = useState([]);
   const [healthIdResponse, setHealthIdResponse] = useState();
   const handleABHAIDSubmit = async () => {
+    setLoader(true);
     setMinutes(2);
     setSeconds(29);
     console.log(abhaId);
@@ -568,6 +571,7 @@ function Dashboard() {
         "Content-Type": "application/json",
       })
       .then((res) => {
+        setLoader(false);
         console.log(res);
         sessionStorage.setItem("BearerToken", res.data.accessToken);
         axios
@@ -599,6 +603,7 @@ function Dashboard() {
       });
   };
   const handleAbhaIDVerify = async () => {
+    setLoader(true);
     console.log(otp);
     let encryptedOTP = encrypt.encrypt(otp);
     let axiosConfig = {
@@ -631,16 +636,18 @@ function Dashboard() {
       }
       console.log(response, "ABHA OTP");
       if (response.status == 200) {
+        setLoader(false)
         sessionStorage.setItem("X-Token", response.data.token);
         setOtpVerified(true);
       }
     } catch (error) {
+      setLoader(false);
       console.error("Error:", error);
       message.warning(error.response.data.message);
     }
   };
   const handleABHACardDownload = () => {
-    setLoading(true);
+    setLoader(true);
     console.log(sessionStorage.getItem("X-Token"));
     axios
       .get(`${BASE_URL}/abdm/api/v1/account/getCard`, {
@@ -654,6 +661,7 @@ function Dashboard() {
         responseType: "blob",
       })
       .then((response) => {
+        setLoader(false);
         setLoading(false);
         console.log(response);
         const href = URL.createObjectURL(response.data);
@@ -669,7 +677,7 @@ function Dashboard() {
         URL.revokeObjectURL(href);
       })
       .catch((err) => {
-        setLoading(false);
+        setLoader(false);
         console.log(err);
       });
   };

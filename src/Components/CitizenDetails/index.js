@@ -8,12 +8,20 @@ import {
   ViewButton,
   ViewModal,
 } from "./style";
+
 import TabPane from "antd/es/tabs/TabPane";
-import { Spin, Table, message } from "antd";
+import { Button, Spin, Table, message } from "antd";
+import {
+
+  FilePdfOutlined,
+  FileExcelOutlined
+  
+} from '@ant-design/icons';
 import axios from "axios";
 import { BASE_URL } from "../../Utils/BaseURL";
 import { LogOut } from "../../Auth/Logout";
 import { useNavigate } from "react-router-dom";
+import { render } from "@testing-library/react";
 
 function CitizenDetails() {
   const navigate = useNavigate();
@@ -93,9 +101,15 @@ function CitizenDetails() {
   }, []);
 
   const Items = [
+    // {
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
-      title: "ID",
-      dataIndex: "id",
+      title:"Sr No",
+      render:(key, data, index)=>{
+        return <p>{index+1}</p>
+      }
     },
     {
       title: "Family ID",
@@ -152,7 +166,7 @@ function CitizenDetails() {
     axios
       .get(`${BASE_URL}/healthworker/api/GetFamilyMembersDetails`, axiosConfig)
       .then((response) => {
-        console.log(response.data.length);
+        console.log(response.data);
         setFamilyMemberArrayLength(response.data.length);
         setFamilyMemberDetails(response.data);
         setShowViewModal(true);
@@ -179,10 +193,48 @@ function CitizenDetails() {
     console.log(familyID, noOfFamilyMembers);
     navigate("/addMember", { state: familyID });
   };
+  // const handleReportDownload= async (data)=>{
+  // console.log(data);
+
+  // try {
+  //   const response = await fetch(data);
+  //   const blob = await response.blob();
+
+  //   // Create a link element
+  //   const link = document.createElement('a');
+
+  //   // Create a Blob URL from the blob data
+  //   const blobUrl = window.URL.createObjectURL(blob);
+
+  //   // Set the download attribute and href for the link
+  //   link.href = blobUrl;
+  //   link.download = 'Report.pdf';
+
+  //   // Append the link to the document body
+  //   document.body.appendChild(link);
+
+  //   // Trigger a click on the link to start the download
+  //   link.click();
+
+  //   // Remove the link from the document body
+  //   document.body.removeChild(link);
+
+  //   // Revoke the Blob URL to free up resources
+  //   window.URL.revokeObjectURL(blobUrl);
+  // } catch (error) {
+  //   console.error('Error downloading PDF:', error);
+  // }
+  // }
   const FamilyMemberItems = [
+    // {
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
-      title: "ID",
-      dataIndex: "id",
+      title:"Sr No.",
+      render:(key, data, index)=>{
+         return <p>{index+1}</p>;
+    }
     },
     {
       title: "Member ID",
@@ -222,6 +274,20 @@ function CitizenDetails() {
         );
       },
     },
+    {
+      title:"Report",
+      dataIndex:"report",
+      render:(data)=>{
+       return(
+        <>{data !=""?( <a
+          href={`${BASE_URL}/media/${data}`}
+          target="_blank"
+        >
+         <Button style={{border:"none"}}><FilePdfOutlined /></Button> 
+        </a>):(<></>)}</>
+       )
+      }
+    }
   ];
 
   return (
