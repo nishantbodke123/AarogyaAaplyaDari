@@ -30,6 +30,7 @@ import axios from "axios";
 import { BASE_URL } from "../Utils/BaseURL";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../Components/Dashboard/Dashboard";
+import { toast } from "react-toastify";
 function Login() {
   const navigate = useNavigate();
   const [showOtpInput, setShowOtpInput] = useState(false);
@@ -64,7 +65,12 @@ function Login() {
         sessionStorage.setItem("group", response.data.Group);
         sessionStorage.setItem("section_id", response.data.section_id);
         sessionStorage.setItem("id", response.data.id);
-        message.success(response.data.message);
+       
+        if(response.data.Group == "mo") {
+          message.warning("These user credentials belong to MO");
+        } else {
+          message.success(response.data.message);
+        }
 
         setTimeout(() => {
           if (
@@ -76,7 +82,8 @@ function Login() {
             window.location.replace("/admin/adminDashboard");
           } else if (response.data.Group == "MOH") {
             window.location.replace("/wardadmin/wardadminDashboard");
-          } else {
+          } else if(response.data.Group == "mo") {
+            // message.warning("These user credentials belong to MO");
           }
         }, 1000);
         setShowLoading(false);
