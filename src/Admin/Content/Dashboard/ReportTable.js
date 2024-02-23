@@ -107,7 +107,7 @@ const ReportTable = (props) => {
       dataIndex: "female",
     },
     {
-      title: "transgender",
+      title: "Transgender",
       dataIndex: "transgender",
     },
     {
@@ -119,7 +119,7 @@ const ReportTable = (props) => {
       dataIndex: "total_diabetes",
     },
     {
-      title: "hypertension",
+      title: "Hypertension",
       dataIndex: "hypertension",
     },
     {
