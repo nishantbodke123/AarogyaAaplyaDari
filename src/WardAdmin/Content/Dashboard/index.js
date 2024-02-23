@@ -30,13 +30,18 @@ import {
   ReferralCountCard,
   Title,
 } from "./style";
-import { AlignRightOutlined, DownloadOutlined } from "@ant-design/icons";
+import {
+  DownloadOutlined,
+  ProfileOutlined,
+  AppstoreOutlined,
+} from "@ant-design/icons";
 import { BASE_URL } from "../../../Utils/BaseURL";
 import axios, { Axios } from "axios";
 import FormItem from "antd/es/form/FormItem";
 import { LogOut } from "../../../Auth/Logout";
 
 import { MyContext } from "../../Admin/WardAdmin";
+import ReportTable from "./ReportTable";
 
 function WardAdminDashboard() {
   const { sideKey, passedHealthpost } = useContext(MyContext);
@@ -123,34 +128,6 @@ function WardAdminDashboard() {
       .then((response) => {
         setLoader(false);
         console.log("Response data is ---> " + response.headers);
-
-        ////////////////////////////////////////////////////////
-        // const contentDisposition = response.headers["content-disposition"];
-        // const filenameMatch = contentDisposition.match(/filename="(.+?)"/);
-        // const filename = filenameMatch ? filenameMatch[1] : null;
-
-        // if (filename) {
-        //   console.log("Filename:", filename);
-        // } else {
-        //   console.error("Filename not found in Content-Disposition header");
-        // }
-
-        ////////////////////////////////////////////////////////////
-
-        // const href = URL.createObjectURL(response.data);
-        // const link = document.createElement("a");
-        // link.href = href;
-        // link.setAttribute(
-        //   "download",
-        //   `${wardName} ward's Citizens Report.xlsx`
-        //   // `${response}.xlsx`
-        // );
-
-        // document.body.appendChild(link);
-        // link.click();
-
-        // document.body.removeChild(link);
-        // URL.revokeObjectURL(href);
       })
       .catch((err) => {
         setLoader(false);
@@ -216,87 +193,6 @@ function WardAdminDashboard() {
   };
 
   const handleMOHDashboardExcelDownload = () => {
-    // if (selectedHealthPost === "" || selectedHealthPost === 0) {
-    //   axios
-    //     .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView/${wardId}`, {
-    //       headers: {
-    //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //       },
-    //       responseType: "blob",
-    //     })
-    //     .then((response) => {
-    //       // setLoader(false);
-    //       const href = URL.createObjectURL(response.data);
-    //       const link = document.createElement("a");
-    //       link.href = href;
-    //       link.setAttribute(
-    //         "download",
-    //         `${wardName} ward's Citizens Report.xlsx`
-    //       );
-
-    //       document.body.appendChild(link);
-    //       link.click();
-
-    //       document.body.removeChild(link);
-    //       URL.revokeObjectURL(href);
-    //     })
-    //     .catch((err) => {
-    //       setLoader(false);
-    //       console.log(err.response.status);
-    //       if (err.response.status == 404) {
-    //         message.warning("Please Select Ward");
-    //       } else if (err.response.status == 401) {
-    //         LogOut();
-    //       } else if (err.response.status == 400) {
-    //         message.warning("Data is not available");
-    //       } else {
-    //         message.warning("Error" + err.response.message);
-    //       }
-    //     });
-    // } else {
-    //   axios
-    //     .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
-    //       params: {
-    //         healthpost_id: selectedHealthPost,
-    //       },
-    //       headers: {
-    //         Authorization: `Token ${sessionStorage.getItem("Token")}`,
-    //       },
-    //       responseType: "blob",
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //       const href = URL.createObjectURL(response.data);
-
-    //       const link = document.createElement("a");
-    //       link.href = href;
-    //       link.setAttribute(
-    //         "download",
-    //         `MOH_Dashboard_${
-    //           selectedHealthPost != undefined ? selectedHealthPost : "All"
-    //         }_Data.xlsx`
-    //       );
-
-    //       document.body.appendChild(link);
-    //       link.click();
-
-    //       document.body.removeChild(link);
-    //       URL.revokeObjectURL(href);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       if (err.response.status == "401") {
-    //         setTimeout(() => {
-    //           LogOut();
-    //         }, 1000);
-    //       } else if (err.response.status == 400) {
-    //         message.warning("Data is not available");
-    //       } else {
-    //         message.warning("Error" + err.response.message);
-    //       }
-    //     });
-    // }
-
     axios
       .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
         params: {
@@ -344,6 +240,11 @@ function WardAdminDashboard() {
         }
       });
   };
+  const [showReport, setShowReport] = useState(false);
+  const handleShowReport = () => {
+    console.log(showReport);
+    setShowReport(!showReport);
+  };
   return (
     <>
       <Spin spinning={loader}>
@@ -352,46 +253,86 @@ function WardAdminDashboard() {
             display: "flex",
             justifyContent: "end",
             margin: "1% 2%-2% 0%",
+            width: "100%",
           }}
         >
-          <div style={{ width: "20%" }}>
-            <Form layout="vertical">
-              <Row>
-                <Col span={24}>
-                  <FormItem label="Health Post">
-                    <select
-                      style={{
-                        width: "200px",
-                        height: "30px",
-                        borderRadius: "5px",
-                      }}
-                      // value={selectedHealthPost}
-                      // placeholder="All"
-                      // onChange={(e) => setSelectedHealthPost(e)}
-                      onChange={(e) => setSelectedHealthPost(e.target.value)}
-                    >
-                      <option value={""} selected>
-                        All
-                      </option>
-                      {healthPostNameList.map((data, index) => (
-                        <option key={data.id} value={data.id}>
-                          {data.healthPostName}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "30%",
+            }}
+          >
+            <div >
+              <Form layout="vertical">
+                <Row>
+                  <Col span={24}>
+                    <FormItem label="Health Post">
+                      <select
+                        style={{
+                          width: "200px",
+                          height: "30px",
+                          borderRadius: "5px",
+                        }}
+                        // value={selectedHealthPost}
+                        // placeholder="All"
+                        // onChange={(e) => setSelectedHealthPost(e)}
+                        onChange={(e) => setSelectedHealthPost(e.target.value)}
+                      >
+                        <option value={""} selected>
+                          All
                         </option>
-                      ))}
-                    </select>
-                  </FormItem>
-                </Col>
-              </Row>
-            </Form>
-          </div>
-          <div style={{ margin: "2% 2% 0% 0%" }}>
-            <Tooltip placement="bottom" title="Excel Download">
-              <Button onClick={handleMOHDashboardExcelDownload}>
-                <DownloadOutlined />
-              </Button>
-            </Tooltip>
+                        {healthPostNameList.map((data, index) => (
+                          <option key={data.id} value={data.id}>
+                            {data.healthPostName}
+                          </option>
+                        ))}
+                      </select>
+                    </FormItem>
+                  </Col>
+                </Row>
+              </Form>
+              </div>
+           
+           
+            <div style={{ margin: "4vh 0vh 0vh 0vh" }}>
+              <Tooltip placement="bottom" title="Excel Download">
+                <Button onClick={handleMOHDashboardExcelDownload}>
+                  <DownloadOutlined />
+                </Button>
+              </Tooltip>
+            </div>
+            <div style={{ margin: "4vh 4vh 0vh 0vh" }}>
+                {showReport ? (
+                  <Tooltip title="Dashboard" placement="top">
+                    <Button
+                      onClick={handleShowReport}
+                      style={{ border: "none" }}
+                    >
+                      <AppstoreOutlined style={{ fontSize: "25px" }} />
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Users Report" placement="top">
+                    <Button
+                      onClick={handleShowReport}
+                      style={{ border: "none" }}
+                    >
+                      <ProfileOutlined style={{ fontSize: "25px" }} />
+                    </Button>
+                  </Tooltip>
+                )}
+              </div>
           </div>
         </div>
+        {showReport ? (
+            <>
+              <ReportTable
+                selectedHealthPost={selectedHealthPost}
+              />
+            </>
+          ) : (
+            <>
         <Row
           style={{
             padding: "2%",
@@ -737,6 +678,7 @@ function WardAdminDashboard() {
             />
           </div>
         </Row>
+        </>)}
       </Spin>
     </>
   );

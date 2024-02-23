@@ -26,7 +26,11 @@ import axios from "axios";
 import { LogOut } from "../../../Auth/Logout";
 import { Select } from "@mui/material";
 import FormItem from "antd/es/form/FormItem";
-import { DownloadOutlined, ProfileOutlined, AppstoreOutlined} from "@ant-design/icons";
+import {
+  DownloadOutlined,
+  ProfileOutlined,
+  AppstoreOutlined,
+} from "@ant-design/icons";
 
 import { createContext, useContext } from "react";
 
@@ -488,7 +492,7 @@ function AdminDashboard() {
                   }}
                   onChange={(e) => handleHealthpostSelect(e.target.value)}
                 >
-                  <option value={undefined}>All</option>
+                  <option value="">All</option>
                   {healthPostNameList.map((data, index) => (
                     <option
                       key={data.id}
@@ -511,16 +515,25 @@ function AdminDashboard() {
                 </Tooltip>
               </div>
               <div style={{ margin: "3vh 4vh 0vh 0vh" }}>
-                {showReport?( <Tooltip title="Dashboard" placement="top">
-                  <Button onClick={handleShowReport} style={{ border: "none" }}>
-                    <AppstoreOutlined style={{ fontSize: "25px" }} />
-                  </Button>
-                </Tooltip>):( <Tooltip title="Users Report" placement="top">
-                  <Button onClick={handleShowReport} style={{ border: "none" }}>
-                    <ProfileOutlined style={{ fontSize: "25px" }} />
-                  </Button>
-                </Tooltip>)}
-               
+                {showReport ? (
+                  <Tooltip title="Dashboard" placement="top">
+                    <Button
+                      onClick={handleShowReport}
+                      style={{ border: "none" }}
+                    >
+                      <AppstoreOutlined style={{ fontSize: "25px" }} />
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Users Report" placement="top">
+                    <Button
+                      onClick={handleShowReport}
+                      style={{ border: "none" }}
+                    >
+                      <ProfileOutlined style={{ fontSize: "25px" }} />
+                    </Button>
+                  </Tooltip>
+                )}
               </div>
             </div>
           </div>

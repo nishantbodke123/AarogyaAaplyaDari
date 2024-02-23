@@ -1,4 +1,4 @@
-import { Card, Col, Divider, Row } from "antd";
+import { Card, Col, Divider, Row, Table } from "antd";
 import styled from "styled-components";
 
 export const DashboardCard = styled.div`
@@ -100,4 +100,16 @@ export const DetailSubtitle = styled.span`
 `;
 export const Line = styled(Divider)`
   margin: 0px 0px 12px 0px !important;
+`;
+export const StyledAntTable = styled(Table)`
+  /* Your custom styles here */
+  border-radius: 8px;
+
+  .ant-table-thead > tr > th {
+    background-color: #e0f4ff;
+  }
+
+  .ant-table-row:hover {
+    background-color: #e0f4ff;
+  }
 `;

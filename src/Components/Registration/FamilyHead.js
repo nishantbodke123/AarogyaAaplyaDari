@@ -996,7 +996,7 @@ function FamilyHead(props) {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
-  const [relationWithHead ,setRelationWithHead]=useState("");
+  const [relationWithHead, setRelationWithHead] = useState("");
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState(null);
   const [abhaId, setAbhaId] = useState();
@@ -1163,7 +1163,7 @@ function FamilyHead(props) {
           accept: "*/*",
           "Accept-Language": "en-US",
         },
-        responseType:"blob"
+        responseType: "blob",
       })
       .then((response) => {
         setLoading(false);
@@ -1196,7 +1196,7 @@ function FamilyHead(props) {
           accept: "*/*",
           "Accept-Language": "en-US",
         },
-        responseType:"blob"
+        responseType: "blob",
       })
       .then((response) => {
         setLoading(false);
@@ -1212,7 +1212,6 @@ function FamilyHead(props) {
 
         document.body.removeChild(link);
         URL.revokeObjectURL(href);
-
       })
       .catch((err) => {
         setLoading(false);
@@ -1501,7 +1500,7 @@ function FamilyHead(props) {
       message.warning("Please Mention Gender");
     } else if (age === "") {
       message.warning("Please Enter Age");
-    } else if(relationWithHead ===""){
+    } else if (relationWithHead === "") {
       message.warning("Please Select Relation with Family Head");
     } else if (aadharCard !== null) {
       //|| adharAbhaRequired
@@ -1893,7 +1892,6 @@ function FamilyHead(props) {
     setBloodSampleHome(false);
     setBloodSampleDenied(false);
     setNotRequired(false);
-    
   };
 
   const handleClearPartA = () => {
@@ -2292,7 +2290,7 @@ function FamilyHead(props) {
     area: section,
     name: name,
     gender: gender,
-    relationshipWithHead:relationWithHead,
+    relationshipWithHead: relationWithHead,
     age: age,
     mobileNo: phone,
     aadharCard: aadharCard,
@@ -2901,7 +2899,11 @@ function FamilyHead(props) {
               </Column>
               <Column span={8}>
                 <FormItem label="Relation with the family head" required>
-                   <Select value={relationWithHead} onChange={(value)=>setRelationWithHead(value)} placeholder="Select Relationship with family head" >
+                  <Select
+                    value={relationWithHead}
+                    onChange={(value) => setRelationWithHead(value)}
+                    placeholder="Select Relationship with family head"
+                  >
                     <Option value="Self">Self</Option>
                     <Option value="Mother">Mother</Option>
                     <Option value="Father">Father</Option>
@@ -2909,7 +2911,7 @@ function FamilyHead(props) {
                     <Option value="Son">Son</Option>
                     <Option value="Daughter">Daughter</Option>
                     <Option value="Grandson">Grandson</Option>
-                   </Select>
+                  </Select>
                 </FormItem>
               </Column>
             </Row>
@@ -4443,68 +4445,69 @@ function FamilyHead(props) {
                 : "Submit & Next"}
             </SubmitButton>
           }
-        ><Spin spinning={loading} tip="Loading...">
-          <div>
-            
-            <p>
-              Would you like to mark the citizen as vulnerable citizen?/ वरील
-              नमूद केलेली व्यक्ती खालील जोखीमग्रस्त (Vulnerable) संवर्गात आहे?"
-              <span>
-                <Checkbox
-                  style={{ margin: "0% 5%" }}
-                  checked={vulnerable}
-                  onClick={handleVulnerableClick}
-                ></Checkbox>
-              </span>
-            </p>
-            {vulnerable ? (
-              <div>
-                {vulnerableList.map((data) => (
-                  <li>
-                    <Checkbox
-                      key={data.id}
-                      checked={selectVulnerableList.includes(data.id)}
-                      value={data.id}
-                      onChange={(e) => handleVulnerableList(e.target.value)}
-                    >
-                      {data.choice}/{t(data.choice)}
-                    </Checkbox>
-                  </li>
-                ))}
-              </div>
-            ) : (
-              <></>
-            )}
-            {selectVulnerableList.includes("Any other reason") ? (
-              <TextArea
-                placeholder="Enter other reason here"
-                style={{ width: "80%" }}
-                rows={2}
-                value={vulnerableReason}
-                onChange={(e) => setVulnerableReason(e.target.value)}
-              />
-            ) : (
-              <></>
-            )}
-
+        >
+          <Spin spinning={loading} tip="Loading...">
             <div>
-              <h4>REFERRAL OPTIONS / संदर्भ पर्याय :</h4>
-            </div>
-            {refarralList.map((data) => (
-              <li>
-                <Checkbox
-                  key={data.id}
-                  checked={selectedReferalList.includes(data.id)}
-                  value={data.id}
-                  onChange={(e) => {
-                    handleReferralList(e.target.value);
-                  }}
-                >
-                  {data.choice}/{t(data.choice)}
-                </Checkbox>
-              </li>
-            ))}
-            {/* <Checkbox>Referral for further management (Known case)</Checkbox>
+              <p>
+                Would you like to mark the citizen as vulnerable citizen?/ वरील
+                नमूद केलेली व्यक्ती खालील जोखीमग्रस्त (Vulnerable) संवर्गात
+                आहे?"
+                <span>
+                  <Checkbox
+                    style={{ margin: "0% 5%" }}
+                    checked={vulnerable}
+                    onClick={handleVulnerableClick}
+                  ></Checkbox>
+                </span>
+              </p>
+              {vulnerable ? (
+                <div>
+                  {vulnerableList.map((data) => (
+                    <li>
+                      <Checkbox
+                        key={data.id}
+                        checked={selectVulnerableList.includes(data.id)}
+                        value={data.id}
+                        onChange={(e) => handleVulnerableList(e.target.value)}
+                      >
+                        {data.choice}/{t(data.choice)}
+                      </Checkbox>
+                    </li>
+                  ))}
+                </div>
+              ) : (
+                <></>
+              )}
+              {selectVulnerableList.includes("Any other reason") ? (
+                <TextArea
+                  placeholder="Enter other reason here"
+                  style={{ width: "80%" }}
+                  rows={2}
+                  value={vulnerableReason}
+                  onChange={(e) => setVulnerableReason(e.target.value)}
+                />
+              ) : (
+                <></>
+              )}
+
+              <div>
+                <h4>REFERRAL OPTIONS / संदर्भ पर्याय :</h4>
+              </div>
+              {refarralList.map((data) => (
+                <li>
+                  <Checkbox
+                    key={data.id}
+                    checked={selectedReferalList.includes(data.id)}
+                    value={data.id}
+                    onChange={(e) => {
+                      handleReferralList(e.target.value);
+                    }}
+                  >
+                    {data.choice}/{t(data.choice)}
+                  </Checkbox>
+                </li>
+              ))}
+              {/* <Checkbox>Referral for further management (Known case)</Checkbox>
             <Checkbox style={{ margin: "0% 0.3%" }}>
               Referral for further Diagnosis
             </Checkbox>
@@ -4513,90 +4516,90 @@ function FamilyHead(props) {
               Referral in case of multiple co-morbid investigation
             </Checkbox>
             <Checkbox>Referral for blood collection</Checkbox> */}
-          </div>
+            </div>
 
-          <>
-            <BloodSampleText>BLOOD COLLECTION / रक्त संकलन :</BloodSampleText>
-            <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
-            <BloodSampleButtonsRow>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    bloodSampleHome
-                      ? { backgroundColor: "#E9B384", width: "200px" }
-                      : { backgroundColor: "white", width: "200px" }
-                  }
-                  onClick={handleBloodSampleHomeSelct}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faHouse} />
-                  </span>
-                  Home / घर
-                </Button>
-              </BloodSampleButtonCol>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    bloodSampleCenter
-                      ? { backgroundColor: "#E9B384", width: "200px" }
-                      : { backgroundColor: "white", width: "200px" }
-                  }
-                  onClick={handleBloodSampleCenterSelect}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faPlus} />
-                  </span>
-                  Center / केंद्र
-                </Button>
-              </BloodSampleButtonCol>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    bloodSampleDenied
-                      ? { backgroundColor: "#E9B384", width: "200px" }
-                      : { backgroundColor: "white", width: "200px" }
-                  }
-                  onClick={handleBloodSampleDesiedSelect}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faXmark} />
-                  </span>
-                  Denied / नाकारले
-                </Button>
-                {bloodSampleDenied ? (
-                  <div style={{ margin: "10px 25px" }}>
-                    <Radio.Group
-                      onChange={(e) => setDeniedBy(e.target.value)}
-                      value={deniedBy}
-                    >
-                      <Radio value="byindividual">
-                        By Individual /वैयक्तिकरित्या
-                      </Radio>
-                      <br />
-                      <Radio value="byamo">By AMO / AMO द्वारे</Radio>
-                    </Radio.Group>
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </BloodSampleButtonCol>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    notRequired
-                      ? { backgroundColor: "#E9B384", width: "210px" }
-                      : { backgroundColor: "white", width: "210px" }
-                  }
-                  onClick={handleNotRequiredSelect}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faXmark} />
-                  </span>
-                  Not required / आवश्यक नाही
-                </Button>
-              </BloodSampleButtonCol>
-            </BloodSampleButtonsRow>
-          </>
+            <>
+              <BloodSampleText>BLOOD COLLECTION / रक्त संकलन :</BloodSampleText>
+              <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
+              <BloodSampleButtonsRow>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      bloodSampleHome
+                        ? { backgroundColor: "#E9B384", width: "200px" }
+                        : { backgroundColor: "white", width: "200px" }
+                    }
+                    onClick={handleBloodSampleHomeSelct}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faHouse} />
+                    </span>
+                    Home / घर
+                  </Button>
+                </BloodSampleButtonCol>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      bloodSampleCenter
+                        ? { backgroundColor: "#E9B384", width: "200px" }
+                        : { backgroundColor: "white", width: "200px" }
+                    }
+                    onClick={handleBloodSampleCenterSelect}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </span>
+                    Center / केंद्र
+                  </Button>
+                </BloodSampleButtonCol>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      bloodSampleDenied
+                        ? { backgroundColor: "#E9B384", width: "200px" }
+                        : { backgroundColor: "white", width: "200px" }
+                    }
+                    onClick={handleBloodSampleDesiedSelect}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faXmark} />
+                    </span>
+                    Denied / नाकारले
+                  </Button>
+                  {bloodSampleDenied ? (
+                    <div style={{ margin: "10px 25px" }}>
+                      <Radio.Group
+                        onChange={(e) => setDeniedBy(e.target.value)}
+                        value={deniedBy}
+                      >
+                        <Radio value="byindividual">
+                          By Individual /वैयक्तिकरित्या
+                        </Radio>
+                        <br />
+                        <Radio value="byamo">By AMO / AMO द्वारे</Radio>
+                      </Radio.Group>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </BloodSampleButtonCol>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      notRequired
+                        ? { backgroundColor: "#E9B384", width: "210px" }
+                        : { backgroundColor: "white", width: "210px" }
+                    }
+                    onClick={handleNotRequiredSelect}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faXmark} />
+                    </span>
+                    Not required / आवश्यक नाही
+                  </Button>
+                </BloodSampleButtonCol>
+              </BloodSampleButtonsRow>
+            </>
           </Spin>
 
           {/* {bloodSampleHome ? (

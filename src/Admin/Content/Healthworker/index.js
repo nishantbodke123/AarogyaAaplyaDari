@@ -38,14 +38,23 @@ function Healthworker() {
   const [refresh, setRefresh] = useState(1);
   const [wardSelect, setWardSelect] = useState("A");
   const [nextPage, setNextPage] = useState(null);
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
-  const fetchData = async (page=1) => {
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  const fetchData = async (page = 1) => {
     setLoader(true);
     try {
-      const response = await axios.get(`${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/healthworker`,{ params: {
-        limit: pagination.pageSize,
-        offset: (page - 1) * pagination.pageSize
-      }});
+      const response = await axios.get(
+        `${BASE_URL}/adminportal/api/GetuserListAPI/${wardSelect}/healthworker`,
+        {
+          params: {
+            limit: pagination.pageSize,
+            offset: (page - 1) * pagination.pageSize,
+          },
+        }
+      );
       const data = response.data;
 
       if (data.results && data.results.data) {
@@ -54,11 +63,11 @@ function Healthworker() {
         setPagination({
           ...pagination,
           current: page,
-          total: data.count
+          total: data.count,
         });
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
 
       if (error.response && error.response.status === 401) {
         setTimeout(() => {
@@ -471,7 +480,6 @@ function Healthworker() {
         if (u_password !== u_ConfirmPassword) {
           message.warning("password and confirm password should be same");
         } else {
-       
           const formData = {
             name: u_name,
             username: u_userName,
@@ -480,7 +488,7 @@ function Healthworker() {
             // ...(u_Section != [] && { userSections: u_Section }),
             userSections: u_Section,
             group: "healthworker",
-            is_active:u_is_ActiveStatus,
+            is_active: u_is_ActiveStatus,
             newpassword: u_password,
           };
 
@@ -525,7 +533,7 @@ function Healthworker() {
         ...(u_email && { emailId: u_email }),
         // ...(u_Section != [] && { userSections: u_Section }),
         userSections: u_Section,
-        is_active:u_is_ActiveStatus,
+        is_active: u_is_ActiveStatus,
         group: "healthworker",
       };
 
@@ -676,7 +684,7 @@ function Healthworker() {
       title: "Status",
       dataIndex: "is_active",
       render: (data) => {
-        return data ? <p>Active</p> : <p style={{color:"red"}}>Inactive</p>;
+        return data ? <p>Active</p> : <p style={{ color: "red" }}>Inactive</p>;
       },
     },
     // {
@@ -779,11 +787,13 @@ function Healthworker() {
                   </Form>
                 </Col>
               </Row>
-              <Table columns={column}
-          dataSource={healthWorkersData}
-          pagination={pagination}
-          onChange={handleTableChange}
-          rowKey="id"></Table>
+              <Table
+                columns={column}
+                dataSource={healthWorkersData}
+                pagination={pagination}
+                onChange={handleTableChange}
+                rowKey="id"
+              ></Table>
             </div>
             <Modal
               open={addHealthWorkerModal}

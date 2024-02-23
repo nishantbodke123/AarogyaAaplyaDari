@@ -1,7 +1,14 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import React, { useEffect, useState } from "react";
+// import { BASE_URL } from "../../../Utils/BaseURL";
+// import { Spin, Table, message } from "antd";
+// import { LogOut } from "../../../Auth/Logout";
+// import { StyledAntTable } from "./style";
+
+import { useEffect, useState } from "react";
 import { BASE_URL } from "../../../Utils/BaseURL";
-import { Spin, Table, message } from "antd";
+import axios from "axios";
+import { Spin, message } from "antd";
 import { LogOut } from "../../../Auth/Logout";
 import { StyledAntTable } from "./style";
 
@@ -24,13 +31,12 @@ const ReportTable = (props) => {
     setLoader(true);
     try {
       const response = await axios.get(
-        `${BASE_URL}/adminportal/api/AdminDashboardTabView`,
+        `${BASE_URL}/adminportal/api/MOHDashboardTabView`,
         {
           headers: {
             Authorization: `Token ${sessionStorage.getItem("Token")}`,
           },
           params: {
-            ...(props.selectedWard !== "" && { wardId: props.selectedWard }),
             ...(props.selectedHealthPost !== "" && {
               healthpost_id: props.selectedHealthPost,
             }),
@@ -66,8 +72,7 @@ const ReportTable = (props) => {
   };
   useEffect(() => {
     fetchData();
-    console.log(props);
-  }, [props.selectedWard, props.selectedHealthPost]);
+  }, [props.selectedHealthPost]);
 
   const Columns = [
     {
@@ -107,7 +112,7 @@ const ReportTable = (props) => {
       dataIndex: "female",
     },
     {
-      title: "transgender",
+      title: "Transgender",
       dataIndex: "transgender",
     },
     {
@@ -211,7 +216,15 @@ const ReportTable = (props) => {
   return (
     <>
       <Spin spinning={loader} tip="Loading...">
-        <div style={{ margin: "1%" }}>
+        <div
+          style={{
+            padding: "2%",
+            width: "100%",
+            height: "100%",
+            overflowY: "auto",
+            maxHeight: "79vh",
+          }}
+        >
           <StyledAntTable
             className="antd"
             columns={Columns}
