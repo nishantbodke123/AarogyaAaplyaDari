@@ -568,7 +568,7 @@ function MO() {
       title: "Status",
       dataIndex: "is_active",
       render: (data) => {
-        return data ? "Active" : "Deactive";
+        return data ? <p>Active</p> : <p style={{ color: "red" }}>Inactive</p>;
       },
     },
     {
@@ -965,7 +965,7 @@ function MO() {
                 <FormItem label="Is Active" style={{ width: "350px" }}>
                   <Select onChange={(value) => setU_Is_ActiveStatus(value)}>
                     <Option value="true">Active</Option>
-                    <Option value="false">Deactive</Option>
+                    <Option value="false">Inactive</Option>
                   </Select>
                 </FormItem>
               </Form>

@@ -112,4 +112,7 @@ export const StyledAntTable = styled(Table)`
   .ant-table-row:hover {
     background-color: #e0f4ff;
   }
+  .ant-table-wrapper .ant-table {
+    overflow-x: scroll;
+  }
 `;

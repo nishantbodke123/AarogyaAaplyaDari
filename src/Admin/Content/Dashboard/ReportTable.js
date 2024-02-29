@@ -4,6 +4,7 @@ import { BASE_URL } from "../../../Utils/BaseURL";
 import { Spin, Table, message } from "antd";
 import { LogOut } from "../../../Auth/Logout";
 import { StyledAntTable } from "./style";
+import "./style.css";
 
 const ReportTable = (props) => {
   const [reportData, setReportData] = useState([]);
