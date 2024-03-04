@@ -1502,7 +1502,7 @@ function FamilyHead(props) {
   };
 
   const handleFormSubmit = async () => {
-    console.log(typeof aadharCard)
+    console.log(typeof aadharCard);
     if (name === "") {
       message.warning("Please Enter Name");
     } else if (gender === "") {

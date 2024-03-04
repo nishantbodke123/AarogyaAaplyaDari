@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 
 let loginToken = sessionStorage.getItem("Token");
 let userGroup = sessionStorage.getItem("group");
@@ -11,8 +11,7 @@ export function HealthworkerProtected({ children }) {
   ) {
     return children;
   } else {
-    navigate("/");
-    return null;
+    return <Navigate to="/"></Navigate>;
   }
 }
 
@@ -21,17 +20,19 @@ export function PhleboProtected({ children }) {
   if (loginToken !== "" && userGroup === "phlebotomist") {
     return children;
   } else {
-    navigate("/");
-    return null;
+    return <Navigate to="/"></Navigate>;
   }
 }
 export function AdminProtected({ children }) {
   const navigate = useNavigate();
-  if (loginToken !== "" && userGroup === "admin" || userGroup === "ViewAdmin") {
+  if (
+    (loginToken !== "" && userGroup === "admin") ||
+    userGroup === "ViewAdmin"
+  ) {
     return children;
   } else {
-    navigate("/");
-    return null;
+    return <Navigate to="/"></Navigate>;
+    // return null;
   }
 }
 export function WardAdminProtected({ children }) {
@@ -39,7 +40,7 @@ export function WardAdminProtected({ children }) {
   if (loginToken !== "" && userGroup === "MOH") {
     return children;
   } else {
-    navigate("/");
-    return null;
+    return <Navigate to="/"></Navigate>;
+    // return null;
   }
 }
