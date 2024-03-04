@@ -267,6 +267,14 @@ function FamilyHead(props) {
     healthPost: healthPost,
   };
 
+  const handleFamilyHeadNameChange = (e) => {
+    const regex = /^[ a-zA-Z]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      // console.log(e.target.value);
+      setFamilyHeadName(e.target.value);
+    }
+  };
+
   const handleFamilyMembers = (e) => {
     const regex = /^[0-9]{1,3}$/;
     if (e.target.value === "" || regex.test(e.target.value)) {
@@ -998,7 +1006,7 @@ function FamilyHead(props) {
   const [age, setAge] = useState("");
   const [relationWithHead, setRelationWithHead] = useState("");
   const [phone, setPhone] = useState("");
-  const [aadharCard, setAadharCard] = useState(null);
+  const [aadharCard, setAadharCard] = useState("");
   const [abhaId, setAbhaId] = useState();
   const [abhaNumber, setAbhaNumber] = useState();
   const [pulse, setPulse] = useState("");
@@ -1494,6 +1502,7 @@ function FamilyHead(props) {
   };
 
   const handleFormSubmit = async () => {
+    console.log(typeof aadharCard)
     if (name === "") {
       message.warning("Please Enter Name");
     } else if (gender === "") {
@@ -1502,7 +1511,7 @@ function FamilyHead(props) {
       message.warning("Please Enter Age");
     } else if (relationWithHead === "") {
       message.warning("Please Select Relation with Family Head");
-    } else if (aadharCard !== null) {
+    } else if (aadharCard !== "") {
       //|| adharAbhaRequired
       axios
         .get(
@@ -1877,7 +1886,7 @@ function FamilyHead(props) {
     setAge("");
     setRelationWithHead("");
     setPhone("");
-    setAadharCard(null);
+    setAadharCard("");
     setAbhaId("");
     setPulse("");
     setBloodPressure("");
@@ -2642,7 +2651,7 @@ function FamilyHead(props) {
                 type="text"
                 name="firstName"
                 value={familyHeadName}
-                onChange={(e) => setFamilyHeadName(e.target.value)}
+                onChange={(e) => handleFamilyHeadNameChange(e)}
               ></Input>
             </FormItem>
           </Column>
@@ -2911,6 +2920,13 @@ function FamilyHead(props) {
                     <Option value="Son">Son</Option>
                     <Option value="Daughter">Daughter</Option>
                     <Option value="Grandson">Grandson</Option>
+                    <Option value="Granddaughter">Granddaughter</Option>
+                    <Option value="Grandmother">Grandmother</Option>
+                    <Option value="Grandfather">Grandfather</Option>
+                    <Option value="Uncle">Uncle</Option>
+                    <Option value="Aunty">Aunty</Option>
+                    <Option value="Nephew">Nephew</Option>
+                    <Option value="Niece">Niece</Option>
                   </Select>
                 </FormItem>
               </Column>

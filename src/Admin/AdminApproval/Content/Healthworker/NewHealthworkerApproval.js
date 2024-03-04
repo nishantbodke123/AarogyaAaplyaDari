@@ -37,8 +37,10 @@ import { useTheme } from "styled-components";
 function HealthworkerApproval() {
   const [refresh, setRefresh] = useState(1);
   const [wardSelect, setWardSelect] = useState("A");
+  const [Group, setGroup] = useState();
   useEffect(() => {
     setLoader(true);
+    setGroup(sessionStorage.getItem("group"));
     axios
       .get(
         `${BASE_URL}/adminportal/api/GetDeactivatedUserList/${wardSelect}/healthworker`,
@@ -492,7 +494,7 @@ function HealthworkerApproval() {
           ""
         ) : (
           <Button
-            style={{ backgroundColor: "#176B87" }}
+            style={{ backgroundColor: "#176B87" ,display: Group === "ViewAdmin" ? "none" : "block", }}
             onClick={() => handleApproveUser(status, data)}
           >
             Approve

@@ -18,6 +18,7 @@ import { SearchButton } from "./style";
 function HealthworkerGroupApproval() {
   const [groupApprovalList, setGroupApprovalList] = useState([]);
   const [searchValue, setSearchValue] = useState();
+  const [Group, setGroup] = useState();
   const [loader, setLoader] = useState(false);
   const [refresh, setRefresh] = useState(1);
   let axiosConfig = {
@@ -27,6 +28,7 @@ function HealthworkerGroupApproval() {
   };
   useEffect(() => {
     setLoader(true);
+    setGroup(sessionStorage.getItem("group"));
     axios
       .get(`${BASE_URL}/adminportal/api/GetGroupRequestList`, axiosConfig)
       .then((res) => {
@@ -82,7 +84,7 @@ function HealthworkerGroupApproval() {
           ""
         ) : (
           <Button
-            style={{ backgroundColor: "#176B87" }}
+            style={{ backgroundColor: "#176B87" ,display: Group === "ViewAdmin" ? "none" : "block", }}
             onClick={() => handleApproveUser(data)}
           >
             Approve

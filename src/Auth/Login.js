@@ -65,8 +65,8 @@ function Login() {
         sessionStorage.setItem("group", response.data.Group);
         sessionStorage.setItem("section_id", response.data.section_id);
         sessionStorage.setItem("id", response.data.id);
-       
-        if(response.data.Group == "mo") {
+
+        if (response.data.Group == "mo") {
           message.warning("These user credentials belong to MO");
         } else {
           message.success(response.data.message);
@@ -82,8 +82,10 @@ function Login() {
             window.location.replace("/admin/adminDashboard");
           } else if (response.data.Group == "MOH") {
             window.location.replace("/wardadmin/wardadminDashboard");
-          } else if(response.data.Group == "mo") {
-            // message.warning("These user credentials belong to MO");
+          } else if (response.data.Group == "mo") {
+            message.warning("These user credentials belong to MO");
+          } else if (response.data.Group == "ViewAdmin") {
+            window.location.replace("/admin/adminDashboard");
           }
         }, 1000);
         setShowLoading(false);
@@ -139,7 +141,7 @@ function Login() {
                     <InputBox.Password
                       name="password"
                       placeholder="Enter Password"
-                      style={{height:"6vh"}}
+                      style={{ height: "6vh" }}
                       onChange={(e) => setPassword(e.target.value)}
                     ></InputBox.Password>
                   </FormItem>

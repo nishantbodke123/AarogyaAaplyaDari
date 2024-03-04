@@ -27,7 +27,7 @@ export function PhleboProtected({ children }) {
 }
 export function AdminProtected({ children }) {
   const navigate = useNavigate();
-  if (loginToken !== "" && userGroup === "admin") {
+  if (loginToken !== "" && userGroup === "admin" || userGroup === "ViewAdmin") {
     return children;
   } else {
     navigate("/");

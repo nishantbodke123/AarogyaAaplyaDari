@@ -36,6 +36,7 @@ function Area() {
   const [updateAreaId, setUpdateAreaId] = useState();
   const [updatedArea, setUpdatedArea] = useState();
   const [updateArea, setUpdateArea] = useState();
+  const [Group, setGroup] = useState();
   let axiosConfig = {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -44,6 +45,7 @@ function Area() {
   };
   useEffect(() => {
     setLoader(true);
+    setGroup(sessionStorage.getItem("group"));
     axios
       .get(`${BASE_URL}/allauth/api/GetWardAreasAPI/${wardSelect}`, axiosConfig)
       .then((res) => {
@@ -93,7 +95,10 @@ function Area() {
       title: "",
       render: (data) => {
         return (
-          <UpdateButton onClick={() => handleShowEditAreaModal(data)}>
+          <UpdateButton
+            style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+            onClick={() => handleShowEditAreaModal(data)}
+          >
             Update{" "}
           </UpdateButton>
         );
@@ -275,7 +280,12 @@ function Area() {
           }}
         >
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <AddButton onClick={handleShowAddAreaModal}>Add Area</AddButton>
+            <AddButton
+              style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+              onClick={handleShowAddAreaModal}
+            >
+              Add Area
+            </AddButton>
           </div>
           <Row>
             <Col>

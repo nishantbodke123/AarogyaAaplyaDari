@@ -36,6 +36,7 @@ import { useTheme } from "styled-components";
 
 function Healthworker() {
   const [refresh, setRefresh] = useState(1);
+  const [Group, setGroup] = useState();
   const [wardSelect, setWardSelect] = useState("A");
   const [nextPage, setNextPage] = useState(null);
   const [pagination, setPagination] = useState({
@@ -80,6 +81,7 @@ function Healthworker() {
   };
   useEffect(() => {
     fetchData();
+    setGroup(sessionStorage.getItem("group"));
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -674,7 +676,10 @@ function Healthworker() {
       title: "Update",
       render: (data) => {
         return (
-          <EditButton onClick={() => handleEditModalShow(data)}>
+          <EditButton
+            style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+            onClick={() => handleEditModalShow(data)}
+          >
             Edit
           </EditButton>
         );
@@ -700,7 +705,10 @@ function Healthworker() {
       render: (data) => {
         return (
           <Button
-            style={{ border: "none" }}
+            style={{
+              border: "none",
+              display: Group === "ViewAdmin" ? "none" : "block",
+            }}
             onClick={() => handleChangePasswordModalView(data.id)}
           >
             <EditOutlined />
@@ -738,7 +746,10 @@ function Healthworker() {
               >
                 Auxiliary Nurse and Midwife (ANM)
               </p>
-              <AddButton onClick={handleAddHealthWorkerModalView}>
+              <AddButton
+                style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+                onClick={handleAddHealthWorkerModalView}
+              >
                 Add ANM
               </AddButton>
             </div>

@@ -35,6 +35,7 @@ import { EditOutlined } from "@ant-design/icons";
 
 function CHV() {
   const [refresh, setRefresh] = useState(1);
+  const [Group, setGroup] = useState();
   const [wardSelect, setWardSelect] = useState("A");
   const [nextPage, setNextPage] = useState(null);
   const [pagination, setPagination] = useState({
@@ -79,6 +80,7 @@ function CHV() {
   };
   useEffect(() => {
     fetchData();
+    setGroup(sessionStorage.getItem("group"));
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -772,7 +774,10 @@ function CHV() {
       title: "Update",
       render: (data) => {
         return (
-          <EditButton onClick={() => handleEditModalShow(data)}>
+          <EditButton
+            style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+            onClick={() => handleEditModalShow(data)}
+          >
             Edit
           </EditButton>
         );
@@ -790,7 +795,7 @@ function CHV() {
       title: "Status",
       dataIndex: "is_active",
       render: (data) => {
-        return data ? <p>Active</p> : <p style={{color:"red"}}>Inactive</p>;
+        return data ? <p>Active</p> : <p style={{ color: "red" }}>Inactive</p>;
       },
     },
     {
@@ -798,7 +803,10 @@ function CHV() {
       render: (data) => {
         return (
           <Button
-            style={{ border: "none" }}
+            style={{
+              border: "none",
+              display: Group === "ViewAdmin" ? "none" : "block",
+            }}
             onClick={() => handleChangePasswordModalView(data.id)}
           >
             <EditOutlined />
@@ -842,7 +850,12 @@ function CHV() {
               >
                 Community Health Volunteers (CHV)
               </p>
-              <AddButton onClick={handleaddCHVModalView}>Add CHV</AddButton>
+              <AddButton
+                style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+                onClick={handleaddCHVModalView}
+              >
+                Add CHV
+              </AddButton>
             </div>
             <div>
               <div style={{ margin: "20px 10px" }}>

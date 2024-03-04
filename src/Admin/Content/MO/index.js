@@ -36,6 +36,7 @@ import { Option } from "antd/es/mentions";
 function MO() {
   const [refresh, setRefresh] = useState(1);
   const [wardSelect, setWardSelect] = useState("A");
+  const [Group, setGroup] = useState();
   // const [nextPage, setNextPage] = useState(null);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -79,6 +80,7 @@ function MO() {
   };
   useEffect(() => {
     fetchData();
+    setGroup(sessionStorage.getItem("group"));
     axios
       .get(`${BASE_URL}/allauth/api/GetWardListAPI`, {
         headers: {
@@ -550,7 +552,10 @@ function MO() {
       title: "Update",
       render: (data) => {
         return (
-          <EditButton onClick={() => handleEditModalShow(data)}>
+          <EditButton
+            style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+            onClick={() => handleEditModalShow(data)}
+          >
             Edit
           </EditButton>
         );
@@ -576,7 +581,10 @@ function MO() {
       render: (data) => {
         return (
           <Button
-            style={{ border: "none" }}
+            style={{
+              border: "none",
+              display: Group === "ViewAdmin" ? "none" : "block",
+            }}
             onClick={() => handleChangePasswordModalView(data.id)}
           >
             <EditOutlined />
@@ -614,7 +622,12 @@ function MO() {
               >
                 Medical Officers (MO)
               </p>
-              <AddButton onClick={handleMOModalView}>Add MO</AddButton>
+              <AddButton
+                style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+                onClick={handleMOModalView}
+              >
+                Add MO
+              </AddButton>
             </div>
             <div>
               <div style={{ margin: "20px 10px" }}>

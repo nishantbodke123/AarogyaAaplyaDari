@@ -20,6 +20,7 @@ function CHVGroupApproval() {
   const [searchValue, setSearchValue] = useState();
   const [loader, setLoader] = useState(false);
   const [refresh, setRefresh] = useState(1);
+  const [Group, setGroup] = useState();
   let axiosConfig = {
     headers: {
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -27,6 +28,7 @@ function CHVGroupApproval() {
   };
   useEffect(() => {
     setLoader(true);
+    setGroup(sessionStorage.getItem("group"));
     axios
       .get(`${BASE_URL}/adminportal/api/GetGroupRequestList`, axiosConfig)
       .then((res) => {
@@ -81,7 +83,7 @@ function CHVGroupApproval() {
           ""
         ) : (
           <Button
-            style={{ backgroundColor: "#176B87" }}
+            style={{ backgroundColor: "#176B87" , display: Group === "ViewAdmin" ? "none" : "block" }}
             onClick={() => handleApproveUser(data)}
           >
             Approve

@@ -4,7 +4,7 @@ import {
   AddButton,
   StyledTabs,
   TableContainer,
-  TableHeading,
+
   ViewButton,
   ViewModal,
 } from "./style";
@@ -14,14 +14,15 @@ import { Button, Spin, Table, message } from "antd";
 import {
 
   FilePdfOutlined,
-  FileExcelOutlined
+
   
 } from '@ant-design/icons';
 import axios from "axios";
 import { BASE_URL } from "../../Utils/BaseURL";
 import { LogOut } from "../../Auth/Logout";
 import { useNavigate } from "react-router-dom";
-import { render } from "@testing-library/react";
+import { useTranslation } from "react-i18next";
+
 
 function CitizenDetails() {
   const navigate = useNavigate();
@@ -33,6 +34,8 @@ function CitizenDetails() {
   const [familyMemeberDetails, setFamilyMemberDetails] = useState([]);
   const [showViewModal, setShowViewModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
+  const { i18n } = useTranslation();
 
   let axiosConfig = {
     headers: {
@@ -42,28 +45,8 @@ function CitizenDetails() {
   };
 
   useEffect(() => {
+    i18n.changeLanguage("mr");
     setLoading(true);
-
-    // console.log(axiosConfig);
-    // axios
-    //   .get(`${BASE_URL}/healthworker/api/GetSurveyorDashboard`, axiosConfig)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     setDashboardCounts(response.data);
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     if (error.response.status == 401) {
-    //       message.warning("system is logged out");
-    //       setTimeout(() => {
-    //         LogOut();
-    //       }, 1000);
-    //     } else {
-    //       message.error(error.message);
-    //     }
-    //     setLoading(false);
-    //   });
     axios
       .get(`${BASE_URL}/healthworker/api/GetFamilyHeadList`, axiosConfig)
       .then((response) => {
@@ -118,6 +101,9 @@ function CitizenDetails() {
     {
       title: "Name",
       dataIndex: "name",
+      // render:(data)=>{
+      //   return <p>{data}/t{data}</p>
+      // }
     },
     {
       title: "Mobile Number",

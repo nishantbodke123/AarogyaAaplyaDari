@@ -32,6 +32,7 @@ function Section() {
   const [section, setSection] = useState();
   const [updatedSection, setUpdatedSection] = useState();
   const [updateSectionId, setUpdateSectionId] = useState();
+  const [Group, setGroup] = useState();
   let axiosConfig = {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -40,6 +41,7 @@ function Section() {
   };
   useEffect(() => {
     setLoader(true);
+    setGroup(sessionStorage.getItem("group"));
     axios
       .get(
         `${BASE_URL}/allauth/api/GetWardSectionListAPI/${wardSelect}`,
@@ -92,7 +94,10 @@ function Section() {
       title: "",
       render: (data) => {
         return (
-          <UpdateButton onClick={() => handleShowEditSectionModal(data)}>
+          <UpdateButton
+            style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+            onClick={() => handleShowEditSectionModal(data)}
+          >
             Update{" "}
           </UpdateButton>
         );
@@ -255,7 +260,13 @@ function Section() {
             maxHeight: "80vh",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              display: Group === "ViewAdmin" ? "none" : "block",
+            }}
+          >
             <AddButton onClick={handleShowAddSectionModal}>
               Add Section
             </AddButton>
