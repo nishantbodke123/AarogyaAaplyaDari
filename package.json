@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.7.2",
     "axios": "^1.4.0",
+    "crypto-js": "^4.2.0",
     "i18next": "^23.5.1",
     "jsencrypt": "^3.3.2",
     "moment": "^2.29.4",

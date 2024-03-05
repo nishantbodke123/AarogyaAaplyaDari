@@ -31,6 +31,8 @@ import { BASE_URL } from "../Utils/BaseURL";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../Components/Dashboard/Dashboard";
 import { toast } from "react-toastify";
+import Encrypt from "./encrypt";
+
 function Login() {
   const navigate = useNavigate();
   const [showOtpInput, setShowOtpInput] = useState(false);
@@ -43,8 +45,8 @@ function Login() {
   const handleLoginSubmit = () => {
     setShowLoading(true);
     const formData = new FormData();
-    formData.append("phoneNumber", mobileNumber);
-    formData.append("password", password);
+    formData.append("phoneNumber", Encrypt(mobileNumber));
+    formData.append("password", Encrypt(password));
 
     let axiosConfig = {
       headers: {
@@ -92,7 +94,7 @@ function Login() {
       })
       .catch((error) => {
         console.log(error);
-        message.error(error.response.data.message);
+        // message.error(error.response.data.message);
         setShowLoading(false);
       });
   };
