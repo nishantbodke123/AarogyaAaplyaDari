@@ -94,7 +94,7 @@ function Login() {
       })
       .catch((error) => {
         console.log(error);
-        // message.error(error.response.data.message);
+        message.error(error.response.data.message);
         setShowLoading(false);
       });
   };
