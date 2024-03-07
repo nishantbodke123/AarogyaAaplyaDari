@@ -1447,7 +1447,7 @@ function FamilyHead(props) {
     if (e.target.value === "" || regex.test(e.target.value)) {
       setWeight(e.target.value);
     }
-    calculateBMI();
+    // calculateBMI();
   };
 
   const handleHeightChange = (e) => {
@@ -1455,7 +1455,7 @@ function FamilyHead(props) {
     if (e.target.value === "" || regex.test(e.target.value)) {
       setHeight(e.target.value);
     }
-    calculateBMI();
+    // calculateBMI();
   };
   // const handleBMI = () => {
   //   var BMI;
@@ -1468,19 +1468,21 @@ function FamilyHead(props) {
     const weightInKg = parseFloat(weight);
     const heightInCm = parseFloat(height);
 
-    if (weight !== "" && height !== "") {
+    if (!isNaN(weightInKg) && !isNaN(heightInCm) && heightInCm !== 0) {
       // Convert height to meters
       const heightInM = heightInCm / 100;
 
-      // Calculate BMI
+      // Calculate BMI using the correct formula
       const calculatedBMI = weightInKg / (heightInM * heightInM);
 
       // Update state
-      setBMI(calculatedBMI.toFixed(2));
+      setBMI(calculatedBMI.toFixed(1));
     } else {
+      // Handle invalid input
       setBMI("");
     }
   };
+
   const handleBMIChange = (e) => {
     const regex = /^[0-9]{1,1}$/;
     if (e.target.value === "" || regex.test(e.target.value)) {
@@ -3078,6 +3080,16 @@ function FamilyHead(props) {
                         onChange={(e) => handleHeightChange(e)}
                       ></Input>
                     </FormItem>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        margin: "-2vh 0vw 2vh 8vw",
+                      }}
+                      onClick={calculateBMI}
+                    >
+                      <button style={{borderRadius:"5px" ,backgroundColor:"#FFE5AD"}}>Calculate BMI</button>
+                    </div>
                   </Column>
                   <Column>
                     <FormItem label="BMI">

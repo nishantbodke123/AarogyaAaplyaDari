@@ -22,19 +22,24 @@ import { BASE_URL } from "../Utils/BaseURL";
 
 export const LogOut = () => {
   axios
-    .post(`${BASE_URL}/allauth/api/logout`, {
-      headers: {
-        Authorization: `Token ${sessionStorage.getItem("Token")}`,
-      },
-    })
+    .post(
+      `${BASE_URL}/allauth/api/logout`,
+      {},
+      {
+        headers: {
+          Authorization: `Token ${sessionStorage.getItem("Token")}`,
+        },
+      }
+    )
     .then((res) => {
       console.log(res, "Log out");
       sessionStorage.clear();
       window.location.replace("/");
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
+    
     });
-  sessionStorage.clear();
-  window.location.replace("/");
+    sessionStorage.clear();
+    window.location.replace("/");
 };

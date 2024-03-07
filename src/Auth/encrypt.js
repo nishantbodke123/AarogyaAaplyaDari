@@ -8,11 +8,12 @@ import CryptoJS from "crypto-js";
 // }
 
 const Encrypt = (data) => {
-  const SECRET_KEY =
-    "d73b3572d4b6e4df6c5b0efb0616e9a8c9266ba6d6a10abdc78a11485d002fd8";
-
+//   const SECRET_KEY =
+//     "d73b3572d4b6e4df6c5b0efb0616e9a8c9266ba6d6a10abdc78a11485d002fd8";
+//   console.log(process.env.REACT_APP_SECRET_KEY);
+//   console.log(SECRET_KEY);
   // Convert key and iv from hex to WordArray
-  const keyBytes = CryptoJS.enc.Hex.parse(SECRET_KEY);
+  const keyBytes = CryptoJS.enc.Hex.parse(process.env.REACT_APP_SECRET_KEY);
   const ivBytes = CryptoJS.enc.Hex.parse("00000000000000000000000000000000==");
 
   // Create the AES cipher
@@ -23,8 +24,8 @@ const Encrypt = (data) => {
   });
 
   // Convert the ciphertext to base64
-  //   const encryptedData = cipher.toString(CryptoJS.Base16);
-  const encryptedData = cipher.toString();
+  const encryptedData = cipher.toString(CryptoJS.Base16);
+  //   const encryptedData = cipher.toString();
   return encryptedData;
 };
 
