@@ -371,7 +371,7 @@ function MemberAdd(props) {
   const [age, setAge] = useState("");
   const [relationWithHead, setRelationWithHead] = useState("");
   const [phone, setPhone] = useState("");
-  const [aadharCard, setAadharCard] = useState(null);
+  const [aadharCard, setAadharCard] = useState(0);
   const [abhaId, setAbhaId] = useState("");
   const [pulse, setPulse] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
@@ -1369,7 +1369,7 @@ function MemberAdd(props) {
       message.warning("Please Select Area");
     } else if (selectedCHV === "") {
       message.warning("Please Select CHV");
-    } else if (aadharCard !== null) {
+    } else if (aadharCard !== 0) {
       //|| adharAbhaRequired
       axios
         .get(

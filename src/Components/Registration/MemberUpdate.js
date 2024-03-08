@@ -130,7 +130,7 @@ function MemberUpdate(props) {
 
     // setPartC1OptionSelect(state.Questionnaire.part_c[0].selectedOptions);
 
-    console.log(state.Questionnaire.part_c[0].answer ,"Part C1 answer");
+    console.log(state.Questionnaire.part_c[0].answer, "Part C1 answer");
     setPartC1OptionSelect(state.Questionnaire.part_c[0].answer);
     // setPartC2OptionSelect(state.Questionnaire.part_c[1].selectedOptions);
     setPartC2OptionSelect(state.Questionnaire.part_c[1].answer);
@@ -851,7 +851,7 @@ function MemberUpdate(props) {
 
   const [partC1OptionSelect, setPartC1OptionSelect] = useState([]);
   const handlePartC1Select = (option) => {
-    console.log(partC1OptionSelect)
+    console.log(partC1OptionSelect);
     if (partC1OptionSelect.includes(option)) {
       setPartC1OptionSelect(
         partC1OptionSelect.filter((item) => item !== option)
@@ -1332,7 +1332,6 @@ function MemberUpdate(props) {
                   value={name}
                   // onChange={(e) => handleNameChange(e)}
                   pattern="[a-zA-Z]+"
-                  
                 ></Input>
               </FormItem>
             </Column>
@@ -1375,7 +1374,7 @@ function MemberUpdate(props) {
                 <Input
                   type="number"
                   value={age}
-                
+
                   // onChange={(e) => handleAgeChange(e)}
                 ></Input>
               </FormItem>
@@ -1394,7 +1393,7 @@ function MemberUpdate(props) {
               <Checkbox
                 style={{ margin: "0% 2%" }}
                 value={adharAbhaRequired}
-                // onChange={handleAadharAbhaRequired}
+                onChange={handleAadharAbhaRequired}
               >
                 <h4>
                   If You want to fill Adhar Number and ABHA Number, tick the box
@@ -1418,7 +1417,7 @@ function MemberUpdate(props) {
                       type="text"
                       value={aadharCard}
                       maxLength={12}
-                      
+
                       // onChange={(e) => handleAadharCardChange(e)}
                     ></Input>
                   </FormItem>
@@ -2504,19 +2503,19 @@ function MemberUpdate(props) {
               </QuestionCol>
             </QuestionRow>
             {partC1Options.map((item, index) => (
-              <>{console.log(partC1OptionSelect.includes(item))}
-              <QuestionSubRow >
-                
-                <QuestionSubCol>
-                  {t(item)} / {item}
-                </QuestionSubCol>
-                <AnswerSubCol>
-                  <Checkbox
-                    checked={partC1OptionSelect.includes(item)}
-                    // onChange={() => handlePartC1Select(item)}
-                  ></Checkbox>
-                </AnswerSubCol>
-              </QuestionSubRow>
+              <>
+                {console.log(partC1OptionSelect.includes(item))}
+                <QuestionSubRow>
+                  <QuestionSubCol>
+                    {t(item)} / {item}
+                  </QuestionSubCol>
+                  <AnswerSubCol>
+                    <Checkbox
+                      checked={partC1OptionSelect.includes(item)}
+                      // onChange={() => handlePartC1Select(item)}
+                    ></Checkbox>
+                  </AnswerSubCol>
+                </QuestionSubRow>
               </>
             ))}
 
@@ -2861,7 +2860,8 @@ function MemberUpdate(props) {
         open={consentModalShow}
         onCancel={handleConsentModalClose}
         footer={
-          <SubmitButton onClick={() => handleUpdate()}>Update</SubmitButton>
+          <></>
+          // <SubmitButton onClick={() => handleUpdate()}>Update</SubmitButton>
         }
       >
         <div>

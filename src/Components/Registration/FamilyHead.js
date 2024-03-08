@@ -1006,7 +1006,7 @@ function FamilyHead(props) {
   const [age, setAge] = useState("");
   const [relationWithHead, setRelationWithHead] = useState("");
   const [phone, setPhone] = useState("");
-  const [aadharCard, setAadharCard] = useState("");
+  const [aadharCard, setAadharCard] = useState(0);
   const [abhaId, setAbhaId] = useState();
   const [abhaNumber, setAbhaNumber] = useState();
   const [pulse, setPulse] = useState("");
@@ -1513,7 +1513,7 @@ function FamilyHead(props) {
       message.warning("Please Enter Age");
     } else if (relationWithHead === "") {
       message.warning("Please Select Relation with Family Head");
-    } else if (aadharCard !== "") {
+    } else if (aadharCard !== 0) {
       //|| adharAbhaRequired
       axios
         .get(
@@ -1888,7 +1888,7 @@ function FamilyHead(props) {
     setAge("");
     setRelationWithHead("");
     setPhone("");
-    setAadharCard("");
+    setAadharCard(0);
     setAbhaId("");
     setPulse("");
     setBloodPressure("");
@@ -3088,7 +3088,14 @@ function FamilyHead(props) {
                       }}
                       onClick={calculateBMI}
                     >
-                      <button style={{borderRadius:"5px" ,backgroundColor:"#FFE5AD"}}>Calculate BMI</button>
+                      <button
+                        style={{
+                          borderRadius: "5px",
+                          backgroundColor: "#FFE5AD",
+                        }}
+                      >
+                        Calculate BMI
+                      </button>
                     </div>
                   </Column>
                   <Column>
