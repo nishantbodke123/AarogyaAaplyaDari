@@ -1386,7 +1386,7 @@ function MemberAdd(props) {
           }
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error.response.data.message, "ABHA CHECK");
           message.warning(error.response.data.message);
         });
     } else if (abhaId !== "") {
@@ -1403,8 +1403,8 @@ function MemberAdd(props) {
           }
         })
         .catch((error) => {
-          console.log(error);
-          message.warning(error.response.message);
+          console.log(error.response.data.message, "ABHA ID");
+          message.warning(error.response.data.message);
         });
     } else {
       handleConsentModalShow();
@@ -2457,6 +2457,13 @@ function MemberAdd(props) {
                     <Option value="Son">Son</Option>
                     <Option value="Daughter">Daughter</Option>
                     <Option value="Grandson">Grandson</Option>
+                    <Option value="Granddaughter">Granddaughter</Option>
+                    <Option value="Grandmother">Grandmother</Option>
+                    <Option value="Grandfather">Grandfather</Option>
+                    <Option value="Uncle">Uncle</Option>
+                    <Option value="Aunty">Aunty</Option>
+                    <Option value="Nephew">Nephew</Option>
+                    <Option value="Niece">Niece</Option>
                   </Select>
                 </FormItem>
               </Column>
