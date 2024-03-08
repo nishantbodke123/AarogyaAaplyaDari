@@ -70,7 +70,7 @@ import {
   faXmark,
   faBackward,
   faArrowLeft,
-  faFileArrowDown
+  faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { LogOut } from "../../Auth/Logout";
@@ -369,7 +369,7 @@ function MemberAdd(props) {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
-  const [relationWithHead ,setRelationWithHead]=useState("");
+  const [relationWithHead, setRelationWithHead] = useState("");
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState(null);
   const [abhaId, setAbhaId] = useState("");
@@ -475,7 +475,7 @@ function MemberAdd(props) {
 
     if (newWeight === "" || regex.test(newWeight)) {
       setWeight(newWeight);
-      calculateBMI(); // You can also pass weight as an argument here
+      // calculateBMI(); // You can also pass weight as an argument here
     } else {
       // Handle invalid input if needed
     }
@@ -487,7 +487,7 @@ function MemberAdd(props) {
 
     if (newHeight === "" || regex.test(newHeight)) {
       setHeight(newHeight);
-      calculateBMI(); // You can also pass height as an argument here
+      // calculateBMI(); // You can also pass height as an argument here
     } else {
       // Handle invalid input if needed
     }
@@ -501,15 +501,19 @@ function MemberAdd(props) {
   // };
   const calculateBMI = () => {
     const weightInKg = parseFloat(weight);
-    const heightInM = parseFloat(height) / 100;
+    const heightInCm = parseFloat(height);
 
-    if (!isNaN(weightInKg) && !isNaN(heightInM) && heightInM > 0) {
-      // Calculate BMI using the Math object
-      const calculatedBMI = (weightInKg / Math.pow(heightInM, 2)).toFixed(1);
+    if (!isNaN(weightInKg) && !isNaN(heightInCm) && heightInCm !== 0) {
+      // Convert height to meters
+      const heightInM = heightInCm / 100;
+
+      // Calculate BMI using the correct formula
+      const calculatedBMI = weightInKg / (heightInM * heightInM);
 
       // Update state
-      setBMI(calculatedBMI);
+      setBMI(calculatedBMI.toFixed(1));
     } else {
+      // Handle invalid input
       setBMI("");
     }
   };
@@ -1034,7 +1038,7 @@ function MemberAdd(props) {
     name: name,
     gender: gender,
     age: age,
-    relationshipWithHead:relationWithHead,
+    relationshipWithHead: relationWithHead,
     mobileNo: phone,
     aadharCard: aadharCard,
     familyHead: state,
@@ -1357,10 +1361,9 @@ function MemberAdd(props) {
       message.warning("Please Enter Name");
     } else if (gender === "") {
       message.warning("Please Mention Gender");
-    } else if(relationWithHead === ""){
-      message.warning("Select Relation With Family Head")
-    } 
-    else if (age === "") {
+    } else if (relationWithHead === "") {
+      message.warning("Select Relation With Family Head");
+    } else if (age === "") {
       message.warning("Please Enter Age");
     } else if (section === "") {
       message.warning("Please Select Area");
@@ -1576,8 +1579,8 @@ function MemberAdd(props) {
               <div>
                 <p>
                   Abha ID Already Exist with this Aadhar card Number ,ABHA ID is
-                  as given : / या आधार कार्ड क्रमांकासह आभा आयडी आधीपासूनच अस्तित्वात आहे, ABHA आयडी आहे
-                   दिल्याप्रमाणे:
+                  as given : / या आधार कार्ड क्रमांकासह आभा आयडी आधीपासूनच
+                  अस्तित्वात आहे, ABHA आयडी आहे दिल्याप्रमाणे:
                 </p>
                 <h4>{response.data.healthIdNumber}</h4>
               </div>
@@ -1657,8 +1660,9 @@ function MemberAdd(props) {
               <>
                 <p>
                   This number is associated with your Aadhar card. Would you
-                  like to link it with your Abha card? / हा क्रमांक तुमच्या आधार कार्डशी संलग्न आहे. तुम्ही कराल
-                   तुमच्या आभा कार्डशी लिंक करायला आवडेल?
+                  like to link it with your Abha card? / हा क्रमांक तुमच्या आधार
+                  कार्डशी संलग्न आहे. तुम्ही कराल तुमच्या आभा कार्डशी लिंक
+                  करायला आवडेल?
                 </p>
               </>
             ),
@@ -1784,33 +1788,40 @@ function MemberAdd(props) {
         setProgress(70);
         setLoading(false);
         console.log(res.data.message);
-        if(res.status== 200){
+        if (res.status == 200) {
           setLoading(true);
           settxnID(res.data.txnId);
-          axios.post(`${BASE_URL}/abdm/api/createHealthIdByAdhaarAPI`,{
-            consent:true,
-            consentVersion:"V1.0",
-            txnId:res.data.txnId
-          },axiosConfig).then((res)=>{
-            setLoading(false);
-            setProgress(100);
-            console.log(res);
-            setAadharPhotoURL(res.data.kycPhoto);
-            setAadharCardName(res.data.name);
-            setAadharMobileNumber(res.data.mobile);
-            setAbhaId(res.data.healthIdNumber);
-            setHealthId(res.data.healthId);
-            setMobileNumberForAbhaID("");
-            handleShowHealthNumberModal();
-            handleHideCheckAndGeneratedMobileOtp();
-          }).catch((err)=>{
-            setLoading(false);
-            console.log(err);
-            message.warning(err.response.data.message)
-          })
+          axios
+            .post(
+              `${BASE_URL}/abdm/api/createHealthIdByAdhaarAPI`,
+              {
+                consent: true,
+                consentVersion: "V1.0",
+                txnId: res.data.txnId,
+              },
+              axiosConfig
+            )
+            .then((res) => {
+              setLoading(false);
+              setProgress(100);
+              console.log(res);
+              setAadharPhotoURL(res.data.kycPhoto);
+              setAadharCardName(res.data.name);
+              setAadharMobileNumber(res.data.mobile);
+              setAbhaId(res.data.healthIdNumber);
+              setHealthId(res.data.healthId);
+              setMobileNumberForAbhaID("");
+              handleShowHealthNumberModal();
+              handleHideCheckAndGeneratedMobileOtp();
+            })
+            .catch((err) => {
+              setLoading(false);
+              console.log(err);
+              message.warning(err.response.data.message);
+            });
         } else {
           setLoading(false);
-          message.warning("Mobile number is not verified , try again")
+          message.warning("Mobile number is not verified , try again");
         }
       })
       .catch((err) => {
@@ -2098,7 +2109,7 @@ function MemberAdd(props) {
           accept: "*/*",
           "Accept-Language": "en-US",
         },
-        responseType:"blob"
+        responseType: "blob",
       })
       .then((response) => {
         setLoading(false);
@@ -2131,7 +2142,7 @@ function MemberAdd(props) {
           accept: "*/*",
           "Accept-Language": "en-US",
         },
-        responseType:"blob"
+        responseType: "blob",
       })
       .then((response) => {
         setLoading(false);
@@ -2147,7 +2158,6 @@ function MemberAdd(props) {
 
         document.body.removeChild(link);
         URL.revokeObjectURL(href);
-
       })
       .catch((err) => {
         setLoading(false);
@@ -2435,7 +2445,11 @@ function MemberAdd(props) {
               </Column>
               <Column span={8}>
                 <FormItem label="Relation with the family head" required>
-                   <Select value={relationWithHead} onChange={(value)=>setRelationWithHead(value)} placeholder="Select Relationship with family head" >
+                  <Select
+                    value={relationWithHead}
+                    onChange={(value) => setRelationWithHead(value)}
+                    placeholder="Select Relationship with family head"
+                  >
                     <Option value="Self">Self</Option>
                     <Option value="Mother">Mother</Option>
                     <Option value="Father">Father</Option>
@@ -2443,7 +2457,7 @@ function MemberAdd(props) {
                     <Option value="Son">Son</Option>
                     <Option value="Daughter">Daughter</Option>
                     <Option value="Grandson">Grandson</Option>
-                   </Select>
+                  </Select>
                 </FormItem>
               </Column>
             </Row>
@@ -2464,7 +2478,8 @@ function MemberAdd(props) {
                 >
                   <h4>
                     If You want to fill Adhar Number and ABHA Number, tick the
-                    box / जर तुम्हाला आधार क्रमांक आणि ABHA क्रमांक भरायचा असेल तर बॉक्सवर टिक करा
+                    box / जर तुम्हाला आधार क्रमांक आणि ABHA क्रमांक भरायचा असेल
+                    तर बॉक्सवर टिक करा
                   </h4>
                 </Checkbox>
               </Row>
@@ -2517,7 +2532,6 @@ function MemberAdd(props) {
                       </Popover>
                     </Tooltip>
                   </Column>
-            
                 </Row>
               </>
             )}
@@ -2536,7 +2550,10 @@ function MemberAdd(props) {
                   value={physicalDetailsRequired}
                   onChange={handlePhysicalDetailsRequired}
                 >
-                  <h4>If You want to fill physical details, tick the box / तुम्हाला भौतिक तपशील भरायचे असल्यास, बॉक्सवर खूण करा </h4>
+                  <h4>
+                    If You want to fill physical details, tick the box /
+                    तुम्हाला भौतिक तपशील भरायचे असल्यास, बॉक्सवर खूण करा{" "}
+                  </h4>
                 </Checkbox>
               </Row>
             ) : (
@@ -2591,6 +2608,23 @@ function MemberAdd(props) {
                         onChange={(e) => handleHeightChange(e)}
                       ></Input>
                     </FormItem>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        margin: "-2vh 0vw 2vh 8vw",
+                      }}
+                      onClick={calculateBMI}
+                    >
+                      <button
+                        style={{
+                          borderRadius: "5px",
+                          backgroundColor: "#FFE5AD",
+                        }}
+                      >
+                        Calculate BMI
+                      </button>
+                    </div>
                   </Column>
                   <Column>
                     <FormItem label="BMI">
@@ -2622,7 +2656,10 @@ function MemberAdd(props) {
                   value={CBACRequired}
                   onChange={handleCBACRequired}
                 >
-                  <h4>If You want to fill CBAC Form, tick the box / तुम्हाला CBAC फॉर्म भरायचा असेल तर बॉक्सवर टिक करा</h4>
+                  <h4>
+                    If You want to fill CBAC Form, tick the box / तुम्हाला CBAC
+                    फॉर्म भरायचा असेल तर बॉक्सवर टिक करा
+                  </h4>
                 </Checkbox>
               </Row>
             ) : (
@@ -3959,61 +3996,63 @@ function MemberAdd(props) {
           }
         >
           <Spin spinning={loading}>
-          <div>
-            <p>
-              Would you like to mark the citizen as vulnerable citizen?
-              <span>
-                <Checkbox
-                  style={{ margin: "0% 5%" }}
-                  onClick={handleVulnerableClick}
-                ></Checkbox>
-              </span>
-            </p>
-            {vulnerable ? (
-              <div>
-                {vulnerableList.map((data) => (
-                  <li>
-                    <Checkbox
-                      key={data.id}
-                      value={data.id}
-                      onChange={(e) => handleVulnerableList(e.target.value)}
-                    >
-                      {data.choice}
-                    </Checkbox>
-                  </li>
-                ))}
-              </div>
-            ) : (
-              <></>
-            )}
-            {selectVulnerableList.includes("Any other reason") ? (
-              <TextArea
-                placeholder="Enter other reason here"
-                style={{ width: "80%" }}
-                rows={2}
-                onChange={(e) => setVulnerableReason(e.target.value)}
-              />
-            ) : (
-              <></>
-            )}
-            
             <div>
-              <h4>REFERRAL OPTIONS :</h4>
-            </div>
-            {refarralList.map((data) => (
-              <li>
-                <Checkbox
-                  key={data.id}
-                  value={data.id}
-                  onChange={(e) => {
-                    handleReferralList(e.target.value);
-                  }}
-                >
-                  {data.choice}
-                </Checkbox>
-              </li>
-            ))}
-            {/* <Checkbox>Referral for further management (Known case)</Checkbox>
+              <p>
+                Would you like to mark the citizen as vulnerable citizen?/ वरील
+                नमूद केलेली व्यक्ती खालील जोखीमग्रस्त (Vulnerable) संवर्गात
+                <span>
+                  <Checkbox
+                    style={{ margin: "0% 5%" }}
+                    checked={vulnerable}
+                    onClick={handleVulnerableClick}
+                  ></Checkbox>
+                </span>
+              </p>
+              {vulnerable ? (
+                <div>
+                  {vulnerableList.map((data) => (
+                    <li>
+                      <Checkbox
+                        key={data.id}
+                        value={data.id}
+                        onChange={(e) => handleVulnerableList(e.target.value)}
+                      >
+                        {data.choice}/{t(data.choice)}
+                      </Checkbox>
+                    </li>
+                  ))}
+                </div>
+              ) : (
+                <></>
+              )}
+              {selectVulnerableList.includes("Any other reason") ? (
+                <TextArea
+                  placeholder="Enter other reason here"
+                  style={{ width: "80%" }}
+                  rows={2}
+                  onChange={(e) => setVulnerableReason(e.target.value)}
+                />
+              ) : (
+                <></>
+              )}
+
+              <div>
+                <h4>REFERRAL OPTIONS :</h4>
+              </div>
+              {refarralList.map((data) => (
+                <li>
+                  <Checkbox
+                    key={data.id}
+                    value={data.id}
+                    onChange={(e) => {
+                      handleReferralList(e.target.value);
+                    }}
+                  >
+                    {data.choice}/{t(data.choice)}
+                  </Checkbox>
+                </li>
+              ))}
+              {/* <Checkbox>Referral for further management (Known case)</Checkbox>
             <Checkbox style={{ margin: "0% 0.3%" }}>
               Referral for further Diagnosis
             </Checkbox>
@@ -4022,89 +4061,91 @@ function MemberAdd(props) {
               Referral in case of multiple co-morbid investigation
             </Checkbox>
             <Checkbox>Referral for blood collection</Checkbox> */}
-          </div>
+            </div>
 
-          <>
-            <BloodSampleText>BLOOD COLLECTION / रक्त संकलन :</BloodSampleText>
-            <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
-            <BloodSampleButtonsRow>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    bloodSampleHome
-                      ? { backgroundColor: "#E9B384", width: "200px" }
-                      : { backgroundColor: "white", width: "200px" }
-                  }
-                  onClick={handleBloodSampleHomeSelct}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faHouse} />
-                  </span>
-                  Home / घर
-                </Button>
-              </BloodSampleButtonCol>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    bloodSampleCenter
-                      ? { backgroundColor: "#E9B384", width: "200px" }
-                      : { backgroundColor: "white", width: "200px" }
-                  }
-                  onClick={handleBloodSampleCenterSelect}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faPlus} />
-                  </span>
-                  Center / केंद्र
-                </Button>
-              </BloodSampleButtonCol>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    bloodSampleDenied
-                      ? { backgroundColor: "#E9B384", width: "200px" }
-                      : { backgroundColor: "white", width: "200px" }
-                  }
-                  onClick={handleBloodSampleDesiedSelect}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faXmark} />
-                  </span>
-                  Denied / नाकारले
-                </Button>
-                {bloodSampleDenied ? (
-                  <div style={{ margin: "10px 25px" }}>
-                    <Radio.Group
-                      onChange={(e) => setDeniedBy(e.target.value)}
-                      value={deniedBy}
-                    >
-                      <Radio value="byindividual">By Individual</Radio>
-                      <br />
-                      <Radio value="byamo">By AMO</Radio>
-                    </Radio.Group>
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </BloodSampleButtonCol>
-              <BloodSampleButtonCol>
-                <Button
-                  style={
-                    notRequired
-                      ? { backgroundColor: "#E9B384", width: "210px" }
-                      : { backgroundColor: "white", width: "210px" }
-                  }
-                  onClick={handleNotRequiredSelect}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    <FontAwesomeIcon icon={faXmark} />
-                  </span>
-                  Not required / आवश्यक नाही
-                </Button>
-              </BloodSampleButtonCol>
-            </BloodSampleButtonsRow>
-            
-          </>
+            <>
+              <BloodSampleText>BLOOD COLLECTION / रक्त संकलन :</BloodSampleText>
+              <BloodLogoImage src="blood-analysis.png"></BloodLogoImage>
+              <BloodSampleButtonsRow>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      bloodSampleHome
+                        ? { backgroundColor: "#E9B384", width: "200px" }
+                        : { backgroundColor: "white", width: "200px" }
+                    }
+                    onClick={handleBloodSampleHomeSelct}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faHouse} />
+                    </span>
+                    Home / घर
+                  </Button>
+                </BloodSampleButtonCol>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      bloodSampleCenter
+                        ? { backgroundColor: "#E9B384", width: "200px" }
+                        : { backgroundColor: "white", width: "200px" }
+                    }
+                    onClick={handleBloodSampleCenterSelect}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </span>
+                    Center / केंद्र
+                  </Button>
+                </BloodSampleButtonCol>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      bloodSampleDenied
+                        ? { backgroundColor: "#E9B384", width: "200px" }
+                        : { backgroundColor: "white", width: "200px" }
+                    }
+                    onClick={handleBloodSampleDesiedSelect}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faXmark} />
+                    </span>
+                    Denied / नाकारले
+                  </Button>
+
+                  {bloodSampleDenied ? (
+                    <div style={{ margin: "10px 25px" }}>
+                      <Radio.Group
+                        onChange={(e) => setDeniedBy(e.target.value)}
+                        value={deniedBy}
+                      >
+                        <Radio value="byindividual">
+                          By Individual /वैयक्तिकरित्या
+                        </Radio>
+                        <br />
+                        <Radio value="byamo">By AMO / AMO द्वारे</Radio>
+                      </Radio.Group>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </BloodSampleButtonCol>
+                <BloodSampleButtonCol>
+                  <Button
+                    style={
+                      notRequired
+                        ? { backgroundColor: "#E9B384", width: "210px" }
+                        : { backgroundColor: "white", width: "210px" }
+                    }
+                    onClick={handleNotRequiredSelect}
+                  >
+                    <span style={{ marginRight: "10px" }}>
+                      <FontAwesomeIcon icon={faXmark} />
+                    </span>
+                    Not required / आवश्यक नाही
+                  </Button>
+                </BloodSampleButtonCol>
+              </BloodSampleButtonsRow>
+            </>
           </Spin>
 
           {/* {bloodSampleHome ? (
@@ -4250,68 +4291,70 @@ function MemberAdd(props) {
           }
         >
           <Spin spinning={loading}>
-          <div style={{ margin: "0px" }}>
-            <Form layout="vertical">
-              <div style={{ display: "flex", justifyContent: "space-around" }}>
-                <img width={100} src="Aadhar-Color.svg"></img>
-                <Form.Item label="Aadhar Number">
-                  <Input
-                    type="text"
-                    placeholder="Enter Aadhar Number "
-                    style={{ width: "300px " }}
-                    value={aadharNumber}
-                    onChange={(e) => handleAadharNumberChange(e)}
-                  ></Input>
-                </Form.Item>
-              </div>
+            <div style={{ margin: "0px" }}>
+              <Form layout="vertical">
+                <div
+                  style={{ display: "flex", justifyContent: "space-around" }}
+                >
+                  <img width={100} src="Aadhar-Color.svg"></img>
+                  <Form.Item label="Aadhar Number">
+                    <Input
+                      type="text"
+                      placeholder="Enter Aadhar Number "
+                      style={{ width: "300px " }}
+                      value={aadharNumber}
+                      onChange={(e) => handleAadharNumberChange(e)}
+                    ></Input>
+                  </Form.Item>
+                </div>
 
-              {aadharNumberSubmitted ? (
-                <>
-                  {" "}
-                  <Form.Item
-                    label={
-                      <p>
-                        {" "}
-                        <b>OTP </b> (Please enter the One-Time Password (OTP)
-                        that has been sent to the mobile number associated with
-                        your Aadhar registration . Registered Mobile Number is{" "}
-                        <b>{mobileNumberLinkedWithAadhar}</b> ){" "}
-                      </p>
-                    }
-                  >
-                    <OtpInput
-                      inputStyle={{
-                        width: "30px",
-                        height: "30px",
-                        margin: "2px 20px",
-                      }}
-                      value={otp}
-                      numInputs={6}
-                      type="number"
-                      onChange={(value) => setOtp(value)}
-                      renderSeparator={<span></span>}
-                      renderInput={(props) => <input {...props} />}
-                    ></OtpInput>
-                    <div className="countdown-text">
-                      {seconds > 0 || minutes > 0 ? (
-                        <p style={{ color: "red" }}>
-                          Time Remaining:{" "}
-                          {minutes < 10 ? `0${minutes}` : minutes}:
-                          {seconds < 10 ? `0${seconds}` : seconds}
+                {aadharNumberSubmitted ? (
+                  <>
+                    {" "}
+                    <Form.Item
+                      label={
+                        <p>
+                          {" "}
+                          <b>OTP </b> (Please enter the One-Time Password (OTP)
+                          that has been sent to the mobile number associated
+                          with your Aadhar registration . Registered Mobile
+                          Number is <b>{mobileNumberLinkedWithAadhar}</b> ){" "}
                         </p>
-                      ) : (
-                        <p>Didn't recieve code?</p>
-                      )}
-                      <a
-                        style={{
-                          display: seconds > 0 || minutes > 0 ? "none" : "",
+                      }
+                    >
+                      <OtpInput
+                        inputStyle={{
+                          width: "30px",
+                          height: "30px",
+                          margin: "2px 20px",
                         }}
-                        onClick={handleAadharNumberSubmit}
-                      >
-                        Resend OTP
-                      </a>
-                    </div>
-                    {/* <div
+                        value={otp}
+                        numInputs={6}
+                        type="number"
+                        onChange={(value) => setOtp(value)}
+                        renderSeparator={<span></span>}
+                        renderInput={(props) => <input {...props} />}
+                      ></OtpInput>
+                      <div className="countdown-text">
+                        {seconds > 0 || minutes > 0 ? (
+                          <p style={{ color: "red" }}>
+                            Time Remaining:{" "}
+                            {minutes < 10 ? `0${minutes}` : minutes}:
+                            {seconds < 10 ? `0${seconds}` : seconds}
+                          </p>
+                        ) : (
+                          <p>Didn't recieve code?</p>
+                        )}
+                        <a
+                          style={{
+                            display: seconds > 0 || minutes > 0 ? "none" : "",
+                          }}
+                          onClick={handleAadharNumberSubmit}
+                        >
+                          Resend OTP
+                        </a>
+                      </div>
+                      {/* <div
                       style={{
                         display: "flex",
                         justifyContent: "flex-end",
@@ -4320,13 +4363,13 @@ function MemberAdd(props) {
                     >
                       <a onClick={handleAadharNumberSubmit}>Resend OTP</a>
                     </div> */}
-                  </Form.Item>
-                </>
-              ) : (
-                <></>
-              )}
-            </Form>
-          </div>
+                    </Form.Item>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </Form>
+            </div>
           </Spin>
         </AadharOtpLinkedModal>
         <CheckAndGenerateMobileOtpModal
@@ -4379,57 +4422,58 @@ function MemberAdd(props) {
           }
         >
           <>
-          <Spin spinning={loading}>
-            <Form layout="vertical">
-              <Form.Item label="Mobile Number" style={{ padding: "20px" }}>
-                <Input
-                  type="text"
-                  placeholder="Enter Mobile Number"
-                  style={{ width: "400px" }}
-                  value={mobileNumberForAbhaID}
-                  onChange={(e) => handleMobileNumberForAbhaId(e)}
-                ></Input>
-                {aadharLinkedMobileNumber ? (
-                  <></>
-                ) : (
-                  <>
-                    <div style={{ margin: "30px 2px" }}>
-                      <Form.Item label="OTP">
-                        <OtpInput
-                          inputStyle={{
-                            width: "30px",
-                            height: "30px",
-                            margin: "0px 15px",
-                          }}
-                          value={otp}
-                          numInputs={6}
-                          type="number"
-                          onChange={(value) => setOtp(value)}
-                          renderSeparator={<span></span>}
-                          renderInput={(props) => <input {...props} />}
-                        ></OtpInput>
-
-                        <div className="countdown-text">
-                          {seconds > 0 || minutes > 0 ? (
-                            <p style={{ color: "red" }}>
-                              Time Remaining:{" "}
-                              {minutes < 10 ? `0${minutes}` : minutes}:
-                              {seconds < 10 ? `0${seconds}` : seconds}
-                            </p>
-                          ) : (
-                            <p>Didn't recieve code?</p>
-                          )}
-                          <a
-                            style={{
-                              display: seconds > 0 || minutes > 0 ? "none" : "",
+            <Spin spinning={loading}>
+              <Form layout="vertical">
+                <Form.Item label="Mobile Number" style={{ padding: "20px" }}>
+                  <Input
+                    type="text"
+                    placeholder="Enter Mobile Number"
+                    style={{ width: "400px" }}
+                    value={mobileNumberForAbhaID}
+                    onChange={(e) => handleMobileNumberForAbhaId(e)}
+                  ></Input>
+                  {aadharLinkedMobileNumber ? (
+                    <></>
+                  ) : (
+                    <>
+                      <div style={{ margin: "30px 2px" }}>
+                        <Form.Item label="OTP">
+                          <OtpInput
+                            inputStyle={{
+                              width: "30px",
+                              height: "30px",
+                              margin: "0px 15px",
                             }}
-                            onClick={handleCheckAndGenerateMobileOtp}
-                          >
-                            Resend OTP
-                          </a>
-                        </div>
+                            value={otp}
+                            numInputs={6}
+                            type="number"
+                            onChange={(value) => setOtp(value)}
+                            renderSeparator={<span></span>}
+                            renderInput={(props) => <input {...props} />}
+                          ></OtpInput>
 
-                        {/* <div
+                          <div className="countdown-text">
+                            {seconds > 0 || minutes > 0 ? (
+                              <p style={{ color: "red" }}>
+                                Time Remaining:{" "}
+                                {minutes < 10 ? `0${minutes}` : minutes}:
+                                {seconds < 10 ? `0${seconds}` : seconds}
+                              </p>
+                            ) : (
+                              <p>Didn't recieve code?</p>
+                            )}
+                            <a
+                              style={{
+                                display:
+                                  seconds > 0 || minutes > 0 ? "none" : "",
+                              }}
+                              onClick={handleCheckAndGenerateMobileOtp}
+                            >
+                              Resend OTP
+                            </a>
+                          </div>
+
+                          {/* <div
                           style={{
                             display: "flex",
                             justifyContent: "flex-end",
@@ -4440,12 +4484,12 @@ function MemberAdd(props) {
                             Resend OTP
                           </a>
                         </div> */}
-                      </Form.Item>
-                    </div>
-                  </>
-                )}
-              </Form.Item>
-            </Form>
+                        </Form.Item>
+                      </div>
+                    </>
+                  )}
+                </Form.Item>
+              </Form>
             </Spin>
           </>
         </CheckAndGenerateMobileOtpModal>
@@ -4537,7 +4581,6 @@ function MemberAdd(props) {
             >
               <a onClick={handleCheckAndGenerateMobileOtp}>Resend OTP</a>
             </div> */}
-
             </Form.Item>
           </Form>
         </HealthIdModal>
