@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
+import OtpInput from "react-otp-input";
 
 //
 import {
@@ -17,6 +18,8 @@ import {
   Col,
   message,
   Divider,
+  Tooltip,
+  Popover,
 } from "antd";
 
 import {
@@ -42,6 +45,10 @@ import {
   QuestionSubRow,
   TextAreaForm,
   AnswerCol1,
+  DownlaodCARDButton,
+  DownlaodQRButton,
+  ABHACardDownLoad,
+  ABHAIDSubmitButton,
 } from "./style";
 
 import axios, { Axios } from "axios";
@@ -55,8 +62,11 @@ import {
   faPlug,
   faPlus,
   faXmark,
+  faFileArrowDown,
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { LogOut } from "../../Auth/Logout";
+import { JSEncrypt } from "jsencrypt";
 
 function MemberUpdate(props) {
   const { t } = useTranslation();
@@ -74,6 +84,34 @@ function MemberUpdate(props) {
       Authorization: `Token ${sessionStorage.getItem("Token")}`,
     },
   };
+
+  //1 st public key
+  var encrypt = new JSEncrypt();
+  var publicKey = `MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAstWB95C5pHLXiYW59qyO
+    4Xb+59KYVm9Hywbo77qETZVAyc6VIsxU+UWhd/k/YtjZibCznB+HaXWX9TVTFs9N
+    wgv7LRGq5uLczpZQDrU7dnGkl/urRA8p0Jv/f8T0MZdFWQgks91uFffeBmJOb58u
+    68ZRxSYGMPe4hb9XXKDVsgoSJaRNYviH7RgAI2QhTCwLEiMqIaUX3p1SAc178ZlN
+    8qHXSSGXvhDR1GKM+y2DIyJqlzfik7lD14mDY/I4lcbftib8cv7llkybtjX1Aayf
+    Zp4XpmIXKWv8nRM488/jOAF81Bi13paKgpjQUUuwq9tb5Qd/DChytYgBTBTJFe7i
+    rDFCmTIcqPr8+IMB7tXA3YXPp3z605Z6cGoYxezUm2Nz2o6oUmarDUntDhq/PnkN
+    ergmSeSvS8gD9DHBuJkJWZweG3xOPXiKQAUBr92mdFhJGm6fitO5jsBxgpmulxpG
+    0oKDy9lAOLWSqK92JMcbMNHn4wRikdI9HSiXrrI7fLhJYTbyU3I4v5ESdEsayHXu
+    iwO/1C8y56egzKSw44GAtEpbAkTNEEfK5H5R0QnVBIXOvfeF4tzGvmkfOO6nNXU3
+    o/WAdOyV3xSQ9dqLY5MEL4sJCGY1iJBIAQ452s8v0ynJG5Yq+8hNhsCVnklCzAls
+    IzQpnSVDUVEzv17grVAw078CAwEAAQ==`;
+  encrypt.setPublicKey(publicKey);
+
+  // 2 nd public key
+  var encrypt2 = new JSEncrypt();
+  var publicKey2 = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7Zq7YKcjmccSBnR9CDHd
+    6IX96V7D/a2XSMs+yCgejSe956mqjA/0Q9h+Xnx7ZZdwe2Tf2Jq/mWXa+gYdnta5
+    8otreXg/5oGnNV3Edlixz1Oc8tJg5bG4sIUCGZcbEQGSbm1iC+Fp1kS+YLVG4Su8
+    KoRxcCvRJI2QkfqAruX3JoFjggOkv0TgWCo9z6NV6PPmPN3UsXyH3OPDi3Ewnvd6
+    4ngCUKPSBiIDwhLj2yYSShcxH8aWbrz00SJodBJzqgjvCfZuljBXXIN4Ngi/nzqE
+    J7woKQ1kNgWoHFZy7YL74PihW//4OlniSRoITX+7ChILIv2ezSmAdIjpNJ9Dg9XK
+    cQIDAQAB`;
+  encrypt2.setPublicKey(publicKey2);
+
   useEffect(() => {
     i18n.changeLanguage("mr");
     console.log(state);
@@ -1317,6 +1355,396 @@ function MemberUpdate(props) {
   const handlePartialSelect = (e) => {
     setPartialSubmit(e.target.checked);
   };
+  const [loading, setLoading] = useState(false);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [otp, setOtp] = useState();
+  const [ABHAIDSubmited, setABHAIDSubmited] = useState(false);
+  const [authMethodSelected, setAuthMethodSelected] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [mobileNumberLinkedWithABHAID, setMobileNumberLinkedWithABHAID] =
+    useState();
+  const [authMethodResponse, setAuthMethodResponse] = useState([]);
+  const [healthIdResponse, setHealthIdResponse] = useState();
+  const [selectedAuthMethods, setSelectedAuthMethods] = useState();
+  const [txnId, settxnID] = useState();
+  const [aadharNumberSubmitted, setAadharNumberSubmitted] = useState(false);
+
+  const handleABHAIDSubmit = async () => {
+    setMinutes(2);
+    setSeconds(29);
+    console.log(abhaId);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+
+    const formData = new FormData();
+    formData.append("clientId", "SBX_004200");
+    formData.append("clientSecret", "bed456a5-46bb-4de5-94ef-6caa2dc77a00");
+    await axios
+      .post(`${BASE_URL}/abdm/api/GetGatewaySessionTokenAPI`, formData, {
+        "Content-Type": "application/json",
+      })
+      .then((res) => {
+        console.log(res);
+        sessionStorage.setItem("BearerToken", res.data.accessToken);
+        axios
+          .post(
+            `${BASE_URL}/abdm/api/v1/phr/registration/hid/search/auth-methods`,
+            { healhtIdNumber: abhaId },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${res.data.accessToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            setAuthMethodResponse(res.data.authMethods);
+            setHealthIdResponse(res.data.healthIdNumber);
+            // setABHAIDSubmited(true);
+            setAuthMethodSelected(true);
+            // message.success(res.data.message);
+          })
+          .catch((err) => {
+            console.log(err);
+            message.warning(err.response.data.message);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleSelectAuthMethods = (e) => {
+    // setProgress(20);
+    setLoading(true);
+    console.log(e.target.value);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+    setSelectedAuthMethods(e.target.value);
+    axios
+      .post(
+        `${BASE_URL}/abdm/api/v1/auth/init`,
+        {
+          authMethod: e.target.value,
+          healthid: abhaId,
+        },
+        axiosConfig
+      )
+      .then((response) => {
+        console.log(response);
+        // setProgress(70);
+        setLoading(false);
+        settxnID(response.data.txnId);
+        setAadharNumberSubmitted(true);
+        setMinutes(2);
+        setSeconds(29);
+        setABHAIDSubmited(true);
+      })
+      .catch((error) => {
+        // setProgress(70);
+        setLoading(false);
+        console.log(error);
+        message.warning(error.response.data.message);
+      });
+    // setProgress(100);
+  };
+  const handleAbhaIDVerify = async () => {
+    console.log(otp);
+    let encryptedOTP = encrypt.encrypt(otp);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+      },
+    };
+
+    try {
+      let response;
+      const data = {
+        otp: otp,
+        txnId: txnId,
+      };
+      if (selectedAuthMethods === "AADHAAR_OTP") {
+        setOtp();
+        response = await axios.post(
+          `${BASE_URL}/abdm/api/v1/auth/confirmWithAadhaarOtp`,
+          data,
+          axiosConfig
+        );
+      } else if (selectedAuthMethods === "MOBILE_OTP") {
+        setOtp();
+        response = await axios.post(
+          `${BASE_URL}/abdm/api/v1/auth/confirmWithMobileOTP`,
+          data,
+          axiosConfig
+        );
+      }
+      console.log(response, "ABHA OTP");
+      if (response.status == 200) {
+        sessionStorage.setItem("X-Token", response.data.token);
+        setOtpVerified(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.warning(error.response.data.message);
+    }
+  };
+  const handleABHACardDownload = () => {
+    setLoading(true);
+    console.log(sessionStorage.getItem("X-Token"));
+    axios
+      .get(`${BASE_URL}/abdm/api/v1/account/getCard`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+          "content-type": "application/json",
+          "X-Token": `Bearer ${sessionStorage.getItem("X-Token")}`,
+          accept: "*/*",
+          "Accept-Language": "en-US",
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute("download", `ABHACard.pdf`);
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
+
+  const handleABHAQRDownload = () => {
+    setLoading(true);
+    axios
+      .get(`${BASE_URL}/abdm/api/v1/account/getqrCode`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+          "content-type": "image/png",
+          "X-Token": `Bearer ${sessionStorage.getItem("X-Token")}`,
+          accept: "*/*",
+          "Accept-Language": "en-US",
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute("download", `Qrcode.png`);
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
+
+  const handleBackButtonOfABHADownload = () => {
+    setAuthMethodSelected(false);
+    setABHAIDSubmited(false);
+    setOtpVerified(false);
+    setSelectedAuthMethods();
+    setOtp();
+    setMinutes(0);
+    setSeconds(0);
+  };
+
+  const ABHACARDDownloadInputContent = (
+    <>
+      <div>
+        {" "}
+        <Button
+          style={{ borderRadius: "30px" }}
+          disabled={!authMethodSelected && !ABHAIDSubmited && !otpVerified}
+          onClick={handleBackButtonOfABHADownload}
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </Button>
+      </div>
+      {otpVerified ? (
+        <>
+          <div style={{ width: "25vw" }}>
+            <p style={{ fontSize: "15px", marginLeft: "3%" }}>
+              ABHA ID:
+              <span style={{ fontWeight: "700", marginLeft: "3%" }}>
+                {abhaId}
+              </span>
+            </p>
+            <p
+              style={{
+                fontSize: "20px",
+                fontWeight: "600",
+                margin: "-2% -2% 0% 3%",
+              }}
+            >
+              Download Options
+            </p>
+            <p style={{ margin: "0% 0% 3% 3%" }}>
+              Choose a format to download ABHA Card
+            </p>
+            <div style={{ display: "flex", justifyContent: "space-around" }}>
+              <DownlaodCARDButton onClick={handleABHACardDownload}>
+                Download Card
+              </DownlaodCARDButton>
+              <DownlaodQRButton onClick={handleABHAQRDownload}>
+                Download QR
+              </DownlaodQRButton>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                margin: "5% 5%",
+              }}
+            >
+              <Button
+                onClick={handleBackButtonOfABHADownload}
+                style={{ width: "120px", backgroundColor: "#FF8551" }}
+              >
+                Finish
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <Form layout="vertical">
+            <Form.Item label="Health ID">
+              <InputForm
+                type="text"
+                value={abhaId}
+                maxLength={17}
+                onChange={(e) => handleAbhaIDChange(e)}
+                placeholder="Enter ABHA ID"
+              ></InputForm>
+            </Form.Item>
+
+            {authMethodSelected ? (
+              <>
+                <div>
+                  {" "}
+                  <h4>
+                    Please select one of the following options to receive your
+                    OTP/ कृपया OTP प्राप्त करण्यासाठी खालीलपैकी एक पर्याय निवडा
+                  </h4>
+                </div>
+                {authMethodResponse.map((data) => (
+                  <Radio.Group
+                    onChange={(e) => handleSelectAuthMethods(e)}
+                    value={selectedAuthMethods}
+                    style={{ margin: "0px 30px" }}
+                  >
+                    <Radio value={data}>{data}</Radio>
+                  </Radio.Group>
+                ))}
+              </>
+            ) : (
+              <></>
+            )}
+            {ABHAIDSubmited ? (
+              <>
+                <div style={{ margin: "5% 5% " }}>
+                  <Form.Item label="OTP">
+                    <OtpInput
+                      inputStyle={{
+                        width: "35px",
+                        height: "30px",
+                        margin: "2px 10px",
+                      }}
+                      value={otp}
+                      numInputs={6}
+                      type="number"
+                      onChange={(value) => setOtp(value)}
+                      renderSeparator={<span></span>}
+                      renderInput={(props) => <input {...props} />}
+                    ></OtpInput>
+                    <div className="countdown-text">
+                      {seconds > 0 || minutes > 0 ? (
+                        <p style={{ color: "red" }}>
+                          Time Remaining:{" "}
+                          {minutes < 10 ? `0${minutes}` : minutes}:
+                          {seconds < 10 ? `0${seconds}` : seconds}
+                        </p>
+                      ) : (
+                        <p>Didn't recieve code?</p>
+                      )}
+                      <a
+                        style={{
+                          display: seconds > 0 || minutes > 0 ? "none" : "",
+                        }}
+                        onClick={handleABHAIDSubmit}
+                      >
+                        Resend OTP
+                      </a>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "end" }}>
+                      <ABHAIDSubmitButton onClick={handleAbhaIDVerify}>
+                        Verify
+                      </ABHAIDSubmitButton>
+                    </div>
+
+                    {/* <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  margin: "10px 40px ",
+                }}
+              >
+                <a onClick={handleABHAIDSubmit}>Resend OTP</a>
+              </div> */}
+                  </Form.Item>
+                </div>
+              </>
+            ) : (
+              <>
+                {authMethodSelected || otpVerified ? (
+                  <></>
+                ) : (
+                  <>
+                    {" "}
+                    <div style={{ display: "flex", justifyContent: "end" }}>
+                      <ABHAIDSubmitButton onClick={handleABHAIDSubmit}>
+                        Submit
+                      </ABHAIDSubmitButton>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </Form>
+        </>
+      )}
+    </>
+  );
 
   return (
     <>
@@ -1438,7 +1866,7 @@ function MemberUpdate(props) {
                     </a>
                   </p> */}
                 </Column>
-                {/* <Column span={1}>
+                <Column span={1}>
                   <Tooltip title="ABHA Card Download">
                     <Popover
                       content={ABHACARDDownloadInputContent}
@@ -1448,7 +1876,7 @@ function MemberUpdate(props) {
                       <ABHACardDownLoad icon={faFileArrowDown} />
                     </Popover>
                   </Tooltip>
-                </Column> */}
+                </Column>
               </Row>
             </>
           )}

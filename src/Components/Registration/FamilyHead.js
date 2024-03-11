@@ -1311,7 +1311,7 @@ function FamilyHead(props) {
                   {" "}
                   <h4>
                     Please select one of the following options to receive your
-                    OTP
+                    OTP/ कृपया OTP प्राप्त करण्यासाठी खालीलपैकी एक पर्याय निवडा
                   </h4>
                 </div>
                 {authMethodResponse.map((data) => (

@@ -20,7 +20,7 @@ function HeaderBar(props) {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            marginRight: "25px",
+            marginRight: "1vw",
           }}
         >
           <Button
@@ -54,7 +54,7 @@ function HeaderBar(props) {
             ></FontAwesomeIcon>
             <Select
               value={sessionStorage.getItem("name")}
-              style={{ width: "250px" }}
+              style={{ width: "10vw" }}
               onChange={() => LogOut()}
             >
               <Option>

@@ -2250,7 +2250,7 @@ function MemberAdd(props) {
                   {" "}
                   <h4>
                     Please select one of the following options to receive your
-                    OTP
+                    OTP / कृपया OTP प्राप्त करण्यासाठी खालीलपैकी एक पर्याय निवडा
                   </h4>
                 </div>
                 {authMethodResponse.map((data) => (
@@ -2343,6 +2343,7 @@ function MemberAdd(props) {
   );
 
   const handleAdd = () => {
+    setLoading(true);
     axios
       .post(
         `${BASE_URL}/healthworker/api/PostFamilyDetails`,
@@ -2350,6 +2351,7 @@ function MemberAdd(props) {
         axiosConfig
       )
       .then((response) => {
+        setLoading(false);
         console.log(response.data.message);
         message.success(response.data.message);
         setTimeout(() => {
@@ -2357,6 +2359,7 @@ function MemberAdd(props) {
         }, 1000);
       })
       .catch((error) => {
+        setLoading(false);
         console.log(error.response.data.message);
         if (error.response.status == 401) {
           message.warning("system is logged out");
@@ -3999,7 +4002,11 @@ function MemberAdd(props) {
           open={consentModalShow}
           onCancel={handleConsentModalClose}
           footer={
-            <SubmitButton onClick={() => handleAdd()}>Submit</SubmitButton>
+            loading ? (
+              <></>
+            ) : (
+              <SubmitButton onClick={() => handleAdd()}>Submit</SubmitButton>
+            )
           }
         >
           <Spin spinning={loading}>
