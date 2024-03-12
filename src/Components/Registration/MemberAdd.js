@@ -44,8 +44,7 @@ import {
   InputBox,
   QuestionSubCol,
   QuestionSubRow,
-  TextAreaForm,
-  AnswerCol1,
+ 
   SelectWardButton,
   CreateHealthIdModal,
   HealthIdModal,
@@ -58,7 +57,7 @@ import {
   ABHACardDownLoad,
 } from "./style";
 
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { BASE_URL } from "../../Utils/BaseURL";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
@@ -375,6 +374,7 @@ function MemberAdd(props) {
   const [abhaId, setAbhaId] = useState("");
   const [pulse, setPulse] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
+  const [randomBloodSugar, setRandomBloodSugar] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
@@ -468,6 +468,12 @@ function MemberAdd(props) {
     // if (e.target.value === "" || regex.test(e.target.value)) {
     // setBloodPressure(e.target.value);
     // }
+  };
+  const handleRandomBloodSugarChange = (e) => {
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setRandomBloodSugar(e.target.value);
+    }
   };
   const handleWeightChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
@@ -1046,6 +1052,7 @@ function MemberAdd(props) {
     abhaId: abhaId,
     pulse: pulse,
     bloodPressure: bloodPressure,
+    randomBloodSugar: randomBloodSugar,
     weight: weight,
     height: height,
     BMI: BMI,
@@ -2599,6 +2606,19 @@ function MemberAdd(props) {
                       ></Input>
                     </FormItem>
                   </Column>
+                  <Column>
+                    <FormItem label="Random Blood Sugar / यादृच्छिक रक्तातील साखर">
+                      <Input
+                        type="text"
+                        value={randomBloodSugar}
+                        suffix="mg/dL"
+                        maxLength={3}
+                        onChange={(e) => handleRandomBloodSugarChange(e)}
+                      ></Input>
+                    </FormItem>
+                  </Column>
+                  </Row>
+                  <Row>
                   <Column>
                     <FormItem label="Weight / वजन">
                       <Input

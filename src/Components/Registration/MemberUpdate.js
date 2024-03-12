@@ -123,6 +123,7 @@ function MemberUpdate(props) {
     setAbhaId(state.abhaId);
     setPulse(state.pulse);
     setBloodPressure(state.bloodPressure);
+    setRandomBloodSugar(state.randomBloodSugar);
     setWeight(state.weight);
     setHeight(state.height);
     setBMI(state.BMI);
@@ -350,6 +351,7 @@ function MemberUpdate(props) {
   const [abhaId, setAbhaId] = useState("");
   const [pulse, setPulse] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
+  const [randomBloodSugar, setRandomBloodSugar] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
@@ -421,6 +423,12 @@ function MemberUpdate(props) {
     const regex = /^[0-9]{1,3}$/;
     if (e.target.value === "" || regex.test(e.target.value)) {
       setBloodPressure(e.target.value);
+    }
+  };
+  const handleRandomBloodSugarChange = (e) => {
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setRandomBloodSugar(e.target.value);
     }
   };
   const handleWeightChange = (e) => {
@@ -1015,6 +1023,7 @@ function MemberUpdate(props) {
     abhaId: abhaId,
     pulse: pulse,
     bloodPressure: bloodPressure,
+    randomBloodSugar:randomBloodSugar,
     weight: weight,
     height: height,
     BMI: BMI,
@@ -1930,6 +1939,19 @@ function MemberUpdate(props) {
                     ></Input>
                   </FormItem>
                 </Column>
+                <Column>
+                    <FormItem label="Random Blood Sugar / यादृच्छिक रक्तातील साखर">
+                      <Input
+                        type="text"
+                        value={randomBloodSugar}
+                        suffix="mg/dL"
+                        maxLength={3}
+                        onChange={(e) => handleRandomBloodSugarChange(e)}
+                      ></Input>
+                    </FormItem>
+                  </Column>
+                </Row>
+                <Row>
                 <Column>
                   <FormItem label="Weight / वजन">
                     <Input

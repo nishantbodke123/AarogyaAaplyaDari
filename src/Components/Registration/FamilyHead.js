@@ -514,7 +514,7 @@ function FamilyHead(props) {
   const [aadharPhotoURL, setAadharPhotoURL] = useState("");
   const [aadharCardName, setAadharCardName] = useState();
   const [aadharMobileNumber, setAadharMobileNumber] = useState();
-  const [healthNumber, setHealthNumber] = useState();
+  // const [healthNumber, setHealthNumber] = useState();
   const [authMethods, setAuthMethods] = useState([]);
   const [selectedAuthMethods, setSelectedAuthMethods] = useState();
   const [healthId, setHealthId] = useState();
@@ -623,37 +623,37 @@ function FamilyHead(props) {
   };
 
   const [showHealthIdModal, setShowHealthIdModal] = useState(false);
-  const handleShowHealthIdModal = () => {
-    // setProgress(20);
-    setLoading(true);
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
-      },
-    };
-    axios
-      .post(
-        `${BASE_URL}/abdm/api/v1/phr/registration/hid/search/auth-methods`,
-        {
-          healhtIdNumber: abhaId,
-        },
-        axiosConfig
-      )
-      .then((res) => {
-        // setProgress(70);
-        setLoading(false);
-        console.log(res.data.authMethods);
-        setAuthMethods(res.data.authMethods);
-        setShowHealthIdModal(true);
-      })
-      .catch((error) => {
-        // setProgress(70);
-        setLoading(false);
-        console.log(error);
-      });
-    // setProgress(100);
-  };
+  // const handleShowHealthIdModal = () => {
+  //   // setProgress(20);
+  //   setLoading(true);
+  //   let axiosConfig = {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+  //     },
+  //   };
+  //   axios
+  //     .post(
+  //       `${BASE_URL}/abdm/api/v1/phr/registration/hid/search/auth-methods`,
+  //       {
+  //         healhtIdNumber: abhaId,
+  //       },
+  //       axiosConfig
+  //     )
+  //     .then((res) => {
+  //       // setProgress(70);
+  //       setLoading(false);
+  //       console.log(res.data.authMethods);
+  //       setAuthMethods(res.data.authMethods);
+  //       setShowHealthIdModal(true);
+  //     })
+  //     .catch((error) => {
+  //       // setProgress(70);
+  //       setLoading(false);
+  //       console.log(error);
+  //     });
+  //   // setProgress(100);
+  // };
   const handleHideHealthIdModal = () => {
     setSelectedAuthMethods();
     setOtp();
@@ -1008,15 +1008,16 @@ function FamilyHead(props) {
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState(0);
   const [abhaId, setAbhaId] = useState();
-  const [abhaNumber, setAbhaNumber] = useState();
+  // const [abhaNumber, setAbhaNumber] = useState();
   const [pulse, setPulse] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
+  const [randomBloodSugar, setRandomBloodSugar] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [BMI, setBMI] = useState("");
-  const [cbacScore, setCbacScore] = useState("");
+  // const [cbacScore, setCbacScore] = useState("");
 
-  const [demandLetter, setDemandLetter] = useState("");
+  // const [demandLetter, setDemandLetter] = useState("");
 
   const handleNameChange = (e) => {
     const regex = /^[ a-zA-Z]+$/;
@@ -1065,20 +1066,20 @@ function FamilyHead(props) {
   const [ABHAIDSubmited, setABHAIDSubmited] = useState(false);
   const [authMethodSelected, setAuthMethodSelected] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
-  const [mobileNumberLinkedWithABHAID, setMobileNumberLinkedWithABHAID] =
-    useState();
+  // const [mobileNumberLinkedWithABHAID, setMobileNumberLinkedWithABHAID] =
+  //   useState();
   const [authMethodResponse, setAuthMethodResponse] = useState([]);
-  const [healthIdResponse, setHealthIdResponse] = useState();
+  // const [healthIdResponse, setHealthIdResponse] = useState();
   const handleABHAIDSubmit = async () => {
     setMinutes(2);
     setSeconds(29);
     console.log(abhaId);
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
-      },
-    };
+    // let axiosConfig = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${sessionStorage.getItem("BearerToken")}`,
+    //   },
+    // };
 
     const formData = new FormData();
     formData.append("clientId", "SBX_004200");
@@ -1104,7 +1105,7 @@ function FamilyHead(props) {
           .then((res) => {
             console.log(res);
             setAuthMethodResponse(res.data.authMethods);
-            setHealthIdResponse(res.data.healthIdNumber);
+            // setHealthIdResponse(res.data.healthIdNumber);
             // setABHAIDSubmited(true);
             setAuthMethodSelected(true);
             // message.success(res.data.message);
@@ -1120,7 +1121,7 @@ function FamilyHead(props) {
   };
   const handleAbhaIDVerify = async () => {
     console.log(otp);
-    let encryptedOTP = encrypt.encrypt(otp);
+    // let encryptedOTP = encrypt.encrypt(otp);
     let axiosConfig = {
       headers: {
         "Content-Type": "application/json",
@@ -1442,6 +1443,12 @@ function FamilyHead(props) {
     // setBloodPressure(e.target.value);
     // }
   };
+  const handleRandomBloodSugarChange = (e) => {
+    const regex = /^[0-9]{1,3}$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setRandomBloodSugar(e.target.value);
+    }
+  };
   const handleWeightChange = (e) => {
     const regex = /^[0-9]{1,3}$/;
     if (e.target.value === "" || regex.test(e.target.value)) {
@@ -1490,18 +1497,18 @@ function FamilyHead(props) {
     }
   };
 
-  const handleDemandLetter = (file) => {
-    console.log(file);
-    const reader = new FileReader();
+  // const handleDemandLetter = (file) => {
+  //   console.log(file);
+  //   const reader = new FileReader();
 
-    reader.readAsDataURL(file);
+  //   reader.readAsDataURL(file);
 
-    reader.onload = () => {
-      console.log("called: ", reader);
-      console.log(reader.result);
-      setDemandLetter(reader.result);
-    };
-  };
+  //   reader.onload = () => {
+  //     console.log("called: ", reader);
+  //     console.log(reader.result);
+  //     // setDemandLetter(reader.result);
+  //   };
+  // };
 
   const handleFormSubmit = async () => {
     console.log(typeof aadharCard);
@@ -1892,6 +1899,7 @@ function FamilyHead(props) {
     setAbhaId("");
     setPulse("");
     setBloodPressure("");
+    setRandomBloodSugar("");
     setWeight("");
     setHeight("");
     setBMI("");
@@ -2309,6 +2317,7 @@ function FamilyHead(props) {
     abhaId: abhaId,
     pulse: pulse,
     bloodPressure: bloodPressure,
+    randomBloodSugar: randomBloodSugar,
     weight: weight,
     height: height,
     BMI: BMI,
@@ -3061,6 +3070,19 @@ function FamilyHead(props) {
                       ></Input>
                     </FormItem>
                   </Column>
+                  <Column>
+                    <FormItem label="Random Blood Sugar / यादृच्छिक रक्तातील साखर">
+                      <Input
+                        type="text"
+                        value={randomBloodSugar}
+                        suffix="mg/dL"
+                        maxLength={3}
+                        onChange={(e) => handleRandomBloodSugarChange(e)}
+                      ></Input>
+                    </FormItem>
+                  </Column>
+                </Row>
+                <Row>
                   <Column>
                     <FormItem label="Weight / वजन">
                       <Input
