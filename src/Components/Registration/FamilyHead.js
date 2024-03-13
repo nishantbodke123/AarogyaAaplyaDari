@@ -305,6 +305,8 @@ function FamilyHead(props) {
       message.warning("Please Enter PinCode");
     } else if (totalFamilyMembers == "") {
       message.warning("Please Enter number Family members ");
+    } else if (totalFamilyMembers <= 0 ){
+      message.warning("Please Enter valid family Members")
     } else {
       setLoading(true);
       axios
