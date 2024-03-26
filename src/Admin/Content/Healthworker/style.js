@@ -38,6 +38,6 @@ export const CancelButton = styled(Button)`
 export const PasswordUpdateButton = styled(Button)`
   background-color: #176b87;
   color: white;
-  width: 100px;
-  margin: 18px 50px;
+  // width: 100px;
+  margin: 0px 140px;
 `;

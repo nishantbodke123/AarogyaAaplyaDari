@@ -107,7 +107,7 @@ function Section() {
   const handleSearch = () => {
     setLoader(true);
     axios
-      .get(`${BASE_URL}/allauth/api/GetWardAreasAPI/${wardSelect}`, {
+      .get(`${BASE_URL}/allauth/api/GetWardSectionListAPI/${wardSelect}`, {
         params: {
           search: searchValue,
         },
@@ -260,14 +260,11 @@ function Section() {
             maxHeight: "80vh",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              display: Group === "ViewAdmin" ? "none" : "block",
-            }}
-          >
-            <AddButton onClick={handleShowAddSectionModal}>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <AddButton
+              style={{ display: Group === "ViewAdmin" ? "none" : "block" }}
+              onClick={handleShowAddSectionModal}
+            >
               Add Section
             </AddButton>
           </div>

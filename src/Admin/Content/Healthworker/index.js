@@ -975,15 +975,16 @@ function Healthworker() {
                 </>
               }
             >
+              <div style={{display:"flex",justifyContent:"center"}}>
               <Form layout="vertical">
-                <FormItem label="New Password">
+                <FormItem label="New Password" required>
                   <Input.Password
                     style={{ width: "350px" }}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                   ></Input.Password>
                 </FormItem>
-                <FormItem label="Confirm new password">
+                <FormItem label="Confirm new password" required>
                   <Input.Password
                     style={{ width: "350px" }}
                     value={confirmNewPassword}
@@ -991,6 +992,7 @@ function Healthworker() {
                   ></Input.Password>
                 </FormItem>
               </Form>
+              </div>
             </Modal>
             <Modal
               open={showEditModal}

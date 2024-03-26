@@ -1094,15 +1094,16 @@ function CHV() {
                 </>
               }
             >
+              <div style={{display:"flex" ,justifyContent:"center"}}>
               <Form layout="vertical">
-                <FormItem label="New Password">
+                <FormItem label="New Password" required>
                   <Input.Password
                     style={{ width: "350px" }}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                   ></Input.Password>
                 </FormItem>
-                <FormItem label="Confirm New Password">
+                <FormItem label="Confirm New Password" required>
                   <Input.Password
                     style={{ width: "350px" }}
                     value={confirmNewPassword}
@@ -1110,6 +1111,7 @@ function CHV() {
                   ></Input.Password>
                 </FormItem>
               </Form>
+              </div>
             </Modal>
             <Modal
               open={showEditModal}

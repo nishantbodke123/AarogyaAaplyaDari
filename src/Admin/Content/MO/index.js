@@ -826,15 +826,16 @@ function MO() {
                 </>
               }
             >
+              <div style={{display:"flex" ,justifyContent:"center"}}>
               <Form layout="vertical">
-                <FormItem label="New Password">
+                <FormItem label="New Password" required>
                   <Input.Password
                     style={{ width: "350px" }}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                   ></Input.Password>
                 </FormItem>
-                <FormItem label="confirm new Password">
+                <FormItem label="confirm new Password" required>
                   <Input.Password
                     style={{ width: "350px" }}
                     value={confirmNewPassword}
@@ -842,6 +843,7 @@ function MO() {
                   ></Input.Password>
                 </FormItem>
               </Form>
+              </div>
             </Modal>
             <Modal
               open={showEditModal}
