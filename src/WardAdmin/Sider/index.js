@@ -76,6 +76,7 @@ function Sidebar(props) {
   };
 
   const handleWardwiseCitizenDownload = () => {
+    console.log("the value clicked")
     updateSideKey(1, selectedHealthPost, selectedWardName);
   };
 
@@ -158,7 +159,7 @@ function Sidebar(props) {
                     }}
                     onChange={(e) => handleHealthpostSelect(e.target.value)}
                   >
-                    <option value={undefined}>All</option>
+                    <option value={undefined}>Select the Healthpost</option>
                     {healthPostNameList.map((data, index) => (
                       <option
                         key={data.id}

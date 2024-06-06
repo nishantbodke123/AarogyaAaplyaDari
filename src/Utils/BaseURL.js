@@ -11,3 +11,5 @@ export const BASE_URL = "http://202.189.224.222:9061";
 //HTTPS
 // export const BASE_URL = "https://aaduat.nashikgeoportal.com";
 // export const BASE_URL = "http://10.1.10.14";
+
+// export const BASE_URL = "https://aaduat.nashikgeoportal.com";

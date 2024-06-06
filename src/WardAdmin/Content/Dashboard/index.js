@@ -118,25 +118,39 @@ function WardAdminDashboard() {
 
   const handleWardwiseCitizenDownload = () => {
     setLoader(true);
+    console.log("coming here.......") 
     axios
       .get(`${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${wardId}`, {
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
         },
-        // responseType: "blob",
+        responseType: "blob",
       })
       .then((response) => {
         setLoader(false);
-        console.log("Response data is ---> " + response.headers);
+        const href = URL.createObjectURL(response.data);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.setAttribute(
+          "download",
+          `MOH_Dashboard_Wardwise_User_Data.xlsx`
+        );
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
       })
       .catch((err) => {
         setLoader(false);
-        console.log(err.response.status);
-        if (err.response.status == 404) {
-          message.warning("Please Select Ward");
-        } else if (err.response.status == 401) {
-          LogOut();
-        } else if (err.response.status == 400) {
+        console.log(err);
+        if (err.response.status === 401) {
+          setTimeout(() => {
+            LogOut();
+          }, 1000);
+        } else if (err.response.status === 400) {
           message.warning("Data is not available");
         } else {
           message.warning("Error" + err.response.message);
@@ -149,6 +163,7 @@ function WardAdminDashboard() {
     console.log(
       "passed healthpost value in the content ward admin is " + passedHealthpost
     );
+    console.log("hereee abhishek")
     axios
       .get(
         // `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
