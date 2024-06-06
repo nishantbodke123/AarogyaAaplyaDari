@@ -1023,7 +1023,7 @@ function MemberUpdate(props) {
     abhaId: abhaId,
     pulse: pulse,
     bloodPressure: bloodPressure,
-    randomBloodSugar:randomBloodSugar,
+    randomBloodSugar: randomBloodSugar,
     weight: weight,
     height: height,
     BMI: BMI,
@@ -1796,9 +1796,9 @@ function MemberUpdate(props) {
               {/* rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]} */}
               <FormItem label="Gender / लिंग" required>
                 <Select onChange={(value) => setGender(value)} value={gender}>
-                  <Option value="male">Male / पुरुष</Option>
-                  <Option value="female">Female / स्त्री</Option>
-                  <Option value="transgender">Transgender/समलैंगिक</Option>
+                  <Option value="M">Male / पुरुष</Option>
+                  <Option value="F">Female / स्त्री</Option>
+                  <Option value="O">Transgender/समलैंगिक</Option>
                 </Select>
               </FormItem>
             </Column>
@@ -1817,31 +1817,35 @@ function MemberUpdate(props) {
               </FormItem>
             </Column>
           </Row>
-          {age === "" || age <= 18 ? (
-            <Row
-              style={{
-                display: "flex",
-                justifyContent: "start",
-                margin: "0.5% 0%",
-                backgroundColor: "#dde6ed",
-              }}
-            >
-              {/* <h3>Hello</h3> */}
-              <Checkbox
-                style={{ margin: "0% 2%" }}
-                value={adharAbhaRequired}
-                onChange={handleAadharAbhaRequired}
+          <div>
+            {age === "" || age <= 18 ? (
+              <Row
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  margin: "0.5% 0%",
+                  backgroundColor: "#dde6ed",
+                }}
               >
-                <h4>
-                  If You want to fill Adhar Number and ABHA Number, tick the box
-                </h4>
-              </Checkbox>
-            </Row>
-          ) : (
-            <>
-              <Divider />
-            </>
-          )}
+                {/* <h3>Hello</h3> */}
+                <Checkbox
+                  style={{ margin: "0% 2%" }}
+                  value={adharAbhaRequired}
+                  onChange={handleAadharAbhaRequired}
+                >
+                  <h4>
+                    If You want to fill Adhar Number and ABHA Number, tick the
+                    box
+                  </h4>
+                </Checkbox>
+              </Row>
+            ) : (
+              <>
+                <Divider />
+              </>
+            )}
+          </div>
+
           {age <= 18 && !adharAbhaRequired ? (
             <></>
           ) : (
@@ -1940,18 +1944,18 @@ function MemberUpdate(props) {
                   </FormItem>
                 </Column>
                 <Column>
-                    <FormItem label="Random Blood Sugar / यादृच्छिक रक्तातील साखर">
-                      <Input
-                        type="text"
-                        value={randomBloodSugar}
-                        suffix="mg/dL"
-                        maxLength={3}
-                        onChange={(e) => handleRandomBloodSugarChange(e)}
-                      ></Input>
-                    </FormItem>
-                  </Column>
-                </Row>
-                <Row>
+                  <FormItem label="Random Blood Sugar / यादृच्छिक रक्तातील साखर">
+                    <Input
+                      type="text"
+                      value={randomBloodSugar}
+                      suffix="mg/dL"
+                      maxLength={3}
+                      onChange={(e) => handleRandomBloodSugarChange(e)}
+                    ></Input>
+                  </FormItem>
+                </Column>
+              </Row>
+              <Row>
                 <Column>
                   <FormItem label="Weight / वजन">
                     <Input
@@ -1987,7 +1991,8 @@ function MemberUpdate(props) {
           )}
 
           <Row></Row>
-          {age === "" || age <= 30 ? (
+          {/* age === "" || age <= 30 */}
+          {false ? (
             <Row
               style={{
                 display: "flex",
@@ -3393,7 +3398,7 @@ function MemberUpdate(props) {
                     ? { backgroundColor: "#E9B384", width: "200px" }
                     : { backgroundColor: "white", width: "200px" }
                 }
-                onClick={handleBloodSampleHomeSelct}
+                // onClick={handleBloodSampleHomeSelct}
               >
                 <span style={{ marginRight: "10px" }}>
                   <FontAwesomeIcon icon={faHouse} />
@@ -3408,7 +3413,7 @@ function MemberUpdate(props) {
                     ? { backgroundColor: "#E9B384", width: "200px" }
                     : { backgroundColor: "white", width: "200px" }
                 }
-                onClick={handleBloodSampleCenterSelect}
+                // onClick={handleBloodSampleCenterSelect}
               >
                 <span style={{ marginRight: "10px" }}>
                   <FontAwesomeIcon icon={faPlus} />
@@ -3423,7 +3428,7 @@ function MemberUpdate(props) {
                     ? { backgroundColor: "#E9B384", width: "200px" }
                     : { backgroundColor: "white", width: "200px" }
                 }
-                onClick={handleBloodSampleDesiedSelect}
+                // onClick={handleBloodSampleDesiedSelect}
               >
                 <span style={{ marginRight: "10px" }}>
                   <FontAwesomeIcon icon={faXmark} />
@@ -3432,7 +3437,7 @@ function MemberUpdate(props) {
               </Button>
               {bloodSampleDenied ? (
                 <div style={{ margin: "10px 25px" }}>
-                  <Radio.Group value={deniedBy}>
+                  <Radio.Group value={deniedBy} disabled>
                     <Radio value="byindividual">By Individual</Radio>
                     <br />
                     <Radio value="byamo">By AMO</Radio>
@@ -3449,7 +3454,7 @@ function MemberUpdate(props) {
                     ? { backgroundColor: "#E9B384", width: "210px" }
                     : { backgroundColor: "white", width: "210px" }
                 }
-                onClick={handleNotRequiredSelect}
+                // onClick={handleNotRequiredSelect}
               >
                 <span style={{ marginRight: "10px" }}>
                   <FontAwesomeIcon icon={faXmark} />

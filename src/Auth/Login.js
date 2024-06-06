@@ -69,7 +69,7 @@ function Login() {
         sessionStorage.setItem("id", response.data.id);
 
         if (response.data.Group == "mo") {
-          message.warning("These user credentials belong to MO");
+          message.warning("UnAuthorized User");
         } else {
           message.success(response.data.message);
         }
@@ -85,7 +85,7 @@ function Login() {
           } else if (response.data.Group == "MOH") {
             window.location.replace("/wardadmin/wardadminDashboard");
           } else if (response.data.Group == "mo") {
-            message.warning("These user credentials belong to MO");
+            message.warning("UnAuthorized User");
           } else if (response.data.Group == "ViewAdmin") {
             window.location.replace("/admin/adminDashboard");
           }

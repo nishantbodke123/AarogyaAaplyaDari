@@ -5,7 +5,7 @@ function Error() {
   
   return (
     <>
-    <Navigate to="/"></Navigate>
+    {/* <Navigate to="/"></Navigate> */}
       <div
         style={{
           display: "flex",

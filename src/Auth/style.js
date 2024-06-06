@@ -7,50 +7,66 @@ export const Container = styled.div`
   display: flex;
   flex-direction: row;
   height: 100vh;
-
+  @media (max-width: 900px) {
+    flex-direction: column;
+  
+  }
   @media (max-width: 415px) {
     flex-direction: column;
-    width: 100%;
+    
   }
-  @media (max-width: 900px) {
-  }
+
 `;
 export const LogoContainer = styled.div`
   width: 50%;
 
-  @media (max-width: 415px) {
-    align-items: center;
+   @media (max-width: 900px) {
+    
     width: 100%;
     height: 25%;
     background-color: white;
   }
-  @media (max-width: 900px) {
+
+  @media (max-width: 415px) {
+ 
+    width: 100%;
+    height: 25%;
+    background-color: white;
   }
+ 
 `;
 export const LogoImage = styled.img`
   width: 50vw;
   height: 90vh;
 
   @media (max-width: 900px) {
-    width: 30vw;
-    height: 40vh;
+    width: 100vw;
+    height: 50vh;
   }
 
   @media (max-width: 415px) {
-    width: 50vw;
-    height: 60vh;
+    width: 100vw;
+    height: 50vh;
   }
 `;
 export const FormContainer = styled.div`
   width: 50%;
+  height:50vh;
 
-  @media (max-width: 415px) {
-    width: 100%;
-    height: 50%;
-  }
-
+  
   @media (max-width: 900px) {
+   
+    width: 100%;
+    height: 50vh;
+    
   }
+  @media (max-width: 415px) {
+ 
+    width: 100%;
+    height: 50vh;
+    
+  }
+
 `;
 
 export const LoginForm = styled.div`
@@ -60,8 +76,20 @@ export const LoginForm = styled.div`
   margin: 15%;
   align-items: center;
 
+  @media (max-width:900px){
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 25vh 25vw;
+    align-items: end;
+  }
+
   @media (max-width: 415px) {
-    margin: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 25vh 10vw ;
+    align-items: end;
   }
 `;
 export const LoginFormHeading = styled.h1`

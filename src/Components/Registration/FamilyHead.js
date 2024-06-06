@@ -1007,7 +1007,7 @@ function FamilyHead(props) {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [relationWithHead, setRelationWithHead] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(null);
   const [aadharCard, setAadharCard] = useState(0);
   const [abhaId, setAbhaId] = useState();
   // const [abhaNumber, setAbhaNumber] = useState();
@@ -1896,7 +1896,7 @@ function FamilyHead(props) {
     setGender("");
     setAge("");
     setRelationWithHead("");
-    setPhone("");
+    setPhone(null);
     setAadharCard(0);
     setAbhaId("");
     setPulse("");
@@ -2323,7 +2323,7 @@ function FamilyHead(props) {
     weight: weight,
     height: height,
     BMI: BMI,
-    cbacRequired: CBACRequired,
+    cbacRequired: age<30?CBACRequired:true,
     referels: selectedReferalList,
     Questionnaire: {
       part_a: [
@@ -2899,9 +2899,9 @@ function FamilyHead(props) {
                 {/* rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]} */}
                 <FormItem label="Gender / लिंग" required>
                   <Select onChange={(value) => setGender(value)} value={gender}>
-                    <Option value="male">Male / पुरुष</Option>
-                    <Option value="female">Female / स्त्री</Option>
-                    <Option value="transgender">Transgender/समलैंगिक</Option>
+                    <Option value="M">Male / पुरुष</Option>
+                    <Option value="F">Female / स्त्री</Option>
+                    <Option value="O">Transgender/समलैंगिक</Option>
                   </Select>
                 </FormItem>
               </Column>

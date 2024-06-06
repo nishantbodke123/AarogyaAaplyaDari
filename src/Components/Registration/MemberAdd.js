@@ -44,7 +44,6 @@ import {
   InputBox,
   QuestionSubCol,
   QuestionSubRow,
- 
   SelectWardButton,
   CreateHealthIdModal,
   HealthIdModal,
@@ -267,16 +266,17 @@ function MemberAdd(props) {
     setShowModal(false);
   };
   const handleWardSelectionModal = () => {
-    if (
-      sessionStorage.getItem("group") === "healthworker" &&
-      selectedCHV == ""
-    ) {
-      message.warning("Please select CHV");
-    } else if (section == "") {
-      message.warning("Please Select Area");
-    } else {
-      handleShowModalClose();
-    }
+    // if (
+    //   sessionStorage.getItem("group") === "healthworker" &&
+    //   selectedCHV == ""
+    // ) {
+    //   message.warning("Please select CHV");
+    // } else if (section == "") {
+    //   message.warning("Please Select Area");
+    // } else {
+
+    // }
+    handleShowModalClose();
   };
 
   const handleSectionSelect = (value) => {
@@ -369,7 +369,7 @@ function MemberAdd(props) {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [relationWithHead, setRelationWithHead] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(null);
   const [aadharCard, setAadharCard] = useState(0);
   const [abhaId, setAbhaId] = useState("");
   const [pulse, setPulse] = useState("");
@@ -1374,8 +1374,6 @@ function MemberAdd(props) {
       message.warning("Please Enter Age");
     } else if (section === "") {
       message.warning("Please Select Area");
-    } else if (selectedCHV === "") {
-      message.warning("Please Select CHV");
     } else if (aadharCard !== 0) {
       //|| adharAbhaRequired
       axios
@@ -2433,9 +2431,9 @@ function MemberAdd(props) {
                 {/* rules={[{required:true ,message:"Gender mention is must / लिंग नमूद करणे आवश्यक आहे"}]} */}
                 <FormItem label="Gender / लिंग" required>
                   <Select onChange={(value) => setGender(value)} value={gender}>
-                    <Option value="male">Male / पुरुष</Option>
-                    <Option value="female">Female / स्त्री</Option>
-                    <Option value="transgender">Transgender/समलैंगिक</Option>
+                    <Option value="M">Male / पुरुष</Option>
+                    <Option value="F">Female / स्त्री</Option>
+                    <Option value="O">Transgender/समलैंगिक</Option>
                   </Select>
                 </FormItem>
               </Column>
@@ -2617,8 +2615,8 @@ function MemberAdd(props) {
                       ></Input>
                     </FormItem>
                   </Column>
-                  </Row>
-                  <Row>
+                </Row>
+                <Row>
                   <Column>
                     <FormItem label="Weight / वजन">
                       <Input
