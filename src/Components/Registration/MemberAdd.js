@@ -1048,7 +1048,7 @@ function MemberAdd(props) {
     mobileNo: phone,
     aadharCard: aadharCard,
     familyHead: state,
-    ASHA_CHV: selectedCHV,
+    ASHA_CHV:  selectedCHV,
     abhaId: abhaId,
     pulse: pulse,
     bloodPressure: bloodPressure,
@@ -1056,7 +1056,7 @@ function MemberAdd(props) {
     weight: weight,
     height: height,
     BMI: BMI,
-    cbacRequired: CBACRequired,
+    cbacRequired: age<30?CBACRequired:true,
     referels: selectedReferalList,
     Questionnaire: {
       part_a: [
@@ -2348,6 +2348,10 @@ function MemberAdd(props) {
   );
 
   const handleAdd = () => {
+    console.log(state);
+    console.log(selectedCHV);
+    console.log(sessionStorage.getItem("id"));
+    console.log(sessionStorage.getItem("id"));
     setLoading(true);
     axios
       .post(
@@ -2357,7 +2361,7 @@ function MemberAdd(props) {
       )
       .then((response) => {
         setLoading(false);
-        console.log(response.data.message);
+        console.log(response);
         message.success(response.data.message);
         setTimeout(() => {
           window.location.replace("/dashboard");

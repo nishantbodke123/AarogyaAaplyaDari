@@ -1027,7 +1027,7 @@ function MemberUpdate(props) {
     weight: weight,
     height: height,
     BMI: BMI,
-    cbacRequired: CBACRequired,
+    cbacRequired: age<30?CBACRequired:true,
     referels: selectedReferalList,
     Questionnaire: {
       part_a: [

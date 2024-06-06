@@ -57,12 +57,14 @@ function Login() {
       .post(`${BASE_URL}/allauth/api/login`, formData, axiosConfig)
       .then((response) => {
         console.log(response);
+        console.log(response.data.id);
         sessionStorage.setItem("Token", response.data.Token);
         sessionStorage.setItem("ward", response.data.ward);
         sessionStorage.setItem("wardName", response.data.ward_name);
         sessionStorage.setItem("ward_id", response.data.ward_id);
         sessionStorage.setItem("healthPostName", response.data.healthPostName);
         sessionStorage.setItem("healthPostID", response.data.healthPostID);
+
         sessionStorage.setItem("name", response.data.name);
         sessionStorage.setItem("group", response.data.Group);
         sessionStorage.setItem("section_id", response.data.section_id);
@@ -73,7 +75,7 @@ function Login() {
         } else {
           message.success(response.data.message);
         }
-  
+
         setTimeout(() => {
           if (
             response.data.Group == "healthworker" ||
