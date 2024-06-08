@@ -2352,6 +2352,7 @@ function MemberAdd(props) {
     console.log(selectedCHV);
     console.log(sessionStorage.getItem("id"));
     console.log(sessionStorage.getItem("id"));
+    phone === "" && setPhone(null);
     setLoading(true);
     axios
       .post(

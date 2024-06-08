@@ -1027,7 +1027,7 @@ function MemberUpdate(props) {
     weight: weight,
     height: height,
     BMI: BMI,
-    cbacRequired: age<30?CBACRequired:true,
+    cbacRequired: age < 30 ? CBACRequired : true,
     referels: selectedReferalList,
     Questionnaire: {
       part_a: [
@@ -2005,7 +2005,7 @@ function MemberUpdate(props) {
               <Checkbox
                 style={{ margin: "0% 2%" }}
                 value={CBACRequired}
-                // onChange={handleCBACRequired}
+                onChange={handleCBACRequired}
               >
                 <h4>If You want to fill CBAC Form, tick the box</h4>
               </Checkbox>
@@ -2033,8 +2033,8 @@ function MemberUpdate(props) {
         ) : (
           <></>
         )} */}
-
-      {age <= 30 && !CBACRequired ? (
+      {console.log(CBACRequired, "CBAC Required")}
+      {age <= 30 && CBACRequired ? (
         <SubmitButtonDiv>
           <SubmitButton onClick={handleFormSubmit}>Next</SubmitButton>
         </SubmitButtonDiv>
