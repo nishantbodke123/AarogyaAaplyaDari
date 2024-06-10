@@ -1041,8 +1041,12 @@ function FamilyHead(props) {
   };
   const handleMobileNumberChange = (e) => {
     const regex = /^[0-9]{1,10}$/;
-    if (e.target.value === "" || regex.test(e.target.value)) {
-      setPhone(e.target.value);
+    const value = e.target.value;
+
+    if (value === "") {
+      setPhone(null);
+    } else if (regex.test(value)) {
+      setPhone(value);
     }
   };
 
@@ -1989,6 +1993,7 @@ function FamilyHead(props) {
   };
 
   const handleSubmitAndNext = () => {
+    phone === "" && setPhone(null);
     if (partialSubmit) {
       familyMembersArray.push(memberData);
       handleSubmit();
@@ -2055,6 +2060,7 @@ function FamilyHead(props) {
   };
 
   const handleSubmit = () => {
+    phone === "" && setPhone(null);
     setLoading(true);
     const Data = {
       ward_name: sessionStorage.getItem("ward"),
@@ -2887,12 +2893,12 @@ function FamilyHead(props) {
                     },
                   ]}
                 >
-                  <Input
-                    type="text"
-                    value={phone}
-                    maxLength={10}
-                    onChange={(e) => handleMobileNumberChange(e)}
-                  ></Input>
+                   <Input
+      type="text"
+      value={phone === null ? '' : phone}
+      maxLength={10}
+      onChange={(e) => handleMobileNumberChange(e)}
+    />
                 </FormItem>
               </Column>
               <Column>

@@ -400,8 +400,12 @@ function MemberAdd(props) {
   };
   const handleMobileNumberChange = (e) => {
     const regex = /^[0-9]{1,10}$/;
-    if (e.target.value === "" || regex.test(e.target.value)) {
-      setPhone(e.target.value);
+    const value = e.target.value;
+
+    if (value === "") {
+      setPhone(null);
+    } else if (regex.test(value)) {
+      setPhone(value);
     }
   };
 
@@ -1048,7 +1052,7 @@ function MemberAdd(props) {
     mobileNo: phone,
     aadharCard: aadharCard,
     familyHead: state,
-    ASHA_CHV:  selectedCHV,
+    ASHA_CHV: selectedCHV,
     abhaId: abhaId,
     pulse: pulse,
     bloodPressure: bloodPressure,
@@ -1056,7 +1060,7 @@ function MemberAdd(props) {
     weight: weight,
     height: height,
     BMI: BMI,
-    cbacRequired: age<30?CBACRequired:true,
+    cbacRequired: age < 30 ? CBACRequired : true,
     referels: selectedReferalList,
     Questionnaire: {
       part_a: [
@@ -2426,10 +2430,10 @@ function MemberAdd(props) {
                 >
                   <Input
                     type="text"
-                    value={phone}
+                    value={phone === null ? "" : phone}
                     maxLength={10}
                     onChange={(e) => handleMobileNumberChange(e)}
-                  ></Input>
+                  />
                 </FormItem>
               </Column>
               <Column>
