@@ -370,7 +370,7 @@ function MemberAdd(props) {
   const [age, setAge] = useState("");
   const [relationWithHead, setRelationWithHead] = useState("");
   const [phone, setPhone] = useState(null);
-  const [aadharCard, setAadharCard] = useState(0);
+  const [aadharCard, setAadharCard] = useState(null);
   const [abhaId, setAbhaId] = useState("");
   const [pulse, setPulse] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
@@ -388,7 +388,15 @@ function MemberAdd(props) {
   };
   const handleAadharCardChange = (e) => {
     const regex = /^[0-9]{1,12}$/;
-    if (e.target.value === "" || regex.test(e.target.value)) {
+    // if (e.target.value === "" || regex.test(e.target.value)) {
+    //   setAadharCard(e.target.value);
+    // }
+
+    const value = e.target.value;
+
+    if (value === "") {
+      setAadharCard(null);
+    } else if (regex.test(value)) {
       setAadharCard(e.target.value);
     }
   };
@@ -1048,7 +1056,7 @@ function MemberAdd(props) {
     name: name,
     gender: gender,
     age: age,
-    relationshipWithHead: relationWithHead,
+    relationship: relationWithHead,
     mobileNo: phone,
     aadharCard: aadharCard,
     familyHead: state,
@@ -1378,7 +1386,7 @@ function MemberAdd(props) {
       message.warning("Please Enter Age");
     } else if (section === "") {
       message.warning("Please Select Area");
-    } else if (aadharCard !== 0) {
+    } else if (aadharCard !== null) {
       //|| adharAbhaRequired
       axios
         .get(
@@ -2472,6 +2480,7 @@ function MemberAdd(props) {
                     <Option value="Father">Father</Option>
                     <Option value="Spouse">Spouse</Option>
                     <Option value="Son">Son</Option>
+                    <Option value="Sibling">Sibling</Option>
                     <Option value="Daughter">Daughter</Option>
                     <Option value="Grandson">Grandson</Option>
                     <Option value="Granddaughter">Granddaughter</Option>

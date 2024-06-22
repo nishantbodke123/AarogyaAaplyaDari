@@ -78,6 +78,7 @@ function MemberUpdate(props) {
   const [adharAbhaRequired, setAadharAbhaRequired] = useState(false);
   const [physicalDetailsRequired, setPhysicalDetailedRequired] =
     useState(false);
+
   let axiosConfig = {
     headers: {
       "Content-Type": "application/json",
@@ -119,6 +120,7 @@ function MemberUpdate(props) {
     setGender(state.gender);
     setAge(state.age);
     setPhone(state.mobileNo);
+    setRelationWithHead(state.relationship);
     setAadharCard(state.aadharCard);
     setAbhaId(state.abhaId);
     setPulse(state.pulse);
@@ -346,6 +348,7 @@ function MemberUpdate(props) {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
+  const [relationWithHead, setRelationWithHead] = useState("");
   const [phone, setPhone] = useState("");
   const [aadharCard, setAadharCard] = useState("");
   const [abhaId, setAbhaId] = useState("");
@@ -1816,6 +1819,32 @@ function MemberUpdate(props) {
                 ></Input>
               </FormItem>
             </Column>
+            <Column span={8}>
+                <FormItem label="Relation with the family head" required>
+                  <Select
+                    value={relationWithHead}
+                    // onChange={(value) => setRelationWithHead(value)}
+                    disabled
+                    placeholder="Select Relationship with family head"
+                  >
+                    <Option value="Self">Self</Option>
+                    <Option value="Mother">Mother</Option>
+                    <Option value="Father">Father</Option>
+                    <Option value="Spouse">Spouse</Option>
+                    <Option value="Son">Son</Option>
+                    <Option value="Sibling">Sibling</Option>
+                    <Option value="Daughter">Daughter</Option>
+                    <Option value="Grandson">Grandson</Option>
+                    <Option value="Granddaughter">Granddaughter</Option>
+                    <Option value="Grandmother">Grandmother</Option>
+                    <Option value="Grandfather">Grandfather</Option>
+                    <Option value="Uncle">Uncle</Option>
+                    <Option value="Aunty">Aunty</Option>
+                    <Option value="Nephew">Nephew</Option>
+                    <Option value="Niece">Niece</Option>
+                  </Select>
+                </FormItem>
+              </Column>
           </Row>
           <div>
             {age === "" || age <= 18 ? (

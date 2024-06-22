@@ -305,8 +305,8 @@ function FamilyHead(props) {
       message.warning("Please Enter PinCode");
     } else if (totalFamilyMembers == "") {
       message.warning("Please Enter number Family members ");
-    } else if (totalFamilyMembers <= 0 ){
-      message.warning("Please Enter valid family Members")
+    } else if (totalFamilyMembers <= 0) {
+      message.warning("Please Enter valid family Members");
     } else {
       setLoading(true);
       axios
@@ -1008,7 +1008,7 @@ function FamilyHead(props) {
   const [age, setAge] = useState("");
   const [relationWithHead, setRelationWithHead] = useState("");
   const [phone, setPhone] = useState(null);
-  const [aadharCard, setAadharCard] = useState(0);
+  const [aadharCard, setAadharCard] = useState(null);
   const [abhaId, setAbhaId] = useState();
   // const [abhaNumber, setAbhaNumber] = useState();
   const [pulse, setPulse] = useState("");
@@ -1027,9 +1027,23 @@ function FamilyHead(props) {
       setName(e.target.value);
     }
   };
+  // const handleAadharCardChange = (e) => {
+  //   const regex = /^[0-9]{1,12}$/;
+  //   if (e.target.value === "" || regex.test(e.target.value)) {
+  //     setAadharCard(e.target.value);
+  //   }
+  // };
   const handleAadharCardChange = (e) => {
     const regex = /^[0-9]{1,12}$/;
-    if (e.target.value === "" || regex.test(e.target.value)) {
+    // if (e.target.value === "" || regex.test(e.target.value)) {
+    //   setAadharCard(e.target.value);
+    // }
+
+    const value = e.target.value;
+
+    if (value === "") {
+      setAadharCard(null);
+    } else if (regex.test(value)) {
       setAadharCard(e.target.value);
     }
   };
@@ -1526,7 +1540,7 @@ function FamilyHead(props) {
       message.warning("Please Enter Age");
     } else if (relationWithHead === "") {
       message.warning("Please Select Relation with Family Head");
-    } else if (aadharCard !== 0) {
+    } else if (aadharCard !== null) {
       //|| adharAbhaRequired
       axios
         .get(
@@ -1901,7 +1915,7 @@ function FamilyHead(props) {
     setAge("");
     setRelationWithHead("");
     setPhone(null);
-    setAadharCard(0);
+    setAadharCard(null);
     setAbhaId("");
     setPulse("");
     setBloodPressure("");
@@ -2317,7 +2331,7 @@ function FamilyHead(props) {
     area: section,
     name: name,
     gender: gender,
-    relationshipWithHead: relationWithHead,
+    relationship: relationWithHead,
     age: age,
     mobileNo: phone,
     aadharCard: aadharCard,
@@ -2329,7 +2343,7 @@ function FamilyHead(props) {
     weight: weight,
     height: height,
     BMI: BMI,
-    cbacRequired: age<30?CBACRequired:true,
+    cbacRequired: age < 30 ? CBACRequired : true,
     referels: selectedReferalList,
     Questionnaire: {
       part_a: [
@@ -2893,12 +2907,12 @@ function FamilyHead(props) {
                     },
                   ]}
                 >
-                   <Input
-      type="text"
-      value={phone === null ? '' : phone}
-      maxLength={10}
-      onChange={(e) => handleMobileNumberChange(e)}
-    />
+                  <Input
+                    type="text"
+                    value={phone === null ? "" : phone}
+                    maxLength={10}
+                    onChange={(e) => handleMobileNumberChange(e)}
+                  />
                 </FormItem>
               </Column>
               <Column>
@@ -2937,6 +2951,7 @@ function FamilyHead(props) {
                     <Option value="Father">Father</Option>
                     <Option value="Spouse">Spouse</Option>
                     <Option value="Son">Son</Option>
+                    <Option value="Sibling">Sibling</Option>
                     <Option value="Daughter">Daughter</Option>
                     <Option value="Grandson">Grandson</Option>
                     <Option value="Granddaughter">Granddaughter</Option>

@@ -118,7 +118,7 @@ function WardAdminDashboard() {
 
   const handleWardwiseCitizenDownload = () => {
     setLoader(true);
-    console.log("coming here.......") 
+    console.log("coming here.......");
     axios
       .get(`${BASE_URL}/adminportal/api/DownloadWardtwiseUserList/${wardId}`, {
         headers: {
@@ -132,10 +132,7 @@ function WardAdminDashboard() {
 
         const link = document.createElement("a");
         link.href = href;
-        link.setAttribute(
-          "download",
-          `MOH_Dashboard_Wardwise_User_Data.xlsx`
-        );
+        link.setAttribute("download", `MOH_Dashboard_Wardwise_User_Data.xlsx`);
 
         document.body.appendChild(link);
         link.click();
@@ -163,7 +160,7 @@ function WardAdminDashboard() {
     console.log(
       "passed healthpost value in the content ward admin is " + passedHealthpost
     );
-    console.log("hereee abhishek")
+    console.log("hereee abhishek");
     axios
       .get(
         // `${BASE_URL}/adminportal/api/DownloadHealthpostwiseUserList/${selectedHealthPost}`,
@@ -207,7 +204,8 @@ function WardAdminDashboard() {
       });
   };
 
-  const handleMOHDashboardExcelDownload = () => {
+  const handleMOHDashboardExcelDownload = (group_name) => {
+    setLoader(true);
     axios
       .get(`${BASE_URL}/adminportal/api/MOHDashboardExcelView`, {
         params: {
@@ -216,6 +214,7 @@ function WardAdminDashboard() {
             selectedHealthPost !== undefined
               ? String(selectedHealthPost)
               : undefined,
+          group_name: group_name,
         },
         headers: {
           Authorization: `Token ${sessionStorage.getItem("Token")}`,
@@ -240,6 +239,7 @@ function WardAdminDashboard() {
 
         document.body.removeChild(link);
         URL.revokeObjectURL(href);
+        setLoader(false);
       })
       .catch((err) => {
         console.log("selected healthpost is " + selectedHealthPost);
@@ -253,6 +253,7 @@ function WardAdminDashboard() {
         } else {
           message.warning("Error" + err.response.message);
         }
+        setLoader(false);
       });
   };
   const [showReport, setShowReport] = useState(false);
@@ -278,7 +279,7 @@ function WardAdminDashboard() {
               width: "30%",
             }}
           >
-            <div >
+            <div>
               <Form layout="vertical">
                 <Row>
                   <Col span={24}>
@@ -307,393 +308,424 @@ function WardAdminDashboard() {
                   </Col>
                 </Row>
               </Form>
-              </div>
-           
-           
+            </div>
+
             <div style={{ margin: "4vh 0vh 0vh 0vh" }}>
-              <Tooltip placement="bottom" title="Excel Download">
-                <Button onClick={handleMOHDashboardExcelDownload}>
+              <Tooltip
+                placement="bottom"
+                title={
+                  <>
+                    <Button
+                      onClick={() =>
+                        handleMOHDashboardExcelDownload("healthworker")
+                      }
+                    >
+                      ANM
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        handleMOHDashboardExcelDownload("CHV-ASHA")
+                      }
+                    >
+                      CHV
+                    </Button>
+                  </>
+                }
+              >
+                <Button>
                   <DownloadOutlined />
                 </Button>
               </Tooltip>
             </div>
             <div style={{ margin: "4vh 4vh 0vh 0vh" }}>
-                {showReport ? (
-                  <Tooltip title="Dashboard" placement="top">
-                    <Button
-                      onClick={handleShowReport}
-                      style={{ border: "none" }}
-                    >
-                      <AppstoreOutlined style={{ fontSize: "25px" }} />
-                    </Button>
-                  </Tooltip>
-                ) : (
-                  <Tooltip title="Users Report" placement="top">
-                    <Button
-                      onClick={handleShowReport}
-                      style={{ border: "none" }}
-                    >
-                      <ProfileOutlined style={{ fontSize: "25px" }} />
-                    </Button>
-                  </Tooltip>
-                )}
-              </div>
+              {showReport ? (
+                <Tooltip title="Dashboard" placement="top">
+                  <Button onClick={handleShowReport} style={{ border: "none" }}>
+                    <AppstoreOutlined style={{ fontSize: "25px" }} />
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Tooltip title="Users Report" placement="top">
+                  <Button onClick={handleShowReport} style={{ border: "none" }}>
+                    <ProfileOutlined style={{ fontSize: "25px" }} />
+                  </Button>
+                </Tooltip>
+              )}
+            </div>
           </div>
         </div>
         {showReport ? (
-            <>
-              <ReportTable
-                selectedHealthPost={selectedHealthPost}
-              />
-            </>
-          ) : (
-            <>
-        <Row
-          style={{
-            padding: "2%",
-            width: "100%",
-            height: "100%",
-            overflowY: "auto",
-            maxHeight: "79vh",
-          }}
-        >
-          <Col span={14}>
-            <MainCountRow>
-              <CountCard>
-                <CardTitle>ANM/Co-Ordinator</CardTitle>
-                <CountTitle>{MOHDashboardData.ANM_count}</CountTitle>
-              </CountCard>
-              <CountCard>
-                <CardTitle>CHV/ASHA</CardTitle>
-                <CountTitle>{MOHDashboardData.CHV_ASHA_count}</CountTitle>
-              </CountCard>
-              <CountCard>
-                <CardTitle>MO</CardTitle>
-                <CountTitle>{MOHDashboardData.MO_count}</CountTitle>
-              </CountCard>
-            </MainCountRow>
-            <h3>Citizens Details</h3>
-            <MainCountRow>
-              <CountCard>
-                <CardTitle>Family Enrolled</CardTitle>
-                <CountTitle>{MOHDashboardData.total_family_count}</CountTitle>
-              </CountCard>
-              {/* <CountCard>
+          <>
+            <ReportTable selectedHealthPost={selectedHealthPost} />
+          </>
+        ) : (
+          <>
+            <Row
+              style={{
+                padding: "2%",
+                width: "100%",
+                height: "100%",
+                overflowY: "auto",
+                maxHeight: "79vh",
+              }}
+            >
+              <Col span={14}>
+                <MainCountRow>
+                  <CountCard>
+                    <CardTitle>ANM/Co-Ordinator</CardTitle>
+                    <CountTitle>{MOHDashboardData.ANM_count}</CountTitle>
+                  </CountCard>
+                  <CountCard>
+                    <CardTitle>CHV/ASHA</CardTitle>
+                    <CountTitle>{MOHDashboardData.CHV_ASHA_count}</CountTitle>
+                  </CountCard>
+                  <CountCard>
+                    <CardTitle>MO</CardTitle>
+                    <CountTitle>{MOHDashboardData.MO_count}</CountTitle>
+                  </CountCard>
+                </MainCountRow>
+                <h3>Citizens Details</h3>
+                <MainCountRow>
+                  <CountCard>
+                    <CardTitle>Family Enrolled</CardTitle>
+                    <CountTitle>
+                      {MOHDashboardData.total_family_count}
+                    </CountTitle>
+                  </CountCard>
+                  {/* <CountCard>
                 <CardTitle>Today's Families Enrolled</CardTitle>
                 <CountTitle>{MOHDashboardData.today_family_count}</CountTitle>
               </CountCard> */}
-              <CountCard>
-                <CardTitle>Citizens Enrolled</CardTitle>
-                <CountTitle>{MOHDashboardData.total_count}</CountTitle>
-              </CountCard>
-              <CountCard>
-                <CardTitle>CBAC Filled</CardTitle>
-                <CountTitle>{MOHDashboardData.total_cbac_count}</CountTitle>
-              </CountCard>
-            </MainCountRow>
-            <br />
-            <MainCountRow>
-              {/* <CountCard>
+                  <CountCard>
+                    <CardTitle>Citizens Enrolled</CardTitle>
+                    <CountTitle>{MOHDashboardData.total_count}</CountTitle>
+                  </CountCard>
+                  <CountCard>
+                    <CardTitle>CBAC Filled</CardTitle>
+                    <CountTitle>{MOHDashboardData.total_cbac_count}</CountTitle>
+                  </CountCard>
+                </MainCountRow>
+                <br />
+                <MainCountRow>
+                  {/* <CountCard>
                 <CardTitle> Today's Citizens Enrolled</CardTitle>
                 <CountTitle>{MOHDashboardData.todays_count}</CountTitle>
               </CountCard> */}
-              <CountCard>
-                <CardTitle>Males Enrolled</CardTitle>
-                <CountTitle> {MOHDashboardData.male}</CountTitle>
-              </CountCard>
-              <CountCard>
-                <CardTitle>Females Enrolled</CardTitle>
-                <CountTitle> {MOHDashboardData.female}</CountTitle>
-              </CountCard>
-              <CountCard>
-                <CardTitle>Transgender</CardTitle>
-                <CountTitle>{MOHDashboardData.transgender}</CountTitle>
-              </CountCard>
-            </MainCountRow>
-            <br />
-            <MainCountRow>
-              <CountCard>
-                <CardTitle>ABHA ID Generated</CardTitle>
-                <CountTitle>{MOHDashboardData.total_AbhaCreated}</CountTitle>
-              </CountCard>
-              <CountCard>
-                <CardTitle>Citizens 30 years + enrolled</CardTitle>
-                <CountTitle>{MOHDashboardData.citizen_above_30}</CountTitle>
-              </CountCard>
-              <CountCard>
-                <CardTitle>Citizens 60 years + enrolled </CardTitle>
-                <CountTitle>{MOHDashboardData.citizen_above_60}</CountTitle>
-              </CountCard>
-            </MainCountRow>
-            <br />
-            <MainCountRow>
-              <CountCard>
-                <CardTitle>Vulnerable Citizens </CardTitle>
-                <CountTitle>{MOHDashboardData.total_vulnerabel}</CountTitle>
-              </CountCard>
-            </MainCountRow>
-          </Col>
-          <Col span={1}></Col>
-          <Col span={9} style={{ width: "100%" }}>
-            <BloodDetailCard>
-              <h3>Blood Collection Details</h3>
-              <br />
-              {/* <MainCountRow>
+                  <CountCard>
+                    <CardTitle>Males Enrolled</CardTitle>
+                    <CountTitle> {MOHDashboardData.male}</CountTitle>
+                  </CountCard>
+                  <CountCard>
+                    <CardTitle>Females Enrolled</CardTitle>
+                    <CountTitle> {MOHDashboardData.female}</CountTitle>
+                  </CountCard>
+                  <CountCard>
+                    <CardTitle>Transgender</CardTitle>
+                    <CountTitle>{MOHDashboardData.transgender}</CountTitle>
+                  </CountCard>
+                </MainCountRow>
+                <br />
+                <MainCountRow>
+                  <CountCard>
+                    <CardTitle>ABHA ID Generated</CardTitle>
+                    <CountTitle>
+                      {MOHDashboardData.total_AbhaCreated}
+                    </CountTitle>
+                  </CountCard>
+                  <CountCard>
+                    <CardTitle>Citizens 30 years + enrolled</CardTitle>
+                    <CountTitle>{MOHDashboardData.citizen_above_30}</CountTitle>
+                  </CountCard>
+                  <CountCard>
+                    <CardTitle>Citizens 60 years + enrolled </CardTitle>
+                    <CountTitle>{MOHDashboardData.citizen_above_60}</CountTitle>
+                  </CountCard>
+                </MainCountRow>
+                <br />
+                <MainCountRow>
+                  <CountCard>
+                    <CardTitle>Vulnerable Citizens </CardTitle>
+                    <CountTitle>{MOHDashboardData.total_vulnerabel}</CountTitle>
+                  </CountCard>
+                </MainCountRow>
+              </Col>
+              <Col span={1}></Col>
+              <Col span={9} style={{ width: "100%" }}>
+                <BloodDetailCard>
+                  <h3>Blood Collection Details</h3>
+                  <br />
+                  {/* <MainCountRow>
                 <DetailSubtitle> Tests Suggested</DetailSubtitle>
                 <CountTitle>{MOHDashboardData.total_LabTestAdded}</CountTitle>
               </MainCountRow> */}
-              <Line />
-              <MainCountRow>
-                <DetailSubtitle> Tests Assigned</DetailSubtitle>
-                <CountTitle>{MOHDashboardData.total_LabTestAdded}</CountTitle>
-              </MainCountRow>
-              {/* <Line /> */}
-              {/* <MainCountRow>
+                  <Line />
+                  <MainCountRow>
+                    <DetailSubtitle> Tests Assigned</DetailSubtitle>
+                    <CountTitle>
+                      {MOHDashboardData.total_LabTestAdded}
+                    </CountTitle>
+                  </MainCountRow>
+                  {/* <Line /> */}
+                  {/* <MainCountRow>
                 <DetailSubtitle> Tests Done</DetailSubtitle>
                 <CountTitle>0</CountTitle>
               </MainCountRow> */}
-              <Line />
-              <MainCountRow>
-                <DetailSubtitle>Total Reports Generated</DetailSubtitle>
-                <CountTitle>{MOHDashboardData.TestReportGenerated}</CountTitle>
-              </MainCountRow>
-              <Line />
-              <MainCountRow>
-                <DetailSubtitle>Blood Collected At Home</DetailSubtitle>
-                <CountTitle>{MOHDashboardData.blood_collected_home}</CountTitle>
-              </MainCountRow>
-              <Line />
-              <MainCountRow>
-                <DetailSubtitle>Blood Collected At Center</DetailSubtitle>
-                <CountTitle>
-                  {MOHDashboardData.blood_collected_center}
-                </CountTitle>
-              </MainCountRow>
-              <Line />
+                  <Line />
+                  <MainCountRow>
+                    <DetailSubtitle>Total Reports Generated</DetailSubtitle>
+                    <CountTitle>
+                      {MOHDashboardData.TestReportGenerated}
+                    </CountTitle>
+                  </MainCountRow>
+                  <Line />
+                  <MainCountRow>
+                    <DetailSubtitle>Blood Collected At Home</DetailSubtitle>
+                    <CountTitle>
+                      {MOHDashboardData.blood_collected_home}
+                    </CountTitle>
+                  </MainCountRow>
+                  <Line />
+                  <MainCountRow>
+                    <DetailSubtitle>Blood Collected At Center</DetailSubtitle>
+                    <CountTitle>
+                      {MOHDashboardData.blood_collected_center}
+                    </CountTitle>
+                  </MainCountRow>
+                  <Line />
 
-              <MainCountRow>
-                <DetailSubtitle>Blood Collection Denied By AMO</DetailSubtitle>
-                <CountTitle>{MOHDashboardData.denieded_by_mo_count}</CountTitle>
-              </MainCountRow>
-              <Line />
-              <MainCountRow>
-                <DetailSubtitle>
-                  Blood Collection Denied By Citizen
-                </DetailSubtitle>
-                <CountTitle>
-                  {MOHDashboardData.denieded_by_mo_individual}
-                </CountTitle>
-              </MainCountRow>
-            </BloodDetailCard>
-          </Col>
-          <Divider />
-          <div>
-            <h3>Referrals</h3>
-            <div style={{ width: "80vw" }}>
-              <Row>
-                <Col span={8}>
-                  <ReferralCountCard>
-                    <CardTitle>
+                  <MainCountRow>
+                    <DetailSubtitle>
+                      Blood Collection Denied By AMO
+                    </DetailSubtitle>
+                    <CountTitle>
+                      {MOHDashboardData.denieded_by_mo_count}
+                    </CountTitle>
+                  </MainCountRow>
+                  <Line />
+                  <MainCountRow>
+                    <DetailSubtitle>
+                      Blood Collection Denied By Citizen
+                    </DetailSubtitle>
+                    <CountTitle>
+                      {MOHDashboardData.denieded_by_mo_individual}
+                    </CountTitle>
+                  </MainCountRow>
+                </BloodDetailCard>
+              </Col>
+              <Divider />
+              <div>
+                <h3>Referrals</h3>
+                <div style={{ width: "80vw" }}>
+                  <Row>
+                    <Col span={8}>
+                      <ReferralCountCard>
+                        <CardTitle>
+                          {" "}
+                          Referral to Mun. Dispensary / HBT for Blood Test /
+                          Confirmation / Treatment
+                        </CardTitle>
+                        <CountTitle>
+                          {
+                            MOHDashboardData.Referral_choice_Referral_to_Mun_Dispensary
+                          }
+                        </CountTitle>
+                      </ReferralCountCard>
+                    </Col>
+                    <Col span={8}>
                       {" "}
-                      Referral to Mun. Dispensary / HBT for Blood Test /
-                      Confirmation / Treatment
-                    </CardTitle>
-                    <CountTitle>
-                      {
-                        MOHDashboardData.Referral_choice_Referral_to_Mun_Dispensary
-                      }
-                    </CountTitle>
-                  </ReferralCountCard>
-                </Col>
-                <Col span={8}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle>
+                      <ReferralCountCard>
+                        <CardTitle>
+                          {" "}
+                          Referral to HBT polyclinic for physician consultation
+                        </CardTitle>
+                        <CountTitle>
+                          {
+                            MOHDashboardData.Referral_choice_Referral_to_HBT_polyclinic
+                          }
+                        </CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                    <Col span={8}>
                       {" "}
-                      Referral to HBT polyclinic for physician consultation
-                    </CardTitle>
-                    <CountTitle>
-                      {
-                        MOHDashboardData.Referral_choice_Referral_to_HBT_polyclinic
-                      }
-                    </CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-                <Col span={8}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle>
+                      <ReferralCountCard>
+                        <CardTitle>
+                          {" "}
+                          Referral to Peripheral Hospital / Special Hospital for
+                          management of Complication
+                        </CardTitle>
+                        <CountTitle>
+                          {
+                            MOHDashboardData.Referral_choice_Referral_to_Peripheral_Hospital
+                          }
+                        </CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                  </Row>
+                  <div style={{ height: "10px" }}></div>
+                  <Row>
+                    {" "}
+                    <Col span={8}>
+                      <ReferralCountCard>
+                        <CardTitle>
+                          {" "}
+                          Referral to Medical College for management of
+                          Complication
+                        </CardTitle>
+                        <CountTitle>
+                          {
+                            MOHDashboardData.Referral_choice_Referral_to_Medical_College
+                          }
+                        </CountTitle>
+                      </ReferralCountCard>
+                    </Col>
+                    <Col span={8}>
                       {" "}
-                      Referral to Peripheral Hospital / Special Hospital for
-                      management of Complication
-                    </CardTitle>
-                    <CountTitle>
-                      {
-                        MOHDashboardData.Referral_choice_Referral_to_Peripheral_Hospital
-                      }
-                    </CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-              </Row>
-              <div style={{ height: "10px" }}></div>
-              <Row>
-                {" "}
-                <Col span={8}>
-                  <ReferralCountCard>
-                    <CardTitle>
+                      <ReferralCountCard>
+                        <CardTitle> Referral to Private facility</CardTitle>
+                        <CountTitle>
+                          {
+                            MOHDashboardData.Referral_choice_Referral_to_Private_facility
+                          }
+                        </CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+              <Divider />
+
+              <div>
+                <div>
+                  <h3>Disease Suspected</h3>
+                </div>
+                <div style={{ width: "80vw" }}>
+                  <Row>
+                    <Col span={5}>
                       {" "}
-                      Referral to Medical College for management of Complication
-                    </CardTitle>
-                    <CountTitle>
-                      {
-                        MOHDashboardData.Referral_choice_Referral_to_Medical_College
-                      }
-                    </CountTitle>
-                  </ReferralCountCard>
-                </Col>
-                <Col span={8}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle> Referral to Private facility</CardTitle>
-                    <CountTitle>
-                      {
-                        MOHDashboardData.Referral_choice_Referral_to_Private_facility
-                      }
-                    </CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-              </Row>
-            </div>
-          </div>
-          <Divider />
+                      <ReferralCountCard>
+                        <CardTitle> Diabetes</CardTitle>
+                        <CountTitle>{MOHDashboardData.diabetes}</CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                    <Col span={5}>
+                      {" "}
+                      <ReferralCountCard>
+                        <CardTitle>Hypertension </CardTitle>
+                        <CountTitle>{MOHDashboardData.hypertension}</CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                    <Col span={5}>
+                      {" "}
+                      <ReferralCountCard>
+                        <CardTitle> Oral Cancer</CardTitle>
+                        <CountTitle>{MOHDashboardData.oral_Cancer}</CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                    <Col span={5}>
+                      {" "}
+                      <ReferralCountCard>
+                        <CardTitle>Cervical Cancer </CardTitle>
+                        <CountTitle>
+                          {MOHDashboardData.cervical_cancer}
+                        </CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
 
-          <div>
-            <div>
-              <h3>Disease Suspected</h3>
-            </div>
-            <div style={{ width: "80vw" }}>
-              <Row>
-                <Col span={5}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle> Diabetes</CardTitle>
-                    <CountTitle>{MOHDashboardData.diabetes}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-                <Col span={5}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle>Hypertension </CardTitle>
-                    <CountTitle>{MOHDashboardData.hypertension}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-                <Col span={5}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle> Oral Cancer</CardTitle>
-                    <CountTitle>{MOHDashboardData.oral_Cancer}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-                <Col span={5}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle>Cervical Cancer </CardTitle>
-                    <CountTitle>{MOHDashboardData.cervical_cancer}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
+                    <Col span={4}>
+                      {" "}
+                      <ReferralCountCard>
+                        <CardTitle>Breast Cancer </CardTitle>
+                        <CountTitle>
+                          {MOHDashboardData.breast_cancer}
+                        </CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                  </Row>
+                  <div style={{ height: "10px" }}></div>
+                  <Row>
+                    <Col span={5}>
+                      {" "}
+                      <ReferralCountCard>
+                        <CardTitle>COPD </CardTitle>
+                        <CountTitle>{MOHDashboardData.copd}</CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                    <Col span={5}>
+                      {" "}
+                      <ReferralCountCard>
+                        <CardTitle> Asthma</CardTitle>
+                        <CountTitle>{MOHDashboardData.asthama}</CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                    <Col span={5}>
+                      <ReferralCountCard>
+                        <CardTitle>TB</CardTitle>
+                        <CountTitle>{MOHDashboardData.tb}</CountTitle>
+                      </ReferralCountCard>
+                    </Col>
 
-                <Col span={4}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle>Breast Cancer </CardTitle>
-                    <CountTitle>{MOHDashboardData.breast_cancer}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-              </Row>
-              <div style={{ height: "10px" }}></div>
-              <Row>
-                <Col span={5}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle>COPD </CardTitle>
-                    <CountTitle>{MOHDashboardData.copd}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-                <Col span={5}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle> Asthma</CardTitle>
-                    <CountTitle>{MOHDashboardData.asthama}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-                <Col span={5}>
-                  <ReferralCountCard>
-                    <CardTitle>TB</CardTitle>
-                    <CountTitle>{MOHDashboardData.tb}</CountTitle>
-                  </ReferralCountCard>
-                </Col>
+                    <Col span={5}>
+                      <ReferralCountCard>
+                        <CardTitle> Alzheimers/Dementia</CardTitle>
+                        <CountTitle>{MOHDashboardData.Alzheimers}</CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
 
-                <Col span={5}>
-                  <ReferralCountCard>
-                    <CardTitle> Alzheimers/Dementia</CardTitle>
-                    <CountTitle>{MOHDashboardData.Alzheimers}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
+                    <Col span={4}>
+                      <ReferralCountCard>
+                        <CardTitle>ENT Disorder </CardTitle>
+                        <CountTitle>{MOHDashboardData.ent_disorder}</CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                  </Row>
+                  <div style={{ height: "10px" }}></div>
+                  <Row>
+                    <Col span={5}>
+                      {" "}
+                      <ReferralCountCard>
+                        <CardTitle> Eye Disorder</CardTitle>
+                        <CountTitle>{MOHDashboardData.eye_disorder}</CountTitle>
+                      </ReferralCountCard>{" "}
+                    </Col>
+                    <Col span={5}>
+                      <ReferralCountCard>
+                        <CardTitle> Leprosy</CardTitle>
+                        <CountTitle>{MOHDashboardData.leprosy}</CountTitle>
+                      </ReferralCountCard>
+                    </Col>
 
-                <Col span={4}>
-                  <ReferralCountCard>
-                    <CardTitle>ENT Disorder </CardTitle>
-                    <CountTitle>{MOHDashboardData.ent_disorder}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-              </Row>
-              <div style={{ height: "10px" }}></div>
-              <Row>
-                <Col span={5}>
-                  {" "}
-                  <ReferralCountCard>
-                    <CardTitle> Eye Disorder</CardTitle>
-                    <CountTitle>{MOHDashboardData.eye_disorder}</CountTitle>
-                  </ReferralCountCard>{" "}
-                </Col>
-                <Col span={5}>
-                  <ReferralCountCard>
-                    <CardTitle> Leprosy</CardTitle>
-                    <CountTitle>{MOHDashboardData.leprosy}</CountTitle>
-                  </ReferralCountCard>
-                </Col>
+                    <Col span={5}>
+                      <ReferralCountCard>
+                        <CardTitle> Other Communicable Disease</CardTitle>
+                        <CountTitle>
+                          {MOHDashboardData.other_communicable_dieases}
+                        </CountTitle>
+                      </ReferralCountCard>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
 
-                <Col span={5}>
-                  <ReferralCountCard>
-                    <CardTitle> Other Communicable Disease</CardTitle>
-                    <CountTitle>
-                      {MOHDashboardData.other_communicable_dieases}
-                    </CountTitle>
-                  </ReferralCountCard>
-                </Col>
-              </Row>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "end",
-              width: "100%",
-              marginTop: "0%",
-            }}
-          >
-            <p style={{ margin: "0% 1% 0.5% 0%" }}>
-              Developed and Maintained By
-            </p>
-            <img
-              src="\BhugolGISLogo.png"
-              style={{ width: "10rem", height: "2rem" }}
-            />
-          </div>
-        </Row>
-        </>)}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "end",
+                  width: "100%",
+                  marginTop: "0%",
+                }}
+              >
+                <p style={{ margin: "0% 1% 0.5% 0%" }}>
+                  Developed and Maintained By
+                </p>
+                <img
+                  src="\BhugolGISLogo.png"
+                  style={{ width: "10rem", height: "2rem" }}
+                />
+              </div>
+            </Row>
+          </>
+        )}
       </Spin>
     </>
   );
