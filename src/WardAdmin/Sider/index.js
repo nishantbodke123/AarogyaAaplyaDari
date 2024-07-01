@@ -114,93 +114,93 @@ function Sidebar(props) {
         // getItem("MO", "/admin/mo", null, "/admin/mo"),
       ]
     ),
-    getItem(
-      <p style={{ color: "white" }}>Download Report</p>,
-      null,
-      <CloudDownloadOutlined />,
-      null,
-      [
-        {
-          key: "/admin/downloadCitizensWardWise",
-          label: (
-            <p
-              style={{
-                color: "white",
-                whiteSpace: "break-spaces",
-                lineHeight: "20px",
-              }}
-            >
-              Download Citizens Ward wise
-            </p>
-          ),
-          // "Download Citizens Ward wise",
-          icon: null,
-          path: "/admin/adminDashboard",
-          isButton: true,
-          onClick: handleWardwiseCitizenDownload,
-        },
-        {
-          key: "/admin/downloadCitizensHealthpostWise",
-          // label: "Download Citizens Ward wise",
-          label: (
-            <Tooltip
-              style={{ left: "10px" }}
-              title={
-                <div>
-                  <p>Healthpost</p>
-                  {/* <FormItem label="Health Post"> */}
-                  <select
-                    style={{
-                      width: "200px",
-                      height: "30px",
-                      borderRadius: "5px",
-                      margin: "10px 5px",
-                      value: { selectedWard },
-                    }}
-                    onChange={(e) => handleHealthpostSelect(e.target.value)}
-                  >
-                    <option value={undefined}>Select the Healthpost</option>
-                    {healthPostNameList.map((data, index) => (
-                      <option
-                        key={data.id}
-                        value={`${data.id}|${data.healthPostName}`}
-                      >
-                        {data.healthPostName}
-                      </option>
-                    ))}
-                  </select>
-                  {/* </FormItem> */}
+    // getItem(
+    //   <p style={{ color: "white" }}>Download Report</p>,
+    //   null,
+    //   <CloudDownloadOutlined />,
+    //   null,
+    //   [
+    //     {
+    //       key: "/admin/downloadCitizensWardWise",
+    //       label: (
+    //         <p
+    //           style={{
+    //             color: "white",
+    //             whiteSpace: "break-spaces",
+    //             lineHeight: "20px",
+    //           }}
+    //         >
+    //           Download Citizens Ward wise
+    //         </p>
+    //       ),
+    //       // "Download Citizens Ward wise",
+    //       icon: null,
+    //       path: "/admin/adminDashboard",
+    //       isButton: true,
+    //       onClick: handleWardwiseCitizenDownload,
+    //     },
+    //     {
+    //       key: "/admin/downloadCitizensHealthpostWise",
+    //       // label: "Download Citizens Ward wise",
+    //       label: (
+    //         <Tooltip
+    //           style={{ left: "10px" }}
+    //           title={
+    //             <div>
+    //               <p>Healthpost</p>
+    //               {/* <FormItem label="Health Post"> */}
+    //               <select
+    //                 style={{
+    //                   width: "200px",
+    //                   height: "30px",
+    //                   borderRadius: "5px",
+    //                   margin: "10px 5px",
+    //                   value: { selectedWard },
+    //                 }}
+    //                 onChange={(e) => handleHealthpostSelect(e.target.value)}
+    //               >
+    //                 <option value={undefined}>Select the Healthpost</option>
+    //                 {healthPostNameList.map((data, index) => (
+    //                   <option
+    //                     key={data.id}
+    //                     value={`${data.id}|${data.healthPostName}`}
+    //                   >
+    //                     {data.healthPostName}
+    //                   </option>
+    //                 ))}
+    //               </select>
+    //               {/* </FormItem> */}
 
-                  <Button
-                    type="primary"
-                    shape="round"
-                    icon={<DownloadOutlined />}
-                    size={3}
-                    style={{ marginLeft: "35%" }}
-                    onClick={handleHealthPostwiseCitizenDownload}
-                  />
-                </div>
-              }
-              placement="right"
-            >
-              <p
-                style={{
-                  color: "white",
-                  whiteSpace: "break-spaces",
-                  lineHeight: "20px",
-                }}
-              >
-                Download Citizens Healthpost wise
-              </p>
-            </Tooltip>
-          ),
-          icon: null,
-          path: "/admin/adminDashboard",
-          isButton: true,
-          onClick: handleButtonClick,
-        },
-      ]
-    ),
+    //               <Button
+    //                 type="primary"
+    //                 shape="round"
+    //                 icon={<DownloadOutlined />}
+    //                 size={3}
+    //                 style={{ marginLeft: "35%" }}
+    //                 onClick={handleHealthPostwiseCitizenDownload}
+    //               />
+    //             </div>
+    //           }
+    //           placement="right"
+    //         >
+    //           <p
+    //             style={{
+    //               color: "white",
+    //               whiteSpace: "break-spaces",
+    //               lineHeight: "20px",
+    //             }}
+    //           >
+    //             Download Citizens Healthpost wise
+    //           </p>
+    //         </Tooltip>
+    //       ),
+    //       icon: null,
+    //       path: "/admin/adminDashboard",
+    //       isButton: true,
+    //       onClick: handleButtonClick,
+    //     },
+    //   ]
+    // ),
   ];
   return (
     <>
